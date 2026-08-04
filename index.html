@@ -291,6 +291,16 @@
         background: rgba(255, 255, 255, 0.9);
         font-size: 2rem;
       }
+      #introVideoWrap {
+        display: flex;
+        justify-content: center;
+      }
+      .videoActions {
+        display: flex;
+        gap: 1rem;
+        justify-content: center;
+        flex-wrap: wrap;
+      }
       .conversation {
         display: flex;
         flex-direction: column;
@@ -393,47 +403,114 @@
 
       <!-- 1 -->
       <section class="screen active" data-i="1">
-        <div class="content card" style="text-align:center; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:1.4em;">
+        <div
+          class="content card"
+          style="
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 1.4em;
+          "
+        >
           <div class="small">ENGLISH EXPLORER</div>
           <h1>English Explorer</h1>
           <h2>Lesson 1 - 4th of August 2026</h2>
-          <button class="choice pulse" style="background: var(--accent); color: white;" onclick="startIntroVideo()">
+          <button
+            class="choice pulse"
+            style="background: var(--accent); color: white"
+            onclick="startIntroVideo()"
+          >
             ▶ START
           </button>
-          <div id="introVideoWrap" class="hidden" style="width:100%; max-width:900px; margin-top:2em;">
-            <video
-              id="introVideo"
-              muted
-              playsinline
-              preload="auto"
-              controls
-              src="https://res.cloudinary.com/dp455m4rk/video/upload/v1785822007/hello_y2a9fr.mp4"
-            ></video>
-          </div>
+          <p class="small" style="max-width: 80vw">
+            Tap START to go to the video slide, then use BACK and NEXT to
+            continue through the lesson.
+          </p>
         </div>
       </section>
 
       <!-- 2 -->
       <section class="screen" data-i="2">
-        <div class="content hero">
-          <div class="heroText">
-            <div class="small">ENGLISH EXPLORER</div>
-            <h1>HELLO! 👋</h1>
-            <p>Wave to your new friend!</p>
-            <button
-              class="choice pulse"
-              onclick="
-                say('Hello!');
-                waveVideo();
+        <div
+          class="content"
+          style="
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 1.4em;
+          "
+        >
+          <div class="small">ENGLISH EXPLORER</div>
+          <h1>Watch the clip</h1>
+          <div
+            id="introVideoWrap"
+            style="width: 100%; max-width: 1200px; margin-top: 0.5em"
+          >
+            <video
+              id="introVideo"
+              playsinline
+              preload="auto"
+              controls
+              style="
+                width: 100%;
+                height: auto;
+                border-radius: 32px;
+                box-shadow: var(--shadow);
               "
+              src="https://res.cloudinary.com/dp455m4rk/video/upload/v1785822007/hello_y2a9fr.mp4"
+            ></video>
+          </div>
+          <div
+            class="row"
+            style="
+              justify-content: center;
+              gap: 1rem;
+              width: 100%;
+              max-width: 800px;
+            "
+          >
+            <button
+              class="choice yes"
+              style="min-width: 180px"
+              onclick="playIntroVideo()"
             >
-              👋 HELLO!
+              ▶ PLAY
+            </button>
+            <button
+              class="choice no"
+              style="min-width: 180px"
+              onclick="repeatIntroVideo()"
+            >
+              🔁 REPEAT
             </button>
           </div>
+          <p class="small">Use BACK and NEXT to move through the course.</p>
+        </div>
       </section>
 
       <!-- 3 -->
       <section class="screen" data-i="3">
+        <div class="content card">
+          <div class="emoji">👋</div>
+          <h1>HELLO!</h1>
+          <p>Say it together.</p>
+          <button
+            class="choice"
+            onclick="
+              say('Hello!');
+              reward('HELLO!');
+            "
+          >
+            👋 HELLO!
+          </button>
+        </div>
+      </section>
+
+      <!-- 4 -->
+      <section class="screen" data-i="4">
         <div class="content card">
           <div class="emoji">👋</div>
           <h1>HELLO!</h1>
@@ -800,11 +877,11 @@
           idx === 0 ? "hidden" : "visible";
         document.getElementById("nextBtn").textContent =
           idx === screens.length - 1 ? "RESTART ↻" : "NEXT ›";
-        if (idx === 17) buildLetters();
-        if (idx === 18)
+        if (idx === 18) buildLetters();
+        if (idx === 19)
           document.getElementById("convName").textContent =
             childName || "________";
-        if (idx === 19)
+        if (idx === 20)
           document.getElementById("starName").textContent =
             (childName || "YOUR") + " — ENGLISH STAR";
         window.speechSynthesis?.cancel();
@@ -857,12 +934,11 @@
         document.getElementById("videoPlay").classList.add("hidden");
       }
       function startIntroVideo() {
-        const wrap = document.getElementById("introVideoWrap");
+        show(1);
         const video = document.getElementById("introVideo");
-        if (!wrap || !video) return;
-        wrap.classList.remove("hidden");
+        if (!video) return;
         video.currentTime = 0;
-        video.muted = true;
+        video.muted = false;
         video.play().catch(() => {});
       }
       function setName() {
