@@ -649,7 +649,13 @@
         <div class="content card">
           <div class="emoji">🦊</div>
           <h2>MY NAME IS SAM.</h2>
-          <button class="choice" onclick="say('My name is Sam.')">
+          <button
+            class="choice"
+            onclick="
+              say('My name is Sam.');
+              reward('MY NAME IS SAM!');
+            "
+          >
             🔊 HEAR IT
           </button>
           <p>Now say: <b>My name is...</b></p>
