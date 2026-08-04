@@ -280,16 +280,6 @@
         box-shadow: var(--shadow);
         background: #eee;
       }
-      #videoPlay {
-        width: min(340px, 60vw);
-        min-height: 96px;
-        border-radius: 999px;
-        background: var(--accent);
-        color: white;
-        font-size: clamp(2rem, 3.4vw, 3rem);
-        font-weight: 900;
-        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
-      }
       #introVideoWrap {
         display: flex;
         justify-content: center;
@@ -416,7 +406,6 @@
       <div class="topbar">
         <div class="progress" id="progress">1 / 25</div>
         <div class="controls">
-          <button class="ctrl" id="soundBtn" aria-label="Sound">🔊</button>
           <button class="ctrl" id="homeBtn" aria-label="Home">⌂</button>
         </div>
       </div>
@@ -469,7 +458,6 @@
               src="https://res.cloudinary.com/dp455m4rk/video/upload/v1785822007/hello_y2a9fr.mp4"
             ></video>
           </div>
-          <button id="videoPlay" onclick="playIntroVideo()">▶ PLAY</button>
           <p class="small">Use BACK and NEXT to move through the course.</p>
         </div>
       </section>
@@ -483,7 +471,6 @@
           <button
             class="choice"
             onclick="
-              say('Hello!');
               reward('HELLO!');
             "
           >
@@ -497,9 +484,6 @@
         <div class="content card">
           <div class="emoji">🦊</div>
           <h2>MY NAME IS SAM.</h2>
-          <button class="choice" onclick="say('My name is Sam.')">
-            🔊 HEAR IT
-          </button>
           <p>Now say: <b>My name is...</b></p>
         </div>
       </section>
@@ -512,6 +496,7 @@
             id="nameInput"
             class="nameInput"
             maxlength="18"
+            value="Onza"
             placeholder="Your name"
           />
           <div id="nameDisplay" class="nameDisplay">________</div>
@@ -533,7 +518,6 @@
             <button
               class="choice"
               onclick="
-                say('Hello!');
                 toast('Happy hello!');
               "
             >
@@ -542,7 +526,6 @@
             <button
               class="choice"
               onclick="
-                say('Hello!');
                 toast('Robot hello!');
               "
             >
@@ -551,7 +534,6 @@
             <button
               class="choice"
               onclick="
-                say('Hello!');
                 toast('Sleepy hello!');
               "
             >
@@ -561,25 +543,8 @@
         </div>
       </section>
 
-      <!-- 6 -->
-      <section class="screen" data-i="7">
-        <div class="content card">
-          <div class="emoji">�</div>
-          <div class="command">SIT DOWN!</div>
-          <button
-            class="choice"
-            onclick="
-              say('Sit down!');
-              reward('SIT DOWN!');
-            "
-          >
-            ▶ PLAY
-          </button>
-        </div>
-      </section>
-
       <!-- 7 -->
-      <section class="screen" data-i="8">
+      <section class="screen" data-i="7">
         <div
           class="content"
           style="
@@ -636,6 +601,22 @@
       </section>
 
       <!-- 8 -->
+      <section class="screen" data-i="8">
+        <div class="content card">
+          <div class="emoji">�</div>
+          <div class="command">SIT DOWN!</div>
+          <button
+            class="choice"
+            onclick="
+              reward('SIT DOWN!');
+            "
+          >
+            ▶ PLAY
+          </button>
+        </div>
+      </section>
+
+      <!-- 9 -->
       <section class="screen" data-i="9">
         <div class="content card">
           <div class="emoji">🧍</div>
@@ -643,7 +624,6 @@
           <button
             class="choice"
             onclick="
-              say('Stand up!');
               reward('STAND UP!');
             "
           >
@@ -676,7 +656,6 @@
             <button
               class="choice yes"
               onclick="
-                say('Yes!');
                 reward('YES!');
               "
             >
@@ -685,7 +664,6 @@
             <button
               class="choice no"
               onclick="
-                say('No!');
                 reward('TRY AGAIN');
               "
             >
@@ -726,7 +704,6 @@
           <button
             class="choice"
             onclick="
-              say('Ball!');
               reward('BALL!');
             "
           >
@@ -832,11 +809,10 @@
           <button
             class="choice"
             onclick="
-              say('A. Apple.');
               reward('A! APPLE!');
             "
           >
-            🔊 A — APPLE
+            A — APPLE
           </button>
         </div>
       </section>
@@ -850,11 +826,10 @@
           <button
             class="choice"
             onclick="
-              say('B. Bee.');
               reward('B! BEE!');
             "
           >
-            🔊 B — BEE
+            B — BEE
           </button>
         </div>
       </section>
@@ -868,11 +843,10 @@
           <button
             class="choice"
             onclick="
-              say('C. Cat.');
               reward('C! CAT!');
             "
           >
-            🔊 C — CAT
+            C — CAT
           </button>
         </div>
       </section>
@@ -960,13 +934,7 @@
             <div class="line">I AM SEVEN.</div>
             <div class="line">GOODBYE!</div>
           </div>
-          <button
-            class="choice"
-            onclick="
-              sayConversation();
-              reward('YOU SPOKE ENGLISH!');
-            "
-          >
+          <button class="choice" onclick="reward('YOU SPOKE ENGLISH!')">
             🎉 LET'S DO IT!
           </button>
         </div>
@@ -1039,7 +1007,6 @@
           <button
             class="choice"
             onclick="
-              say('Well done! See you next time! Goodbye!');
               reward('GOODBYE!');
             "
           >
@@ -1057,115 +1024,8 @@
     <script>
       const screens = [...document.querySelectorAll(".screen")];
       let idx = 0,
-        soundOn = true,
         childName = "";
       const progress = document.getElementById("progress");
-      const synth =
-        window.speechSynthesis ||
-        window.webkitSpeechSynthesis ||
-        window.mozSpeechSynthesis ||
-        null;
-      const audioCtx =
-        window.AudioContext ||
-        window.webkitAudioContext ||
-        window.mozAudioContext ||
-        null;
-      let actx = null;
-      let defaultVoice = null;
-      let voiceTimer = null;
-      let speechPrimed = false;
-
-      function ensureAudio() {
-        if (!audioCtx) return null;
-        if (!actx) actx = new audioCtx();
-        if (actx.state === "suspended") actx.resume().catch(() => {});
-        return actx;
-      }
-
-      function tone(freq, delay, dur, vol) {
-        const c = ensureAudio();
-        if (!c) return;
-        try {
-          const o = c.createOscillator();
-          const g = c.createGain();
-          o.type = "sine";
-          o.frequency.value = freq;
-          const t0 = c.currentTime + delay;
-          g.gain.setValueAtTime(0.0001, t0);
-          g.gain.linearRampToValueAtTime(vol, t0 + 0.02);
-          g.gain.exponentialRampToValueAtTime(0.0001, t0 + dur);
-          o.connect(g);
-          g.connect(c.destination);
-          o.start(t0);
-          o.stop(t0 + dur + 0.05);
-        } catch (e) {}
-      }
-
-      function chime() {
-        tone(523.25, 0, 0.18, 0.22);
-        tone(659.25, 0.1, 0.22, 0.22);
-        tone(783.99, 0.2, 0.32, 0.22);
-      }
-
-      function cancelSpeech() {
-        if (synth && typeof synth.cancel === "function") {
-          try {
-            synth.cancel();
-          } catch (e) {}
-        }
-      }
-
-      function setVoice() {
-        if (!synth) return;
-        const voices = synth.getVoices();
-        if (!voices || voices.length === 0) return;
-        defaultVoice =
-          voices.find((v) => v.lang?.startsWith("en")) || voices[0] || null;
-      }
-
-      function primeSpeech() {
-        ensureAudio();
-        if (!synth || speechPrimed) return;
-        speechPrimed = true;
-        setVoice();
-        if (!defaultVoice) return;
-        try {
-          const utterance = new SpeechSynthesisUtterance("ready");
-          utterance.volume = 0.01;
-          utterance.rate = 1;
-          utterance.pitch = 1;
-          synth.speak(utterance);
-        } catch (e) {}
-      }
-
-      function initTTS() {
-        if (!synth) return;
-        setVoice();
-        if (typeof synth.addEventListener === "function") {
-          synth.addEventListener("voiceschanged", setVoice);
-        } else if (typeof synth.onvoiceschanged === "function") {
-          synth.onvoiceschanged = setVoice;
-        }
-        voiceTimer = window.setInterval(() => {
-          if (defaultVoice) {
-            window.clearInterval(voiceTimer);
-            voiceTimer = null;
-            return;
-          }
-          setVoice();
-        }, 500);
-        window.setTimeout(() => {
-          if (voiceTimer) {
-            window.clearInterval(voiceTimer);
-            voiceTimer = null;
-          }
-        }, 4000);
-      }
-      initTTS();
-      document.addEventListener("pointerdown", primeSpeech, { once: true });
-      document.addEventListener("click", primeSpeech, { once: true });
-      document.addEventListener("keydown", primeSpeech, { once: true });
-      document.addEventListener("touchstart", primeSpeech, { once: true });
 
       function show(i) {
         idx = Math.max(0, Math.min(screens.length - 1, i));
@@ -1186,7 +1046,6 @@
         if (idx === 24)
           document.getElementById("starName").textContent =
             (childName || "YOUR") + " — ENGLISH STAR";
-        cancelSpeech();
       }
       function next() {
         if (idx === screens.length - 1) show(0);
@@ -1194,33 +1053,6 @@
       }
       function prev() {
         show(idx - 1);
-      }
-      function say(text) {
-        if (!soundOn) return;
-        if (window.tizen && window.tizen.tts) {
-          try {
-            tizen.tts.speak(String(text), {
-              locale: "en-US",
-              rate: 0.9,
-              pitch: 1.1,
-              type: "TTS_TYPE_SCREEN_READER",
-            });
-            return;
-          } catch (e) {}
-        }
-        if (synth && typeof SpeechSynthesisUtterance !== "undefined") {
-          if (!speechPrimed) primeSpeech();
-          if (synth.speaking) synth.cancel();
-          const u = new SpeechSynthesisUtterance(text);
-          u.lang = "en-US";
-          u.volume = 1.0;
-          u.rate = 0.82;
-          u.pitch = 1.08;
-          if (defaultVoice) u.voice = defaultVoice;
-          synth.speak(u);
-          return;
-        }
-        chime();
       }
       function toast(t) {
         const el = document.getElementById("toast");
@@ -1243,14 +1075,6 @@
         }
         setTimeout(() => (r.innerHTML = ""), 2500);
       }
-      function playIntroVideo() {
-        const video = document.getElementById("introVideo");
-        if (!video) return;
-        video.muted = false;
-        video.currentTime = 0;
-        video.play().catch(() => {});
-      }
-
       function playVideo(id) {
         const video = document.getElementById(id);
         if (!video) return;
@@ -1271,15 +1095,14 @@
         }
         document.getElementById("nameDisplay").textContent =
           childName.toUpperCase();
-        say("My name is " + childName + ".");
         reward("MY NAME IS " + childName.toUpperCase() + "!");
       }
       const commands = [
-        ["STAND UP!", "Stand up!"],
-        ["SIT DOWN!", "Sit down!"],
-        ["LOOK!", "Look!"],
-        ["LISTEN!", "Listen!"],
-        ["COME HERE!", "Come here!"],
+        "STAND UP!",
+        "SIT DOWN!",
+        "LOOK!",
+        "LISTEN!",
+        "COME HERE!",
       ];
       function randomCommand() {
         const x = commands[Math.floor(Math.random() * commands.length)];
@@ -1288,7 +1111,6 @@
         el.classList.remove("pop");
         void el.offsetWidth;
         el.classList.add("pop");
-        say(x[1]);
       }
       const quizzes = [
         { emoji: "🐱", q: "IS IT A DOG?", yes: false },
@@ -1302,7 +1124,6 @@
         document.getElementById("quizFeedback").textContent = correct
           ? "GREAT! ⭐"
           : "TRY AGAIN!";
-        say(correct ? "Yes! Great!" : "No! Try again!");
         if (correct) {
           reward("GREAT!");
           document.getElementById("nextQuiz").classList.remove("hidden");
@@ -1318,8 +1139,7 @@
       }
       function revealMystery() {
         document.getElementById("mystery").innerHTML =
-          '<div class="object pop">⚽</div><div class="word">BALL!</div><button class="choice" onclick="say(\'Ball!\');reward(\'BALL!\')">🔊 BALL</button>';
-        say("Ball!");
+          '<div class="object pop">⚽</div><div class="word">BALL!</div><button class="choice" onclick="reward(\'BALL!\')">BALL</button>';
       }
       let num = 1;
       function nextNumber() {
@@ -1331,11 +1151,9 @@
           "TWO",
           "THREE",
         ][num];
-        say(["", "One", "Two", "Three"][num]);
       }
       function showCount() {
         document.getElementById("countAnswer").classList.remove("hidden");
-        say("Three!");
         reward("THREE!");
       }
       function buildLetters() {
@@ -1351,45 +1169,17 @@
               if (letter === target) {
                 document.getElementById("letterFeedback").textContent =
                   "YES! ⭐";
-                say(letter);
                 reward(letter + "!");
               } else {
                 document.getElementById("letterFeedback").textContent =
                   "TRY AGAIN";
-                say("Try again!");
               }
             };
             box.appendChild(b);
           },
         );
         window.currentLetter = ["A", "B", "C"][Math.floor(Math.random() * 3)];
-        setTimeout(() => say("Find " + window.currentLetter + "."), 500);
       }
-      function sayConversation() {
-        const n = childName || "your name";
-        const lines = [
-          "Hello!",
-          "My name is " + n + ".",
-          "I am seven.",
-          "Goodbye!",
-        ];
-        let i = 0;
-        function go() {
-          if (i >= lines.length) {
-            reward("YOU SPOKE ENGLISH!");
-            return;
-          }
-          say(lines[i++]);
-          setTimeout(go, 1500);
-        }
-        go();
-      }
-      document.getElementById("soundBtn").onclick = () => {
-        soundOn = !soundOn;
-        document.getElementById("soundBtn").textContent = soundOn ? "🔊" : "🔇";
-        if (soundOn) primeSpeech();
-        else cancelSpeech();
-      };
       document.getElementById("homeBtn").onclick = () => show(0);
       document.addEventListener("keydown", (e) => {
         if (e.key === "ArrowRight" || e.key === " ") {
