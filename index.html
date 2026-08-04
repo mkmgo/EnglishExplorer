@@ -1,1404 +1,454 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <meta
-      name="viewport"
-      content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no"
-    />
-    <title>English Explorer — Lesson 1</title>
-    <style>
-      :root {
-        --bg: #f5f7fb;
-        --ink: #14213d;
-        --muted: #60708d;
-        --accent: #2878f0;
-        --good: #19a974;
-        --bad: #e05252;
-        --card: #ffffff;
-        --shadow: 0 18px 50px rgba(20, 33, 61, 0.14);
-      }
-      * {
-        box-sizing: border-box;
-      }
-      html,
-      body {
-        margin: 0;
-        width: 100%;
-        height: 100%;
-        overflow: hidden;
-        background: var(--bg);
-        font-family: Arial, Helvetica, sans-serif;
-        color: var(--ink);
-        touch-action: manipulation;
-      }
-      button {
-        font: inherit;
-        border: 0;
-        cursor: pointer;
-      }
-      #app {
-        width: 100vw;
-        height: 100vh;
-        position: relative;
-        overflow: hidden;
-      }
-      .screen {
-        position: absolute;
-        inset: 0;
-        display: none;
-        align-items: center;
-        justify-content: center;
-        padding: 5vh 5vw;
-      }
-      .screen.active {
-        display: flex;
-      }
-      .content {
-        width: min(1400px, 90vw);
-        height: min(820px, 90vh);
-        position: relative;
-        text-align: center;
-      }
-      h1 {
-        font-size: clamp(4rem, 10vw, 10rem);
-        margin: 0.15em 0;
-        font-weight: 900;
-        letter-spacing: -0.04em;
-      }
-      h2 {
-        font-size: clamp(2rem, 5vw, 5rem);
-        margin: 0.2em 0;
-      }
-      p {
-        font-size: clamp(1.4rem, 2.4vw, 2.7rem);
-      }
-      .small {
-        font-size: clamp(1rem, 1.5vw, 1.6rem);
-        color: var(--muted);
-      }
-      .card {
-        background: var(--card);
-        border-radius: 32px;
-        padding: 3vw;
-        box-shadow: var(--shadow);
-      }
-      .character {
-        height: 58vh;
-        max-width: 70vw;
-        object-fit: contain;
-        border-radius: 24px;
-        filter: drop-shadow(0 20px 25px rgba(0, 0, 0, 0.12));
-      }
-      .hero {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: 5vw;
-        height: 100%;
-      }
-      .heroText {
-        text-align: left;
-        max-width: 48vw;
-      }
-      .word {
-        font-size: clamp(4rem, 11vw, 11rem);
-        font-weight: 900;
-      }
-      .emoji {
-        font-size: clamp(5rem, 12vw, 12rem);
-      }
-      .row {
-        display: flex;
-        gap: 3vw;
-        justify-content: center;
-        align-items: center;
-        flex-wrap: wrap;
-      }
-      .choice {
-        min-width: 240px;
-        min-height: 150px;
-        border-radius: 28px;
-        background: white;
-        box-shadow: var(--shadow);
-        font-size: clamp(2rem, 4vw, 4rem);
-        font-weight: 900;
-        transition: 0.15s transform;
-      }
-      .choice:active {
-        transform: scale(0.94);
-      }
-      .yes {
-        background: #dff7ec;
-        color: #087443;
-      }
-      .no {
-        background: #ffe4e4;
-        color: #a52222;
-      }
-      .letter {
-        font-size: clamp(8rem, 22vw, 22rem);
-        font-weight: 900;
-        line-height: 0.8;
-      }
-      .object {
-        font-size: clamp(7rem, 18vw, 18rem);
-        line-height: 1;
-      }
-      .bigNumber {
-        font-size: clamp(10rem, 26vw, 26rem);
-        font-weight: 900;
-        line-height: 0.75;
-      }
-      .apples {
-        font-size: clamp(7rem, 14vw, 14rem);
-        letter-spacing: 0.1em;
-      }
-      .balloons {
-        font-size: clamp(6rem, 13vw, 13rem);
-      }
-      .command {
-        font-size: clamp(4rem, 9vw, 9rem);
-        font-weight: 900;
-        margin: 0.2em;
-      }
-      .topbar {
-        position: absolute;
-        top: 2vh;
-        left: 3vw;
-        right: 3vw;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        z-index: 20;
-      }
-      .progress {
-        font-size: 1.1rem;
-        color: var(--muted);
-        background: rgba(255, 255, 255, 0.8);
-        padding: 0.5em 1em;
-        border-radius: 999px;
-      }
-      .controls {
-        display: flex;
-        gap: 0.7em;
-      }
-      .ctrl {
-        width: 52px;
-        height: 52px;
-        border-radius: 50%;
-        background: white;
-        box-shadow: 0 5px 18px rgba(0, 0, 0, 0.12);
-        font-size: 1.3rem;
-      }
-      .nav {
-        position: absolute;
-        bottom: 2vh;
-        left: 50%;
-        transform: translateX(-50%);
-        display: flex;
-        gap: 1em;
-        z-index: 30;
-      }
-      .nav button {
-        padding: 0.8em 1.3em;
-        border-radius: 999px;
-        background: white;
-        box-shadow: 0 8px 22px rgba(0, 0, 0, 0.12);
-        font-weight: 700;
-      }
-      .nav .primary {
-        background: var(--accent);
-        color: white;
-      }
-      .hidden {
-        display: none !important;
-      }
-      .pulse {
-        animation: pulse 1s ease-in-out infinite;
-      }
-      .wave {
-        animation: wave 1s ease-in-out infinite alternate;
-      }
-      .pop {
-        animation: pop 0.45s ease-out;
-      }
-      .bounce {
-        animation: bounce 0.8s ease-in-out infinite;
-      }
-      .star {
-        font-size: clamp(4rem, 10vw, 10rem);
-        animation: spinpop 0.9s ease-out;
-      }
-      .feedback {
-        font-size: clamp(2rem, 4vw, 4rem);
-        font-weight: 900;
-        margin-top: 0.4em;
-        min-height: 1.2em;
-      }
-      #toast {
-        position: absolute;
-        left: 50%;
-        top: 12%;
-        transform: translateX(-50%);
-        z-index: 100;
-        background: #14213d;
-        color: white;
-        padding: 1em 1.5em;
-        border-radius: 999px;
-        font-size: clamp(1.2rem, 2vw, 2rem);
-        opacity: 0;
-        pointer-events: none;
-        transition: 0.25s;
-      }
-      #toast.show {
-        opacity: 1;
-      }
-      .nameInput {
-        font-size: clamp(2rem, 4vw, 4rem);
-        padding: 0.35em 0.5em;
-        border: 4px solid #d8e0ee;
-        border-radius: 20px;
-        text-align: center;
-        width: min(700px, 80vw);
-      }
-      .nameDisplay {
-        font-size: clamp(3rem, 7vw, 7rem);
-        font-weight: 900;
-        margin: 0.3em;
-      }
-      #videoWrap {
-        position: relative;
-        width: min(900px, 70vw);
-        margin: auto;
-      }
-      #charVideo {
-        width: 100%;
-        max-height: 62vh;
-        object-fit: contain;
-        border-radius: 28px;
-        box-shadow: var(--shadow);
-        background: #eee;
-      }
-      #videoPlay {
-        position: absolute;
-        left: 50%;
-        top: 50%;
-        transform: translate(-50%, -50%);
-        width: 100px;
-        height: 100px;
-        border-radius: 50%;
-        background: rgba(255, 255, 255, 0.9);
-        font-size: 2rem;
-      }
-      #introVideoWrap {
-        display: flex;
-        justify-content: center;
-        width: min(760px, 90vw);
-      }
-      #introVideo {
-        width: 100%;
-        max-height: 60vh;
-        object-fit: contain;
-        border-radius: 32px;
-        box-shadow: var(--shadow);
-      }
-      .lessonVideo {
-        width: 100%;
-        max-height: 60vh;
-        object-fit: contain;
-        border-radius: 32px;
-        box-shadow: var(--shadow);
-      }
-      .videoActions {
-        display: flex;
-        gap: 1rem;
-        justify-content: center;
-        flex-wrap: wrap;
-      }
-      .conversation {
-        display: flex;
-        flex-direction: column;
-        gap: 1.2em;
-        align-items: center;
-      }
-      .line {
-        padding: 0.5em 1em;
-        border-radius: 20px;
-        background: white;
-        box-shadow: var(--shadow);
-        font-size: clamp(1.5rem, 3vw, 3rem);
-        font-weight: 800;
-      }
-      #reward {
-        position: absolute;
-        inset: 0;
-        pointer-events: none;
-        overflow: hidden;
-        z-index: 50;
-      }
-      .confetti {
-        position: absolute;
-        font-size: 2rem;
-        animation: fall 2.2s linear forwards;
-      }
-      @keyframes pulse {
-        50% {
-          transform: scale(1.04);
-        }
-      }
-      @keyframes wave {
-        to {
-          transform: rotate(3deg) scale(1.02);
-        }
-      }
-      @keyframes pop {
-        0% {
-          transform: scale(0.7);
-          opacity: 0;
-        }
-        100% {
-          transform: scale(1);
-          opacity: 1;
-        }
-      }
-      @keyframes bounce {
-        50% {
-          transform: translateY(-25px);
-        }
-      }
-      @keyframes spinpop {
-        0% {
-          transform: scale(0.2) rotate(-25deg);
-          opacity: 0;
-        }
-        70% {
-          transform: scale(1.15) rotate(10deg);
-        }
-        100% {
-          transform: scale(1);
-        }
-      }
-      @keyframes fall {
-        0% {
-          transform: translateY(-10vh) rotate(0);
-          opacity: 1;
-        }
-        100% {
-          transform: translateY(110vh) rotate(720deg);
-          opacity: 0;
-        }
-      }
-      @media (max-aspect-ratio: 1/1) {
-        .hero {
-          flex-direction: column;
-        }
-        .heroText {
-          text-align: center;
-          max-width: 80vw;
-        }
-        .character {
-          height: 45vh;
-        }
-      }
-    </style>
-  </head>
-  <body>
-    <div id="app">
-      <div id="toast"></div>
-      <div id="reward"></div>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>English Adventure — Lesson 1</title>
+<style>
+:root{
+  --bg:#f5f7fb; --ink:#14213d; --muted:#60708d; --accent:#2878f0;
+  --good:#19a974; --bad:#e05252; --card:#ffffff; --shadow:0 18px 50px rgba(20,33,61,.14);
+}
+*{box-sizing:border-box}
+html,body{margin:0;width:100%;height:100%;overflow:hidden;background:var(--bg);
+font-family:Arial,Helvetica,sans-serif;color:var(--ink);touch-action:manipulation}
+button{font:inherit;border:0;cursor:pointer}
+#app{width:100vw;height:100vh;position:relative;overflow:hidden}
+.screen{position:absolute;inset:0;display:none;align-items:center;justify-content:center;padding:5vh 5vw}
+.screen.active{display:flex}
+.content{width:min(1400px,90vw);height:min(820px,90vh);position:relative;text-align:center}
+h1{font-size:clamp(4rem,10vw,10rem);margin:.15em 0;font-weight:900;letter-spacing:-.04em}
+h2{font-size:clamp(2rem,5vw,5rem);margin:.2em 0}
+p{font-size:clamp(1.4rem,2.4vw,2.7rem)}
+.small{font-size:clamp(1rem,1.5vw,1.6rem);color:var(--muted)}
+.card{background:var(--card);border-radius:32px;padding:3vw;box-shadow:var(--shadow)}
+.character{height:58vh;max-width:70vw;object-fit:contain;border-radius:24px;filter:drop-shadow(0 20px 25px rgba(0,0,0,.12))}
+.hero{display:flex;align-items:center;justify-content:center;gap:5vw;height:100%}
+.heroText{text-align:left;max-width:48vw}
+.word{font-size:clamp(4rem,11vw,11rem);font-weight:900}
+.emoji{font-size:clamp(5rem,12vw,12rem)}
+.row{display:flex;gap:3vw;justify-content:center;align-items:center;flex-wrap:wrap}
+.choice{min-width:240px;min-height:150px;border-radius:28px;background:white;box-shadow:var(--shadow);
+font-size:clamp(2rem,4vw,4rem);font-weight:900;transition:.15s transform}
+.choice:active{transform:scale(.94)}
+.yes{background:#dff7ec;color:#087443}.no{background:#ffe4e4;color:#a52222}
+.letter{font-size:clamp(8rem,22vw,22rem);font-weight:900;line-height:.8}
+.object{font-size:clamp(7rem,18vw,18rem);line-height:1}
+.bigNumber{font-size:clamp(10rem,26vw,26rem);font-weight:900;line-height:.75}
+.apples{font-size:clamp(7rem,14vw,14rem);letter-spacing:.1em}
+.balloons{font-size:clamp(6rem,13vw,13rem)}
+.command{font-size:clamp(4rem,9vw,9rem);font-weight:900;margin:.2em}
+.topbar{position:absolute;top:2vh;left:3vw;right:3vw;display:flex;justify-content:space-between;align-items:center;z-index:20}
+.progress{font-size:1.1rem;color:var(--muted);background:rgba(255,255,255,.8);padding:.5em 1em;border-radius:999px}
+.controls{display:flex;gap:.7em}
+.ctrl{width:52px;height:52px;border-radius:50%;background:white;box-shadow:0 5px 18px rgba(0,0,0,.12);font-size:1.3rem}
+.nav{position:absolute;bottom:2vh;left:50%;transform:translateX(-50%);display:flex;gap:1em;z-index:30}
+.nav button{padding:.8em 1.3em;border-radius:999px;background:white;box-shadow:0 8px 22px rgba(0,0,0,.12);font-weight:700}
+.nav .primary{background:var(--accent);color:white}
+.hidden{display:none!important}
+.pulse{animation:pulse 1s ease-in-out infinite}
+.wave{animation:wave 1s ease-in-out infinite alternate}
+.pop{animation:pop .45s ease-out}
+.bounce{animation:bounce .8s ease-in-out infinite}
+.star{font-size:clamp(4rem,10vw,10rem);animation:spinpop .9s ease-out}
+.feedback{font-size:clamp(2rem,4vw,4rem);font-weight:900;margin-top:.4em;min-height:1.2em}
+#toast{position:absolute;left:50%;top:12%;transform:translateX(-50%);z-index:100;
+background:#14213d;color:white;padding:1em 1.5em;border-radius:999px;font-size:clamp(1.2rem,2vw,2rem);
+opacity:0;pointer-events:none;transition:.25s}
+#toast.show{opacity:1}
+.nameInput{font-size:clamp(2rem,4vw,4rem);padding:.35em .5em;border:4px solid #d8e0ee;border-radius:20px;text-align:center;width:min(700px,80vw)}
+.nameDisplay{font-size:clamp(3rem,7vw,7rem);font-weight:900;margin:.3em}
+#videoWrap{position:relative;width:min(900px,70vw);margin:auto}
+#charVideo{width:100%;max-height:62vh;object-fit:contain;border-radius:28px;box-shadow:var(--shadow);background:#eee}
+#videoPlay{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:100px;height:100px;border-radius:50%;background:rgba(255,255,255,.9);font-size:2rem}
+.conversation{display:flex;flex-direction:column;gap:1.2em;align-items:center}
+.line{padding:.5em 1em;border-radius:20px;background:white;box-shadow:var(--shadow);font-size:clamp(1.5rem,3vw,3rem);font-weight:800}
+#reward{position:absolute;inset:0;pointer-events:none;overflow:hidden;z-index:50}
+.confetti{position:absolute;font-size:2rem;animation:fall 2.2s linear forwards}
+@keyframes pulse{50%{transform:scale(1.04)}}
+@keyframes wave{to{transform:rotate(3deg) scale(1.02)}}
+@keyframes pop{0%{transform:scale(.7);opacity:0}100%{transform:scale(1);opacity:1}}
+@keyframes bounce{50%{transform:translateY(-25px)}}
+@keyframes spinpop{0%{transform:scale(.2) rotate(-25deg);opacity:0}70%{transform:scale(1.15) rotate(10deg)}100%{transform:scale(1)}}
+@keyframes fall{0%{transform:translateY(-10vh) rotate(0);opacity:1}100%{transform:translateY(110vh) rotate(720deg);opacity:0}}
+@media(max-aspect-ratio:1/1){.hero{flex-direction:column}.heroText{text-align:center;max-width:80vw}.character{height:45vh}}
+</style>
+</head>
+<body>
+<div id="app">
+  <div id="toast"></div>
+  <div id="reward"></div>
 
-      <div class="topbar">
-        <div class="progress" id="progress">1 / 25</div>
-        <div class="controls">
-          <button class="ctrl" id="soundBtn" aria-label="Sound">🔊</button>
-          <button class="ctrl" id="homeBtn" aria-label="Home">⌂</button>
-        </div>
+  <div class="topbar">
+    <div class="progress" id="progress">1 / 20</div>
+    <div class="controls">
+      <button class="ctrl" id="soundBtn" aria-label="Sound">🔊</button>
+      <button class="ctrl" id="homeBtn" aria-label="Home">⌂</button>
+    </div>
+  </div>
+
+  <!-- 1 -->
+  <section class="screen active" data-i="1">
+    <div class="content hero">
+      <div class="heroText">
+        <div class="small">ENGLISH ADVENTURE</div>
+        <h1>HELLO! 👋</h1>
+        <p>Wave to your new friend!</p>
+        <button class="choice pulse" onclick="say('Hello!'); waveVideo()">👋 HELLO!</button>
       </div>
-
-      <!-- 1 -->
-      <section class="screen active" data-i="1">
-        <div
-          class="content card"
-          style="
-            text-align: center;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            gap: 1.4em;
-          "
-        >
-          <div class="small">ENGLISH EXPLORER</div>
-          <h1>English Explorer</h1>
-          <h2>Lesson 1 - 4th of August 2026</h2>
-          <button
-            class="choice pulse"
-            style="background: var(--accent); color: white"
-            onclick="startIntroVideo()"
-          >
-            ▶ START
-          </button>
-          <p class="small" style="max-width: 80vw">
-            Tap START to go to the video slide, then use BACK and NEXT to
-            continue through the lesson.
-          </p>
-        </div>
-      </section>
-
-      <!-- 2 -->
-      <section class="screen" data-i="2">
-        <div
-          class="content"
-          style="
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            gap: 1.4em;
-          "
-        >
-          <div class="small">ENGLISH EXPLORER</div>
-          <h1 style="font-size: clamp(3rem, 5vw, 4rem)">Watch the clip</h1>
-          <div id="introVideoWrap" style="margin-top: 0.5em">
-            <video
-              id="introVideo"
-              playsinline
-              webkit-playsinline
-              x5-playsinline
-              preload="auto"
-              controls
-              muted
-              autoplay
-              src="https://res.cloudinary.com/dp455m4rk/video/upload/v1785822007/hello_y2a9fr.mp4"
-            ></video>
-          </div>
-          <div
-            class="row"
-            style="
-              justify-content: center;
-              gap: 1rem;
-              width: 100%;
-              max-width: 800px;
-            "
-          >
-            <button
-              class="choice yes"
-              style="min-width: 180px"
-              onclick="playIntroVideo()"
-            >
-              ▶ PLAY
-            </button>
-            <button
-              class="choice no"
-              style="min-width: 180px"
-              onclick="repeatIntroVideo()"
-            >
-              🔁 REPEAT
-            </button>
-          </div>
-          <p class="small">Use BACK and NEXT to move through the course.</p>
-        </div>
-      </section>
-
-      <!-- 3 -->
-      <section class="screen" data-i="3">
-        <div class="content card">
-          <div class="emoji">👋</div>
-          <h1>HELLO!</h1>
-          <p>Say it together.</p>
-          <button
-            class="choice"
-            onclick="
-              say('Hello!');
-              reward('HELLO!');
-            "
-          >
-            👋 HELLO!
-          </button>
-        </div>
-      </section>
-
-      <!-- 4 -->
-      <section class="screen" data-i="4">
-        <div class="content card">
-          <div class="emoji">🦊</div>
-          <h2>MY NAME IS SAM.</h2>
-          <button class="choice" onclick="say('My name is Sam.')">
-            🔊 HEAR IT
-          </button>
-          <p>Now say: <b>My name is...</b></p>
-        </div>
-      </section>
-
-      <!-- 5 -->
-      <section class="screen" data-i="5">
-        <div class="content card">
-          <h2>MY NAME IS</h2>
-          <input
-            id="nameInput"
-            class="nameInput"
-            maxlength="18"
-            placeholder="Your name"
-          />
-          <div id="nameDisplay" class="nameDisplay">________</div>
-          <button class="choice" onclick="setName()">✨ MAGIC NAME!</button>
-          <p class="small">
-            Teacher: enter the child's name, then let him say the whole
-            sentence.
-          </p>
-        </div>
-      </section>
-
-      <!-- 6 -->
-      <section class="screen" data-i="6">
-        <div class="content">
-          <div class="emoji wave">👋</div>
-          <h1>HELLO!</h1>
-          <p>Say hello in a funny voice.</p>
-          <div class="row">
-            <button
-              class="choice"
-              onclick="
-                say('Hello!');
-                toast('Happy hello!');
-              "
-            >
-              😄 HAPPY
-            </button>
-            <button
-              class="choice"
-              onclick="
-                say('Hello!');
-                toast('Robot hello!');
-              "
-            >
-              🤖 ROBOT
-            </button>
-            <button
-              class="choice"
-              onclick="
-                say('Hello!');
-                toast('Sleepy hello!');
-              "
-            >
-              😴 SLEEPY
-            </button>
-          </div>
-        </div>
-      </section>
-
-      <!-- 6 -->
-      <section class="screen" data-i="7">
-        <div class="content card">
-          <div class="emoji">�</div>
-          <div class="command">SIT DOWN!</div>
-          <button
-            class="choice"
-            onclick="
-              say('Sit down!');
-              reward('SIT DOWN!');
-            "
-          >
-            ▶ PLAY
-          </button>
-        </div>
-      </section>
-
-      <!-- 7 -->
-      <section class="screen" data-i="8">
-        <div
-          class="content"
-          style="
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            gap: 1.4em;
-          "
-        >
-          <div class="small">ENGLISH EXPLORER</div>
-          <h1>Watch the clip</h1>
-          <div
-            id="commandsVideoWrap"
-            style="margin-top: 0.5em; width: 100%; max-width: 760px"
-          >
-            <video
-              id="commandsVideo"
-              class="lessonVideo"
-              playsinline
-              webkit-playsinline
-              x5-playsinline
-              preload="auto"
-              controls
-              src="https://res.cloudinary.com/dp455m4rk/video/upload/v1785822006/commands_v7zbgo.mp4"
-            ></video>
-          </div>
-          <div
-            class="row"
-            style="
-              justify-content: center;
-              gap: 1rem;
-              width: 100%;
-              max-width: 800px;
-            "
-          >
-            <button
-              class="choice yes"
-              style="min-width: 180px"
-              onclick="playVideo('commandsVideo')"
-            >
-              ▶ PLAY
-            </button>
-            <button
-              class="choice no"
-              style="min-width: 180px"
-              onclick="repeatVideo('commandsVideo')"
-            >
-              🔁 REPEAT
-            </button>
-          </div>
-          <p class="small">Use BACK and NEXT to move through the course.</p>
-        </div>
-      </section>
-
-      <!-- 8 -->
-      <section class="screen" data-i="9">
-        <div class="content card">
-          <div class="emoji">🧍</div>
-          <div class="command">STAND UP!</div>
-          <button
-            class="choice"
-            onclick="
-              say('Stand up!');
-              reward('STAND UP!');
-            "
-          >
-            ▶ PLAY
-          </button>
-        </div>
-      </section>
-
-      <!-- 9 -->
-      <section class="screen" data-i="10">
-        <div class="content">
-          <h1>TEACHER SAYS...</h1>
-          <div id="commandCard" class="card command">READY?</div>
-          <button class="choice" onclick="randomCommand()">
-            🎲 NEW COMMAND
-          </button>
-          <p class="small">
-            Teacher: give the command. Child performs the action.
-          </p>
-        </div>
-      </section>
-
-      <!-- 9 -->
-      <section class="screen" data-i="11">
-        <div class="content">
-          <h1>YES or NO?</h1>
-          <div class="emoji">🐶</div>
-          <h2>IS IT A DOG?</h2>
-          <div class="row">
-            <button
-              class="choice yes"
-              onclick="
-                say('Yes!');
-                reward('YES!');
-              "
-            >
-              YES ✅
-            </button>
-            <button
-              class="choice no"
-              onclick="
-                say('No!');
-                reward('TRY AGAIN');
-              "
-            >
-              NO ❌
-            </button>
-          </div>
-        </div>
-      </section>
-
-      <!-- 10 -->
-      <section class="screen" data-i="12">
-        <div class="content">
-          <h1>YES or NO?</h1>
-          <div id="quizEmoji" class="emoji">🐱</div>
-          <h2 id="quizQuestion">IS IT A DOG?</h2>
-          <div class="row">
-            <button class="choice yes" onclick="quizAnswer(true)">
-              YES ✅
-            </button>
-            <button class="choice no" onclick="quizAnswer(false)">NO ❌</button>
-          </div>
-          <div id="quizFeedback" class="feedback"></div>
-          <button
-            class="choice hidden"
-            id="nextQuiz"
-            onclick="nextQuizQuestion()"
-          >
-            NEXT ➜
-          </button>
-        </div>
-      </section>
-
-      <!-- 11 -->
-      <section class="screen" data-i="13">
-        <div class="content card">
-          <div class="object bounce">⚽</div>
-          <div class="word">BALL</div>
-          <button
-            class="choice"
-            onclick="
-              say('Ball!');
-              reward('BALL!');
-            "
-          >
-            ⚽ BALL
-          </button>
-          <p>Find the real ball. Touch it. Roll it.</p>
-        </div>
-      </section>
-
-      <!-- 12 -->
-      <section class="screen" data-i="14">
-        <div class="content">
-          <h1>WHAT IS IT?</h1>
-          <div id="mystery" class="card">
-            <div class="emoji">🎁</div>
-            <button class="choice" onclick="revealMystery()">✨ OPEN!</button>
-          </div>
-        </div>
-      </section>
-
-      <!-- 13 -->
-      <section class="screen" data-i="15">
-        <div
-          class="content"
-          style="
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            gap: 1.4em;
-          "
-        >
-          <div class="small">ENGLISH EXPLORER</div>
-          <h1>Watch the clip</h1>
-          <div
-            id="countVideoWrap"
-            style="margin-top: 0.5em; width: 100%; max-width: 760px"
-          >
-            <video
-              id="countVideo"
-              class="lessonVideo"
-              playsinline
-              webkit-playsinline
-              x5-playsinline
-              preload="auto"
-              controls
-              src="https://res.cloudinary.com/dp455m4rk/video/upload/v1785822006/1-2-3-a-b-c_lkdrp6.mp4"
-            ></video>
-          </div>
-          <div
-            class="row"
-            style="
-              justify-content: center;
-              gap: 1rem;
-              width: 100%;
-              max-width: 800px;
-            "
-          >
-            <button
-              class="choice yes"
-              style="min-width: 180px"
-              onclick="playVideo('countVideo')"
-            >
-              ▶ PLAY
-            </button>
-            <button
-              class="choice no"
-              style="min-width: 180px"
-              onclick="repeatVideo('countVideo')"
-            >
-              🔁 REPEAT
-            </button>
-          </div>
-          <p class="small">Use BACK and NEXT to move through the course.</p>
-        </div>
-      </section>
-
-      <!-- 14 -->
-      <section class="screen" data-i="16">
-        <div class="content">
-          <div id="apples" class="apples">🍎</div>
-          <div id="numberWord" class="word">ONE</div>
-          <button class="choice" onclick="nextNumber()">🔢 NEXT</button>
-        </div>
-      </section>
-
-      <!-- 15 -->
-      <section class="screen" data-i="17">
-        <div class="content">
-          <h1>HOW MANY?</h1>
-          <div id="balloons" class="balloons">🎈🎈🎈</div>
-          <div id="countAnswer" class="word hidden">THREE!</div>
-          <button class="choice" onclick="showCount()">👆 SHOW ME!</button>
-        </div>
-      </section>
-
-      <!-- 18 -->
-      <section class="screen" data-i="18">
-        <div class="content card">
-          <div class="letter">A</div>
-          <div class="object">🍎</div>
-          <div class="word">APPLE</div>
-          <button
-            class="choice"
-            onclick="
-              say('A. Apple.');
-              reward('A! APPLE!');
-            "
-          >
-            🔊 A — APPLE
-          </button>
-        </div>
-      </section>
-
-      <!-- 19 -->
-      <section class="screen" data-i="19">
-        <div class="content card">
-          <div class="letter">B</div>
-          <div class="object">🐝</div>
-          <div class="word">BEE</div>
-          <button
-            class="choice"
-            onclick="
-              say('B. Bee.');
-              reward('B! BEE!');
-            "
-          >
-            🔊 B — BEE
-          </button>
-        </div>
-      </section>
-
-      <!-- 20 -->
-      <section class="screen" data-i="20">
-        <div class="content card">
-          <div class="letter">C</div>
-          <div class="object">🐱</div>
-          <div class="word">CAT</div>
-          <button
-            class="choice"
-            onclick="
-              say('C. Cat.');
-              reward('C! CAT!');
-            "
-          >
-            🔊 C — CAT
-          </button>
-        </div>
-      </section>
-
-      <!-- 21 -->
-      <section class="screen" data-i="21">
-        <div class="content">
-          <h1>FIND THE LETTER!</h1>
-          <div id="letters" class="row"></div>
-          <div id="letterFeedback" class="feedback"></div>
-          <p class="small">
-            Teacher: say A, B or C. Child points. Then click the correct letter.
-          </p>
-        </div>
-      </section>
-
-      <!-- 22 -->
-      <section class="screen" data-i="22">
-        <div
-          class="content"
-          style="
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            gap: 1.4em;
-          "
-        >
-          <div class="small">ENGLISH EXPLORER</div>
-          <h1>Watch the clip</h1>
-          <div
-            id="thankYouVideoWrap"
-            style="margin-top: 0.5em; width: 100%; max-width: 760px"
-          >
-            <video
-              id="thankYouVideo"
-              class="lessonVideo"
-              playsinline
-              webkit-playsinline
-              x5-playsinline
-              preload="auto"
-              controls
-              src="https://res.cloudinary.com/dp455m4rk/video/upload/v1785822007/Thankyou_gtg6ya.mp4"
-            ></video>
-          </div>
-          <div
-            class="row"
-            style="
-              justify-content: center;
-              gap: 1rem;
-              width: 100%;
-              max-width: 800px;
-            "
-          >
-            <button
-              class="choice yes"
-              style="min-width: 180px"
-              onclick="playVideo('thankYouVideo')"
-            >
-              ▶ PLAY
-            </button>
-            <button
-              class="choice no"
-              style="min-width: 180px"
-              onclick="repeatVideo('thankYouVideo')"
-            >
-              🔁 REPEAT
-            </button>
-          </div>
-          <p class="small">Use BACK and NEXT to move through the course.</p>
-        </div>
-      </section>
-
-      <!-- 24 -->
-      <section class="screen" data-i="24">
-        <div class="content card">
-          <h1>MY FIRST ENGLISH CONVERSATION</h1>
-          <div class="conversation">
-            <div class="line">👋 HELLO!</div>
-            <div class="line">WHAT'S YOUR NAME?</div>
-            <div class="line">
-              MY NAME IS <span id="convName">________</span>.
-            </div>
-            <div class="line">HOW OLD ARE YOU?</div>
-            <div class="line">I AM SEVEN.</div>
-            <div class="line">GOODBYE!</div>
-          </div>
-          <button
-            class="choice"
-            onclick="
-              sayConversation();
-              reward('YOU SPOKE ENGLISH!');
-            "
-          >
-            🎉 LET'S DO IT!
-          </button>
-        </div>
-      </section>
-
-      <!-- 25 -->
-      <section class="screen" data-i="25">
-        <div
-          class="content"
-          style="
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            gap: 1.4em;
-          "
-        >
-          <div class="small">ENGLISH EXPLORER</div>
-          <h1>Watch the clip</h1>
-          <div
-            id="goodbyeVideoWrap"
-            style="margin-top: 0.5em; width: 100%; max-width: 760px"
-          >
-            <video
-              id="goodbyeVideo"
-              class="lessonVideo"
-              playsinline
-              webkit-playsinline
-              x5-playsinline
-              preload="auto"
-              controls
-              src="https://res.cloudinary.com/dp455m4rk/video/upload/v1785822008/goodbye_vw5lb0.mp4"
-            ></video>
-          </div>
-          <div
-            class="row"
-            style="
-              justify-content: center;
-              gap: 1rem;
-              width: 100%;
-              max-width: 800px;
-            "
-          >
-            <button
-              class="choice yes"
-              style="min-width: 180px"
-              onclick="playVideo('goodbyeVideo')"
-            >
-              ▶ PLAY
-            </button>
-            <button
-              class="choice no"
-              style="min-width: 180px"
-              onclick="repeatVideo('goodbyeVideo')"
-            >
-              🔁 REPEAT
-            </button>
-          </div>
-          <p class="small">Use BACK and NEXT to move through the course.</p>
-        </div>
-      </section>
-
-      <!-- 26 -->
-      <section class="screen" data-i="26">
-        <div class="content card">
-          <div class="star">⭐</div>
-          <h1 id="starName">ENGLISH STAR</h1>
-          <h2>YOU SPOKE ENGLISH!</h2>
-          <p>Well done! See you next time! 👋</p>
-          <button
-            class="choice"
-            onclick="
-              say('Well done! See you next time! Goodbye!');
-              reward('GOODBYE!');
-            "
-          >
-            👋 GOODBYE!
-          </button>
-        </div>
-      </section>
-
-      <div class="nav">
-        <button id="prevBtn" onclick="prev()">‹ BACK</button>
-        <button class="primary" id="nextBtn" onclick="next()">NEXT ›</button>
+      <div id="videoWrap">
+        <video id="charVideo" muted playsinline preload="auto" src="character.mp4"></video>
+        <button id="videoPlay" onclick="playCharacter()">▶</button>
       </div>
     </div>
+  </section>
 
-    <script>
-      const screens = [...document.querySelectorAll(".screen")];
-      let idx = 0,
-        soundOn = true,
-        childName = "";
-      const progress = document.getElementById("progress");
-      const video = document.getElementById("charVideo");
-      const synth =
-        window.speechSynthesis ||
-        window.webkitSpeechSynthesis ||
-        window.mozSpeechSynthesis ||
-        null;
-      let defaultVoice = null;
-      let voiceTimer = null;
-      let speechPrimed = false;
+  <!-- 2 -->
+  <section class="screen" data-i="2">
+    <div class="content card">
+      <div class="emoji">👋</div><h1>HELLO!</h1>
+      <p>Say it together.</p>
+      <button class="choice" onclick="say('Hello!'); reward('HELLO!')">👋 HELLO!</button>
+    </div>
+  </section>
 
-      function setVoice() {
-        if (!synth) return;
-        const voices = synth.getVoices();
-        if (!voices || voices.length === 0) return;
-        defaultVoice =
-          voices.find((v) => v.lang?.startsWith("en")) || voices[0] || null;
-      }
+  <!-- 3 -->
+  <section class="screen" data-i="3">
+    <div class="content card">
+      <div class="emoji">🦊</div>
+      <h2>MY NAME IS SAM.</h2>
+      <button class="choice" onclick="say('My name is Sam.')">🔊 HEAR IT</button>
+      <p>Now say: <b>My name is...</b></p>
+    </div>
+  </section>
 
-      function primeSpeech() {
-        if (!synth || speechPrimed) return;
-        setVoice();
-        if (!defaultVoice) return;
-        const utterance = new SpeechSynthesisUtterance("ready");
-        utterance.volume = 0.01;
-        utterance.rate = 1;
-        utterance.pitch = 1;
-        utterance.onend = () => {
-          speechPrimed = true;
-        };
-        synth.speak(utterance);
-      }
+  <!-- 4 -->
+  <section class="screen" data-i="4">
+    <div class="content card">
+      <h2>MY NAME IS</h2>
+      <input id="nameInput" class="nameInput" maxlength="18" placeholder="Your name">
+      <div id="nameDisplay" class="nameDisplay">________</div>
+      <button class="choice" onclick="setName()">✨ MAGIC NAME!</button>
+      <p class="small">Teacher: enter the child's name, then let him say the whole sentence.</p>
+    </div>
+  </section>
 
-      function initTTS() {
-        if (!synth) return;
-        setVoice();
-        if (typeof synth.addEventListener === "function") {
-          synth.addEventListener("voiceschanged", setVoice);
-        } else if (typeof synth.onvoiceschanged === "function") {
-          synth.onvoiceschanged = setVoice;
-        }
-        voiceTimer = window.setInterval(() => {
-          if (defaultVoice) {
-            window.clearInterval(voiceTimer);
-            voiceTimer = null;
-            return;
-          }
-          setVoice();
-        }, 500);
-        window.setTimeout(() => {
-          if (voiceTimer) {
-            window.clearInterval(voiceTimer);
-            voiceTimer = null;
-          }
-        }, 4000);
-      }
-      initTTS();
-      document.addEventListener("pointerdown", primeSpeech, { once: true });
-      document.addEventListener("click", primeSpeech, { once: true });
-      document.addEventListener("keydown", primeSpeech, { once: true });
-      document.addEventListener("touchstart", primeSpeech, { once: true });
+  <!-- 5 -->
+  <section class="screen" data-i="5">
+    <div class="content">
+      <div class="emoji wave">👋</div>
+      <h1>HELLO!</h1>
+      <p>Say hello in a funny voice.</p>
+      <div class="row">
+        <button class="choice" onclick="say('Hello!'); toast('Happy hello!')">😄 HAPPY</button>
+        <button class="choice" onclick="say('Hello!'); toast('Robot hello!')">🤖 ROBOT</button>
+        <button class="choice" onclick="say('Hello!'); toast('Sleepy hello!')">😴 SLEEPY</button>
+      </div>
+    </div>
+  </section>
 
-      function show(i) {
-        idx = Math.max(0, Math.min(screens.length - 1, i));
-        screens.forEach((s, n) => s.classList.toggle("active", n === idx));
-        progress.textContent = idx + 1 + " / " + screens.length;
-        document.getElementById("prevBtn").style.visibility =
-          idx === 0 ? "hidden" : "visible";
-        document.getElementById("nextBtn").textContent =
-          idx === screens.length - 1 ? "RESTART ↻" : "NEXT ›";
-        if (idx === 20) buildLetters();
-        if (idx === 22)
-          document.getElementById("convName").textContent =
-            childName || "________";
-        if (idx === 24)
-          document.getElementById("starName").textContent =
-            (childName || "YOUR") + " — ENGLISH STAR";
-        synth?.cancel();
-        if (idx === 1) {
-          autoPlayIntroVideo();
-        }
-      }
-      function next() {
-        if (idx === screens.length - 1) show(0);
-        else show(idx + 1);
-      }
-      function prev() {
-        show(idx - 1);
-      }
-      function say(text) {
-        if (!soundOn || !synth) return;
-        if (!speechPrimed) {
-          primeSpeech();
-        }
-        if (synth.speaking) synth.cancel();
-        const u = new SpeechSynthesisUtterance(text);
-        u.lang = "en-US";
-        u.volume = 1.0;
-        u.rate = 0.82;
-        u.pitch = 1.08;
-        if (defaultVoice) u.voice = defaultVoice;
-        synth.speak(u);
-      }
-      function toast(t) {
-        const el = document.getElementById("toast");
-        el.textContent = t;
-        el.classList.add("show");
-        setTimeout(() => el.classList.remove("show"), 1100);
-      }
-      function reward(t) {
-        toast(t);
-        const r = document.getElementById("reward");
-        r.innerHTML = "";
-        for (let i = 0; i < 24; i++) {
-          const s = document.createElement("span");
-          s.className = "confetti";
-          s.textContent = ["⭐", "✨", "🎉", "👏"][i % 4];
-          s.style.left = Math.random() * 100 + "%";
-          s.style.top = -5 - Math.random() * 20 + "%";
-          s.style.animationDelay = Math.random() * 0.4 + "s";
-          r.appendChild(s);
-        }
-        setTimeout(() => (r.innerHTML = ""), 2500);
-      }
-      function waveVideo() {
-        if (!video) return;
-        video.currentTime = 0;
-        video.muted = true;
-        video.play().catch(() => {});
-      }
-      function playCharacter() {
-        waveVideo();
-        document.getElementById("videoPlay").classList.add("hidden");
-      }
-      function autoPlayIntroVideo() {
-        const video = document.getElementById("introVideo");
-        if (!video) return;
-        video.muted = true;
-        video.currentTime = 0;
-        video.play().catch(() => {});
-      }
+  <!-- 6 -->
+  <section class="screen" data-i="6">
+    <div class="content card">
+      <div class="emoji">🧍</div>
+      <div class="command">STAND UP!</div>
+      <button class="choice" onclick="say('Stand up!'); reward('STAND UP!')">▶ PLAY</button>
+    </div>
+  </section>
 
-      function playIntroVideo() {
-        const video = document.getElementById("introVideo");
-        if (!video) return;
-        video.muted = false;
-        video.currentTime = 0;
-        video.play().catch(() => {});
-      }
+  <!-- 7 -->
+  <section class="screen" data-i="7">
+    <div class="content card">
+      <div class="emoji">🪑</div>
+      <div class="command">SIT DOWN!</div>
+      <button class="choice" onclick="say('Sit down!'); reward('SIT DOWN!')">▶ PLAY</button>
+    </div>
+  </section>
 
-      function repeatIntroVideo() {
-        const video = document.getElementById("introVideo");
-        if (!video) return;
-        video.muted = false;
-        video.currentTime = 0;
-        video.play().catch(() => {});
-      }
+  <!-- 8 -->
+  <section class="screen" data-i="8">
+    <div class="content">
+      <h1>TEACHER SAYS...</h1>
+      <div id="commandCard" class="card command">READY?</div>
+      <button class="choice" onclick="randomCommand()">🎲 NEW COMMAND</button>
+      <p class="small">Teacher: give the command. Child performs the action.</p>
+    </div>
+  </section>
 
-      function playVideo(id) {
-        const video = document.getElementById(id);
-        if (!video) return;
-        video.muted = false;
-        video.currentTime = 0;
-        video.play().catch(() => {});
-      }
+  <!-- 9 -->
+  <section class="screen" data-i="9">
+    <div class="content">
+      <h1>YES or NO?</h1>
+      <div class="emoji">🐶</div>
+      <h2>IS IT A DOG?</h2>
+      <div class="row">
+        <button class="choice yes" onclick="say('Yes!'); reward('YES!')">YES ✅</button>
+        <button class="choice no" onclick="say('No!'); reward('TRY AGAIN')">NO ❌</button>
+      </div>
+    </div>
+  </section>
 
-      function repeatVideo(id) {
-        playVideo(id);
-      }
+  <!-- 10 -->
+  <section class="screen" data-i="10">
+    <div class="content">
+      <h1>YES or NO?</h1>
+      <div id="quizEmoji" class="emoji">🐱</div>
+      <h2 id="quizQuestion">IS IT A DOG?</h2>
+      <div class="row">
+        <button class="choice yes" onclick="quizAnswer(true)">YES ✅</button>
+        <button class="choice no" onclick="quizAnswer(false)">NO ❌</button>
+      </div>
+      <div id="quizFeedback" class="feedback"></div>
+      <button class="choice hidden" id="nextQuiz" onclick="nextQuizQuestion()">NEXT ➜</button>
+    </div>
+  </section>
 
-      function startIntroVideo() {
-        primeSpeech();
-        show(1);
-        setTimeout(playIntroVideo, 120);
-      }
+  <!-- 11 -->
+  <section class="screen" data-i="11">
+    <div class="content card">
+      <div class="object bounce">⚽</div>
+      <div class="word">BALL</div>
+      <button class="choice" onclick="say('Ball!'); reward('BALL!')">⚽ BALL</button>
+      <p>Find the real ball. Touch it. Roll it.</p>
+    </div>
+  </section>
 
-      function setName() {
-        childName = (document.getElementById("nameInput").value || "").trim();
-        if (!childName) {
-          toast("Type the name first");
-          return;
-        }
-        document.getElementById("nameDisplay").textContent =
-          childName.toUpperCase();
-        say("My name is " + childName + ".");
-        reward("MY NAME IS " + childName.toUpperCase() + "!");
-      }
-      const commands = [
-        ["STAND UP!", "Stand up!"],
-        ["SIT DOWN!", "Sit down!"],
-        ["LOOK!", "Look!"],
-        ["LISTEN!", "Listen!"],
-        ["COME HERE!", "Come here!"],
-      ];
-      function randomCommand() {
-        const x = commands[Math.floor(Math.random() * commands.length)];
-        const el = document.getElementById("commandCard");
-        el.textContent = x[0];
-        el.classList.remove("pop");
-        void el.offsetWidth;
-        el.classList.add("pop");
-        say(x[1]);
-      }
-      const quizzes = [
-        { emoji: "🐱", q: "IS IT A DOG?", yes: false },
-        { emoji: "🐶", q: "IS IT A DOG?", yes: true },
-        { emoji: "⚽", q: "IS IT A BALL?", yes: true },
-        { emoji: "🍎", q: "IS IT A CAT?", yes: false },
-      ];
-      let qi = 0;
-      function quizAnswer(v) {
-        const correct = v === quizzes[qi].yes;
-        document.getElementById("quizFeedback").textContent = correct
-          ? "GREAT! ⭐"
-          : "TRY AGAIN!";
-        say(correct ? "Yes! Great!" : "No! Try again!");
-        if (correct) {
-          reward("GREAT!");
-          document.getElementById("nextQuiz").classList.remove("hidden");
-        }
-      }
-      function nextQuizQuestion() {
-        qi = (qi + 1) % quizzes.length;
-        const q = quizzes[qi];
-        document.getElementById("quizEmoji").textContent = q.emoji;
-        document.getElementById("quizQuestion").textContent = q.q;
-        document.getElementById("quizFeedback").textContent = "";
-        document.getElementById("nextQuiz").classList.add("hidden");
-      }
-      function revealMystery() {
-        document.getElementById("mystery").innerHTML =
-          '<div class="object pop">⚽</div><div class="word">BALL!</div><button class="choice" onclick="say(\'Ball!\');reward(\'BALL!\')">🔊 BALL</button>';
-        say("Ball!");
-      }
-      let num = 1;
-      function nextNumber() {
-        num = num === 3 ? 1 : num + 1;
-        document.getElementById("apples").textContent = "🍎".repeat(num);
-        document.getElementById("numberWord").textContent = [
-          "",
-          "ONE",
-          "TWO",
-          "THREE",
-        ][num];
-        say(["", "One", "Two", "Three"][num]);
-      }
-      function showCount() {
-        document.getElementById("countAnswer").classList.remove("hidden");
-        say("Three!");
-        reward("THREE!");
-      }
-      function buildLetters() {
-        const box = document.getElementById("letters");
-        box.innerHTML = "";
-        [...["A", "B", "C"].sort(() => Math.random() - 0.5)].forEach(
-          (letter) => {
-            const b = document.createElement("button");
-            b.className = "choice";
-            b.textContent = letter;
-            b.onclick = () => {
-              const target = window.currentLetter || "A";
-              if (letter === target) {
-                document.getElementById("letterFeedback").textContent =
-                  "YES! ⭐";
-                say(letter);
-                reward(letter + "!");
-              } else {
-                document.getElementById("letterFeedback").textContent =
-                  "TRY AGAIN";
-                say("Try again!");
-              }
-            };
-            box.appendChild(b);
-          },
-        );
-        window.currentLetter = ["A", "B", "C"][Math.floor(Math.random() * 3)];
-        setTimeout(() => say("Find " + window.currentLetter + "."), 500);
-      }
-      function sayConversation() {
-        const n = childName || "your name";
-        const lines = [
-          "Hello!",
-          "My name is " + n + ".",
-          "I am seven.",
-          "Goodbye!",
-        ];
-        let i = 0;
-        function go() {
-          if (i >= lines.length) {
-            reward("YOU SPOKE ENGLISH!");
-            return;
-          }
-          say(lines[i++]);
-          setTimeout(go, 1500);
-        }
-        go();
-      }
-      document.getElementById("soundBtn").onclick = () => {
-        soundOn = !soundOn;
-        document.getElementById("soundBtn").textContent = soundOn ? "🔊" : "🔇";
-        if (soundOn) primeSpeech();
-        else synth?.cancel();
-      };
-      document.getElementById("homeBtn").onclick = () => show(0);
-      document.addEventListener("keydown", (e) => {
-        if (e.key === "ArrowRight" || e.key === " ") {
-          e.preventDefault();
-          next();
-        }
-        if (e.key === "ArrowLeft") prev();
-        if (e.key === "Escape") show(0);
-      });
-      show(0);
-    </script>
-  </body>
+  <!-- 12 -->
+  <section class="screen" data-i="12">
+    <div class="content">
+      <h1>WHAT IS IT?</h1>
+      <div id="mystery" class="card">
+        <div class="emoji">🎁</div>
+        <button class="choice" onclick="revealMystery()">✨ OPEN!</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- 13 -->
+  <section class="screen" data-i="13">
+    <div class="content">
+      <div id="apples" class="apples">🍎</div>
+      <div id="numberWord" class="word">ONE</div>
+      <button class="choice" onclick="nextNumber()">🔢 NEXT</button>
+    </div>
+  </section>
+
+  <!-- 14 -->
+  <section class="screen" data-i="14">
+    <div class="content">
+      <h1>HOW MANY?</h1>
+      <div id="balloons" class="balloons">🎈🎈🎈</div>
+      <div id="countAnswer" class="word hidden">THREE!</div>
+      <button class="choice" onclick="showCount()">👆 SHOW ME!</button>
+    </div>
+  </section>
+
+  <!-- 15 -->
+  <section class="screen" data-i="15">
+    <div class="content card">
+      <div class="letter">A</div>
+      <div class="object">🍎</div>
+      <div class="word">APPLE</div>
+      <button class="choice" onclick="say('A. Apple.'); reward('A! APPLE!')">🔊 A — APPLE</button>
+    </div>
+  </section>
+
+  <!-- 16 -->
+  <section class="screen" data-i="16">
+    <div class="content card">
+      <div class="letter">B</div>
+      <div class="object">🐝</div>
+      <div class="word">BEE</div>
+      <button class="choice" onclick="say('B. Bee.'); reward('B! BEE!')">🔊 B — BEE</button>
+    </div>
+  </section>
+
+  <!-- 17 -->
+  <section class="screen" data-i="17">
+    <div class="content card">
+      <div class="letter">C</div>
+      <div class="object">🐱</div>
+      <div class="word">CAT</div>
+      <button class="choice" onclick="say('C. Cat.'); reward('C! CAT!')">🔊 C — CAT</button>
+    </div>
+  </section>
+
+  <!-- 18 -->
+  <section class="screen" data-i="18">
+    <div class="content">
+      <h1>FIND THE LETTER!</h1>
+      <div id="letters" class="row"></div>
+      <div id="letterFeedback" class="feedback"></div>
+      <p class="small">Teacher: say A, B or C. Child points. Then click the correct letter.</p>
+    </div>
+  </section>
+
+  <!-- 19 -->
+  <section class="screen" data-i="19">
+    <div class="content card">
+      <h1>MY FIRST ENGLISH CONVERSATION</h1>
+      <div class="conversation">
+        <div class="line">👋 HELLO!</div>
+        <div class="line">WHAT'S YOUR NAME?</div>
+        <div class="line">MY NAME IS <span id="convName">________</span>.</div>
+        <div class="line">HOW OLD ARE YOU?</div>
+        <div class="line">I AM SEVEN.</div>
+        <div class="line">GOODBYE!</div>
+      </div>
+      <button class="choice" onclick="sayConversation(); reward('YOU SPOKE ENGLISH!')">🎉 LET'S DO IT!</button>
+    </div>
+  </section>
+
+  <!-- 20 -->
+  <section class="screen" data-i="20">
+    <div class="content card">
+      <div class="star">⭐</div>
+      <h1 id="starName">ENGLISH STAR</h1>
+      <h2>YOU SPOKE ENGLISH!</h2>
+      <p>Well done! See you next time! 👋</p>
+      <button class="choice" onclick="say('Well done! See you next time! Goodbye!'); reward('GOODBYE!')">👋 GOODBYE!</button>
+    </div>
+  </section>
+
+  <div class="nav">
+    <button id="prevBtn" onclick="prev()">‹ BACK</button>
+    <button class="primary" id="nextBtn" onclick="next()">NEXT ›</button>
+  </div>
+</div>
+
+<script>
+const screens=[...document.querySelectorAll('.screen')];
+let idx=0, soundOn=true, childName='';
+const progress=document.getElementById('progress');
+const video=document.getElementById('charVideo');
+
+function show(i){
+  idx=Math.max(0,Math.min(screens.length-1,i));
+  screens.forEach((s,n)=>s.classList.toggle('active',n===idx));
+  progress.textContent=(idx+1)+' / '+screens.length;
+  document.getElementById('prevBtn').style.visibility=idx===0?'hidden':'visible';
+  document.getElementById('nextBtn').textContent=idx===screens.length-1?'RESTART ↻':'NEXT ›';
+  if(idx===17) buildLetters();
+  if(idx===18) document.getElementById('convName').textContent=childName||'________';
+  if(idx===19) document.getElementById('starName').textContent=(childName||'YOUR')+' — ENGLISH STAR';
+  window.speechSynthesis?.cancel();
+}
+function next(){ if(idx===screens.length-1) show(0); else show(idx+1); }
+function prev(){show(idx-1)}
+function say(text){
+  if(!soundOn || !('speechSynthesis' in window)) return;
+  speechSynthesis.cancel();
+  const u=new SpeechSynthesisUtterance(text);
+  u.lang='en-US'; u.rate=.82; u.pitch=1.08;
+  speechSynthesis.speak(u);
+}
+function toast(t){
+  const el=document.getElementById('toast'); el.textContent=t; el.classList.add('show');
+  setTimeout(()=>el.classList.remove('show'),1100);
+}
+function reward(t){
+  toast(t);
+  const r=document.getElementById('reward'); r.innerHTML='';
+  for(let i=0;i<24;i++){
+    const s=document.createElement('span'); s.className='confetti';
+    s.textContent=['⭐','✨','🎉','👏'][i%4];
+    s.style.left=(Math.random()*100)+'%'; s.style.top=(-5-Math.random()*20)+'%';
+    s.style.animationDelay=(Math.random()*.4)+'s';
+    r.appendChild(s);
+  }
+  setTimeout(()=>r.innerHTML='',2500);
+}
+function waveVideo(){
+  if(!video) return;
+  video.currentTime=0; video.muted=true;
+  video.play().catch(()=>{});
+}
+function playCharacter(){waveVideo();document.getElementById('videoPlay').classList.add('hidden')}
+function setName(){
+  childName=(document.getElementById('nameInput').value||'').trim();
+  if(!childName){toast('Type the name first');return}
+  document.getElementById('nameDisplay').textContent=childName.toUpperCase();
+  say('My name is '+childName+'.');
+  reward('MY NAME IS '+childName.toUpperCase()+'!');
+}
+const commands=[
+ ['STAND UP!','Stand up!'],['SIT DOWN!','Sit down!'],['LOOK!','Look!'],['LISTEN!','Listen!'],['COME HERE!','Come here!']
+];
+function randomCommand(){
+  const x=commands[Math.floor(Math.random()*commands.length)];
+  const el=document.getElementById('commandCard');
+  el.textContent=x[0]; el.classList.remove('pop'); void el.offsetWidth; el.classList.add('pop');
+  say(x[1]);
+}
+const quizzes=[
+ {emoji:'🐱',q:'IS IT A DOG?',yes:false},
+ {emoji:'🐶',q:'IS IT A DOG?',yes:true},
+ {emoji:'⚽',q:'IS IT A BALL?',yes:true},
+ {emoji:'🍎',q:'IS IT A CAT?',yes:false}
+];
+let qi=0;
+function quizAnswer(v){
+  const correct=v===quizzes[qi].yes;
+  document.getElementById('quizFeedback').textContent=correct?'GREAT! ⭐':'TRY AGAIN!';
+  say(correct?'Yes! Great!':'No! Try again!');
+  if(correct){reward('GREAT!');document.getElementById('nextQuiz').classList.remove('hidden')}
+}
+function nextQuizQuestion(){
+  qi=(qi+1)%quizzes.length;
+  const q=quizzes[qi];
+  document.getElementById('quizEmoji').textContent=q.emoji;
+  document.getElementById('quizQuestion').textContent=q.q;
+  document.getElementById('quizFeedback').textContent='';
+  document.getElementById('nextQuiz').classList.add('hidden');
+}
+function revealMystery(){
+  document.getElementById('mystery').innerHTML='<div class="object pop">⚽</div><div class="word">BALL!</div><button class="choice" onclick="say(\'Ball!\');reward(\'BALL!\')">🔊 BALL</button>';
+  say('Ball!');
+}
+let num=1;
+function nextNumber(){
+  num=num===3?1:num+1;
+  document.getElementById('apples').textContent='🍎'.repeat(num);
+  document.getElementById('numberWord').textContent=['','ONE','TWO','THREE'][num];
+  say(['','One','Two','Three'][num]);
+}
+function showCount(){
+  document.getElementById('countAnswer').classList.remove('hidden');
+  say('Three!');
+  reward('THREE!');
+}
+function buildLetters(){
+  const box=document.getElementById('letters'); box.innerHTML='';
+  [...['A','B','C'].sort(()=>Math.random()-.5)].forEach(letter=>{
+    const b=document.createElement('button'); b.className='choice'; b.textContent=letter;
+    b.onclick=()=>{
+      const target=window.currentLetter||'A';
+      if(letter===target){document.getElementById('letterFeedback').textContent='YES! ⭐';say(letter);reward(letter+'!')}
+      else {document.getElementById('letterFeedback').textContent='TRY AGAIN';say('Try again!')}
+    };
+    box.appendChild(b);
+  });
+  window.currentLetter=['A','B','C'][Math.floor(Math.random()*3)];
+  setTimeout(()=>say('Find '+window.currentLetter+'.'),500);
+}
+function sayConversation(){
+  const n=childName||'your name';
+  const lines=['Hello!','My name is '+n+'.','I am seven.','Goodbye!'];
+  let i=0;
+  function go(){if(i>=lines.length){reward('YOU SPOKE ENGLISH!');return} say(lines[i++]);setTimeout(go,1500)}
+  go();
+}
+document.getElementById('soundBtn').onclick=()=>{
+  soundOn=!soundOn; document.getElementById('soundBtn').textContent=soundOn?'🔊':'🔇';
+  if(!soundOn) speechSynthesis?.cancel();
+};
+document.getElementById('homeBtn').onclick=()=>show(0);
+document.addEventListener('keydown',e=>{
+  if(e.key==='ArrowRight'||e.key===' ') {e.preventDefault();next()}
+  if(e.key==='ArrowLeft') prev();
+  if(e.key==='Escape') show(0);
+});
+show(0);
+</script>
+</body>
 </html>
