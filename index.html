@@ -82,7 +82,8 @@
       }
       .content {
         width: min(1320px, 100%);
-        height: min(860px, 100%);
+        height: auto;
+        min-height: min(860px, 100%);
         max-width: 100%;
         max-height: 100%;
         position: relative;
@@ -442,6 +443,93 @@
           opacity: 0;
         }
       }
+      @media (max-width: 1024px) {
+        .screen {
+          padding: 12px;
+        }
+        .content {
+          width: min(100%, 100vw);
+          min-height: auto;
+          max-height: calc(100dvh - 12vh);
+        }
+        .card {
+          border-radius: 24px;
+          padding: 1rem;
+        }
+        .choice {
+          min-width: 132px;
+          min-height: 76px;
+          font-size: clamp(1.2rem, 2.5vw, 1.9rem);
+        }
+        .topbar {
+          top: 1vh;
+          left: 2vw;
+          right: 2vw;
+        }
+        .progress {
+          font-size: 0.95rem;
+        }
+        .ctrl {
+          width: 46px;
+          height: 46px;
+          font-size: 1.15rem;
+        }
+        .nav {
+          bottom: 1.2vh;
+          gap: 0.7em;
+        }
+        .nav button {
+          padding: 0.7em 1.05em;
+          font-size: 0.95rem;
+        }
+        #introVideoWrap,
+        #commandsVideoWrap,
+        #countVideoWrap,
+        #thankYouVideoWrap,
+        #goodbyeVideoWrap {
+          width: min(100%, 720px);
+        }
+        .lessonVideo,
+        #introVideo {
+          max-height: 56vh;
+        }
+      }
+
+      @media (max-width: 1024px) and (orientation: portrait) {
+        h1 {
+          font-size: clamp(2.2rem, 5.5vw, 3.4rem);
+        }
+        h2 {
+          font-size: clamp(1.5rem, 4vw, 2.4rem);
+        }
+        p {
+          font-size: clamp(1rem, 2.1vw, 1.45rem);
+        }
+        .nameInput {
+          width: min(560px, 86vw);
+          font-size: clamp(1.4rem, 3.4vw, 2.1rem);
+        }
+        .alpha .letter {
+          font-size: clamp(3rem, 8vw, 5rem);
+        }
+        .alpha .object {
+          font-size: clamp(2.5rem, 7vw, 4rem);
+        }
+        .alpha .word {
+          font-size: clamp(1.8rem, 5vw, 3rem);
+        }
+      }
+
+      @media (max-width: 1024px) and (orientation: landscape) {
+        .content {
+          max-height: calc(100dvh - 8vh);
+        }
+        .lessonVideo,
+        #introVideo {
+          max-height: 46vh;
+        }
+      }
+
       @media (max-aspect-ratio: 1/1) {
         .hero {
           flex-direction: column;
@@ -1036,18 +1124,24 @@
       let speechPrimed = false;
 
       function preloadVideo(video) {
-        if (!video) return;
+        if (!video || !video.src) return;
         try {
           video.preload = "auto";
+          video.setAttribute("preload", "auto");
           if (typeof video.load === "function") {
             video.load();
+          }
+          if (typeof fetch === "function" && video.src.startsWith("http")) {
+            fetch(video.src, { cache: "force-cache" }).catch(() => {});
           }
         } catch (e) {}
       }
 
       function preloadLessonVideos() {
-        const videos = document.querySelectorAll("video");
-        videos.forEach((video) => preloadVideo(video));
+        const videos = [...document.querySelectorAll("video")];
+        videos.forEach((video, index) => {
+          window.setTimeout(() => preloadVideo(video), index * 120);
+        });
       }
 
       function setVoice() {
