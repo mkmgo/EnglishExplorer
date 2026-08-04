@@ -674,7 +674,17 @@
       <section class="screen" data-i="12">
         <div class="content">
           <h1>YES or NO?</h1>
-          <div id="quizEmoji" class="emoji">🐱</div>
+          <div id="quizEmoji" class="emoji">
+            <img
+              src="https://res.cloudinary.com/dp455m4rk/image/upload/v1785846896/cat_memoji_djx2z3.png"
+              style="
+                width: 1em;
+                height: 1em;
+                object-fit: contain;
+                vertical-align: middle;
+              "
+            />
+          </div>
           <h2 id="quizQuestion">IS IT A DOG?</h2>
           <div class="row">
             <button class="choice yes" onclick="quizAnswer(true)">
@@ -1228,8 +1238,19 @@
         ["LISTEN!", "Listen!"],
         ["COME HERE!", "Come here!"],
       ];
+      let lastIdx = -1;
+      let lastCount = 0;
       function randomCommand() {
-        const x = commands[Math.floor(Math.random() * commands.length)];
+        let idx = Math.floor(Math.random() * commands.length);
+        if (idx === lastIdx && lastCount >= 2) {
+          const others = commands
+            .map((_, i) => i)
+            .filter((i) => i !== lastIdx);
+          idx = others[Math.floor(Math.random() * others.length)];
+        }
+        lastCount = idx === lastIdx ? lastCount + 1 : 1;
+        lastIdx = idx;
+        const x = commands[idx];
         const el = document.getElementById("commandCard");
         el.textContent = x[0];
         el.classList.remove("pop");
@@ -1238,12 +1259,28 @@
         say(x[1]);
       }
       const quizzes = [
-        { emoji: "🐱", q: "IS IT A DOG?", yes: false },
+        {
+          emoji: "🐱",
+          img: "https://res.cloudinary.com/dp455m4rk/image/upload/v1785846896/cat_memoji_djx2z3.png",
+          q: "IS IT A DOG?",
+          yes: false,
+        },
         { emoji: "🐶", q: "IS IT A DOG?", yes: true },
         { emoji: "⚽", q: "IS IT A BALL?", yes: true },
         { emoji: "🍎", q: "IS IT A CAT?", yes: false },
       ];
       let qi = 0;
+      function renderQuizEmoji(q) {
+        const el = document.getElementById("quizEmoji");
+        if (q.img) {
+          el.innerHTML =
+            '<img src="' +
+            q.img +
+            '" style="width:1em;height:1em;object-fit:contain;vertical-align:middle"/>';
+        } else {
+          el.textContent = q.emoji;
+        }
+      }
       function quizAnswer(v) {
         const correct = v === quizzes[qi].yes;
         document.getElementById("quizFeedback").textContent = correct
@@ -1258,7 +1295,7 @@
       function nextQuizQuestion() {
         qi = (qi + 1) % quizzes.length;
         const q = quizzes[qi];
-        document.getElementById("quizEmoji").textContent = q.emoji;
+        renderQuizEmoji(q);
         document.getElementById("quizQuestion").textContent = q.q;
         document.getElementById("quizFeedback").textContent = "";
         document.getElementById("nextQuiz").classList.add("hidden");
