@@ -591,13 +591,13 @@
       <!-- 6 -->
       <section class="screen" data-i="7">
         <div class="content card">
-          <div class="emoji">🧍</div>
-          <div class="command">STAND UP!</div>
+          <div class="emoji">�</div>
+          <div class="command">SIT DOWN!</div>
           <button
             class="choice"
             onclick="
-              say('Stand up!');
-              reward('STAND UP!');
+              say('Sit down!');
+              reward('SIT DOWN!');
             "
           >
             ▶ PLAY
@@ -665,13 +665,13 @@
       <!-- 8 -->
       <section class="screen" data-i="9">
         <div class="content card">
-          <div class="emoji">🪑</div>
-          <div class="command">SIT DOWN!</div>
+          <div class="emoji">🧍</div>
+          <div class="command">STAND UP!</div>
           <button
             class="choice"
             onclick="
-              say('Sit down!');
-              reward('SIT DOWN!');
+              say('Stand up!');
+              reward('STAND UP!');
             "
           >
             ▶ PLAY
@@ -973,8 +973,8 @@
         </div>
       </section>
 
-      <!-- 23 -->
-      <section class="screen" data-i="23">
+      <!-- 24 -->
+      <section class="screen" data-i="24">
         <div class="content card">
           <h1>MY FIRST ENGLISH CONVERSATION</h1>
           <div class="conversation">
@@ -999,25 +999,7 @@
         </div>
       </section>
 
-      <!-- 24 -->
-      <section class="screen" data-i="24">
-        <div class="content card">
-          <div class="star">⭐</div>
-          <h1 id="starName">ENGLISH STAR</h1>
-          <h2>YOU SPOKE ENGLISH!</h2>
-          <p>Well done! See you next time! 👋</p>
-          <button
-            class="choice"
-            onclick="
-              say('Well done! See you next time! Goodbye!');
-              reward('GOODBYE!');
-            "
-          >
-            👋 GOODBYE!
-          </button>
-        </div>
-      </section>
-
+      <!-- 25 -->
       <section class="screen" data-i="25">
         <div
           class="content"
@@ -1071,6 +1053,25 @@
             </button>
           </div>
           <p class="small">Use BACK and NEXT to move through the course.</p>
+        </div>
+      </section>
+
+      <!-- 26 -->
+      <section class="screen" data-i="26">
+        <div class="content card">
+          <div class="star">⭐</div>
+          <h1 id="starName">ENGLISH STAR</h1>
+          <h2>YOU SPOKE ENGLISH!</h2>
+          <p>Well done! See you next time! 👋</p>
+          <button
+            class="choice"
+            onclick="
+              say('Well done! See you next time! Goodbye!');
+              reward('GOODBYE!');
+            "
+          >
+            👋 GOODBYE!
+          </button>
         </div>
       </section>
 
@@ -1156,10 +1157,10 @@
         document.getElementById("nextBtn").textContent =
           idx === screens.length - 1 ? "RESTART ↻" : "NEXT ›";
         if (idx === 20) buildLetters();
-        if (idx === 21)
+        if (idx === 22)
           document.getElementById("convName").textContent =
             childName || "________";
-        if (idx === 23)
+        if (idx === 24)
           document.getElementById("starName").textContent =
             (childName || "YOUR") + " — ENGLISH STAR";
         synth?.cancel();
