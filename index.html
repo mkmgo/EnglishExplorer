@@ -1039,14 +1039,7 @@
         if (!synth || speechPrimed) return;
         setVoice();
         if (!defaultVoice) return;
-        const utterance = new SpeechSynthesisUtterance("ready");
-        utterance.volume = 0.01;
-        utterance.rate = 1;
-        utterance.pitch = 1;
-        utterance.onend = () => {
-          speechPrimed = true;
-        };
-        synth.speak(utterance);
+        speechPrimed = true;
       }
 
       function initTTS() {
@@ -1212,9 +1205,7 @@
       function randomCommand() {
         let idx = Math.floor(Math.random() * commands.length);
         if (idx === lastIdx && lastCount >= 2) {
-          const others = commands
-            .map((_, i) => i)
-            .filter((i) => i !== lastIdx);
+          const others = commands.map((_, i) => i).filter((i) => i !== lastIdx);
           idx = others[Math.floor(Math.random() * others.length)];
         }
         lastCount = idx === lastIdx ? lastCount + 1 : 1;
@@ -1255,13 +1246,15 @@
         document.getElementById("quizFeedback").textContent = correct
           ? "GREAT! ⭐"
           : "TRY AGAIN!";
-        say(v
-          ? correct
-            ? "Yes! Great!"
-            : "No! Try again!"
-          : correct
-            ? "Great, you are right!"
-            : "No! Try again!");
+        say(
+          v
+            ? correct
+              ? "Yes! Great!"
+              : "No! Try again!"
+            : correct
+              ? "Great, you are right!"
+              : "No! Try again!",
+        );
         if (correct) {
           reward("GREAT!");
           document.getElementById("nextQuiz").classList.remove("hidden");
@@ -1304,7 +1297,9 @@
         const letters = ["A", "B", "C"];
         let idx = Math.floor(Math.random() * letters.length);
         if (idx === lastLetterIdx && lastLetterCount >= 2) {
-          const others = letters.map((_, i) => i).filter((i) => i !== lastLetterIdx);
+          const others = letters
+            .map((_, i) => i)
+            .filter((i) => i !== lastLetterIdx);
           idx = others[Math.floor(Math.random() * others.length)];
         }
         lastLetterCount = idx === lastLetterIdx ? lastLetterCount + 1 : 1;
