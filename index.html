@@ -914,7 +914,7 @@
           <button
             class="choice"
             onclick="
-              say('A. Apple.');
+              say('A — Apple.');
               reward('A! APPLE!');
             "
           >
@@ -932,7 +932,7 @@
           <button
             class="choice"
             onclick="
-              say('B. Bee.');
+              say('B — Bee.');
               reward('B! BEE!');
             "
           >
@@ -960,7 +960,7 @@
           <button
             class="choice"
             onclick="
-              say('C. Cat.');
+              say('C — Cat.');
               reward('C! CAT!');
             "
           >
@@ -1416,6 +1416,7 @@
       const letterSpeech = { A: "ay", B: "bee", C: "see" };
       let lastLetterIdx = -1;
       let lastLetterCount = 0;
+      let letterFeedbackTimer = null;
       function pickTargetLetter() {
         const letters = ["A", "B", "C"];
         let idx = Math.floor(Math.random() * letters.length);
@@ -1434,6 +1435,10 @@
         box.innerHTML = "";
         const current = pickTargetLetter();
         window.currentLetter = current;
+        if (letterFeedbackTimer) {
+          window.clearTimeout(letterFeedbackTimer);
+          letterFeedbackTimer = null;
+        }
         document.getElementById("letterFeedback").textContent = "";
         [...["A", "B", "C"].sort(() => Math.random() - 0.5)].forEach(
           (letter) => {
@@ -1442,14 +1447,20 @@
             b.textContent = letter;
             b.onclick = () => {
               const target = window.currentLetter || "A";
+              const feedback = document.getElementById("letterFeedback");
               if (letter === target) {
-                document.getElementById("letterFeedback").textContent =
-                  "YES! ⭐";
-                say(letterSpeech[letter]);
+                feedback.textContent = "YES! ⭐";
+                say("Correct - " + letter);
                 reward(letter + "!");
+                if (letterFeedbackTimer) {
+                  window.clearTimeout(letterFeedbackTimer);
+                }
+                letterFeedbackTimer = window.setTimeout(() => {
+                  feedback.textContent = "";
+                  letterFeedbackTimer = null;
+                }, 1200);
               } else {
-                document.getElementById("letterFeedback").textContent =
-                  "TRY AGAIN";
+                feedback.textContent = "TRY AGAIN";
                 say("Try again!");
               }
             };
