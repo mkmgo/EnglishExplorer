@@ -294,6 +294,14 @@
       #introVideoWrap {
         display: flex;
         justify-content: center;
+        width: min(760px, 90vw);
+      }
+      #introVideo {
+        width: 100%;
+        max-height: 60vh;
+        object-fit: contain;
+        border-radius: 32px;
+        box-shadow: var(--shadow);
       }
       .videoActions {
         display: flex;
@@ -444,22 +452,17 @@
           "
         >
           <div class="small">ENGLISH EXPLORER</div>
-          <h1>Watch the clip</h1>
-          <div
-            id="introVideoWrap"
-            style="width: 100%; max-width: 1200px; margin-top: 0.5em"
-          >
+          <h1 style="font-size: clamp(3rem, 5vw, 4rem)">Watch the clip</h1>
+          <div id="introVideoWrap" style="margin-top: 0.5em">
             <video
               id="introVideo"
               playsinline
+              webkit-playsinline
+              x5-playsinline
               preload="auto"
               controls
-              style="
-                width: 100%;
-                height: auto;
-                border-radius: 32px;
-                box-shadow: var(--shadow);
-              "
+              muted
+              autoplay
               src="https://res.cloudinary.com/dp455m4rk/video/upload/v1785822007/hello_y2a9fr.mp4"
             ></video>
           </div>
@@ -868,6 +871,23 @@
         childName = "";
       const progress = document.getElementById("progress");
       const video = document.getElementById("charVideo");
+      const synth =
+        window.speechSynthesis || window.webkitSpeechSynthesis || null;
+      let defaultVoice = null;
+
+      function initTTS() {
+        if (!synth) return;
+        const setVoice = () => {
+          const voices = synth.getVoices();
+          if (!voices || voices.length === 0) return;
+          defaultVoice =
+            voices.find((v) => v.lang?.startsWith("en")) || voices[0] || null;
+        };
+        setVoice();
+        setTimeout(setVoice, 300);
+        synth.onvoiceschanged = setVoice;
+      }
+      initTTS();
 
       function show(i) {
         idx = Math.max(0, Math.min(screens.length - 1, i));
@@ -884,7 +904,10 @@
         if (idx === 20)
           document.getElementById("starName").textContent =
             (childName || "YOUR") + " — ENGLISH STAR";
-        window.speechSynthesis?.cancel();
+        synth?.cancel();
+        if (idx === 1) {
+          autoPlayIntroVideo();
+        }
       }
       function next() {
         if (idx === screens.length - 1) show(0);
@@ -894,13 +917,14 @@
         show(idx - 1);
       }
       function say(text) {
-        if (!soundOn || !("speechSynthesis" in window)) return;
-        speechSynthesis.cancel();
+        if (!soundOn || !synth) return;
+        synth.cancel();
         const u = new SpeechSynthesisUtterance(text);
         u.lang = "en-US";
+        if (defaultVoice) u.voice = defaultVoice;
         u.rate = 0.82;
         u.pitch = 1.08;
-        speechSynthesis.speak(u);
+        synth.speak(u);
       }
       function toast(t) {
         const el = document.getElementById("toast");
@@ -933,14 +957,35 @@
         waveVideo();
         document.getElementById("videoPlay").classList.add("hidden");
       }
-      function startIntroVideo() {
-        show(1);
+      function autoPlayIntroVideo() {
         const video = document.getElementById("introVideo");
         if (!video) return;
+        video.muted = true;
         video.currentTime = 0;
-        video.muted = false;
         video.play().catch(() => {});
       }
+
+      function playIntroVideo() {
+        const video = document.getElementById("introVideo");
+        if (!video) return;
+        video.muted = false;
+        video.currentTime = 0;
+        video.play().catch(() => {});
+      }
+
+      function repeatIntroVideo() {
+        const video = document.getElementById("introVideo");
+        if (!video) return;
+        video.muted = false;
+        video.currentTime = 0;
+        video.play().catch(() => {});
+      }
+
+      function startIntroVideo() {
+        show(1);
+        setTimeout(playIntroVideo, 120);
+      }
+
       function setName() {
         childName = (document.getElementById("nameInput").value || "").trim();
         if (!childName) {
