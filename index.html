@@ -1035,6 +1035,21 @@
       let voiceTimer = null;
       let speechPrimed = false;
 
+      function preloadVideo(video) {
+        if (!video) return;
+        try {
+          video.preload = "auto";
+          if (typeof video.load === "function") {
+            video.load();
+          }
+        } catch (e) {}
+      }
+
+      function preloadLessonVideos() {
+        const videos = document.querySelectorAll("video");
+        videos.forEach((video) => preloadVideo(video));
+      }
+
       function setVoice() {
         if (!synth) return;
         const voices = synth.getVoices();
@@ -1074,6 +1089,8 @@
         }, 4000);
       }
       initTTS();
+      preloadLessonVideos();
+      window.addEventListener("load", preloadLessonVideos);
       document.addEventListener("pointerdown", primeSpeech, { once: true });
       document.addEventListener("click", primeSpeech, { once: true });
       document.addEventListener("keydown", primeSpeech, { once: true });
@@ -1082,6 +1099,10 @@
       function show(i) {
         idx = Math.max(0, Math.min(screens.length - 1, i));
         screens.forEach((s, n) => s.classList.toggle("active", n === idx));
+        const activeVideo = screens[idx]?.querySelector("video") || null;
+        if (activeVideo) {
+          preloadVideo(activeVideo);
+        }
         progress.textContent = idx + 1 + " / " + screens.length;
         document.getElementById("prevBtn").style.visibility =
           idx === 0 ? "hidden" : "visible";
