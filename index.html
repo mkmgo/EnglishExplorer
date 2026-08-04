@@ -145,6 +145,22 @@
         font-size: clamp(7rem, 18vw, 18rem);
         line-height: 1;
       }
+      .alpha {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 0.8em;
+      }
+      .alpha .letter {
+        font-size: clamp(4rem, 11vw, 8rem);
+      }
+      .alpha .object {
+        font-size: clamp(3.5rem, 10vw, 7rem);
+      }
+      .alpha .word {
+        font-size: clamp(2.2rem, 6vw, 5rem);
+      }
       .bigNumber {
         font-size: clamp(10rem, 26vw, 26rem);
         font-weight: 900;
@@ -764,28 +780,9 @@
         </div>
       </section>
 
-      <!-- 14 -->
-      <section class="screen" data-i="16">
-        <div class="content">
-          <div id="apples" class="apples">🍎</div>
-          <div id="numberWord" class="word">ONE</div>
-          <button class="choice" onclick="nextNumber()">🔢 NEXT</button>
-        </div>
-      </section>
-
-      <!-- 15 -->
-      <section class="screen" data-i="17">
-        <div class="content">
-          <h1>HOW MANY?</h1>
-          <div id="balloons" class="balloons">🎈🎈🎈</div>
-          <div id="countAnswer" class="word hidden">THREE!</div>
-          <button class="choice" onclick="showCount()">👆 SHOW ME!</button>
-        </div>
-      </section>
-
       <!-- 18 -->
       <section class="screen" data-i="18">
-        <div class="content card">
+        <div class="content card alpha">
           <div class="letter">A</div>
           <div class="object">🍎</div>
           <div class="word">APPLE</div>
@@ -803,7 +800,7 @@
 
       <!-- 19 -->
       <section class="screen" data-i="19">
-        <div class="content card">
+        <div class="content card alpha">
           <div class="letter">B</div>
           <div class="object">🐝</div>
           <div class="word">BEE</div>
@@ -821,9 +818,19 @@
 
       <!-- 20 -->
       <section class="screen" data-i="20">
-        <div class="content card">
+        <div class="content card alpha">
           <div class="letter">C</div>
-          <div class="object">🐱</div>
+          <div class="object">
+            <img
+              src="https://res.cloudinary.com/dp455m4rk/image/upload/v1785846896/cat_memoji_djx2z3.png"
+              style="
+                width: 1em;
+                height: 1em;
+                object-fit: contain;
+                vertical-align: middle;
+              "
+            />
+          </div>
           <div class="word">CAT</div>
           <button
             class="choice"
@@ -843,6 +850,7 @@
           <h1>FIND THE LETTER!</h1>
           <div id="letters" class="row"></div>
           <div id="letterFeedback" class="feedback"></div>
+          <button class="choice" onclick="newLetter()">🎲 NEW COMMAND</button>
           <p class="small">
             Teacher: say A, B or C. Child points. Then click the correct letter.
           </p>
@@ -1075,11 +1083,11 @@
           idx === 0 ? "hidden" : "visible";
         document.getElementById("nextBtn").textContent =
           idx === screens.length - 1 ? "RESTART ↻" : "NEXT ›";
-        if (idx === 18) buildLetters();
-        if (idx === 20)
+        if (idx === 16) buildLetters();
+        if (idx === 18)
           document.getElementById("convName").textContent =
             childName || "________";
-        if (idx === 22)
+        if (idx === 20)
           document.getElementById("starName").textContent =
             (childName || "YOUR") + " — ENGLISH STAR";
         synth?.cancel();
@@ -1289,9 +1297,26 @@
         say("Three!");
         reward("THREE!");
       }
+      const letterSpeech = { A: "ay", B: "bee", C: "see" };
+      let lastLetterIdx = -1;
+      let lastLetterCount = 0;
+      function pickTargetLetter() {
+        const letters = ["A", "B", "C"];
+        let idx = Math.floor(Math.random() * letters.length);
+        if (idx === lastLetterIdx && lastLetterCount >= 2) {
+          const others = letters.map((_, i) => i).filter((i) => i !== lastLetterIdx);
+          idx = others[Math.floor(Math.random() * others.length)];
+        }
+        lastLetterCount = idx === lastLetterIdx ? lastLetterCount + 1 : 1;
+        lastLetterIdx = idx;
+        return letters[idx];
+      }
       function buildLetters() {
         const box = document.getElementById("letters");
         box.innerHTML = "";
+        const current = pickTargetLetter();
+        window.currentLetter = current;
+        document.getElementById("letterFeedback").textContent = "";
         [...["A", "B", "C"].sort(() => Math.random() - 0.5)].forEach(
           (letter) => {
             const b = document.createElement("button");
@@ -1302,7 +1327,7 @@
               if (letter === target) {
                 document.getElementById("letterFeedback").textContent =
                   "YES! ⭐";
-                say(letter);
+                say(letterSpeech[letter]);
                 reward(letter + "!");
               } else {
                 document.getElementById("letterFeedback").textContent =
@@ -1313,8 +1338,10 @@
             box.appendChild(b);
           },
         );
-        window.currentLetter = ["A", "B", "C"][Math.floor(Math.random() * 3)];
-        setTimeout(() => say("Find " + window.currentLetter + "."), 500);
+        setTimeout(() => say(letterSpeech[window.currentLetter]), 500);
+      }
+      function newLetter() {
+        buildLetters();
       }
       function sayConversation() {
         const n = childName || "your name";
