@@ -872,23 +872,46 @@
       const progress = document.getElementById("progress");
       const video = document.getElementById("charVideo");
       const synth =
-        window.speechSynthesis || window.webkitSpeechSynthesis || null;
+        window.speechSynthesis ||
+        window.webkitSpeechSynthesis ||
+        window.mozSpeechSynthesis ||
+        null;
       let defaultVoice = null;
+      let voiceTimer = null;
+
+      function setVoice() {
+        if (!synth) return;
+        const voices = synth.getVoices();
+        if (!voices || voices.length === 0) return;
+        defaultVoice =
+          voices.find((v) => v.lang?.startsWith("en")) ||
+          voices[0] ||
+          voices[0] ||
+          null;
+      }
 
       function initTTS() {
         if (!synth) return;
-        const setVoice = () => {
-          const voices = synth.getVoices();
-          if (!voices || voices.length === 0) return;
-          defaultVoice =
-            voices.find((v) => v.lang?.startsWith("en")) || voices[0] || null;
-        };
         setVoice();
-        setTimeout(setVoice, 500);
-        setTimeout(setVoice, 1200);
-        if (typeof synth.onvoiceschanged === "function") {
+        if (typeof synth.addEventListener === "function") {
+          synth.addEventListener("voiceschanged", setVoice);
+        } else if (typeof synth.onvoiceschanged === "function") {
           synth.onvoiceschanged = setVoice;
         }
+        voiceTimer = window.setInterval(() => {
+          if (defaultVoice) {
+            window.clearInterval(voiceTimer);
+            voiceTimer = null;
+            return;
+          }
+          setVoice();
+        }, 500);
+        window.setTimeout(() => {
+          if (voiceTimer) {
+            window.clearInterval(voiceTimer);
+            voiceTimer = null;
+          }
+        }, 4000);
       }
       initTTS();
 
