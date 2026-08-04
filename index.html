@@ -303,6 +303,13 @@
         border-radius: 32px;
         box-shadow: var(--shadow);
       }
+      .lessonVideo {
+        width: 100%;
+        max-height: 60vh;
+        object-fit: contain;
+        border-radius: 32px;
+        box-shadow: var(--shadow);
+      }
       .videoActions {
         display: flex;
         gap: 1rem;
@@ -402,7 +409,7 @@
       <div id="reward"></div>
 
       <div class="topbar">
-        <div class="progress" id="progress">1 / 20</div>
+        <div class="progress" id="progress">1 / 25</div>
         <div class="controls">
           <button class="ctrl" id="soundBtn" aria-label="Sound">🔊</button>
           <button class="ctrl" id="homeBtn" aria-label="Home">⌂</button>
@@ -515,24 +522,6 @@
       <!-- 4 -->
       <section class="screen" data-i="4">
         <div class="content card">
-          <div class="emoji">👋</div>
-          <h1>HELLO!</h1>
-          <p>Say it together.</p>
-          <button
-            class="choice"
-            onclick="
-              say('Hello!');
-              reward('HELLO!');
-            "
-          >
-            👋 HELLO!
-          </button>
-        </div>
-      </section>
-
-      <!-- 3 -->
-      <section class="screen" data-i="3">
-        <div class="content card">
           <div class="emoji">🦊</div>
           <h2>MY NAME IS SAM.</h2>
           <button class="choice" onclick="say('My name is Sam.')">
@@ -542,8 +531,8 @@
         </div>
       </section>
 
-      <!-- 4 -->
-      <section class="screen" data-i="4">
+      <!-- 5 -->
+      <section class="screen" data-i="5">
         <div class="content card">
           <h2>MY NAME IS</h2>
           <input
@@ -561,8 +550,8 @@
         </div>
       </section>
 
-      <!-- 5 -->
-      <section class="screen" data-i="5">
+      <!-- 6 -->
+      <section class="screen" data-i="6">
         <div class="content">
           <div class="emoji wave">👋</div>
           <h1>HELLO!</h1>
@@ -600,7 +589,7 @@
       </section>
 
       <!-- 6 -->
-      <section class="screen" data-i="6">
+      <section class="screen" data-i="7">
         <div class="content card">
           <div class="emoji">🧍</div>
           <div class="command">STAND UP!</div>
@@ -617,7 +606,64 @@
       </section>
 
       <!-- 7 -->
-      <section class="screen" data-i="7">
+      <section class="screen" data-i="8">
+        <div
+          class="content"
+          style="
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 1.4em;
+          "
+        >
+          <div class="small">ENGLISH EXPLORER</div>
+          <h1>Watch the clip</h1>
+          <div
+            id="commandsVideoWrap"
+            style="margin-top: 0.5em; width: 100%; max-width: 760px"
+          >
+            <video
+              id="commandsVideo"
+              class="lessonVideo"
+              playsinline
+              webkit-playsinline
+              x5-playsinline
+              preload="auto"
+              controls
+              src="https://res.cloudinary.com/dp455m4rk/video/upload/v1785822006/commands_v7zbgo.mp4"
+            ></video>
+          </div>
+          <div
+            class="row"
+            style="
+              justify-content: center;
+              gap: 1rem;
+              width: 100%;
+              max-width: 800px;
+            "
+          >
+            <button
+              class="choice yes"
+              style="min-width: 180px"
+              onclick="playVideo('commandsVideo')"
+            >
+              ▶ PLAY
+            </button>
+            <button
+              class="choice no"
+              style="min-width: 180px"
+              onclick="repeatVideo('commandsVideo')"
+            >
+              🔁 REPEAT
+            </button>
+          </div>
+          <p class="small">Use BACK and NEXT to move through the course.</p>
+        </div>
+      </section>
+
+      <!-- 8 -->
+      <section class="screen" data-i="9">
         <div class="content card">
           <div class="emoji">🪑</div>
           <div class="command">SIT DOWN!</div>
@@ -633,8 +679,8 @@
         </div>
       </section>
 
-      <!-- 8 -->
-      <section class="screen" data-i="8">
+      <!-- 9 -->
+      <section class="screen" data-i="10">
         <div class="content">
           <h1>TEACHER SAYS...</h1>
           <div id="commandCard" class="card command">READY?</div>
@@ -648,7 +694,7 @@
       </section>
 
       <!-- 9 -->
-      <section class="screen" data-i="9">
+      <section class="screen" data-i="11">
         <div class="content">
           <h1>YES or NO?</h1>
           <div class="emoji">🐶</div>
@@ -677,7 +723,7 @@
       </section>
 
       <!-- 10 -->
-      <section class="screen" data-i="10">
+      <section class="screen" data-i="12">
         <div class="content">
           <h1>YES or NO?</h1>
           <div id="quizEmoji" class="emoji">🐱</div>
@@ -700,7 +746,7 @@
       </section>
 
       <!-- 11 -->
-      <section class="screen" data-i="11">
+      <section class="screen" data-i="13">
         <div class="content card">
           <div class="object bounce">⚽</div>
           <div class="word">BALL</div>
@@ -718,7 +764,7 @@
       </section>
 
       <!-- 12 -->
-      <section class="screen" data-i="12">
+      <section class="screen" data-i="14">
         <div class="content">
           <h1>WHAT IS IT?</h1>
           <div id="mystery" class="card">
@@ -729,7 +775,64 @@
       </section>
 
       <!-- 13 -->
-      <section class="screen" data-i="13">
+      <section class="screen" data-i="15">
+        <div
+          class="content"
+          style="
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 1.4em;
+          "
+        >
+          <div class="small">ENGLISH EXPLORER</div>
+          <h1>Watch the clip</h1>
+          <div
+            id="countVideoWrap"
+            style="margin-top: 0.5em; width: 100%; max-width: 760px"
+          >
+            <video
+              id="countVideo"
+              class="lessonVideo"
+              playsinline
+              webkit-playsinline
+              x5-playsinline
+              preload="auto"
+              controls
+              src="https://res.cloudinary.com/dp455m4rk/video/upload/v1785822006/1-2-3-a-b-c_lkdrp6.mp4"
+            ></video>
+          </div>
+          <div
+            class="row"
+            style="
+              justify-content: center;
+              gap: 1rem;
+              width: 100%;
+              max-width: 800px;
+            "
+          >
+            <button
+              class="choice yes"
+              style="min-width: 180px"
+              onclick="playVideo('countVideo')"
+            >
+              ▶ PLAY
+            </button>
+            <button
+              class="choice no"
+              style="min-width: 180px"
+              onclick="repeatVideo('countVideo')"
+            >
+              🔁 REPEAT
+            </button>
+          </div>
+          <p class="small">Use BACK and NEXT to move through the course.</p>
+        </div>
+      </section>
+
+      <!-- 14 -->
+      <section class="screen" data-i="16">
         <div class="content">
           <div id="apples" class="apples">🍎</div>
           <div id="numberWord" class="word">ONE</div>
@@ -737,8 +840,8 @@
         </div>
       </section>
 
-      <!-- 14 -->
-      <section class="screen" data-i="14">
+      <!-- 15 -->
+      <section class="screen" data-i="17">
         <div class="content">
           <h1>HOW MANY?</h1>
           <div id="balloons" class="balloons">🎈🎈🎈</div>
@@ -747,8 +850,8 @@
         </div>
       </section>
 
-      <!-- 15 -->
-      <section class="screen" data-i="15">
+      <!-- 18 -->
+      <section class="screen" data-i="18">
         <div class="content card">
           <div class="letter">A</div>
           <div class="object">🍎</div>
@@ -765,8 +868,8 @@
         </div>
       </section>
 
-      <!-- 16 -->
-      <section class="screen" data-i="16">
+      <!-- 19 -->
+      <section class="screen" data-i="19">
         <div class="content card">
           <div class="letter">B</div>
           <div class="object">🐝</div>
@@ -783,8 +886,8 @@
         </div>
       </section>
 
-      <!-- 17 -->
-      <section class="screen" data-i="17">
+      <!-- 20 -->
+      <section class="screen" data-i="20">
         <div class="content card">
           <div class="letter">C</div>
           <div class="object">🐱</div>
@@ -801,8 +904,8 @@
         </div>
       </section>
 
-      <!-- 18 -->
-      <section class="screen" data-i="18">
+      <!-- 21 -->
+      <section class="screen" data-i="21">
         <div class="content">
           <h1>FIND THE LETTER!</h1>
           <div id="letters" class="row"></div>
@@ -813,8 +916,65 @@
         </div>
       </section>
 
-      <!-- 19 -->
-      <section class="screen" data-i="19">
+      <!-- 22 -->
+      <section class="screen" data-i="22">
+        <div
+          class="content"
+          style="
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 1.4em;
+          "
+        >
+          <div class="small">ENGLISH EXPLORER</div>
+          <h1>Watch the clip</h1>
+          <div
+            id="thankYouVideoWrap"
+            style="margin-top: 0.5em; width: 100%; max-width: 760px"
+          >
+            <video
+              id="thankYouVideo"
+              class="lessonVideo"
+              playsinline
+              webkit-playsinline
+              x5-playsinline
+              preload="auto"
+              controls
+              src="https://res.cloudinary.com/dp455m4rk/video/upload/v1785822007/Thankyou_gtg6ya.mp4"
+            ></video>
+          </div>
+          <div
+            class="row"
+            style="
+              justify-content: center;
+              gap: 1rem;
+              width: 100%;
+              max-width: 800px;
+            "
+          >
+            <button
+              class="choice yes"
+              style="min-width: 180px"
+              onclick="playVideo('thankYouVideo')"
+            >
+              ▶ PLAY
+            </button>
+            <button
+              class="choice no"
+              style="min-width: 180px"
+              onclick="repeatVideo('thankYouVideo')"
+            >
+              🔁 REPEAT
+            </button>
+          </div>
+          <p class="small">Use BACK and NEXT to move through the course.</p>
+        </div>
+      </section>
+
+      <!-- 23 -->
+      <section class="screen" data-i="23">
         <div class="content card">
           <h1>MY FIRST ENGLISH CONVERSATION</h1>
           <div class="conversation">
@@ -839,8 +999,8 @@
         </div>
       </section>
 
-      <!-- 20 -->
-      <section class="screen" data-i="20">
+      <!-- 24 -->
+      <section class="screen" data-i="24">
         <div class="content card">
           <div class="star">⭐</div>
           <h1 id="starName">ENGLISH STAR</h1>
@@ -855,6 +1015,62 @@
           >
             👋 GOODBYE!
           </button>
+        </div>
+      </section>
+
+      <section class="screen" data-i="25">
+        <div
+          class="content"
+          style="
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 1.4em;
+          "
+        >
+          <div class="small">ENGLISH EXPLORER</div>
+          <h1>Watch the clip</h1>
+          <div
+            id="goodbyeVideoWrap"
+            style="margin-top: 0.5em; width: 100%; max-width: 760px"
+          >
+            <video
+              id="goodbyeVideo"
+              class="lessonVideo"
+              playsinline
+              webkit-playsinline
+              x5-playsinline
+              preload="auto"
+              controls
+              src="https://res.cloudinary.com/dp455m4rk/video/upload/v1785822008/goodbye_vw5lb0.mp4"
+            ></video>
+          </div>
+          <div
+            class="row"
+            style="
+              justify-content: center;
+              gap: 1rem;
+              width: 100%;
+              max-width: 800px;
+            "
+          >
+            <button
+              class="choice yes"
+              style="min-width: 180px"
+              onclick="playVideo('goodbyeVideo')"
+            >
+              ▶ PLAY
+            </button>
+            <button
+              class="choice no"
+              style="min-width: 180px"
+              onclick="repeatVideo('goodbyeVideo')"
+            >
+              🔁 REPEAT
+            </button>
+          </div>
+          <p class="small">Use BACK and NEXT to move through the course.</p>
         </div>
       </section>
 
@@ -939,11 +1155,11 @@
           idx === 0 ? "hidden" : "visible";
         document.getElementById("nextBtn").textContent =
           idx === screens.length - 1 ? "RESTART ↻" : "NEXT ›";
-        if (idx === 18) buildLetters();
-        if (idx === 19)
+        if (idx === 20) buildLetters();
+        if (idx === 21)
           document.getElementById("convName").textContent =
             childName || "________";
-        if (idx === 20)
+        if (idx === 23)
           document.getElementById("starName").textContent =
             (childName || "YOUR") + " — ENGLISH STAR";
         synth?.cancel();
@@ -1025,6 +1241,18 @@
         video.muted = false;
         video.currentTime = 0;
         video.play().catch(() => {});
+      }
+
+      function playVideo(id) {
+        const video = document.getElementById(id);
+        if (!video) return;
+        video.muted = false;
+        video.currentTime = 0;
+        video.play().catch(() => {});
+      }
+
+      function repeatVideo(id) {
+        playVideo(id);
       }
 
       function startIntroVideo() {
