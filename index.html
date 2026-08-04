@@ -406,6 +406,7 @@
       <div class="topbar">
         <div class="progress" id="progress">1 / 25</div>
         <div class="controls">
+          <button class="ctrl" id="soundBtn" aria-label="Sound">🔊</button>
           <button class="ctrl" id="homeBtn" aria-label="Home">⌂</button>
         </div>
       </div>
@@ -471,6 +472,7 @@
           <button
             class="choice"
             onclick="
+              say('Hello!');
               reward('HELLO!');
             "
           >
@@ -484,6 +486,9 @@
         <div class="content card">
           <div class="emoji">🦊</div>
           <h2>MY NAME IS SAM.</h2>
+          <button class="choice" onclick="say('My name is Sam.')">
+            🔊 HEAR IT
+          </button>
           <p>Now say: <b>My name is...</b></p>
         </div>
       </section>
@@ -518,6 +523,7 @@
             <button
               class="choice"
               onclick="
+                say('Hello!');
                 toast('Happy hello!');
               "
             >
@@ -526,6 +532,7 @@
             <button
               class="choice"
               onclick="
+                say('Hello!');
                 toast('Robot hello!');
               "
             >
@@ -534,6 +541,7 @@
             <button
               class="choice"
               onclick="
+                say('Hello!');
                 toast('Sleepy hello!');
               "
             >
@@ -608,6 +616,7 @@
           <button
             class="choice"
             onclick="
+              say('Sit down!');
               reward('SIT DOWN!');
             "
           >
@@ -624,6 +633,7 @@
           <button
             class="choice"
             onclick="
+              say('Stand up!');
               reward('STAND UP!');
             "
           >
@@ -656,6 +666,7 @@
             <button
               class="choice yes"
               onclick="
+                say('Yes!');
                 reward('YES!');
               "
             >
@@ -664,6 +675,7 @@
             <button
               class="choice no"
               onclick="
+                say('No!');
                 reward('TRY AGAIN');
               "
             >
@@ -704,6 +716,7 @@
           <button
             class="choice"
             onclick="
+              say('Ball!');
               reward('BALL!');
             "
           >
@@ -809,10 +822,11 @@
           <button
             class="choice"
             onclick="
+              say('A. Apple.');
               reward('A! APPLE!');
             "
           >
-            A — APPLE
+            🔊 A — APPLE
           </button>
         </div>
       </section>
@@ -826,10 +840,11 @@
           <button
             class="choice"
             onclick="
+              say('B. Bee.');
               reward('B! BEE!');
             "
           >
-            B — BEE
+            🔊 B — BEE
           </button>
         </div>
       </section>
@@ -843,10 +858,11 @@
           <button
             class="choice"
             onclick="
+              say('C. Cat.');
               reward('C! CAT!');
             "
           >
-            C — CAT
+            🔊 C — CAT
           </button>
         </div>
       </section>
@@ -934,7 +950,13 @@
             <div class="line">I AM SEVEN.</div>
             <div class="line">GOODBYE!</div>
           </div>
-          <button class="choice" onclick="reward('YOU SPOKE ENGLISH!')">
+          <button
+            class="choice"
+            onclick="
+              sayConversation();
+              reward('YOU SPOKE ENGLISH!');
+            "
+          >
             🎉 LET'S DO IT!
           </button>
         </div>
@@ -1007,6 +1029,7 @@
           <button
             class="choice"
             onclick="
+              say('Well done! See you next time! Goodbye!');
               reward('GOODBYE!');
             "
           >
