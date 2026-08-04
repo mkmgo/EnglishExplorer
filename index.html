@@ -611,6 +611,7 @@
               controls
               autoplay
               data-autoplay="true"
+              data-autoplay-mode="welcome"
               src="https://res.cloudinary.com/dp455m4rk/video/upload/v1785822007/hello_y2a9fr.mp4"
             ></video>
           </div>
@@ -711,7 +712,8 @@
               x5-playsinline
               preload="auto"
               controls
-              data-autoplay="true"
+              data-autoplay="false"
+              data-autoplay-mode="manual"
               src="https://res.cloudinary.com/dp455m4rk/video/upload/v1785822006/commands_v7zbgo.mp4"
             ></video>
           </div>
@@ -883,7 +885,8 @@
               x5-playsinline
               preload="auto"
               controls
-              data-autoplay="true"
+              data-autoplay="false"
+              data-autoplay-mode="manual"
               src="https://res.cloudinary.com/dp455m4rk/video/upload/v1785822006/1-2-3-a-b-c_lkdrp6.mp4"
             ></video>
           </div>
@@ -1013,7 +1016,8 @@
               x5-playsinline
               preload="auto"
               controls
-              data-autoplay="true"
+              data-autoplay="false"
+              data-autoplay-mode="manual"
               src="https://res.cloudinary.com/dp455m4rk/video/upload/v1785822007/Thankyou_gtg6ya.mp4"
             ></video>
           </div>
@@ -1065,6 +1069,7 @@
               preload="auto"
               controls
               data-autoplay="true"
+              data-autoplay-mode="goodbye"
               src="https://res.cloudinary.com/dp455m4rk/video/upload/v1785822008/goodbye_vw5lb0.mp4"
             ></video>
           </div>
@@ -1227,13 +1232,14 @@
         idx = Math.max(0, Math.min(screens.length - 1, i));
         screens.forEach((s, n) => s.classList.toggle("active", n === idx));
         const activeVideo = screens[idx]?.querySelector("video") || null;
-        if (
-          activeVideo &&
-          activeVideo.getAttribute("data-autoplay") === "true"
-        ) {
-          playMediaVideo(activeVideo, true);
-        } else if (activeVideo) {
-          preloadVideo(activeVideo);
+        if (activeVideo) {
+          const autoplayEnabled =
+            activeVideo.getAttribute("data-autoplay") === "true";
+          if (autoplayEnabled) {
+            playMediaVideo(activeVideo, true);
+          } else {
+            preloadVideo(activeVideo);
+          }
         }
         progress.textContent = idx + 1 + " / " + screens.length;
         document.getElementById("prevBtn").style.visibility =
