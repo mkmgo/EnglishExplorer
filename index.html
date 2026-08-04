@@ -45,12 +45,15 @@
       body {
         margin: 0;
         width: 100%;
-        height: 100%;
+        min-height: 100%;
         overflow: hidden;
         background: var(--bg);
         font-family: Arial, Helvetica, sans-serif;
         color: var(--ink);
         touch-action: manipulation;
+      }
+      body {
+        min-height: 100dvh;
       }
       button {
         font: inherit;
@@ -58,8 +61,11 @@
         cursor: pointer;
       }
       #app {
-        width: 100vw;
-        height: 100vh;
+        width: 100%;
+        height: 100%;
+        min-height: 100dvh;
+        max-width: 100%;
+        max-height: 100%;
         position: relative;
         overflow: hidden;
       }
@@ -69,14 +75,16 @@
         display: none;
         align-items: center;
         justify-content: center;
-        padding: 5vh 5vw;
+        padding: clamp(10px, 1.4vh, 24px) clamp(10px, 1.8vw, 24px);
       }
       .screen.active {
         display: flex;
       }
       .content {
-        width: min(1400px, 90vw);
-        height: min(820px, 90vh);
+        width: min(1320px, 100%);
+        height: min(860px, 100%);
+        max-width: 100%;
+        max-height: 100%;
         position: relative;
         text-align: center;
       }
@@ -100,7 +108,7 @@
       .card {
         background: var(--card);
         border-radius: 32px;
-        padding: 3vw;
+        padding: clamp(1.2rem, 2.2vw, 2.6rem);
         box-shadow: var(--shadow);
       }
       .character {
@@ -136,12 +144,12 @@
         flex-wrap: wrap;
       }
       .choice {
-        min-width: 240px;
-        min-height: 150px;
+        min-width: 160px;
+        min-height: 96px;
         border-radius: 28px;
         background: white;
         box-shadow: var(--shadow);
-        font-size: clamp(2rem, 4vw, 4rem);
+        font-size: clamp(1.5rem, 2.8vw, 3rem);
         font-weight: 900;
         transition: 0.15s transform;
       }
@@ -476,7 +484,7 @@
         >
           <div class="small">ENGLISH EXPLORER</div>
           <h1>English Explorer</h1>
-          <h2>Lesson 1 - 4th of August 2026</h2>
+          <h2 style="text-align: center">Lesson 1</h2>
           <button
             class="choice pulse"
             style="background: var(--accent); color: white"
