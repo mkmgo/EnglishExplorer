@@ -161,6 +161,10 @@
       .alpha .word {
         font-size: clamp(2.2rem, 6vw, 5rem);
       }
+      .alpha h1 {
+        font-size: clamp(2.5rem, 6vw, 4rem);
+        margin: 0.1em 0;
+      }
       .bigNumber {
         font-size: clamp(10rem, 26vw, 26rem);
         font-weight: 900;
@@ -846,7 +850,7 @@
 
       <!-- 21 -->
       <section class="screen" data-i="21">
-        <div class="content">
+        <div class="content alpha">
           <h1>FIND THE LETTER!</h1>
           <div id="letters" class="row"></div>
           <div id="letterFeedback" class="feedback"></div>
@@ -904,32 +908,6 @@
             </button>
           </div>
           <p class="small">Use BACK and NEXT to move through the course.</p>
-        </div>
-      </section>
-
-      <!-- 24 -->
-      <section class="screen" data-i="24">
-        <div class="content card">
-          <h1>MY FIRST ENGLISH CONVERSATION</h1>
-          <div class="conversation">
-            <div class="line">👋 HELLO!</div>
-            <div class="line">WHAT'S YOUR NAME?</div>
-            <div class="line">
-              MY NAME IS <span id="convName">________</span>.
-            </div>
-            <div class="line">HOW OLD ARE YOU?</div>
-            <div class="line">I AM SEVEN.</div>
-            <div class="line">GOODBYE!</div>
-          </div>
-          <button
-            class="choice"
-            onclick="
-              sayConversation();
-              reward('YOU SPOKE ENGLISH!');
-            "
-          >
-            🎉 LET'S DO IT!
-          </button>
         </div>
       </section>
 
@@ -1084,10 +1062,7 @@
         document.getElementById("nextBtn").textContent =
           idx === screens.length - 1 ? "RESTART ↻" : "NEXT ›";
         if (idx === 16) buildLetters();
-        if (idx === 18)
-          document.getElementById("convName").textContent =
-            childName || "________";
-        if (idx === 20)
+        if (idx === 19)
           document.getElementById("starName").textContent =
             (childName || "YOUR") + " — ENGLISH STAR";
         synth?.cancel();
