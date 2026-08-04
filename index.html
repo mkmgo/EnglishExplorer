@@ -610,6 +610,7 @@
               preload="auto"
               controls
               autoplay
+              data-autoplay="true"
               src="https://res.cloudinary.com/dp455m4rk/video/upload/v1785822007/hello_y2a9fr.mp4"
             ></video>
           </div>
@@ -710,6 +711,7 @@
               x5-playsinline
               preload="auto"
               controls
+              data-autoplay="true"
               src="https://res.cloudinary.com/dp455m4rk/video/upload/v1785822006/commands_v7zbgo.mp4"
             ></video>
           </div>
@@ -881,6 +883,7 @@
               x5-playsinline
               preload="auto"
               controls
+              data-autoplay="true"
               src="https://res.cloudinary.com/dp455m4rk/video/upload/v1785822006/1-2-3-a-b-c_lkdrp6.mp4"
             ></video>
           </div>
@@ -975,7 +978,9 @@
           <h1>FIND THE LETTER!</h1>
           <div id="letters" class="row"></div>
           <div id="letterFeedback" class="feedback"></div>
-          <button class="choice" onclick="newLetter()">🎲 NEW COMMAND</button>
+          <button id="newLetterBtn" class="choice" onclick="newLetter()">
+            🎲 NEW COMMAND
+          </button>
           <p class="small">
             Teacher: say A, B or C. Child points. Then click the correct letter.
           </p>
@@ -1008,6 +1013,7 @@
               x5-playsinline
               preload="auto"
               controls
+              data-autoplay="true"
               src="https://res.cloudinary.com/dp455m4rk/video/upload/v1785822007/Thankyou_gtg6ya.mp4"
             ></video>
           </div>
@@ -1058,6 +1064,7 @@
               x5-playsinline
               preload="auto"
               controls
+              data-autoplay="true"
               src="https://res.cloudinary.com/dp455m4rk/video/upload/v1785822008/goodbye_vw5lb0.mp4"
             ></video>
           </div>
@@ -1137,6 +1144,29 @@
         } catch (e) {}
       }
 
+      function playMediaVideo(video, preferUnmuted = true) {
+        if (!video) return;
+        try {
+          preloadVideo(video);
+          video.currentTime = 0;
+          video.muted = false;
+          const attemptPlay = () => {
+            const p = video.play();
+            if (!p || typeof p.then !== "function") return;
+            p.then(() => {}).catch(() => {
+              video.muted = true;
+              video.play().catch(() => {});
+            });
+          };
+          if (preferUnmuted) {
+            attemptPlay();
+          } else {
+            video.muted = true;
+            attemptPlay();
+          }
+        } catch (e) {}
+      }
+
       function preloadLessonVideos() {
         const videos = [...document.querySelectorAll("video")];
         videos.forEach((video, index) => {
@@ -1194,7 +1224,12 @@
         idx = Math.max(0, Math.min(screens.length - 1, i));
         screens.forEach((s, n) => s.classList.toggle("active", n === idx));
         const activeVideo = screens[idx]?.querySelector("video") || null;
-        if (activeVideo) {
+        if (
+          activeVideo &&
+          activeVideo.getAttribute("data-autoplay") === "true"
+        ) {
+          playMediaVideo(activeVideo, true);
+        } else if (activeVideo) {
           preloadVideo(activeVideo);
         }
         progress.textContent = idx + 1 + " / " + screens.length;
@@ -1266,33 +1301,25 @@
       function autoPlayIntroVideo() {
         const video = document.getElementById("introVideo");
         if (!video) return;
-        video.muted = false;
-        video.currentTime = 0;
-        video.play().catch(() => {});
+        playMediaVideo(video, true);
       }
 
       function playIntroVideo() {
         const video = document.getElementById("introVideo");
         if (!video) return;
-        video.muted = false;
-        video.currentTime = 0;
-        video.play().catch(() => {});
+        playMediaVideo(video, true);
       }
 
       function repeatIntroVideo() {
         const video = document.getElementById("introVideo");
         if (!video) return;
-        video.muted = false;
-        video.currentTime = 0;
-        video.play().catch(() => {});
+        playMediaVideo(video, true);
       }
 
       function playVideo(id) {
         const video = document.getElementById(id);
         if (!video) return;
-        video.muted = false;
-        video.currentTime = 0;
-        video.play().catch(() => {});
+        playMediaVideo(video, true);
       }
 
       function repeatVideo(id) {
@@ -1413,10 +1440,24 @@
         say("Three!");
         reward("THREE!");
       }
-      const letterSpeech = { A: "ay", B: "bee", C: "see" };
+      const letterSpeech = { A: "A", B: "B", C: "C" };
       let lastLetterIdx = -1;
       let lastLetterCount = 0;
       let letterFeedbackTimer = null;
+      let letterIntroTimer = null;
+      let letterRoundActive = true;
+
+      function sayLetter(letter) {
+        if (!soundOn || !synth) return;
+        if (synth.speaking) synth.cancel();
+        const u = new SpeechSynthesisUtterance(letterSpeech[letter] || letter);
+        u.lang = "en-US";
+        u.volume = 1.0;
+        u.rate = 0.72;
+        u.pitch = 1.0;
+        if (defaultVoice) u.voice = defaultVoice;
+        synth.speak(u);
+      }
       function pickTargetLetter() {
         const letters = ["A", "B", "C"];
         let idx = Math.floor(Math.random() * letters.length);
@@ -1430,14 +1471,29 @@
         lastLetterIdx = idx;
         return letters[idx];
       }
+      function setNewLetterButtonState(enabled) {
+        const btn = document.getElementById("newLetterBtn");
+        if (!btn) return;
+        btn.disabled = !enabled;
+        btn.style.opacity = enabled ? "1" : "0.25";
+        btn.style.cursor = enabled ? "pointer" : "not-allowed";
+        btn.style.pointerEvents = enabled ? "auto" : "none";
+      }
+
       function buildLetters() {
         const box = document.getElementById("letters");
         box.innerHTML = "";
         const current = pickTargetLetter();
         window.currentLetter = current;
+        letterRoundActive = true;
+        setNewLetterButtonState(false);
         if (letterFeedbackTimer) {
           window.clearTimeout(letterFeedbackTimer);
           letterFeedbackTimer = null;
+        }
+        if (letterIntroTimer) {
+          window.clearTimeout(letterIntroTimer);
+          letterIntroTimer = null;
         }
         document.getElementById("letterFeedback").textContent = "";
         [...["A", "B", "C"].sort(() => Math.random() - 0.5)].forEach(
@@ -1450,6 +1506,12 @@
               const feedback = document.getElementById("letterFeedback");
               if (letter === target) {
                 feedback.textContent = "YES! ⭐";
+                letterRoundActive = false;
+                setNewLetterButtonState(true);
+                if (letterIntroTimer) {
+                  window.clearTimeout(letterIntroTimer);
+                  letterIntroTimer = null;
+                }
                 say("Correct - " + letter);
                 reward(letter + "!");
                 if (letterFeedbackTimer) {
@@ -1462,15 +1524,24 @@
               } else {
                 feedback.textContent = "TRY AGAIN";
                 say("Try again!");
+                setNewLetterButtonState(false);
+                window.setTimeout(() => {
+                  sayLetter(target);
+                }, 900);
               }
             };
             box.appendChild(b);
           },
         );
-        setTimeout(() => say(letterSpeech[window.currentLetter]), 500);
+        letterIntroTimer = window.setTimeout(() => {
+          sayLetter(window.currentLetter);
+          letterIntroTimer = null;
+        }, 500);
       }
       function newLetter() {
-        buildLetters();
+        if (!letterRoundActive) {
+          buildLetters();
+        }
       }
       function sayConversation() {
         const n = childName || "your name";
