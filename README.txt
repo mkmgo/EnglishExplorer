@@ -15,5 +15,5 @@ How to use:
 
 Notes:
 - No external JavaScript libraries or web fonts are used.
-- Speech uses the browser's Web Speech API. Tizen browser support can vary by model/year; if unavailable, the visual lesson still works and the teacher can model pronunciation.
+- Speech uses a layered engine: native Tizen TTS (tizen.tts) when available, otherwise the browser's Web Speech API, and finally a Web Audio "chime" so every interactive button is always audible on Tizen. If spoken words are required on a model without TTS, add pre-recorded MP3 clips (see the say() function in index.html).
 - The lesson is intentionally teacher-led: the screen supports the tutor rather than replacing the tutor.

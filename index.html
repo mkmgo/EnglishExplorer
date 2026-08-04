@@ -1093,9 +1093,55 @@
         window.webkitSpeechSynthesis ||
         window.mozSpeechSynthesis ||
         null;
+      const audioCtx =
+        window.AudioContext ||
+        window.webkitAudioContext ||
+        window.mozAudioContext ||
+        null;
+      let actx = null;
       let defaultVoice = null;
       let voiceTimer = null;
       let speechPrimed = false;
+
+      function ensureAudio() {
+        if (!audioCtx) return null;
+        if (!actx) actx = new audioCtx();
+        if (actx.state === "suspended") actx.resume().catch(() => {});
+        return actx;
+      }
+
+      function tone(freq, delay, dur, vol) {
+        const c = ensureAudio();
+        if (!c) return;
+        try {
+          const o = c.createOscillator();
+          const g = c.createGain();
+          o.type = "sine";
+          o.frequency.value = freq;
+          const t0 = c.currentTime + delay;
+          g.gain.setValueAtTime(0.0001, t0);
+          g.gain.linearRampToValueAtTime(vol, t0 + 0.02);
+          g.gain.exponentialRampToValueAtTime(0.0001, t0 + dur);
+          o.connect(g);
+          g.connect(c.destination);
+          o.start(t0);
+          o.stop(t0 + dur + 0.05);
+        } catch (e) {}
+      }
+
+      function chime() {
+        tone(523.25, 0, 0.18, 0.22);
+        tone(659.25, 0.1, 0.22, 0.22);
+        tone(783.99, 0.2, 0.32, 0.22);
+      }
+
+      function cancelSpeech() {
+        if (synth && typeof synth.cancel === "function") {
+          try {
+            synth.cancel();
+          } catch (e) {}
+        }
+      }
 
       function setVoice() {
         if (!synth) return;
@@ -1106,17 +1152,18 @@
       }
 
       function primeSpeech() {
+        ensureAudio();
         if (!synth || speechPrimed) return;
+        speechPrimed = true;
         setVoice();
         if (!defaultVoice) return;
-        const utterance = new SpeechSynthesisUtterance("ready");
-        utterance.volume = 0.01;
-        utterance.rate = 1;
-        utterance.pitch = 1;
-        utterance.onend = () => {
-          speechPrimed = true;
-        };
-        synth.speak(utterance);
+        try {
+          const utterance = new SpeechSynthesisUtterance("ready");
+          utterance.volume = 0.01;
+          utterance.rate = 1;
+          utterance.pitch = 1;
+          synth.speak(utterance);
+        } catch (e) {}
       }
 
       function initTTS() {
@@ -1163,7 +1210,7 @@
         if (idx === 24)
           document.getElementById("starName").textContent =
             (childName || "YOUR") + " — ENGLISH STAR";
-        synth?.cancel();
+        cancelSpeech();
         if (idx === 1) {
           autoPlayIntroVideo();
         }
@@ -1176,18 +1223,31 @@
         show(idx - 1);
       }
       function say(text) {
-        if (!soundOn || !synth) return;
-        if (!speechPrimed) {
-          primeSpeech();
+        if (!soundOn) return;
+        if (window.tizen && window.tizen.tts) {
+          try {
+            tizen.tts.speak(String(text), {
+              locale: "en-US",
+              rate: 0.9,
+              pitch: 1.1,
+              type: "TTS_TYPE_SCREEN_READER",
+            });
+            return;
+          } catch (e) {}
         }
-        if (synth.speaking) synth.cancel();
-        const u = new SpeechSynthesisUtterance(text);
-        u.lang = "en-US";
-        u.volume = 1.0;
-        u.rate = 0.82;
-        u.pitch = 1.08;
-        if (defaultVoice) u.voice = defaultVoice;
-        synth.speak(u);
+        if (synth && typeof SpeechSynthesisUtterance !== "undefined") {
+          if (!speechPrimed) primeSpeech();
+          if (synth.speaking) synth.cancel();
+          const u = new SpeechSynthesisUtterance(text);
+          u.lang = "en-US";
+          u.volume = 1.0;
+          u.rate = 0.82;
+          u.pitch = 1.08;
+          if (defaultVoice) u.voice = defaultVoice;
+          synth.speak(u);
+          return;
+        }
+        chime();
       }
       function toast(t) {
         const el = document.getElementById("toast");
@@ -1387,7 +1447,7 @@
         soundOn = !soundOn;
         document.getElementById("soundBtn").textContent = soundOn ? "🔊" : "🔇";
         if (soundOn) primeSpeech();
-        else synth?.cancel();
+        else cancelSpeech();
       };
       document.getElementById("homeBtn").onclick = () => show(0);
       document.addEventListener("keydown", (e) => {
