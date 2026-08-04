@@ -878,16 +878,28 @@
         null;
       let defaultVoice = null;
       let voiceTimer = null;
+      let speechPrimed = false;
 
       function setVoice() {
         if (!synth) return;
         const voices = synth.getVoices();
         if (!voices || voices.length === 0) return;
         defaultVoice =
-          voices.find((v) => v.lang?.startsWith("en")) ||
-          voices[0] ||
-          voices[0] ||
-          null;
+          voices.find((v) => v.lang?.startsWith("en")) || voices[0] || null;
+      }
+
+      function primeSpeech() {
+        if (!synth || speechPrimed) return;
+        setVoice();
+        if (!defaultVoice) return;
+        const utterance = new SpeechSynthesisUtterance("ready");
+        utterance.volume = 0.01;
+        utterance.rate = 1;
+        utterance.pitch = 1;
+        utterance.onend = () => {
+          speechPrimed = true;
+        };
+        synth.speak(utterance);
       }
 
       function initTTS() {
@@ -914,6 +926,10 @@
         }, 4000);
       }
       initTTS();
+      document.addEventListener("pointerdown", primeSpeech, { once: true });
+      document.addEventListener("click", primeSpeech, { once: true });
+      document.addEventListener("keydown", primeSpeech, { once: true });
+      document.addEventListener("touchstart", primeSpeech, { once: true });
 
       function show(i) {
         idx = Math.max(0, Math.min(screens.length - 1, i));
@@ -944,6 +960,9 @@
       }
       function say(text) {
         if (!soundOn || !synth) return;
+        if (!speechPrimed) {
+          primeSpeech();
+        }
         if (synth.speaking) synth.cancel();
         const u = new SpeechSynthesisUtterance(text);
         u.lang = "en-US";
@@ -1009,6 +1028,7 @@
       }
 
       function startIntroVideo() {
+        primeSpeech();
         show(1);
         setTimeout(playIntroVideo, 120);
       }
@@ -1137,7 +1157,8 @@
       document.getElementById("soundBtn").onclick = () => {
         soundOn = !soundOn;
         document.getElementById("soundBtn").textContent = soundOn ? "🔊" : "🔇";
-        if (!soundOn) synth?.cancel();
+        if (soundOn) primeSpeech();
+        else synth?.cancel();
       };
       document.getElementById("homeBtn").onclick = () => show(0);
       document.addEventListener("keydown", (e) => {
