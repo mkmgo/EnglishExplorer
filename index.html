@@ -884,8 +884,11 @@
             voices.find((v) => v.lang?.startsWith("en")) || voices[0] || null;
         };
         setVoice();
-        setTimeout(setVoice, 300);
-        synth.onvoiceschanged = setVoice;
+        setTimeout(setVoice, 500);
+        setTimeout(setVoice, 1200);
+        if (typeof synth.onvoiceschanged === "function") {
+          synth.onvoiceschanged = setVoice;
+        }
       }
       initTTS();
 
@@ -918,12 +921,13 @@
       }
       function say(text) {
         if (!soundOn || !synth) return;
-        synth.cancel();
+        if (synth.speaking) synth.cancel();
         const u = new SpeechSynthesisUtterance(text);
         u.lang = "en-US";
-        if (defaultVoice) u.voice = defaultVoice;
+        u.volume = 1.0;
         u.rate = 0.82;
         u.pitch = 1.08;
+        if (defaultVoice) u.voice = defaultVoice;
         synth.speak(u);
       }
       function toast(t) {
@@ -1110,7 +1114,7 @@
       document.getElementById("soundBtn").onclick = () => {
         soundOn = !soundOn;
         document.getElementById("soundBtn").textContent = soundOn ? "🔊" : "🔇";
-        if (!soundOn) speechSynthesis?.cancel();
+        if (!soundOn) synth?.cancel();
       };
       document.getElementById("homeBtn").onclick = () => show(0);
       document.addEventListener("keydown", (e) => {
