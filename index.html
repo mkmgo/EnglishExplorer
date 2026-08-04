@@ -660,7 +660,7 @@
             <button
               class="choice no"
               onclick="
-                say('No!');
+                say('No, try again!');
                 reward('TRY AGAIN');
               "
             >
@@ -700,24 +700,6 @@
           >
             NEXT ➜
           </button>
-        </div>
-      </section>
-
-      <!-- 11 -->
-      <section class="screen" data-i="13">
-        <div class="content card">
-          <div class="object bounce">⚽</div>
-          <div class="word">BALL</div>
-          <button
-            class="choice"
-            onclick="
-              say('Ball!');
-              reward('BALL!');
-            "
-          >
-            ⚽ BALL
-          </button>
-          <p>Find the real ball. Touch it. Roll it.</p>
         </div>
       </section>
 
@@ -776,13 +758,6 @@
               onclick="playVideo('countVideo')"
             >
               ▶ PLAY
-            </button>
-            <button
-              class="choice no"
-              style="min-width: 180px"
-              onclick="repeatVideo('countVideo')"
-            >
-              🔁 REPEAT
             </button>
           </div>
           <p class="small">Use BACK and NEXT to move through the course.</p>
@@ -919,13 +894,6 @@
             >
               ▶ PLAY
             </button>
-            <button
-              class="choice no"
-              style="min-width: 180px"
-              onclick="repeatVideo('thankYouVideo')"
-            >
-              🔁 REPEAT
-            </button>
           </div>
           <p class="small">Use BACK and NEXT to move through the course.</p>
         </div>
@@ -1001,13 +969,6 @@
               onclick="playVideo('goodbyeVideo')"
             >
               ▶ PLAY
-            </button>
-            <button
-              class="choice no"
-              style="min-width: 180px"
-              onclick="repeatVideo('goodbyeVideo')"
-            >
-              🔁 REPEAT
             </button>
           </div>
           <p class="small">Use BACK and NEXT to move through the course.</p>
@@ -1114,11 +1075,11 @@
           idx === 0 ? "hidden" : "visible";
         document.getElementById("nextBtn").textContent =
           idx === screens.length - 1 ? "RESTART ↻" : "NEXT ›";
-        if (idx === 19) buildLetters();
-        if (idx === 21)
+        if (idx === 18) buildLetters();
+        if (idx === 20)
           document.getElementById("convName").textContent =
             childName || "________";
-        if (idx === 23)
+        if (idx === 22)
           document.getElementById("starName").textContent =
             (childName || "YOUR") + " — ENGLISH STAR";
         synth?.cancel();
@@ -1286,7 +1247,13 @@
         document.getElementById("quizFeedback").textContent = correct
           ? "GREAT! ⭐"
           : "TRY AGAIN!";
-        say(correct ? "Yes! Great!" : "No! Try again!");
+        say(v
+          ? correct
+            ? "Yes! Great!"
+            : "No! Try again!"
+          : correct
+            ? "Great, you are right!"
+            : "No! Try again!");
         if (correct) {
           reward("GREAT!");
           document.getElementById("nextQuiz").classList.remove("hidden");
