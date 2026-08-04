@@ -1136,13 +1136,22 @@
           preloadVideo(video);
           video.currentTime = 0;
           video.muted = false;
+          video.autoplay = true;
+          video.setAttribute("autoplay", "true");
+          video.setAttribute("playsinline", "true");
+          video.setAttribute("webkit-playsinline", "true");
+          video.setAttribute("x5-playsinline", "true");
           const attemptPlay = () => {
             const p = video.play();
             if (!p || typeof p.then !== "function") return;
-            p.then(() => {}).catch(() => {
+            p.then(() => {
+              video.muted = false;
+            }).catch(() => {
               if (preferUnmuted) {
-                video.muted = true;
-                video.play().catch(() => {});
+                window.setTimeout(() => {
+                  video.muted = false;
+                  video.play().catch(() => {});
+                }, 150);
               }
             });
           };
