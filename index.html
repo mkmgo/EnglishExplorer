@@ -468,7 +468,6 @@
               x5-playsinline
               preload="auto"
               controls
-              muted
               autoplay
               src="https://res.cloudinary.com/dp455m4rk/video/upload/v1785822007/hello_y2a9fr.mp4"
             ></video>
@@ -488,13 +487,6 @@
               onclick="playIntroVideo()"
             >
               ▶ PLAY
-            </button>
-            <button
-              class="choice no"
-              style="min-width: 180px"
-              onclick="repeatIntroVideo()"
-            >
-              🔁 REPEAT
             </button>
           </div>
           <p class="small">Use BACK and NEXT to move through the course.</p>
@@ -540,6 +532,7 @@
             class="nameInput"
             maxlength="18"
             placeholder="Your name"
+            value="Onza"
           />
           <div id="nameDisplay" class="nameDisplay">________</div>
           <button class="choice" onclick="setName()">✨ MAGIC NAME!</button>
@@ -547,61 +540,6 @@
             Teacher: enter the child's name, then let him say the whole
             sentence.
           </p>
-        </div>
-      </section>
-
-      <!-- 6 -->
-      <section class="screen" data-i="6">
-        <div class="content">
-          <div class="emoji wave">👋</div>
-          <h1>HELLO!</h1>
-          <p>Say hello in a funny voice.</p>
-          <div class="row">
-            <button
-              class="choice"
-              onclick="
-                say('Hello!');
-                toast('Happy hello!');
-              "
-            >
-              😄 HAPPY
-            </button>
-            <button
-              class="choice"
-              onclick="
-                say('Hello!');
-                toast('Robot hello!');
-              "
-            >
-              🤖 ROBOT
-            </button>
-            <button
-              class="choice"
-              onclick="
-                say('Hello!');
-                toast('Sleepy hello!');
-              "
-            >
-              😴 SLEEPY
-            </button>
-          </div>
-        </div>
-      </section>
-
-      <!-- 6 -->
-      <section class="screen" data-i="7">
-        <div class="content card">
-          <div class="emoji">�</div>
-          <div class="command">SIT DOWN!</div>
-          <button
-            class="choice"
-            onclick="
-              say('Sit down!');
-              reward('SIT DOWN!');
-            "
-          >
-            ▶ PLAY
-          </button>
         </div>
       </section>
 
@@ -650,15 +588,25 @@
             >
               ▶ PLAY
             </button>
-            <button
-              class="choice no"
-              style="min-width: 180px"
-              onclick="repeatVideo('commandsVideo')"
-            >
-              🔁 REPEAT
-            </button>
           </div>
           <p class="small">Use BACK and NEXT to move through the course.</p>
+        </div>
+      </section>
+
+      <!-- 7 -->
+      <section class="screen" data-i="7">
+        <div class="content card">
+          <div class="emoji">🪑</div>
+          <div class="command">SIT DOWN!</div>
+          <button
+            class="choice"
+            onclick="
+              say('Sit down!');
+              reward('SIT DOWN!');
+            "
+          >
+            ▶ PLAY
+          </button>
         </div>
       </section>
 
@@ -1156,11 +1104,11 @@
           idx === 0 ? "hidden" : "visible";
         document.getElementById("nextBtn").textContent =
           idx === screens.length - 1 ? "RESTART ↻" : "NEXT ›";
-        if (idx === 20) buildLetters();
-        if (idx === 22)
+        if (idx === 19) buildLetters();
+        if (idx === 21)
           document.getElementById("convName").textContent =
             childName || "________";
-        if (idx === 24)
+        if (idx === 23)
           document.getElementById("starName").textContent =
             (childName || "YOUR") + " — ENGLISH STAR";
         synth?.cancel();
@@ -1223,7 +1171,7 @@
       function autoPlayIntroVideo() {
         const video = document.getElementById("introVideo");
         if (!video) return;
-        video.muted = true;
+        video.muted = false;
         video.currentTime = 0;
         video.play().catch(() => {});
       }
