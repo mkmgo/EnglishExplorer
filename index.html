@@ -281,27 +281,32 @@
         background: #eee;
       }
       #videoPlay {
-        position: absolute;
-        left: 50%;
-        top: 50%;
-        transform: translate(-50%, -50%);
-        width: 100px;
-        height: 100px;
-        border-radius: 50%;
-        background: rgba(255, 255, 255, 0.9);
-        font-size: 2rem;
+        width: min(340px, 60vw);
+        min-height: 96px;
+        border-radius: 999px;
+        background: var(--accent);
+        color: white;
+        font-size: clamp(2rem, 3.4vw, 3rem);
+        font-weight: 900;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
       }
       #introVideoWrap {
         display: flex;
         justify-content: center;
-        width: min(760px, 90vw);
+        width: min(1400px, 94vw);
       }
       #introVideo {
         width: 100%;
-        max-height: 60vh;
+        max-height: 66vh;
         object-fit: contain;
         border-radius: 32px;
         box-shadow: var(--shadow);
+        background: #0b1020;
+      }
+      .introTitle {
+        font-size: clamp(1.4rem, 2.3vw, 2.5rem);
+        font-weight: 500;
+        letter-spacing: 0.02em;
       }
       .lessonVideo {
         width: 100%;
@@ -432,15 +437,8 @@
           <div class="small">ENGLISH EXPLORER</div>
           <h1>English Explorer</h1>
           <h2>Lesson 1 - 4th of August 2026</h2>
-          <button
-            class="choice pulse"
-            style="background: var(--accent); color: white"
-            onclick="startIntroVideo()"
-          >
-            ▶ START
-          </button>
           <p class="small" style="max-width: 80vw">
-            Tap START to go to the video slide, then use BACK and NEXT to
+            Press START to go to the video slide, then use BACK and NEXT to
             continue through the lesson.
           </p>
         </div>
@@ -459,8 +457,8 @@
           "
         >
           <div class="small">ENGLISH EXPLORER</div>
-          <h1 style="font-size: clamp(3rem, 5vw, 4rem)">Watch the clip</h1>
-          <div id="introVideoWrap" style="margin-top: 0.5em">
+          <h1 class="introTitle">Welcome from Sam</h1>
+          <div id="introVideoWrap" style="margin-top: 0.3em">
             <video
               id="introVideo"
               playsinline
@@ -468,35 +466,10 @@
               x5-playsinline
               preload="auto"
               controls
-              muted
-              autoplay
               src="https://res.cloudinary.com/dp455m4rk/video/upload/v1785822007/hello_y2a9fr.mp4"
             ></video>
           </div>
-          <div
-            class="row"
-            style="
-              justify-content: center;
-              gap: 1rem;
-              width: 100%;
-              max-width: 800px;
-            "
-          >
-            <button
-              class="choice yes"
-              style="min-width: 180px"
-              onclick="playIntroVideo()"
-            >
-              ▶ PLAY
-            </button>
-            <button
-              class="choice no"
-              style="min-width: 180px"
-              onclick="repeatIntroVideo()"
-            >
-              🔁 REPEAT
-            </button>
-          </div>
+          <button id="videoPlay" onclick="playIntroVideo()">▶ PLAY</button>
           <p class="small">Use BACK and NEXT to move through the course.</p>
         </div>
       </section>
@@ -1087,7 +1060,6 @@
         soundOn = true,
         childName = "";
       const progress = document.getElementById("progress");
-      const video = document.getElementById("charVideo");
       const synth =
         window.speechSynthesis ||
         window.webkitSpeechSynthesis ||
@@ -1202,7 +1174,11 @@
         document.getElementById("prevBtn").style.visibility =
           idx === 0 ? "hidden" : "visible";
         document.getElementById("nextBtn").textContent =
-          idx === screens.length - 1 ? "RESTART ↻" : "NEXT ›";
+          idx === screens.length - 1
+            ? "RESTART ↻"
+            : idx === 0
+              ? "START ›"
+              : "NEXT ›";
         if (idx === 20) buildLetters();
         if (idx === 22)
           document.getElementById("convName").textContent =
@@ -1211,9 +1187,6 @@
           document.getElementById("starName").textContent =
             (childName || "YOUR") + " — ENGLISH STAR";
         cancelSpeech();
-        if (idx === 1) {
-          autoPlayIntroVideo();
-        }
       }
       function next() {
         if (idx === screens.length - 1) show(0);
@@ -1270,33 +1243,7 @@
         }
         setTimeout(() => (r.innerHTML = ""), 2500);
       }
-      function waveVideo() {
-        if (!video) return;
-        video.currentTime = 0;
-        video.muted = true;
-        video.play().catch(() => {});
-      }
-      function playCharacter() {
-        waveVideo();
-        document.getElementById("videoPlay").classList.add("hidden");
-      }
-      function autoPlayIntroVideo() {
-        const video = document.getElementById("introVideo");
-        if (!video) return;
-        video.muted = true;
-        video.currentTime = 0;
-        video.play().catch(() => {});
-      }
-
       function playIntroVideo() {
-        const video = document.getElementById("introVideo");
-        if (!video) return;
-        video.muted = false;
-        video.currentTime = 0;
-        video.play().catch(() => {});
-      }
-
-      function repeatIntroVideo() {
         const video = document.getElementById("introVideo");
         if (!video) return;
         video.muted = false;
@@ -1314,12 +1261,6 @@
 
       function repeatVideo(id) {
         playVideo(id);
-      }
-
-      function startIntroVideo() {
-        primeSpeech();
-        show(1);
-        setTimeout(playIntroVideo, 120);
       }
 
       function setName() {
