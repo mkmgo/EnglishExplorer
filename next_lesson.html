@@ -312,7 +312,8 @@
       }
       .fullImage {
         width: 100%;
-        height: 100%;
+        min-height: 0;
+        flex: 1;
         object-fit: contain;
         border-radius: 28px;
         box-shadow: var(--shadow);
@@ -407,7 +408,7 @@
         <div class="content hero">
           <div class="heroText">
             <div class="small">ENGLISH EXPLORER · LESSON 2</div>
-            <h2>WELCOME BACK, ONZA!</h1>
+            <h2>WELCOME BACK, ONZA!</h2>
             <p>Sam remembers you!</p>
             <button
               class="choice primary"
@@ -492,18 +493,129 @@
       </section>
 
       <section class="screen" data-i="3">
-        <div class="content">
-          <h1>Have a look at this</h1>
-          <p>What is in your face</p>
+        <div
+          class="content"
+          style="
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 1em;
+            min-height: 0;
+          "
+        >
+          <h1>Head & Eyes</h1>
           <img
             class="fullImage"
-            src="https://res.cloudinary.com/dp455m4rk/image/upload/v1785931877/bodyparts_1_qykwha.png"
-            alt="Body parts"
+            src="https://res.cloudinary.com/dp455m4rk/image/upload/v1785941763/head_eyes_yi7oro.png"
+            alt="Head and eyes"
           />
+          <div class="row">
+            <button
+              class="choice"
+              onclick="
+                say('Head!');
+                pairPress('he', 'head');
+              "
+            >
+              🧑🏻 HEAD
+            </button>
+            <button
+              class="choice"
+              onclick="
+                say('Eyes!');
+                pairPress('he', 'eyes');
+              "
+            >
+              👀 EYES
+            </button>
+          </div>
         </div>
       </section>
 
       <section class="screen" data-i="4">
+        <div
+          class="content"
+          style="
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 1em;
+            min-height: 0;
+          "
+        >
+          <h1>Mouth & Hands</h1>
+          <img
+            class="fullImage"
+            src="https://res.cloudinary.com/dp455m4rk/image/upload/v1785941763/hands_mouth_flcgyw.png"
+            alt="Mouth and hands"
+          />
+          <div class="row">
+            <button
+              class="choice"
+              onclick="
+                say('Mouth!');
+                pairPress('mh', 'mouth');
+              "
+            >
+              👄 MOUTH
+            </button>
+            <button
+              class="choice"
+              onclick="
+                say('Hands!');
+                pairPress('mh', 'hands');
+              "
+            >
+              🙌🏻 HANDS
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <section class="screen" data-i="5">
+        <div
+          class="content"
+          style="
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 1em;
+            min-height: 0;
+          "
+        >
+          <h1>Ears & Nose</h1>
+          <img
+            class="fullImage"
+            src="https://res.cloudinary.com/dp455m4rk/image/upload/v1785941763/ears_nose_tmikep.png"
+            alt="Ears and nose"
+          />
+          <div class="row">
+            <button
+              class="choice"
+              onclick="
+                say('Ears!');
+                pairPress('en', 'ears');
+              "
+            >
+              👂🏻 EARS
+            </button>
+            <button
+              class="choice"
+              onclick="
+                say('Nose!');
+                pairPress('en', 'nose');
+              "
+            >
+              👃🏻 NOSE
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <section class="screen" data-i="6">
         <div class="content card">
           <div class="emoji">🧍</div>
           <div class="command">STAND UP!</div>
@@ -520,7 +632,7 @@
         </div>
       </section>
 
-      <section class="screen" data-i="5">
+      <section class="screen" data-i="7">
         <div class="content card">
           <div class="emoji">🪑</div>
           <div class="command">SIT DOWN!</div>
@@ -537,7 +649,7 @@
         </div>
       </section>
 
-      <section class="screen" data-i="6">
+      <section class="screen" data-i="8">
         <div class="content">
           <h1>FAST OR SLOW?</h1>
           <div id="speedCommand" class="card command">STAND UP!</div>
@@ -549,7 +661,7 @@
         </div>
       </section>
 
-      <section class="screen" data-i="7">
+      <section class="screen" data-i="9">
         <div class="content">
           <h1>SAM IS WRONG!</h1>
           <div class="emoji">🦊</div>
@@ -578,7 +690,7 @@
         </div>
       </section>
 
-      <section class="screen" data-i="8">
+      <section class="screen" data-i="10">
         <div class="content">
           <h1>YES OR NO DETECTIVE</h1>
           <div id="detectiveImg" class="quizImg">⚽</div>
@@ -598,7 +710,7 @@
         </div>
       </section>
 
-      <section class="screen" data-i="9">
+      <section class="screen" data-i="11">
         <div class="content">
           <h1>MEET THE CREW!</h1>
           <p>Sam's friends are here.</p>
@@ -632,7 +744,7 @@
         </div>
       </section>
 
-      <section class="screen" data-i="10">
+      <section class="screen" data-i="12">
         <div class="content card">
           <div class="bodyIcon">🧑‍🦰</div>
           <div class="word">HEAD</div>
@@ -648,7 +760,7 @@
         </div>
       </section>
 
-      <section class="screen" data-i="11">
+      <section class="screen" data-i="13">
         <div class="content card">
           <div class="bodyIcon">👀</div>
           <div class="word">EYES</div>
@@ -664,7 +776,7 @@
         </div>
       </section>
 
-      <section class="screen" data-i="12">
+      <section class="screen" data-i="14">
         <div class="content card">
           <div class="bodyIcon">👃</div>
           <div class="word">NOSE</div>
@@ -680,7 +792,7 @@
         </div>
       </section>
 
-      <section class="screen" data-i="13">
+      <section class="screen" data-i="15">
         <div class="content">
           <h1>TOUCH YOUR...</h1>
           <div id="bodyPrompt" class="card command">NOSE!</div>
@@ -693,7 +805,7 @@
         </div>
       </section>
 
-      <section class="screen" data-i="14">
+      <section class="screen" data-i="16">
         <div class="content">
           <h1>BODY PARTS GAME</h1>
           <p>Listen carefully!</p>
@@ -712,7 +824,7 @@
         </div>
       </section>
 
-      <section class="screen" data-i="15">
+      <section class="screen" data-i="17">
         <div class="content">
           <h1>A B C TREASURE HUNT</h1>
           <p>Teacher: say the letter. Child points.</p>
@@ -721,7 +833,7 @@
         </div>
       </section>
 
-      <section class="screen" data-i="16">
+      <section class="screen" data-i="18">
         <div class="content">
           <h1>1 · 2 · 3 CHALLENGE</h1>
           <div id="countObjects" class="bodyIcon">🍎🍎🍎</div>
@@ -738,7 +850,7 @@
         </div>
       </section>
 
-      <section class="screen" data-i="17">
+      <section class="screen" data-i="19">
         <div class="content card">
           <h1>SAM'S MINI CHAT</h1>
           <div class="conversation">
@@ -755,7 +867,7 @@
         </div>
       </section>
 
-      <section class="screen" data-i="18">
+      <section class="screen" data-i="20">
         <div class="content card">
           <div class="star">⭐</div>
           <h1 id="starName">ENGLISH EXPLORER</h1>
@@ -819,16 +931,16 @@
       const screens = [...document.querySelectorAll(".screen")],
         progress = document.getElementById("progress");
       function go(n) {
-        i = Math.max(0, Math.min(17, n));
+        i = Math.max(0, Math.min(19, n));
         screens.forEach((s, k) => s.classList.toggle("active", k === i));
-        progress.textContent = i + 1 + " / 18";
+        progress.textContent = i + 1 + " / 20";
         document.getElementById("prev").style.visibility = i
           ? "visible"
           : "hidden";
         document.getElementById("next").textContent =
-          i === 17 ? "RESTART ↻" : "NEXT ›";
-        if (i === 14) buildLetters();
-        if (i === 15) newCount();
+          i === 19 ? "RESTART ↻" : "NEXT ›";
+        if (i === 16) buildLetters();
+        if (i === 17) newCount();
         speechSynthesis?.cancel();
         let v = screens[i]?.querySelector("video") || null;
         if (v) {
@@ -964,6 +1076,20 @@
         document.getElementById("detectiveNext").classList.add("hidden");
       }
       const bodies = ["HEAD", "EYES", "NOSE", "EARS", "MOUTH", "HANDS"];
+      const pairSlides = {
+        he: { words: { head: false, eyes: false }, label: "HEAD & EYES!" },
+        mh: { words: { mouth: false, hands: false }, label: "MOUTH & HANDS!" },
+        en: { words: { ears: false, nose: false }, label: "EARS & NOSE!" },
+      };
+      function pairPress(key, word) {
+        let s = pairSlides[key];
+        s.words[word] = true;
+        let all = Object.keys(s.words).every((w) => s.words[w]);
+        if (all) {
+          reward(s.label);
+          for (let w in s.words) s.words[w] = false;
+        }
+      }
       function newBodyPrompt() {
         bodyTarget = bodies[Math.floor(Math.random() * bodies.length)];
         document.getElementById("bodyPrompt").textContent = bodyTarget + "!";
