@@ -397,7 +397,7 @@
       <div id="toast"></div>
       <div id="reward"></div>
       <div class="topbar">
-        <div class="progress" id="progress">1 / 21</div>
+        <div class="progress" id="progress">1 / 20</div>
         <div class="controls">
           <button class="ctrl" id="soundBtn">🔊</button
           ><button class="ctrl" onclick="go(0)">⌂</button>
@@ -713,35 +713,6 @@
 
       <section class="screen" data-i="10">
         <div class="content">
-          <h1>SAM IS WRONG!</h1>
-          <div class="emoji">🦊</div>
-          <h2 id="wrongText">SAM SAYS: SIT DOWN!</h2>
-          <p>But Sam is standing!</p>
-          <div class="row">
-            <button
-              class="choice yes"
-              onclick="
-                say('Yes!');
-                reward('YES!');
-              "
-            >
-              YES ✅</button
-            ><button
-              class="choice no"
-              onclick="
-                say('No!');
-                reward('NO!');
-              "
-            >
-              NO ❌
-            </button>
-          </div>
-          <p class="small">Teacher: ask, "Is Sam right?"</p>
-        </div>
-      </section>
-
-      <section class="screen" data-i="11">
-        <div class="content">
           <h1>YES OR NO DETECTIVE</h1>
           <div id="detectiveImg" class="quizImg">⚽</div>
           <h2 id="detectiveQ">IS IT A BALL?</h2>
@@ -760,7 +731,7 @@
         </div>
       </section>
 
-      <section class="screen" data-i="12">
+      <section class="screen" data-i="11">
         <div class="content">
           <h1>MEET THE CREW!</h1>
           <p>Sam's friends are here.</p>
@@ -794,7 +765,7 @@
         </div>
       </section>
 
-      <section class="screen" data-i="13">
+      <section class="screen" data-i="12">
         <div class="content card">
           <div class="bodyIcon">🧑‍🦰</div>
           <div class="word">HEAD</div>
@@ -810,7 +781,7 @@
         </div>
       </section>
 
-      <section class="screen" data-i="14">
+      <section class="screen" data-i="13">
         <div class="content card">
           <div class="bodyIcon">👀</div>
           <div class="word">EYES</div>
@@ -826,7 +797,7 @@
         </div>
       </section>
 
-      <section class="screen" data-i="15">
+      <section class="screen" data-i="14">
         <div class="content card">
           <div class="bodyIcon">👃</div>
           <div class="word">NOSE</div>
@@ -842,7 +813,7 @@
         </div>
       </section>
 
-      <section class="screen" data-i="16">
+      <section class="screen" data-i="15">
         <div class="content">
           <h1>TOUCH YOUR...</h1>
           <div id="bodyPrompt" class="card command">NOSE!</div>
@@ -855,7 +826,7 @@
         </div>
       </section>
 
-      <section class="screen" data-i="17">
+      <section class="screen" data-i="16">
         <div class="content">
           <h1>BODY PARTS GAME</h1>
           <p>Listen carefully!</p>
@@ -874,7 +845,7 @@
         </div>
       </section>
 
-      <section class="screen" data-i="18">
+      <section class="screen" data-i="17">
         <div class="content">
           <h1>A B C TREASURE HUNT</h1>
           <p>Teacher: say the letter. Child points.</p>
@@ -883,7 +854,7 @@
         </div>
       </section>
 
-      <section class="screen" data-i="19">
+      <section class="screen" data-i="18">
         <div class="content">
           <h1>1 · 2 · 3 CHALLENGE</h1>
           <div id="countObjects" class="bodyIcon">🍎🍎🍎</div>
@@ -900,7 +871,7 @@
         </div>
       </section>
 
-      <section class="screen" data-i="20">
+      <section class="screen" data-i="19">
         <div class="content card">
           <h1>SAM'S MINI CHAT</h1>
           <div class="conversation">
@@ -917,7 +888,7 @@
         </div>
       </section>
 
-      <section class="screen" data-i="21">
+      <section class="screen" data-i="20">
         <div class="content card">
           <div class="star">⭐</div>
           <h1 id="starName">ENGLISH EXPLORER</h1>
@@ -981,16 +952,16 @@
       const screens = [...document.querySelectorAll(".screen")],
         progress = document.getElementById("progress");
       function go(n) {
-        i = Math.max(0, Math.min(20, n));
+        i = Math.max(0, Math.min(19, n));
         screens.forEach((s, k) => s.classList.toggle("active", k === i));
-        progress.textContent = i + 1 + " / 21";
+        progress.textContent = i + 1 + " / 20";
         document.getElementById("prev").style.visibility = i
           ? "visible"
           : "hidden";
         document.getElementById("next").textContent =
-          i === 20 ? "RESTART ↻" : "NEXT ›";
-        if (i === 17) buildLetters();
-        if (i === 18) newCount();
+          i === 19 ? "RESTART ↻" : "NEXT ›";
+        if (i === 16) buildLetters();
+        if (i === 17) newCount();
         speechSynthesis?.cancel();
         let v = screens[i]?.querySelector("video") || null;
         if (v) {
@@ -999,7 +970,7 @@
         }
       }
       function next() {
-        go(i === 20 ? 0 : i + 1);
+        go(i === 19 ? 0 : i + 1);
       }
       function prev() {
         go(i - 1);
@@ -1091,9 +1062,16 @@
         say("My name is " + childName + ".");
         reward("MY NAME IS " + childName.toUpperCase() + "!");
       }
+      const speedPressed = { slow: false, fast: false };
       function speedGame(speed) {
         say(speed === "fast" ? "Fast!" : "Slow!");
         toast(speed === "fast" ? "FAST!" : "SLOW!");
+        speedPressed[speed] = true;
+        if (speedPressed.slow && speedPressed.fast) {
+          reward("SLOW AND FAST!");
+          speedPressed.slow = false;
+          speedPressed.fast = false;
+        }
       }
       const detectives = [
         { img: "⚽", q: "IS IT A BALL?", yes: true },
