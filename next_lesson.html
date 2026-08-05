@@ -258,6 +258,25 @@
       .bodyIcon {
         font-size: clamp(7rem, 15vw, 15rem);
       }
+      .mediaPage h1 {
+        font-size: 1.8rem;
+        font-size: clamp(1.8rem, 3.5vw, 2.8rem);
+        font-weight: 400;
+        margin: 0.15em 0;
+      }
+      .lessonVideo {
+        width: 100%;
+        max-height: 68vh;
+        object-fit: contain;
+        border-radius: 32px;
+        box-shadow: var(--shadow);
+      }
+      .videoActions {
+        display: flex;
+        gap: 1rem;
+        justify-content: center;
+        flex-wrap: wrap;
+      }
       #toast {
         position: absolute;
         left: 50%;
@@ -387,7 +406,7 @@
               class="choice primary"
               onclick="
                 say('Hello Sam. Welcome back!');
-                reward('WELCOME BACK!');
+                reward('ONZA WELCOME BACK');
               "
             >
               👋🏼 Hello Sam! Welcome back.
@@ -414,23 +433,54 @@
         </div>
       </section>
 
-      <section class="screen" data-i="2">
-        <div class="content card">
-          <h1>WHAT IS YOUR NAME?</h1>
-          <div class="emoji">🦊</div>
-          <p>Sam is asking you!</p>
-          <button class="choice" onclick="say('What is your name?')">
-            🔊 HEAR SAM
-          </button>
-          <p>Child: <b>My name is...</b></p>
-          <input
-            id="nameInput"
-            class="nameInput"
-            placeholder="Child's name"
-          /><br /><button class="choice primary" onclick="saveName()">
-            ✨ MY NAME IS...
-          </button>
-          <div id="nameDisplay" class="nameDisplay"></div>
+      <section class="screen mediaPage" data-i="2">
+        <div
+          class="content"
+          style="
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 1.4em;
+          "
+        >
+          <div class="small">ENGLISH EXPLORER</div>
+          <h1>Watch the clip</h1>
+          <div
+            id="nameVideoWrap"
+            style="margin-top: 0.5em; width: 100%; max-width: 760px"
+          >
+            <video
+              id="nameVideo"
+              class="lessonVideo"
+              playsinline
+              webkit-playsinline
+              x5-playsinline
+              preload="auto"
+              controls
+              data-autoplay="false"
+              data-autoplay-mode="manual"
+              src="https://res.cloudinary.com/dp455m4rk/video/upload/v1785933190/sam_onza_name_ro4vuz.mp4"
+            ></video>
+          </div>
+          <div
+            class="row"
+            style="
+              justify-content: center;
+              gap: 1rem;
+              width: 100%;
+              max-width: 800px;
+            "
+          >
+            <button
+              class="choice yes"
+              style="min-width: 180px"
+              onclick="playVideo('nameVideo')"
+            >
+              ▶ PLAY
+            </button>
+          </div>
+          <p class="small">Use BACK and NEXT to move through the course.</p>
         </div>
       </section>
 
@@ -745,6 +795,8 @@
         hands: "PASTE_CLOUDINARY_URL_FOR_HANDS_HERE",
         helloVideo:
           "https://res.cloudinary.com/dp455m4rk/video/upload/v1785822007/hello_y2a9fr.mp4",
+        nameVideo:
+          "https://res.cloudinary.com/dp455m4rk/video/upload/v1785933190/sam_onza_name_ro4vuz.mp4",
         commandsVideo:
           "https://res.cloudinary.com/dp455m4rk/video/upload/v1785822006/commands_v7zbgo.mp4",
         abcVideo:
@@ -775,12 +827,64 @@
         if (i === 14) buildLetters();
         if (i === 15) newCount();
         speechSynthesis?.cancel();
+        let v = screens[i]?.querySelector("video") || null;
+        if (v) {
+          if (v.dataset.autoplay === "true") playMediaVideo(v, true);
+          else preloadVideo(v);
+        }
       }
       function next() {
         go(i === 19 ? 0 : i + 1);
       }
       function prev() {
         go(i - 1);
+      }
+      function preloadVideo(video) {
+        if (!video) return;
+        try {
+          video.preload = "auto";
+          video.setAttribute("preload", "auto");
+          if (typeof video.load === "function") video.load();
+          if (typeof fetch === "function" && video.src.indexOf("http") === 0) {
+            fetch(video.src, { cache: "force-cache" }).catch(function () {});
+          }
+        } catch (e) {}
+      }
+      function playMediaVideo(video, preferUnmuted) {
+        if (typeof preferUnmuted === "undefined") preferUnmuted = true;
+        if (!video) return;
+        try {
+          preloadVideo(video);
+          video.currentTime = 0;
+          video.muted = false;
+          video.autoplay = true;
+          video.setAttribute("autoplay", "true");
+          video.setAttribute("playsinline", "true");
+          video.setAttribute("webkit-playsinline", "true");
+          video.setAttribute("x5-playsinline", "true");
+          var attemptPlay = function () {
+            var p = video.play();
+            if (!p || typeof p.then !== "function") return;
+            p.then(function () {
+              video.muted = false;
+            }).catch(function () {
+              if (preferUnmuted) {
+                window.setTimeout(function () {
+                  video.muted = false;
+                  try {
+                    video.play().catch(function () {});
+                  } catch (e) {}
+                }, 150);
+              }
+            });
+          };
+          attemptPlay();
+        } catch (e) {}
+      }
+      function playVideo(id) {
+        var videoEl = document.getElementById(id);
+        if (!videoEl) return;
+        playMediaVideo(videoEl, true);
       }
       function say(t) {
         if (!soundOn || !("speechSynthesis" in window)) return;
