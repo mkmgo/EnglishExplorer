@@ -652,7 +652,6 @@
       <section class="screen" data-i="8">
         <div class="content">
           <h1>FAST OR SLOW?</h1>
-          <div id="speedCommand" class="card command">STAND UP!</div>
           <div class="row">
             <button class="choice" onclick="speedGame('slow')">🐢 SLOW</button
             ><button class="choice" onclick="speedGame('fast')">⚡ FAST</button>
@@ -1093,11 +1092,7 @@
         reward("MY NAME IS " + childName.toUpperCase() + "!");
       }
       function speedGame(speed) {
-        let e = document.getElementById("speedCommand");
-        e.classList.remove("pop");
-        void e.offsetWidth;
-        e.classList.add("pop");
-        say(speed === "fast" ? "Stand up!" : "Sit down!");
+        say(speed === "fast" ? "Fast!" : "Slow!");
         toast(speed === "fast" ? "FAST!" : "SLOW!");
       }
       const detectives = [
