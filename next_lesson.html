@@ -397,7 +397,7 @@
       <div id="toast"></div>
       <div id="reward"></div>
       <div class="topbar">
-        <div class="progress" id="progress">1 / 18</div>
+        <div class="progress" id="progress">1 / 14</div>
         <div class="controls">
           <button class="ctrl" id="soundBtn">🔊</button
           ><button class="ctrl" onclick="go(0)">⌂</button>
@@ -773,68 +773,6 @@
       </section>
 
       <section class="screen" data-i="14">
-        <div class="content">
-          <h1>BODY PARTS GAME</h1>
-          <p>Listen carefully!</p>
-          <div class="row">
-            <button class="choice" onclick="bodyChoice('HEAD')">HEAD 🧑</button
-            ><button class="choice" onclick="bodyChoice('EYES')">EYES 👀</button
-            ><button class="choice" onclick="bodyChoice('NOSE')">NOSE 👃</button
-            ><button class="choice" onclick="bodyChoice('EARS')">EARS 👂🏻</button
-            ><button class="choice" onclick="bodyChoice('MOUTH')">
-              MOUTH 👄</button
-            ><button class="choice" onclick="bodyChoice('HANDS')">
-              HANDS 👐
-            </button>
-          </div>
-          <div id="bodyFeedback" class="feedback"></div>
-        </div>
-      </section>
-
-      <section class="screen" data-i="15">
-        <div class="content">
-          <h1>A B C TREASURE HUNT</h1>
-          <p>Teacher: say the letter. Child points.</p>
-          <div class="letterGrid" id="letterGrid"></div>
-          <div id="letterFeedback" class="feedback"></div>
-        </div>
-      </section>
-
-      <section class="screen" data-i="16">
-        <div class="content">
-          <h1>1 · 2 · 3 CHALLENGE</h1>
-          <div id="countObjects" class="bodyIcon">🍎🍎🍎</div>
-          <h2>HOW MANY?</h2>
-          <div class="row">
-            <button class="choice" onclick="countAnswer(1)">1</button
-            ><button class="choice" onclick="countAnswer(2)">2</button
-            ><button class="choice" onclick="countAnswer(3)">3</button>
-          </div>
-          <div id="countFeedback" class="feedback"></div>
-          <button class="choice hidden" id="countNext" onclick="newCount()">
-            NEXT ➜
-          </button>
-        </div>
-      </section>
-
-      <section class="screen" data-i="17">
-        <div class="content card">
-          <h1>SAM'S MINI CHAT</h1>
-          <div class="conversation">
-            <h2>👋🏼 HELLO!</h2>
-            <h2>WHAT'S YOUR NAME?</h2>
-            <h2>MY NAME IS <span id="convName">________</span>.</h2>
-            <h2>HOW OLD ARE YOU?</h2>
-            <h2>I AM SEVEN.</h2>
-            <h2>GOODBYE!</h2>
-          </div>
-          <button class="choice primary" onclick="runConversation()">
-            🎉 LET'S TALK!
-          </button>
-        </div>
-      </section>
-
-      <section class="screen" data-i="18">
         <div class="content card">
           <div class="star">⭐</div>
           <h1 id="starName">ENGLISH EXPLORER</h1>
@@ -898,16 +836,14 @@
       const screens = [...document.querySelectorAll(".screen")],
         progress = document.getElementById("progress");
       function go(n) {
-        i = Math.max(0, Math.min(17, n));
+        i = Math.max(0, Math.min(13, n));
         screens.forEach((s, k) => s.classList.toggle("active", k === i));
-        progress.textContent = i + 1 + " / 18";
+        progress.textContent = i + 1 + " / 14";
         document.getElementById("prev").style.visibility = i
           ? "visible"
           : "hidden";
         document.getElementById("next").textContent =
-          i === 17 ? "RESTART ↻" : "NEXT ›";
-        if (i === 14) buildLetters();
-        if (i === 15) newCount();
+          i === 13 ? "RESTART ↻" : "NEXT ›";
         speechSynthesis?.cancel();
         let v = screens[i]?.querySelector("video") || null;
         if (v) {
@@ -916,7 +852,7 @@
         }
       }
       function next() {
-        go(i === 17 ? 0 : i + 1);
+        go(i === 13 ? 0 : i + 1);
       }
       function prev() {
         go(i - 1);
