@@ -310,13 +310,6 @@
       .quizImg {
         font-size: clamp(8rem, 18vw, 18rem);
       }
-      .fullImage {
-        width: 100%;
-        height: 100%;
-        object-fit: contain;
-        border-radius: 28px;
-        box-shadow: var(--shadow);
-      }
       .letterGrid {
         display: grid;
         grid-template-columns: repeat(3, 1fr);
@@ -493,13 +486,18 @@
 
       <section class="screen" data-i="3">
         <div class="content">
-          <h1>Have a look at this</h1>
-          <p>What is in your face</p>
-          <img
-            class="fullImage"
-            src="https://res.cloudinary.com/dp455m4rk/image/upload/v1785931877/bodyparts_1_qykwha.png"
-            alt="Body parts"
-          />
+          <h1>REMEMBER</h1>
+          <p>Teacher: Ask the child to show you.</p>
+          <div class="row">
+            <button class="choice" onclick="say('Stand up!')">
+              🧍 STAND UP</button
+            ><button class="choice" onclick="say('Sit down!')">
+              🪑 SIT DOWN</button
+            ><button class="choice" onclick="say('Look!')">👀 LOOK</button
+            ><button class="choice" onclick="say('Listen!')">👂🏻 LISTEN</button
+            ><button class="choice" onclick="say('Come here!')">➡️ COME HERE</button>
+          </div>
+          <div id="rememberFeedback" class="feedback"></div>
         </div>
       </section>
 
