@@ -397,7 +397,7 @@
       <div id="toast"></div>
       <div id="reward"></div>
       <div class="topbar">
-        <div class="progress" id="progress">1 / 20</div>
+        <div class="progress" id="progress">1 / 21</div>
         <div class="controls">
           <button class="ctrl" id="soundBtn">🔊</button
           ><button class="ctrl" onclick="go(0)">⌂</button>
@@ -661,7 +661,58 @@
         </div>
       </section>
 
-      <section class="screen" data-i="9">
+      <section class="screen mediaPage" data-i="9">
+        <div
+          class="content"
+          style="
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 1.4em;
+          "
+        >
+          <div class="small">ENGLISH EXPLORER</div>
+          <h1>Watch the clip</h1>
+          <div
+            id="standupSlowlyWrap"
+            style="margin-top: 0.5em; width: 100%; max-width: 760px"
+          >
+            <video
+              id="standupSlowlyVideo"
+              class="lessonVideo"
+              playsinline
+              webkit-playsinline
+              x5-playsinline
+              preload="auto"
+              controls
+              data-autoplay="false"
+              data-autoplay-mode="manual"
+              src="https://res.cloudinary.com/dp455m4rk/video/upload/v1785935355/standup_slowly_i6nw11.mp4"
+            ></video>
+          </div>
+          <div
+            class="row"
+            style="
+              justify-content: center;
+              gap: 1rem;
+              width: 100%;
+              max-width: 800px;
+            "
+          >
+            <button
+              class="choice yes"
+              style="min-width: 180px"
+              onclick="playVideo('standupSlowlyVideo')"
+            >
+              ▶ PLAY
+            </button>
+          </div>
+          <p class="small">Use BACK and NEXT to move through the course.</p>
+        </div>
+      </section>
+
+      <section class="screen" data-i="10">
         <div class="content">
           <h1>SAM IS WRONG!</h1>
           <div class="emoji">🦊</div>
@@ -690,7 +741,7 @@
         </div>
       </section>
 
-      <section class="screen" data-i="10">
+      <section class="screen" data-i="11">
         <div class="content">
           <h1>YES OR NO DETECTIVE</h1>
           <div id="detectiveImg" class="quizImg">⚽</div>
@@ -710,7 +761,7 @@
         </div>
       </section>
 
-      <section class="screen" data-i="11">
+      <section class="screen" data-i="12">
         <div class="content">
           <h1>MEET THE CREW!</h1>
           <p>Sam's friends are here.</p>
@@ -744,7 +795,7 @@
         </div>
       </section>
 
-      <section class="screen" data-i="12">
+      <section class="screen" data-i="13">
         <div class="content card">
           <div class="bodyIcon">🧑‍🦰</div>
           <div class="word">HEAD</div>
@@ -760,7 +811,7 @@
         </div>
       </section>
 
-      <section class="screen" data-i="13">
+      <section class="screen" data-i="14">
         <div class="content card">
           <div class="bodyIcon">👀</div>
           <div class="word">EYES</div>
@@ -776,7 +827,7 @@
         </div>
       </section>
 
-      <section class="screen" data-i="14">
+      <section class="screen" data-i="15">
         <div class="content card">
           <div class="bodyIcon">👃</div>
           <div class="word">NOSE</div>
@@ -792,7 +843,7 @@
         </div>
       </section>
 
-      <section class="screen" data-i="15">
+      <section class="screen" data-i="16">
         <div class="content">
           <h1>TOUCH YOUR...</h1>
           <div id="bodyPrompt" class="card command">NOSE!</div>
@@ -805,7 +856,7 @@
         </div>
       </section>
 
-      <section class="screen" data-i="16">
+      <section class="screen" data-i="17">
         <div class="content">
           <h1>BODY PARTS GAME</h1>
           <p>Listen carefully!</p>
@@ -824,7 +875,7 @@
         </div>
       </section>
 
-      <section class="screen" data-i="17">
+      <section class="screen" data-i="18">
         <div class="content">
           <h1>A B C TREASURE HUNT</h1>
           <p>Teacher: say the letter. Child points.</p>
@@ -833,7 +884,7 @@
         </div>
       </section>
 
-      <section class="screen" data-i="18">
+      <section class="screen" data-i="19">
         <div class="content">
           <h1>1 · 2 · 3 CHALLENGE</h1>
           <div id="countObjects" class="bodyIcon">🍎🍎🍎</div>
@@ -850,7 +901,7 @@
         </div>
       </section>
 
-      <section class="screen" data-i="19">
+      <section class="screen" data-i="20">
         <div class="content card">
           <h1>SAM'S MINI CHAT</h1>
           <div class="conversation">
@@ -867,7 +918,7 @@
         </div>
       </section>
 
-      <section class="screen" data-i="20">
+      <section class="screen" data-i="21">
         <div class="content card">
           <div class="star">⭐</div>
           <h1 id="starName">ENGLISH EXPLORER</h1>
@@ -931,16 +982,16 @@
       const screens = [...document.querySelectorAll(".screen")],
         progress = document.getElementById("progress");
       function go(n) {
-        i = Math.max(0, Math.min(19, n));
+        i = Math.max(0, Math.min(20, n));
         screens.forEach((s, k) => s.classList.toggle("active", k === i));
-        progress.textContent = i + 1 + " / 20";
+        progress.textContent = i + 1 + " / 21";
         document.getElementById("prev").style.visibility = i
           ? "visible"
           : "hidden";
         document.getElementById("next").textContent =
-          i === 19 ? "RESTART ↻" : "NEXT ›";
-        if (i === 16) buildLetters();
-        if (i === 17) newCount();
+          i === 20 ? "RESTART ↻" : "NEXT ›";
+        if (i === 17) buildLetters();
+        if (i === 18) newCount();
         speechSynthesis?.cancel();
         let v = screens[i]?.querySelector("video") || null;
         if (v) {
@@ -949,7 +1000,7 @@
         }
       }
       function next() {
-        go(i === 19 ? 0 : i + 1);
+        go(i === 20 ? 0 : i + 1);
       }
       function prev() {
         go(i - 1);
