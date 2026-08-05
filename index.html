@@ -574,6 +574,17 @@
           <h1>English Explorer</h1>
           <h2 style="text-align: center">Lesson 1</h2>
           <h1 style="font-weight: 900; margin: 0">Welcome</h1>
+          <button
+            class="choice pulse"
+            style="background: var(--accent); color: white"
+            onclick="startIntroVideo()"
+          >
+            ▶ START
+          </button>
+          <p class="small" style="max-width: 80vw">
+            Press START to go to the video slide, then use BACK and NEXT to
+            continue through the lesson.
+          </p>
           <div
             style="
               margin-top: 0.5em;
@@ -1136,6 +1147,12 @@
         window.webkitSpeechSynthesis ||
         window.mozSpeechSynthesis ||
         null;
+      var audioCtx =
+        window.AudioContext ||
+        window.webkitAudioContext ||
+        window.mozAudioContext ||
+        null;
+      var actx = null;
       var defaultVoice = null;
       var voiceTimer = null;
       var speechPrimed = false;
@@ -1217,7 +1234,50 @@
         if (!defaultVoice) defaultVoice = voices[0] || null;
       }
 
+      function ensureAudio() {
+        if (!audioCtx) return null;
+        if (!actx) actx = new audioCtx();
+        if (actx.state === "suspended") {
+          actx.resume().catch(function () {});
+        }
+        return actx;
+      }
+
+      function tone(freq, delay, dur, vol) {
+        var c = ensureAudio();
+        if (!c) return;
+        try {
+          var o = c.createOscillator();
+          var g = c.createGain();
+          o.type = "sine";
+          o.frequency.value = freq;
+          var t0 = c.currentTime + delay;
+          g.gain.setValueAtTime(0.0001, t0);
+          g.gain.linearRampToValueAtTime(vol, t0 + 0.02);
+          g.gain.exponentialRampToValueAtTime(0.0001, t0 + dur);
+          o.connect(g);
+          g.connect(c.destination);
+          o.start(t0);
+          o.stop(t0 + dur + 0.05);
+        } catch (e) {}
+      }
+
+      function chime() {
+        tone(523.25, 0, 0.18, 0.22);
+        tone(659.25, 0.1, 0.22, 0.22);
+        tone(783.99, 0.2, 0.32, 0.22);
+      }
+
+      function cancelSpeech() {
+        if (synth && typeof synth.cancel === "function") {
+          try {
+            synth.cancel();
+          } catch (e) {}
+        }
+      }
+
       function primeSpeech() {
+        ensureAudio();
         if (!synth || speechPrimed) return;
         setVoice();
         if (!defaultVoice) return;
@@ -1289,15 +1349,17 @@
         document.getElementById("prevBtn").style.visibility =
           idx === 0 ? "hidden" : "visible";
         document.getElementById("nextBtn").textContent =
-          idx === screens.length - 1 ? "RESTART ↻" : "NEXT ›";
+          idx === screens.length - 1
+            ? "RESTART ↻"
+            : idx === 0
+              ? "START ›"
+              : "NEXT ›";
         if (idx === 16) buildLetters();
         if (idx === 19) {
           document.getElementById("starName").textContent =
             (childName || "YOUR") + " — ENGLISH STAR";
         }
-        if (synth && typeof synth.cancel === "function") {
-          synth.cancel();
-        }
+        cancelSpeech();
         if (idx === 1) {
           autoPlayIntroVideo();
         }
@@ -1310,18 +1372,33 @@
         show(idx - 1);
       }
       function say(text) {
-        if (!soundOn || !synth) return;
-        if (!speechPrimed) {
-          primeSpeech();
+        if (!soundOn) return;
+        if (window.tizen && window.tizen.tts) {
+          try {
+            tizen.tts.speak(String(text), {
+              locale: "en-US",
+              rate: 0.9,
+              pitch: 1.1,
+              type: "TTS_TYPE_SCREEN_READER",
+            });
+            return;
+          } catch (e) {}
         }
-        if (synth.speaking) synth.cancel();
-        var u = new SpeechSynthesisUtterance(text);
-        u.lang = "en-US";
-        u.volume = 1.0;
-        u.rate = 0.82;
-        u.pitch = 1.08;
-        if (defaultVoice) u.voice = defaultVoice;
-        synth.speak(u);
+        if (synth && typeof SpeechSynthesisUtterance !== "undefined") {
+          if (!speechPrimed) {
+            primeSpeech();
+          }
+          if (synth.speaking) synth.cancel();
+          var u = new SpeechSynthesisUtterance(text);
+          u.lang = "en-US";
+          u.volume = 1.0;
+          u.rate = 0.82;
+          u.pitch = 1.08;
+          if (defaultVoice) u.voice = defaultVoice;
+          synth.speak(u);
+          return;
+        }
+        chime();
       }
       function toast(t) {
         var el = document.getElementById("toast");
@@ -1651,7 +1728,7 @@
         soundOn = !soundOn;
         document.getElementById("soundBtn").textContent = soundOn ? "🔊" : "🔇";
         if (soundOn) primeSpeech();
-        else if (synth && typeof synth.cancel === "function") synth.cancel();
+        else cancelSpeech();
       };
       document.getElementById("homeBtn").onclick = function () {
         show(0);
