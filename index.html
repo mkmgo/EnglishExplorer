@@ -1123,20 +1123,23 @@
     </div>
 
     <script>
-      const screens = [...document.querySelectorAll(".screen")];
-      let idx = 0,
-        soundOn = true,
-        childName = "";
-      const progress = document.getElementById("progress");
-      const video = document.getElementById("charVideo");
-      const synth =
+      var screens = Array.prototype.slice.call(
+        document.querySelectorAll(".screen"),
+      );
+      var idx = 0;
+      var soundOn = true;
+      var childName = "";
+      var progress = document.getElementById("progress");
+      var video = document.getElementById("charVideo");
+      var synth =
         window.speechSynthesis ||
         window.webkitSpeechSynthesis ||
         window.mozSpeechSynthesis ||
         null;
-      let defaultVoice = null;
-      let voiceTimer = null;
-      let speechPrimed = false;
+      var defaultVoice = null;
+      var voiceTimer = null;
+      var speechPrimed = false;
+      var speechPrimedOnce = false;
 
       function preloadVideo(video) {
         if (!video || !video.src) return;
@@ -1146,13 +1149,16 @@
           if (typeof video.load === "function") {
             video.load();
           }
-          if (typeof fetch === "function" && video.src.startsWith("http")) {
-            fetch(video.src, { cache: "force-cache" }).catch(() => {});
+          if (typeof fetch === "function" && video.src.indexOf("http") === 0) {
+            try {
+              fetch(video.src, { cache: "force-cache" }).catch(function () {});
+            } catch (e) {}
           }
         } catch (e) {}
       }
 
-      function playMediaVideo(video, preferUnmuted = true) {
+      function playMediaVideo(video, preferUnmuted) {
+        if (typeof preferUnmuted === "undefined") preferUnmuted = true;
         if (!video) return;
         try {
           preloadVideo(video);
@@ -1163,16 +1169,18 @@
           video.setAttribute("playsinline", "true");
           video.setAttribute("webkit-playsinline", "true");
           video.setAttribute("x5-playsinline", "true");
-          const attemptPlay = () => {
-            const p = video.play();
+          var attemptPlay = function () {
+            var p = video.play();
             if (!p || typeof p.then !== "function") return;
-            p.then(() => {
+            p.then(function () {
               video.muted = false;
-            }).catch(() => {
+            }).catch(function () {
               if (preferUnmuted) {
-                window.setTimeout(() => {
+                window.setTimeout(function () {
                   video.muted = false;
-                  video.play().catch(() => {});
+                  try {
+                    video.play().catch(function () {});
+                  } catch (e) {}
                 }, 150);
               }
             });
@@ -1182,18 +1190,31 @@
       }
 
       function preloadLessonVideos() {
-        const videos = [...document.querySelectorAll("video")];
-        videos.forEach((video, index) => {
-          window.setTimeout(() => preloadVideo(video), index * 120);
-        });
+        var videos = Array.prototype.slice.call(
+          document.querySelectorAll("video"),
+        );
+        for (var i = 0; i < videos.length; i++) {
+          (function (videoEl, index) {
+            window.setTimeout(function () {
+              preloadVideo(videoEl);
+            }, index * 120);
+          })(videos[i], i);
+        }
       }
 
       function setVoice() {
         if (!synth) return;
-        const voices = synth.getVoices();
+        var voices = synth.getVoices();
         if (!voices || voices.length === 0) return;
-        defaultVoice =
-          voices.find((v) => v.lang?.startsWith("en")) || voices[0] || null;
+        defaultVoice = null;
+        for (var i = 0; i < voices.length; i++) {
+          var v = voices[i];
+          if (v && v.lang && v.lang.indexOf("en") === 0) {
+            defaultVoice = v;
+            break;
+          }
+        }
+        if (!defaultVoice) defaultVoice = voices[0] || null;
       }
 
       function primeSpeech() {
@@ -1211,7 +1232,7 @@
         } else if (typeof synth.onvoiceschanged === "function") {
           synth.onvoiceschanged = setVoice;
         }
-        voiceTimer = window.setInterval(() => {
+        voiceTimer = window.setInterval(function () {
           if (defaultVoice) {
             window.clearInterval(voiceTimer);
             voiceTimer = null;
@@ -1219,7 +1240,7 @@
           }
           setVoice();
         }, 500);
-        window.setTimeout(() => {
+        window.setTimeout(function () {
           if (voiceTimer) {
             window.clearInterval(voiceTimer);
             voiceTimer = null;
@@ -1229,17 +1250,34 @@
       initTTS();
       preloadLessonVideos();
       window.addEventListener("load", preloadLessonVideos);
-      document.addEventListener("pointerdown", primeSpeech, { once: true });
-      document.addEventListener("click", primeSpeech, { once: true });
-      document.addEventListener("keydown", primeSpeech, { once: true });
-      document.addEventListener("touchstart", primeSpeech, { once: true });
+      function primeSpeechOnce() {
+        if (speechPrimedOnce) return;
+        speechPrimedOnce = true;
+        primeSpeech();
+      }
+      try {
+        document.addEventListener("pointerdown", primeSpeechOnce, false);
+      } catch (e) {}
+      document.addEventListener("click", primeSpeechOnce, false);
+      document.addEventListener("keydown", primeSpeechOnce, false);
+      document.addEventListener("touchstart", primeSpeechOnce, false);
 
       function show(i) {
         idx = Math.max(0, Math.min(screens.length - 1, i));
-        screens.forEach((s, n) => s.classList.toggle("active", n === idx));
-        const activeVideo = screens[idx]?.querySelector("video") || null;
+        for (var j = 0; j < screens.length; j++) {
+          var s = screens[j];
+          if (j === idx) {
+            s.classList.add("active");
+          } else {
+            s.classList.remove("active");
+          }
+        }
+        var activeVideo = null;
+        if (screens[idx]) {
+          activeVideo = screens[idx].querySelector("video") || null;
+        }
         if (activeVideo) {
-          const autoplayEnabled =
+          var autoplayEnabled =
             activeVideo.getAttribute("data-autoplay") === "true";
           if (autoplayEnabled) {
             playMediaVideo(activeVideo, true);
@@ -1253,10 +1291,13 @@
         document.getElementById("nextBtn").textContent =
           idx === screens.length - 1 ? "RESTART ↻" : "NEXT ›";
         if (idx === 16) buildLetters();
-        if (idx === 19)
+        if (idx === 19) {
           document.getElementById("starName").textContent =
             (childName || "YOUR") + " — ENGLISH STAR";
-        synth?.cancel();
+        }
+        if (synth && typeof synth.cancel === "function") {
+          synth.cancel();
+        }
         if (idx === 1) {
           autoPlayIntroVideo();
         }
@@ -1274,7 +1315,7 @@
           primeSpeech();
         }
         if (synth.speaking) synth.cancel();
-        const u = new SpeechSynthesisUtterance(text);
+        var u = new SpeechSynthesisUtterance(text);
         u.lang = "en-US";
         u.volume = 1.0;
         u.rate = 0.82;
@@ -1283,17 +1324,20 @@
         synth.speak(u);
       }
       function toast(t) {
-        const el = document.getElementById("toast");
+        var el = document.getElementById("toast");
         el.textContent = t;
         el.classList.add("show");
-        setTimeout(() => el.classList.remove("show"), 1100);
+        setTimeout(function () {
+          el.classList.remove("show");
+        }, 1100);
       }
       function reward(t) {
         toast(t);
-        const r = document.getElementById("reward");
+        var r = document.getElementById("reward");
         r.innerHTML = "";
-        for (let i = 0; i < 24; i++) {
-          const s = document.createElement("span");
+        var i;
+        for (i = 0; i < 24; i++) {
+          var s = document.createElement("span");
           s.className = "confetti";
           s.textContent = ["⭐", "✨", "🎉", "👏"][i % 4];
           s.style.left = Math.random() * 100 + "%";
@@ -1301,40 +1345,49 @@
           s.style.animationDelay = Math.random() * 0.4 + "s";
           r.appendChild(s);
         }
-        setTimeout(() => (r.innerHTML = ""), 2500);
+        setTimeout(function () {
+          r.innerHTML = "";
+        }, 2500);
       }
       function waveVideo() {
         if (!video) return;
-        video.currentTime = 0;
+        try {
+          video.currentTime = 0;
+        } catch (e) {}
         video.muted = true;
-        video.play().catch(() => {});
+        try {
+          var p = video.play();
+          if (p && typeof p.catch === "function") {
+            p.catch(function () {});
+          }
+        } catch (e) {}
       }
       function playCharacter() {
         waveVideo();
         document.getElementById("videoPlay").classList.add("hidden");
       }
       function autoPlayIntroVideo() {
-        const video = document.getElementById("introVideo");
-        if (!video) return;
-        playMediaVideo(video, true);
+        var videoEl = document.getElementById("introVideo");
+        if (!videoEl) return;
+        playMediaVideo(videoEl, true);
       }
 
       function playIntroVideo() {
-        const video = document.getElementById("introVideo");
-        if (!video) return;
-        playMediaVideo(video, true);
+        var videoEl = document.getElementById("introVideo");
+        if (!videoEl) return;
+        playMediaVideo(videoEl, true);
       }
 
       function repeatIntroVideo() {
-        const video = document.getElementById("introVideo");
-        if (!video) return;
-        playMediaVideo(video, true);
+        var videoEl = document.getElementById("introVideo");
+        if (!videoEl) return;
+        playMediaVideo(videoEl, true);
       }
 
       function playVideo(id) {
-        const video = document.getElementById(id);
-        if (!video) return;
-        playMediaVideo(video, true);
+        var videoEl = document.getElementById(id);
+        if (!videoEl) return;
+        playMediaVideo(videoEl, true);
       }
 
       function repeatVideo(id) {
@@ -1358,32 +1411,35 @@
         say("My name is " + childName + ".");
         reward("MY NAME IS " + childName.toUpperCase() + "!");
       }
-      const commands = [
+      var commands = [
         ["STAND UP!", "Stand up!"],
         ["SIT DOWN!", "Sit down!"],
         ["LOOK!", "Look!"],
         ["LISTEN!", "Listen!"],
         ["COME HERE!", "Come here!"],
       ];
-      let lastIdx = -1;
-      let lastCount = 0;
+      var lastIdx = -1;
+      var lastCount = 0;
       function randomCommand() {
-        let idx = Math.floor(Math.random() * commands.length);
+        var idx = Math.floor(Math.random() * commands.length);
         if (idx === lastIdx && lastCount >= 2) {
-          const others = commands.map((_, i) => i).filter((i) => i !== lastIdx);
+          var others = [];
+          for (var i = 0; i < commands.length; i++) {
+            if (i !== lastIdx) others.push(i);
+          }
           idx = others[Math.floor(Math.random() * others.length)];
         }
         lastCount = idx === lastIdx ? lastCount + 1 : 1;
         lastIdx = idx;
-        const x = commands[idx];
-        const el = document.getElementById("commandCard");
+        var x = commands[idx];
+        var el = document.getElementById("commandCard");
         el.textContent = x[0];
         el.classList.remove("pop");
         void el.offsetWidth;
         el.classList.add("pop");
         say(x[1]);
       }
-      const quizzes = [
+      var quizzes = [
         {
           emoji: "🐱",
           img: "https://res.cloudinary.com/dp455m4rk/image/upload/v1785846896/cat_memoji_djx2z3.png",
@@ -1394,9 +1450,9 @@
         { emoji: "⚽", q: "IS IT A BALL?", yes: true },
         { emoji: "🍎", q: "IS IT A CAT?", yes: false },
       ];
-      let qi = 0;
+      var qi = 0;
       function renderQuizEmoji(q) {
-        const el = document.getElementById("quizEmoji");
+        var el = document.getElementById("quizEmoji");
         if (q.img) {
           el.innerHTML =
             '<img src="' +
@@ -1407,19 +1463,23 @@
         }
       }
       function quizAnswer(v) {
-        const correct = v === quizzes[qi].yes;
+        var correct = v === quizzes[qi].yes;
         document.getElementById("quizFeedback").textContent = correct
           ? "GREAT! ⭐"
           : "TRY AGAIN!";
-        say(
-          v
-            ? correct
-              ? "Yes! Great!"
-              : "No! Try again!"
-            : correct
-              ? "Great, you are right!"
-              : "No! Try again!",
-        );
+        if (v) {
+          if (correct) {
+            say("Yes! Great!");
+          } else {
+            say("No! Try again!");
+          }
+        } else {
+          if (correct) {
+            say("Great, you are right!");
+          } else {
+            say("No! Try again!");
+          }
+        }
         if (correct) {
           reward("GREAT!");
           document.getElementById("nextQuiz").classList.remove("hidden");
@@ -1427,7 +1487,7 @@
       }
       function nextQuizQuestion() {
         qi = (qi + 1) % quizzes.length;
-        const q = quizzes[qi];
+        var q = quizzes[qi];
         renderQuizEmoji(q);
         document.getElementById("quizQuestion").textContent = q.q;
         document.getElementById("quizFeedback").textContent = "";
@@ -1438,34 +1498,38 @@
           '<div class="object pop">⚽</div><div class="word">BALL!</div><button class="choice" onclick="say(\'Ball!\');reward(\'BALL!\')">🔊 BALL</button>';
         say("Ball!");
       }
-      let num = 1;
+      var num = 1;
       function nextNumber() {
         num = num === 3 ? 1 : num + 1;
-        document.getElementById("apples").textContent = "🍎".repeat(num);
-        document.getElementById("numberWord").textContent = [
-          "",
-          "ONE",
-          "TWO",
-          "THREE",
-        ][num];
-        say(["", "One", "Two", "Three"][num]);
+        var apples = document.getElementById("apples");
+        if (apples) {
+          var applesText = "";
+          for (var i = 0; i < num; i++) applesText += "🍎";
+          apples.textContent = applesText;
+        }
+        var numberWord = document.getElementById("numberWord");
+        if (numberWord) {
+          numberWord.textContent = ["", "ONE", "TWO", "THREE"][num];
+        }
+        var word = ["", "One", "Two", "Three"][num];
+        say(word);
       }
       function showCount() {
         document.getElementById("countAnswer").classList.remove("hidden");
         say("Three!");
         reward("THREE!");
       }
-      const letterSpeech = { A: "A", B: "B", C: "C" };
-      let lastLetterIdx = -1;
-      let lastLetterCount = 0;
-      let letterFeedbackTimer = null;
-      let letterIntroTimer = null;
-      let letterRoundActive = true;
+      var letterSpeech = { A: "A", B: "B", C: "C" };
+      var lastLetterIdx = -1;
+      var lastLetterCount = 0;
+      var letterFeedbackTimer = null;
+      var letterIntroTimer = null;
+      var letterRoundActive = true;
 
       function sayLetter(letter) {
         if (!soundOn || !synth) return;
         if (synth.speaking) synth.cancel();
-        const u = new SpeechSynthesisUtterance(letterSpeech[letter] || letter);
+        var u = new SpeechSynthesisUtterance(letterSpeech[letter] || letter);
         u.lang = "en-US";
         u.volume = 1.0;
         u.rate = 0.72;
@@ -1474,12 +1538,13 @@
         synth.speak(u);
       }
       function pickTargetLetter() {
-        const letters = ["A", "B", "C"];
-        let idx = Math.floor(Math.random() * letters.length);
+        var letters = ["A", "B", "C"];
+        var idx = Math.floor(Math.random() * letters.length);
         if (idx === lastLetterIdx && lastLetterCount >= 2) {
-          const others = letters
-            .map((_, i) => i)
-            .filter((i) => i !== lastLetterIdx);
+          var others = [];
+          for (var i = 0; i < letters.length; i++) {
+            if (i !== lastLetterIdx) others.push(i);
+          }
           idx = others[Math.floor(Math.random() * others.length)];
         }
         lastLetterCount = idx === lastLetterIdx ? lastLetterCount + 1 : 1;
@@ -1487,7 +1552,7 @@
         return letters[idx];
       }
       function setNewLetterButtonState(enabled) {
-        const btn = document.getElementById("newLetterBtn");
+        var btn = document.getElementById("newLetterBtn");
         if (!btn) return;
         btn.disabled = !enabled;
         btn.style.opacity = enabled ? "1" : "0.25";
@@ -1496,9 +1561,10 @@
       }
 
       function buildLetters() {
-        const box = document.getElementById("letters");
+        var box = document.getElementById("letters");
+        if (!box) return;
         box.innerHTML = "";
-        const current = pickTargetLetter();
+        var current = pickTargetLetter();
         window.currentLetter = current;
         letterRoundActive = true;
         setNewLetterButtonState(false);
@@ -1511,14 +1577,18 @@
           letterIntroTimer = null;
         }
         document.getElementById("letterFeedback").textContent = "";
-        [...["A", "B", "C"].sort(() => Math.random() - 0.5)].forEach(
-          (letter) => {
-            const b = document.createElement("button");
+        var letters = ["A", "B", "C"];
+        letters.sort(function () {
+          return Math.random() - 0.5;
+        });
+        for (var i = 0; i < letters.length; i++) {
+          (function (letter) {
+            var b = document.createElement("button");
             b.className = "choice";
             b.textContent = letter;
-            b.onclick = () => {
-              const target = window.currentLetter || "A";
-              const feedback = document.getElementById("letterFeedback");
+            b.onclick = function () {
+              var target = window.currentLetter || "A";
+              var feedback = document.getElementById("letterFeedback");
               if (letter === target) {
                 feedback.textContent = "YES! ⭐";
                 letterRoundActive = false;
@@ -1532,7 +1602,7 @@
                 if (letterFeedbackTimer) {
                   window.clearTimeout(letterFeedbackTimer);
                 }
-                letterFeedbackTimer = window.setTimeout(() => {
+                letterFeedbackTimer = window.setTimeout(function () {
                   feedback.textContent = "";
                   letterFeedbackTimer = null;
                 }, 1200);
@@ -1540,15 +1610,15 @@
                 feedback.textContent = "TRY AGAIN";
                 say("Try again!");
                 setNewLetterButtonState(false);
-                window.setTimeout(() => {
+                window.setTimeout(function () {
                   sayLetter(target);
                 }, 900);
               }
             };
             box.appendChild(b);
-          },
-        );
-        letterIntroTimer = window.setTimeout(() => {
+          })(letters[i]);
+        }
+        letterIntroTimer = window.setTimeout(function () {
           sayLetter(window.currentLetter);
           letterIntroTimer = null;
         }, 500);
@@ -1559,14 +1629,14 @@
         }
       }
       function sayConversation() {
-        const n = childName || "your name";
-        const lines = [
+        var n = childName || "your name";
+        var lines = [
           "Hello!",
           "My name is " + n + ".",
           "I am seven.",
           "Goodbye!",
         ];
-        let i = 0;
+        var i = 0;
         function go() {
           if (i >= lines.length) {
             reward("YOU SPOKE ENGLISH!");
@@ -1577,16 +1647,18 @@
         }
         go();
       }
-      document.getElementById("soundBtn").onclick = () => {
+      document.getElementById("soundBtn").onclick = function () {
         soundOn = !soundOn;
         document.getElementById("soundBtn").textContent = soundOn ? "🔊" : "🔇";
         if (soundOn) primeSpeech();
-        else synth?.cancel();
+        else if (synth && typeof synth.cancel === "function") synth.cancel();
       };
-      document.getElementById("homeBtn").onclick = () => show(0);
-      document.addEventListener("keydown", (e) => {
+      document.getElementById("homeBtn").onclick = function () {
+        show(0);
+      };
+      document.addEventListener("keydown", function (e) {
         if (e.key === "ArrowRight" || e.key === " ") {
-          e.preventDefault();
+          if (e.preventDefault) e.preventDefault();
           next();
         }
         if (e.key === "ArrowLeft") prev();
