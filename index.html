@@ -6,22 +6,8 @@
       name="viewport"
       content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no"
     />
-    <title>English Explorer — Lesson 1</title>
+    <title>English Explorer</title>
     <meta name="description" content="English Explorer" />
-    <meta property="og:title" content="English Explorer" />
-    <meta property="og:description" content="English Explorer" />
-    <meta property="og:type" content="website" />
-    <meta
-      property="og:image"
-      content="https://res.cloudinary.com/dp455m4rk/image/upload/v1785849408/sam_favipreview_v2i7l2.png"
-    />
-    <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="English Explorer" />
-    <meta name="twitter:description" content="English Explorer" />
-    <meta
-      name="twitter:image"
-      content="https://res.cloudinary.com/dp455m4rk/image/upload/v1785849408/sam_favipreview_v2i7l2.png"
-    />
     <link
       rel="icon"
       type="image/png"
@@ -46,16 +32,11 @@
         margin: 0;
         width: 100%;
         height: 100%;
-        min-height: 100%;
         overflow: hidden;
         background: var(--bg);
         font-family: Arial, Helvetica, sans-serif;
         color: var(--ink);
         touch-action: manipulation;
-      }
-      body {
-        min-height: 100vh;
-        min-height: 100dvh;
       }
       button {
         font: inherit;
@@ -64,59 +45,139 @@
       }
       #app {
         width: 100%;
-        height: 100%;
         height: 100vh;
         height: 100dvh;
-        min-height: 100%;
-        max-width: 100%;
-        max-height: 100%;
         position: relative;
         overflow: hidden;
       }
       .screen {
         position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
         inset: 0;
         display: none;
         align-items: center;
         justify-content: center;
-        padding: clamp(10px, 1.4vh, 24px) clamp(10px, 1.8vw, 24px);
+        padding: clamp(10px, 2vh, 24px) clamp(10px, 2vw, 24px);
       }
       .screen.active {
         display: flex;
       }
       .content {
-        width: min(1320px, 100%);
-        height: auto;
-        min-height: min(860px, 100%);
-        max-width: 100%;
+        width: min(1400px, 100%);
         max-height: 100%;
         position: relative;
         text-align: center;
+        overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
+        overscroll-behavior: contain;
+        scrollbar-width: none;
+      }
+      .content::-webkit-scrollbar {
+        display: none;
       }
       h1 {
-        font-size: 4rem;
-        font-size: clamp(4rem, 10vw, 10rem);
-        margin: 0.15em 0;
+        font-size: clamp(3rem, 7vw, 7rem);
+        margin: 0.1em 0;
         font-weight: 900;
-        letter-spacing: -0.04em;
+        letter-spacing: -0.03em;
       }
       h2 {
-        font-size: 2rem;
-        font-size: clamp(2rem, 5vw, 5rem);
+        font-size: clamp(1.8rem, 4vw, 4rem);
         margin: 0.2em 0;
       }
       p {
-        font-size: 1.4rem;
-        font-size: clamp(1.4rem, 2.4vw, 2.7rem);
+        font-size: clamp(1.2rem, 2vw, 2.2rem);
       }
       .small {
-        font-size: 1rem;
-        font-size: clamp(1rem, 1.5vw, 1.6rem);
+        font-size: clamp(0.9rem, 1.4vw, 1.4rem);
         color: var(--muted);
+        font-weight: 700;
+        letter-spacing: 0.18em;
+      }
+      .title-slide {
+        background: #ffdfdf;
+      }
+      .cast {
+        display: flex;
+        justify-content: center;
+        align-items: flex-end;
+        gap: 6vw;
+        margin: 3vh auto 0;
+      }
+      .castMember {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 0.5em;
+        margin: 0;
+      }
+      .character {
+        height: 48vh;
+        max-width: 36vw;
+        object-fit: contain;
+        border-radius: 24px;
+        filter: drop-shadow(0 20px 25px rgba(160, 30, 30, 0.22));
+      }
+      .castMember figcaption {
+        font-size: clamp(1.3rem, 2.6vw, 2.6rem);
+        font-weight: 900;
+        color: #8a1f1f;
+        background: rgba(255, 255, 255, 0.75);
+        padding: 0.35em 1em;
+        border-radius: 999px;
+        box-shadow: 0 6px 18px rgba(138, 31, 31, 0.15);
+        transition: 0.15s transform;
+      }
+      .castMember figcaption:active {
+        transform: scale(0.95);
+      }
+      .mediaPage h1 {
+        font-size: clamp(1.8rem, 3.5vw, 2.8rem);
+        font-weight: 400;
+        margin: 0.15em 0;
+      }
+      .lessonVideo {
+        width: 100%;
+        max-height: 60vh;
+        object-fit: contain;
+        border-radius: 28px;
+        box-shadow: var(--shadow);
+        background: #f0f0f0;
+      }
+      .row {
+        display: flex;
+        gap: 2vw;
+        justify-content: center;
+        align-items: center;
+        flex-wrap: wrap;
+      }
+      .choice {
+        min-width: 160px;
+        min-height: 80px;
+        border-radius: 28px;
+        background: white;
+        box-shadow: var(--shadow);
+        font-size: clamp(1.2rem, 2.2vw, 2.2rem);
+        font-weight: 900;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: 0.5em 1em;
+        transition: 0.15s transform;
+      }
+      .choice:active {
+        transform: scale(0.95);
+      }
+      .yes {
+        background: #dff7ec;
+        color: #087443;
+      }
+      .grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+        gap: 15px;
+        width: 100%;
+        max-width: 900px;
+        margin: 1em auto 0;
       }
       .card {
         background: var(--card);
@@ -124,117 +185,23 @@
         padding: clamp(1.2rem, 2.2vw, 2.6rem);
         box-shadow: var(--shadow);
       }
-      .character {
-        height: 58vh;
-        max-width: 70vw;
-        object-fit: contain;
-        border-radius: 24px;
-        filter: drop-shadow(0 20px 25px rgba(0, 0, 0, 0.12));
+      .color-btn {
+        color: white;
+        text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
       }
-      .hero {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: 5vw;
-        height: 100%;
+      .c-red {
+        background: #e05252;
       }
-      .heroText {
-        text-align: left;
-        max-width: 48vw;
+      .c-blue {
+        background: #2878f0;
       }
-      .word {
-        font-size: 4rem;
-        font-size: clamp(4rem, 11vw, 11rem);
-        font-weight: 900;
+      .c-yellow {
+        background: #f1c40f;
+        color: #14213d;
+        text-shadow: none;
       }
-      .emoji {
-        font-size: 5rem;
-        font-size: clamp(5rem, 12vw, 12rem);
-      }
-      .row {
-        display: flex;
-        gap: 3vw;
-        justify-content: center;
-        align-items: center;
-        flex-wrap: wrap;
-      }
-      .choice {
-        min-width: 160px;
-        min-height: 96px;
-        border-radius: 28px;
-        background: white;
-        box-shadow: var(--shadow);
-        font-size: 1.5rem;
-        font-size: clamp(1.5rem, 2.8vw, 3rem);
-        font-weight: 900;
-        transition: 0.15s transform;
-      }
-      .choice:active {
-        transform: scale(0.94);
-      }
-      .yes {
-        background: #dff7ec;
-        color: #087443;
-      }
-      .no {
-        background: #ffe4e4;
-        color: #a52222;
-      }
-      .letter {
-        font-size: 8rem;
-        font-size: clamp(8rem, 22vw, 22rem);
-        font-weight: 900;
-        line-height: 0.8;
-      }
-      .object {
-        font-size: 7rem;
-        font-size: clamp(7rem, 18vw, 18rem);
-        line-height: 1;
-      }
-      .alpha {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        gap: 0.8em;
-      }
-      .alpha .letter {
-        font-size: 4rem;
-        font-size: clamp(4rem, 11vw, 8rem);
-      }
-      .alpha .object {
-        font-size: 3.5rem;
-        font-size: clamp(3.5rem, 10vw, 7rem);
-      }
-      .alpha .word {
-        font-size: 2.2rem;
-        font-size: clamp(2.2rem, 6vw, 5rem);
-      }
-      .alpha h1 {
-        font-size: 2.5rem;
-        font-size: clamp(2.5rem, 6vw, 4rem);
-        margin: 0.1em 0;
-      }
-      .bigNumber {
-        font-size: 10rem;
-        font-size: clamp(10rem, 26vw, 26rem);
-        font-weight: 900;
-        line-height: 0.75;
-      }
-      .apples {
-        font-size: 7rem;
-        font-size: clamp(7rem, 14vw, 14rem);
-        letter-spacing: 0.1em;
-      }
-      .balloons {
-        font-size: 6rem;
-        font-size: clamp(6rem, 13vw, 13rem);
-      }
-      .command {
-        font-size: 4rem;
-        font-size: clamp(4rem, 9vw, 9rem);
-        font-weight: 900;
-        margin: 0.2em;
+      .c-green {
+        background: #19a974;
       }
       .topbar {
         position: absolute;
@@ -249,17 +216,31 @@
       .progress {
         font-size: 1.1rem;
         color: var(--muted);
-        background: rgba(255, 255, 255, 0.8);
+        background: rgba(255, 255, 255, 0.85);
         padding: 0.5em 1em;
         border-radius: 999px;
+        font-weight: bold;
       }
       .controls {
         display: flex;
         gap: 0.7em;
+        align-items: center;
+      }
+      .points {
+        font-size: 1.1rem;
+        font-weight: 900;
+        color: #8a4b00;
+        background: #ffeaa7;
+        padding: 0.5em 1em;
+        border-radius: 999px;
+        box-shadow: 0 5px 18px rgba(255, 180, 0, 0.3);
+        display: inline-flex;
+        align-items: center;
+        white-space: nowrap;
       }
       .ctrl {
-        width: 52px;
-        height: 52px;
+        width: 50px;
+        height: 50px;
         border-radius: 50%;
         background: white;
         box-shadow: 0 5px 18px rgba(0, 0, 0, 0.12);
@@ -275,42 +256,16 @@
         z-index: 30;
       }
       .nav button {
-        padding: 0.8em 1.3em;
+        padding: 0.8em 1.5em;
         border-radius: 999px;
         background: white;
         box-shadow: 0 8px 22px rgba(0, 0, 0, 0.12);
         font-weight: 700;
+        font-size: 1.1rem;
       }
       .nav .primary {
         background: var(--accent);
         color: white;
-      }
-      .hidden {
-        display: none !important;
-      }
-      .pulse {
-        animation: pulse 1s ease-in-out infinite;
-      }
-      .wave {
-        animation: wave 1s ease-in-out infinite alternate;
-      }
-      .pop {
-        animation: pop 0.45s ease-out;
-      }
-      .bounce {
-        animation: bounce 0.8s ease-in-out infinite;
-      }
-      .star {
-        font-size: 4rem;
-        font-size: clamp(4rem, 10vw, 10rem);
-        animation: spinpop 0.9s ease-out;
-      }
-      .feedback {
-        font-size: 2rem;
-        font-size: clamp(2rem, 4vw, 4rem);
-        font-weight: 900;
-        margin-top: 0.4em;
-        min-height: 1.2em;
       }
       #toast {
         position: absolute;
@@ -320,10 +275,9 @@
         z-index: 100;
         background: #14213d;
         color: white;
-        padding: 1em 1.5em;
+        padding: 0.8em 1.5em;
         border-radius: 999px;
-        font-size: 1.2rem;
-        font-size: clamp(1.2rem, 2vw, 2rem);
+        font-size: 1.4rem;
         opacity: 0;
         pointer-events: none;
         transition: 0.25s;
@@ -331,97 +285,8 @@
       #toast.show {
         opacity: 1;
       }
-      .nameInput {
-        font-size: 2rem;
-        font-size: clamp(2rem, 4vw, 4rem);
-        padding: 0.35em 0.5em;
-        border: 4px solid #d8e0ee;
-        border-radius: 20px;
-        text-align: center;
-        width: min(700px, 80vw);
-      }
-      .nameDisplay {
-        font-size: 3rem;
-        font-size: clamp(3rem, 7vw, 7rem);
-        font-weight: 900;
-        margin: 0.3em;
-      }
-      #videoWrap {
-        position: relative;
-        width: min(900px, 70vw);
-        margin: auto;
-      }
-      #charVideo {
-        width: 100%;
-        max-height: 62vh;
-        object-fit: contain;
-        border-radius: 28px;
-        box-shadow: var(--shadow);
-        background: #eee;
-      }
-      #videoPlay {
-        position: absolute;
-        left: 50%;
-        top: 50%;
-        transform: translate(-50%, -50%);
-        width: 100px;
-        height: 100px;
-        border-radius: 50%;
-        background: rgba(255, 255, 255, 0.9);
-        font-size: 2rem;
-      }
-      #introVideoWrap {
-        display: flex;
-        justify-content: center;
-        width: min(760px, 90vw);
-      }
-      #introVideo {
-        width: 100%;
-        max-height: 68vh;
-        object-fit: contain;
-        border-radius: 32px;
-        box-shadow: var(--shadow);
-      }
-      .lessonVideo {
-        width: 100%;
-        max-height: 68vh;
-        object-fit: contain;
-        border-radius: 32px;
-        box-shadow: var(--shadow);
-      }
-      .mediaPage h1 {
-        font-size: 1.8rem;
-        font-size: clamp(1.8rem, 3.5vw, 2.8rem);
-        font-weight: 400;
-        margin: 0.15em 0;
-      }
-      .videoActions {
-        display: flex;
-        gap: 1rem;
-        justify-content: center;
-        flex-wrap: wrap;
-      }
-      .conversation {
-        display: flex;
-        flex-direction: column;
-        gap: 1.2em;
-        align-items: center;
-      }
-      .line {
-        padding: 0.5em 1em;
-        border-radius: 20px;
-        background: white;
-        box-shadow: var(--shadow);
-        font-size: 1.5rem;
-        font-size: clamp(1.5rem, 3vw, 3rem);
-        font-weight: 800;
-      }
       #reward {
         position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
         inset: 0;
         pointer-events: none;
         overflow: hidden;
@@ -431,43 +296,6 @@
         position: absolute;
         font-size: 2rem;
         animation: fall 2.2s linear forwards;
-      }
-      @keyframes pulse {
-        50% {
-          transform: scale(1.04);
-        }
-      }
-      @keyframes wave {
-        to {
-          transform: rotate(3deg) scale(1.02);
-        }
-      }
-      @keyframes pop {
-        0% {
-          transform: scale(0.7);
-          opacity: 0;
-        }
-        100% {
-          transform: scale(1);
-          opacity: 1;
-        }
-      }
-      @keyframes bounce {
-        50% {
-          transform: translateY(-25px);
-        }
-      }
-      @keyframes spinpop {
-        0% {
-          transform: scale(0.2) rotate(-25deg);
-          opacity: 0;
-        }
-        70% {
-          transform: scale(1.15) rotate(10deg);
-        }
-        100% {
-          transform: scale(1);
-        }
       }
       @keyframes fall {
         0% {
@@ -479,103 +307,110 @@
           opacity: 0;
         }
       }
-      @media (max-width: 1024px) {
-        .screen {
-          padding: 12px;
+      .rewardSlots {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        align-items: center;
+        gap: clamp(10px, 1.5vw, 20px);
+        margin: 2vh auto;
+        padding: 1em;
+      }
+      .slot {
+        width: clamp(58px, 8vw, 110px);
+        height: clamp(58px, 8vw, 110px);
+        border-radius: 26px;
+        background: #eef1f7;
+        box-shadow: inset 0 0 0 3px rgba(20, 33, 61, 0.08);
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        font-size: clamp(1.9rem, 4vw, 3.4rem);
+        opacity: 0.3;
+        transition: opacity 0.3s;
+      }
+      .slot.filled {
+        opacity: 1;
+        background: #fff7e0;
+        box-shadow: 0 12px 28px rgba(255, 180, 0, 0.4),
+          inset 0 0 0 3px #f1c40f;
+        animation: starPop 0.65s cubic-bezier(0.2, 1.6, 0.4, 1);
+      }
+      .slot.cup {
+        font-size: clamp(2.4rem, 5.5vw, 4.2rem);
+      }
+      .slot.cup.filled {
+        background: #fff0d9;
+        box-shadow: 0 16px 34px rgba(255, 150, 0, 0.5),
+          inset 0 0 0 3px #ff9800;
+      }
+      @keyframes starPop {
+        0% {
+          transform: scale(0) rotate(-40deg);
         }
-        .content {
-          width: min(100%, 100vw);
-          min-height: auto;
-          max-height: calc(100dvh - 12vh);
+        60% {
+          transform: scale(1.35) rotate(10deg);
         }
-        .card {
-          border-radius: 24px;
-          padding: 1rem;
-        }
-        .choice {
-          min-width: 132px;
-          min-height: 76px;
-          font-size: clamp(1.2rem, 2.5vw, 1.9rem);
-        }
-        .topbar {
-          top: 1vh;
-          left: 2vw;
-          right: 2vw;
-        }
-        .progress {
-          font-size: 0.95rem;
-        }
-        .ctrl {
-          width: 46px;
-          height: 46px;
-          font-size: 1.15rem;
-        }
-        .nav {
-          bottom: 1.2vh;
-          gap: 0.7em;
-        }
-        .nav button {
-          padding: 0.7em 1.05em;
-          font-size: 0.95rem;
-        }
-        #introVideoWrap,
-        #commandsVideoWrap,
-        #countVideoWrap,
-        #thankYouVideoWrap,
-        #goodbyeVideoWrap {
-          width: min(100%, 720px);
-        }
-        .lessonVideo,
-        #introVideo {
-          max-height: 56vh;
+        100% {
+          transform: scale(1) rotate(0);
         }
       }
-
-      @media (max-width: 1024px) and (orientation: portrait) {
-        h1 {
-          font-size: clamp(2.2rem, 5.5vw, 3.4rem);
+      .rewardResult {
+        font-size: clamp(1.4rem, 2.6vw, 2.6rem);
+        font-weight: 900;
+        min-height: 3em;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .rewardResult.good {
+        color: var(--good);
+      }
+      .rewardResult.bad {
+        color: var(--bad);
+      }
+      .rewardVideo {
+        max-height: 46vh;
+        margin-top: 1em;
+      }
+      .burst {
+        position: absolute;
+        font-size: 1.7rem;
+        pointer-events: none;
+        z-index: 60;
+        animation: burstFly 1.1s ease-out forwards;
+      }
+      @keyframes burstFly {
+        0% {
+          transform: translate(0, 0) scale(1);
+          opacity: 1;
         }
-        h2 {
-          font-size: clamp(1.5rem, 4vw, 2.4rem);
-        }
-        p {
-          font-size: clamp(1rem, 2.1vw, 1.45rem);
-        }
-        .nameInput {
-          width: min(560px, 86vw);
-          font-size: clamp(1.4rem, 3.4vw, 2.1rem);
-        }
-        .alpha .letter {
-          font-size: clamp(3rem, 8vw, 5rem);
-        }
-        .alpha .object {
-          font-size: clamp(2.5rem, 7vw, 4rem);
-        }
-        .alpha .word {
-          font-size: clamp(1.8rem, 5vw, 3rem);
+        100% {
+          transform: translate(var(--bx), var(--by)) scale(0.25);
+          opacity: 0;
         }
       }
-
-      @media (max-width: 1024px) and (orientation: landscape) {
-        .content {
-          max-height: calc(100dvh - 8vh);
-        }
-        .lessonVideo,
-        #introVideo {
-          max-height: 46vh;
-        }
-      }
-
       @media (max-aspect-ratio: 1/1) {
-        .hero {
-          flex-direction: column;
+        .screen {
+          padding-bottom: 88px;
         }
-        .heroText {
-          text-align: center;
-          max-width: 80vw;
+        .cast {
+          flex-direction: column;
+          align-items: center;
+          gap: 2vh;
         }
         .character {
-          height: 45vh;
+          height: 30vh;
+          max-width: 60vw;
+        }
+        .castMember figcaption {
+          font-size: clamp(1.1rem, 3.2vw, 1.8rem);
+        }
+        .lessonVideo {
+          max-height: 42vh;
+        }
+        .nav {
+          bottom: calc(2vh + env(safe-area-inset-bottom, 0px));
         }
       }
     </style>
@@ -586,62 +421,46 @@
       <div id="reward"></div>
 
       <div class="topbar">
-        <div class="progress" id="progress">1 / 25</div>
+        <div class="progress" id="progress">1 / 2</div>
         <div class="controls">
+          <span class="points" id="pointsBadge">⭐ 0</span>
           <button class="ctrl" id="soundBtn" aria-label="Sound">🔊</button>
           <button class="ctrl" id="homeBtn" aria-label="Home">⌂</button>
         </div>
       </div>
 
-      <!-- 1 -->
-      <section class="screen active" data-i="1">
-        <div
-          class="content card"
-          style="
-            text-align: center;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            gap: 1.4em;
-          "
-        >
+      <!-- 1: Title -->
+      <section class="screen title-slide active">
+        <div class="content">
           <div class="small">ENGLISH EXPLORER</div>
-          <h1>English Explorer</h1>
-          <h2 style="text-align: center">Lesson 1</h2>
-          <h1 style="font-weight: 900; margin: 0">Welcome</h1>
-          <button
-            class="choice pulse"
-            style="background: var(--accent); color: white"
-            onclick="startIntroVideo()"
-          >
-            ▶ START
-          </button>
-          <p class="small" style="max-width: 80vw">
-            Press START to go to the video slide, then use BACK and NEXT to
-            continue through the lesson.
-          </p>
-          <div
-            style="
-              margin-top: 0.5em;
-              font-size: 0.75rem;
-              align-self: flex-start;
-              margin-left: 1.5em;
-            "
-          >
-            <a
-              href="next_lesson.html"
-              style="color: rgba(20, 33, 61, 0.55); text-decoration: none"
-              title="Tutor only: open next lesson"
-            >
-              next lesson
-            </a>
+          <h1>Welcome</h1>
+          <div class="cast">
+            <figure class="castMember">
+              <img
+                class="character"
+                src="https://res.cloudinary.com/dp455m4rk/image/upload/q_auto/f_auto/v1786010283/sam_3d_awiawr.png"
+                alt="Sam"
+              />
+              <figcaption onclick="speakCaption('My name is Sam.', 'sam')">
+                🔊 My Name is Sam
+              </figcaption>
+            </figure>
+            <figure class="castMember">
+              <img
+                class="character"
+                src="https://res.cloudinary.com/dp455m4rk/image/upload/q_auto/f_auto/v1786010302/onza_3davatar_ipbcid.png"
+                alt="Onza"
+              />
+              <figcaption onclick="speakCaption('My name is Onza.', 'onza')">
+                🔊 My Name is Onza
+              </figcaption>
+            </figure>
           </div>
         </div>
       </section>
 
-      <!-- 2 -->
-      <section class="screen mediaPage" data-i="2">
+      <!-- 2: Video — Sam & Onza introduce themselves -->
+      <section class="screen mediaPage">
         <div
           class="content"
           style="
@@ -653,19 +472,22 @@
           "
         >
           <div class="small">ENGLISH EXPLORER</div>
-          <h1>Watch the clip</h1>
-          <div id="introVideoWrap" style="margin-top: 0.5em">
+          <h1>Watch the Clip</h1>
+          <div
+            id="nameVideoWrap"
+            style="margin-top: 0.5em; width: 100%; max-width: 760px"
+          >
             <video
-              id="introVideo"
+              id="nameVideo"
+              class="lessonVideo"
               playsinline
               webkit-playsinline
               x5-playsinline
               preload="auto"
               controls
-              autoplay
-              data-autoplay="true"
-              data-autoplay-mode="welcome"
-              src="https://res.cloudinary.com/dp455m4rk/video/upload/v1785822007/hello_y2a9fr.mp4"
+              data-autoplay="false"
+              data-autoplay-mode="manual"
+              src="https://res.cloudinary.com/dp455m4rk/video/upload/q_auto/v1785933190/sam_onza_name_ro4vuz.mp4"
             ></video>
           </div>
           <div
@@ -680,7 +502,7 @@
             <button
               class="choice yes"
               style="min-width: 180px"
-              onclick="playIntroVideo()"
+              onclick="playVideo('nameVideo')"
             >
               ▶ PLAY
             </button>
@@ -689,64 +511,8 @@
         </div>
       </section>
 
-      <!-- 3 -->
-      <section class="screen" data-i="3">
-        <div class="content card">
-          <div class="emoji">👋🏼</div>
-          <h1>HELLO!</h1>
-          <p>Say it together.</p>
-          <button
-            class="choice"
-            onclick="
-              say('Hello!');
-              reward('HELLO!');
-            "
-          >
-            👋🏼 HELLO!
-          </button>
-        </div>
-      </section>
-
-      <!-- 4 -->
-      <section class="screen" data-i="4">
-        <div class="content card">
-          <div class="emoji">🦊</div>
-          <h2>MY NAME IS SAM.</h2>
-          <button
-            class="choice"
-            onclick="
-              say('My name is Sam.');
-              reward('MY NAME IS SAM!');
-            "
-          >
-            🔊 HEAR IT
-          </button>
-          <p>Now say: <b>My name is...</b></p>
-        </div>
-      </section>
-
-      <!-- 5 -->
-      <section class="screen" data-i="5">
-        <div class="content card">
-          <h2>MY NAME IS</h2>
-          <input
-            id="nameInput"
-            class="nameInput"
-            maxlength="18"
-            placeholder="Your name"
-            value="Onza"
-          />
-          <div id="nameDisplay" class="nameDisplay">________</div>
-          <button class="choice" onclick="setName()">✨ MAGIC NAME!</button>
-          <p class="small">
-            Teacher: enter the child's name, then let him say the whole
-            sentence.
-          </p>
-        </div>
-      </section>
-
-      <!-- 7 -->
-      <section class="screen mediaPage" data-i="8">
+      <!-- 3: Greetings -->
+      <section class="screen mediaPage">
         <div
           class="content"
           style="
@@ -758,7 +524,54 @@
           "
         >
           <div class="small">ENGLISH EXPLORER</div>
-          <h1>Watch the clip</h1>
+          <h1>Greetings</h1>
+          <p>Tap each line to hear it.</p>
+          <div
+            class="row"
+            style="flex-direction: column; width: 100%; max-width: 700px"
+          >
+            <button
+              class="choice"
+              style="width: 100%"
+              onclick="speakGreeting('Hello. My name is Sam.', 'greetSam')"
+            >
+              🔊 Hello. My Name is Sam.
+            </button>
+            <button
+              class="choice"
+              style="width: 100%"
+              onclick="speakGreeting('What is your name?', 'greetQ')"
+            >
+              🔊 What is your Name?
+            </button>
+            <button
+              class="choice"
+              style="width: 100%"
+              onclick="
+                speakGreeting('Hello Sam. My name is Onza.', 'greetOnza')
+              "
+            >
+              🔊 Hello Sam. My Name is Onza.
+            </button>
+          </div>
+          <p class="small">Use BACK and NEXT to move through the course.</p>
+        </div>
+      </section>
+
+      <!-- 4: Video — Classroom commands -->
+      <section class="screen mediaPage">
+        <div
+          class="content"
+          style="
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 1.4em;
+          "
+        >
+          <div class="small">ENGLISH EXPLORER</div>
+          <h1>Watch the Clip</h1>
           <div
             id="commandsVideoWrap"
             style="margin-top: 0.5em; width: 100%; max-width: 760px"
@@ -773,7 +586,7 @@
               controls
               data-autoplay="false"
               data-autoplay-mode="manual"
-              src="https://res.cloudinary.com/dp455m4rk/video/upload/v1785822006/commands_v7zbgo.mp4"
+              src="https://res.cloudinary.com/dp455m4rk/video/upload/q_auto,f_auto/v1786019411/classroomcommands_wqls5x.mp4"
             ></video>
           </div>
           <div
@@ -797,129 +610,8 @@
         </div>
       </section>
 
-      <!-- 7 -->
-      <section class="screen" data-i="7">
-        <div class="content card">
-          <div class="emoji">🪑</div>
-          <div class="command">SIT DOWN!</div>
-          <button
-            class="choice"
-            onclick="
-              say('Sit down!');
-              reward('SIT DOWN!');
-            "
-          >
-            ▶ PLAY
-          </button>
-        </div>
-      </section>
-
-      <!-- 8 -->
-      <section class="screen" data-i="9">
-        <div class="content card">
-          <div class="emoji">🧍</div>
-          <div class="command">STAND UP!</div>
-          <button
-            class="choice"
-            onclick="
-              say('Stand up!');
-              reward('STAND UP!');
-            "
-          >
-            ▶ PLAY
-          </button>
-        </div>
-      </section>
-
-      <!-- 9 -->
-      <section class="screen" data-i="10">
-        <div class="content">
-          <h1>TEACHER SAYS...</h1>
-          <div id="commandCard" class="card command">READY?</div>
-          <button class="choice" onclick="randomCommand()">
-            🎲 NEW COMMAND
-          </button>
-          <p class="small">
-            Teacher: give the command. Child performs the action.
-          </p>
-        </div>
-      </section>
-
-      <!-- 9 -->
-      <section class="screen" data-i="11">
-        <div class="content">
-          <h1>YES or NO?</h1>
-          <div class="emoji">🐶</div>
-          <h2>IS IT A DOG?</h2>
-          <div class="row">
-            <button
-              class="choice yes"
-              onclick="
-                say('Yes!');
-                reward('YES!');
-              "
-            >
-              YES ✅
-            </button>
-            <button
-              class="choice no"
-              onclick="
-                say('No, try again!');
-                reward('TRY AGAIN');
-              "
-            >
-              NO ❌
-            </button>
-          </div>
-        </div>
-      </section>
-
-      <!-- 10 -->
-      <section class="screen" data-i="12">
-        <div class="content">
-          <h1>YES or NO?</h1>
-          <div id="quizEmoji" class="emoji">
-            <img
-              src="https://res.cloudinary.com/dp455m4rk/image/upload/v1785846896/cat_memoji_djx2z3.png"
-              style="
-                width: 1em;
-                height: 1em;
-                object-fit: contain;
-                vertical-align: middle;
-              "
-            />
-          </div>
-          <h2 id="quizQuestion">IS IT A DOG?</h2>
-          <div class="row">
-            <button class="choice yes" onclick="quizAnswer(true)">
-              YES ✅
-            </button>
-            <button class="choice no" onclick="quizAnswer(false)">NO ❌</button>
-          </div>
-          <div id="quizFeedback" class="feedback"></div>
-          <button
-            class="choice hidden"
-            id="nextQuiz"
-            onclick="nextQuizQuestion()"
-          >
-            NEXT ➜
-          </button>
-        </div>
-      </section>
-
-      <!-- 12 -->
-      <section class="screen" data-i="14">
-        <div class="content">
-          <h1>WHAT IS IT?</h1>
-          <div id="mystery" class="card">
-            <div class="emoji">🎁</div>
-            <button class="choice" onclick="revealMystery()">✨ OPEN!</button>
-          </div>
-        </div>
-      </section>
-
-      <!-- 13 -->
-      <section class="screen mediaPage" data-i="15">
+      <!-- 5: Video — Colours -->
+      <section class="screen mediaPage">
         <div
           class="content"
           style="
@@ -931,13 +623,13 @@
           "
         >
           <div class="small">ENGLISH EXPLORER</div>
-          <h1>Watch the clip</h1>
+          <h1>Watch the Clip</h1>
           <div
-            id="countVideoWrap"
+            id="coloursVideoWrap"
             style="margin-top: 0.5em; width: 100%; max-width: 760px"
           >
             <video
-              id="countVideo"
+              id="coloursVideo"
               class="lessonVideo"
               playsinline
               webkit-playsinline
@@ -946,7 +638,7 @@
               controls
               data-autoplay="false"
               data-autoplay-mode="manual"
-              src="https://res.cloudinary.com/dp455m4rk/video/upload/v1785822006/1-2-3-a-b-c_lkdrp6.mp4"
+              src="https://res.cloudinary.com/dp455m4rk/video/upload/q_auto/v1786027836/colours_jtbfwl.mp4"
             ></video>
           </div>
           <div
@@ -961,7 +653,7 @@
             <button
               class="choice yes"
               style="min-width: 180px"
-              onclick="playVideo('countVideo')"
+              onclick="playVideo('coloursVideo')"
             >
               ▶ PLAY
             </button>
@@ -970,196 +662,67 @@
         </div>
       </section>
 
-      <!-- 18 -->
-      <section class="screen" data-i="18">
-        <div class="content card alpha">
-          <div class="letter">A</div>
-          <div class="object">🍎</div>
-          <div class="word">APPLE</div>
-          <button
-            class="choice"
-            onclick="
-              say('A — Apple.');
-              reward('A! APPLE!');
-            "
-          >
-            🔊 A — APPLE
-          </button>
-        </div>
-      </section>
-
-      <!-- 19 -->
-      <section class="screen" data-i="19">
-        <div class="content card alpha">
-          <div class="letter">B</div>
-          <div class="object">🐝</div>
-          <div class="word">BEE</div>
-          <button
-            class="choice"
-            onclick="
-              say('B — Bee.');
-              reward('B! BEE!');
-            "
-          >
-            🔊 B — BEE
-          </button>
-        </div>
-      </section>
-
-      <!-- 20 -->
-      <section class="screen" data-i="20">
-        <div class="content card alpha">
-          <div class="letter">C</div>
-          <div class="object">
-            <img
-              src="https://res.cloudinary.com/dp455m4rk/image/upload/v1785846896/cat_memoji_djx2z3.png"
-              style="
-                width: 1em;
-                height: 1em;
-                object-fit: contain;
-                vertical-align: middle;
-              "
-            />
-          </div>
-          <div class="word">CAT</div>
-          <button
-            class="choice"
-            onclick="
-              say('C — Cat.');
-              reward('C! CAT!');
-            "
-          >
-            🔊 C — CAT
-          </button>
-        </div>
-      </section>
-
-      <!-- 22 -->
-      <section class="screen mediaPage" data-i="22">
-        <div
-          class="content"
-          style="
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            gap: 1.4em;
-          "
-        >
-          <div class="small">ENGLISH EXPLORER</div>
-          <h1>Watch the clip</h1>
-          <div
-            id="thankYouVideoWrap"
-            style="margin-top: 0.5em; width: 100%; max-width: 760px"
-          >
-            <video
-              id="thankYouVideo"
-              class="lessonVideo"
-              playsinline
-              webkit-playsinline
-              x5-playsinline
-              preload="auto"
-              controls
-              data-autoplay="false"
-              data-autoplay-mode="manual"
-              src="https://res.cloudinary.com/dp455m4rk/video/upload/v1785822007/Thankyou_gtg6ya.mp4"
-            ></video>
-          </div>
-          <div
-            class="row"
-            style="
-              justify-content: center;
-              gap: 1rem;
-              width: 100%;
-              max-width: 800px;
-            "
-          >
-            <button
-              class="choice yes"
-              style="min-width: 180px"
-              onclick="playVideo('thankYouVideo')"
-            >
-              ▶ PLAY
-            </button>
-          </div>
-          <p class="small">Use BACK and NEXT to move through the course.</p>
-        </div>
-      </section>
-
-      <!-- 25 -->
-      <section class="screen mediaPage" data-i="25">
-        <div
-          class="content"
-          style="
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            gap: 1.4em;
-          "
-        >
-          <div class="small">ENGLISH EXPLORER</div>
-          <h1>Watch the clip</h1>
-          <div
-            id="goodbyeVideoWrap"
-            style="margin-top: 0.5em; width: 100%; max-width: 760px"
-          >
-            <video
-              id="goodbyeVideo"
-              class="lessonVideo"
-              playsinline
-              webkit-playsinline
-              x5-playsinline
-              preload="auto"
-              controls
-              data-autoplay="true"
-              data-autoplay-mode="goodbye"
-              src="https://res.cloudinary.com/dp455m4rk/video/upload/v1785822008/goodbye_vw5lb0.mp4"
-            ></video>
-          </div>
-          <div
-            class="row"
-            style="
-              justify-content: center;
-              gap: 1rem;
-              width: 100%;
-              max-width: 800px;
-            "
-          >
-            <button
-              class="choice yes"
-              style="min-width: 180px"
-              onclick="playVideo('goodbyeVideo')"
-            >
-              ▶ PLAY
-            </button>
-          </div>
-          <p class="small">Use BACK and NEXT to move through the course.</p>
-        </div>
-      </section>
-
-      <!-- 26 -->
-      <section class="screen" data-i="26">
+      <!-- 6: Colours check -->
+      <section class="screen">
         <div class="content card">
-          <div class="star">⭐</div>
-          <h1 id="starName">ENGLISH STAR</h1>
-          <h2>YOU SPOKE ENGLISH!</h2>
-          <p style="margin: 0.2em 0 0">Goodbye! 👋🏼</p>
-          <button
-            class="choice"
-            style="
-              background: #ffeaa7;
-              color: #8a4b00;
-              border: 3px solid #ffcf33;
-              box-shadow: 0 10px 24px rgba(255, 180, 0, 0.25);
-            "
-            onclick="
-              say('Goodbye and well done.');
-              reward('GOODBYE!');
-            "
-          >
-            👋🏼 GOODBYE
-          </button>
+          <h1>COLOURS</h1>
+          <p>Tap each colour once.</p>
+          <div class="grid">
+            <button
+              class="choice color-btn c-red"
+              onclick="colourPress('red')"
+            >
+              RED
+            </button>
+            <button
+              class="choice color-btn c-blue"
+              onclick="colourPress('blue')"
+            >
+              BLUE
+            </button>
+            <button
+              class="choice color-btn c-yellow"
+              onclick="colourPress('yellow')"
+            >
+              YELLOW
+            </button>
+            <button
+              class="choice color-btn c-green"
+              onclick="colourPress('green')"
+            >
+              GREEN
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <!-- 7: Results / big reward page -->
+      <section class="screen" id="resultsScreen">
+        <div class="content card">
+          <h1>YOUR SCORE</h1>
+          <p>Complete the tasks to earn all 6 stars and win the cup!</p>
+          <div class="rewardSlots" id="rewardSlots">
+            <span class="slot">⭐</span>
+            <span class="slot">⭐</span>
+            <span class="slot">⭐</span>
+            <span class="slot">⭐</span>
+            <span class="slot">⭐</span>
+            <span class="slot">⭐</span>
+            <span class="slot cup" id="rewardCupSlot">🏆</span>
+          </div>
+          <div id="rewardResult" class="rewardResult"></div>
+          <video
+            id="rewardCupVideo"
+            class="lessonVideo rewardVideo"
+            playsinline
+            webkit-playsinline
+            x5-playsinline
+            preload="auto"
+            data-autoplay="false"
+            data-autoplay-mode="manual"
+            src="https://res.cloudinary.com/dp455m4rk/video/upload/v1786033998/reward_cup_mv1dsm.mp4"
+            style="display: none"
+          ></video>
         </div>
       </section>
 
@@ -1175,37 +738,95 @@
       );
       var idx = 0;
       var soundOn = true;
-      var childName = "";
+      var points = 0;
+      var starsEarned = 0;
+      var pointsBadge = document.getElementById("pointsBadge");
       var progress = document.getElementById("progress");
-      var video = document.getElementById("charVideo");
       var synth =
         window.speechSynthesis ||
         window.webkitSpeechSynthesis ||
         window.mozSpeechSynthesis ||
         null;
-      var audioCtx =
-        window.AudioContext ||
-        window.webkitAudioContext ||
-        window.mozAudioContext ||
-        null;
-      var actx = null;
-      var defaultVoice = null;
-      var voiceTimer = null;
-      var speechPrimed = false;
-      var speechPrimedOnce = false;
+      var altVoice = null;
+      var altVoice2 = null;
+
+      function setVoice() {
+        if (!synth) return;
+        var voices = synth.getVoices();
+        if (!voices || voices.length === 0) return;
+        var preferred = null;
+        var fallback = null;
+        for (var i = 0; i < voices.length; i++) {
+          var v = voices[i];
+          if (!v || !v.lang) continue;
+          if (v.lang.toLowerCase().indexOf("en") !== 0) continue;
+          if (!fallback) fallback = v;
+          if (v.lang.toLowerCase().indexOf("en-gb") === 0) {
+            preferred = v;
+            break;
+          }
+          if (v.name && v.name.indexOf("Zira") >= 0) preferred = v;
+        }
+        altVoice = preferred || fallback;
+        altVoice2 = null;
+        for (var j = 0; j < voices.length; j++) {
+          var w = voices[j];
+          if (!w || !w.lang) continue;
+          if (w.lang.toLowerCase().indexOf("en") !== 0) continue;
+          if (w === altVoice) continue;
+          altVoice2 = w;
+          break;
+        }
+        if (!altVoice2) altVoice2 = altVoice;
+      }
+      if (synth) {
+        setVoice();
+        if (typeof synth.addEventListener === "function") {
+          synth.addEventListener("voiceschanged", setVoice);
+        }
+        var voiceTimer = window.setInterval(function () {
+          if (altVoice) {
+            window.clearInterval(voiceTimer);
+          }
+          setVoice();
+        }, 500);
+        window.setTimeout(function () {
+          window.clearInterval(voiceTimer);
+        }, 4000);
+      }
+
+      function show(i) {
+        idx = Math.max(0, Math.min(screens.length - 1, i));
+        for (var j = 0; j < screens.length; j++) {
+          screens[j].classList.toggle("active", j === idx);
+        }
+        progress.textContent = idx + 1 + " / " + screens.length;
+        document.getElementById("prevBtn").style.visibility =
+          idx === 0 ? "hidden" : "visible";
+        document.getElementById("nextBtn").textContent =
+          idx === screens.length - 1 ? "RESTART ↻" : "NEXT ›";
+        cancelSpeech();
+        var activeVideo = screens[idx].querySelector("video") || null;
+        if (activeVideo) {
+          if (activeVideo.getAttribute("data-autoplay") === "true") {
+            playMediaVideo(activeVideo, true);
+          } else {
+            preloadVideo(activeVideo);
+          }
+        }
+        if (screens[idx].id === "resultsScreen") {
+          showRewards();
+        }
+      }
 
       function preloadVideo(video) {
-        if (!video || !video.src) return;
+        if (!video) return;
         try {
           video.preload = "auto";
           video.setAttribute("preload", "auto");
-          if (typeof video.load === "function") {
-            video.load();
-          }
+          if (typeof video.load === "function") video.load();
           if (typeof fetch === "function" && video.src.indexOf("http") === 0) {
-            try {
-              fetch(video.src, { cache: "force-cache" }).catch(function () {});
-            } catch (e) {}
+            fetch(video.src, { cache: "force-cache" }).catch(function () {});
           }
         } catch (e) {}
       }
@@ -1242,68 +863,19 @@
         } catch (e) {}
       }
 
-      function preloadLessonVideos() {
-        var videos = Array.prototype.slice.call(
-          document.querySelectorAll("video"),
-        );
-        for (var i = 0; i < videos.length; i++) {
-          (function (videoEl, index) {
-            window.setTimeout(function () {
-              preloadVideo(videoEl);
-            }, index * 120);
-          })(videos[i], i);
-        }
+      function playVideo(id) {
+        var videoEl = document.getElementById(id);
+        if (!videoEl) return;
+        playMediaVideo(videoEl, true);
       }
 
-      function setVoice() {
-        if (!synth) return;
-        var voices = synth.getVoices();
-        if (!voices || voices.length === 0) return;
-        defaultVoice = null;
-        for (var i = 0; i < voices.length; i++) {
-          var v = voices[i];
-          if (v && v.lang && v.lang.indexOf("en") === 0) {
-            defaultVoice = v;
-            break;
-          }
-        }
-        if (!defaultVoice) defaultVoice = voices[0] || null;
+      function next() {
+        if (idx === screens.length - 1) show(0);
+        else show(idx + 1);
       }
 
-      function ensureAudio() {
-        if (!audioCtx) return null;
-        try {
-          if (!actx) actx = new audioCtx();
-          if (actx.state === "suspended" && typeof actx.resume === "function") {
-            actx.resume().catch(function () {});
-          }
-        } catch (e) {}
-        return actx;
-      }
-
-      function tone(freq, delay, dur, vol) {
-        var c = ensureAudio();
-        if (!c) return;
-        try {
-          var o = c.createOscillator();
-          var g = c.createGain();
-          o.type = "sine";
-          o.frequency.value = freq;
-          var t0 = c.currentTime + delay;
-          g.gain.setValueAtTime(0.0001, t0);
-          g.gain.linearRampToValueAtTime(vol, t0 + 0.02);
-          g.gain.exponentialRampToValueAtTime(0.0001, t0 + dur);
-          o.connect(g);
-          g.connect(c.destination);
-          o.start(t0);
-          o.stop(t0 + dur + 0.05);
-        } catch (e) {}
-      }
-
-      function chime() {
-        tone(523.25, 0, 0.18, 0.22);
-        tone(659.25, 0.1, 0.22, 0.22);
-        tone(783.99, 0.2, 0.32, 0.22);
+      function prev() {
+        show(idx - 1);
       }
 
       function cancelSpeech() {
@@ -1314,130 +886,31 @@
         }
       }
 
-      function primeSpeech() {
-        ensureAudio();
-        if (!synth || speechPrimed) return;
-        setVoice();
-        if (!defaultVoice) return;
-        speechPrimed = true;
-      }
-
-      function initTTS() {
-        if (!synth) return;
-        setVoice();
-        if (typeof synth.addEventListener === "function") {
-          synth.addEventListener("voiceschanged", setVoice);
-        } else if (typeof synth.onvoiceschanged === "function") {
-          synth.onvoiceschanged = setVoice;
-        }
-        voiceTimer = window.setInterval(function () {
-          if (defaultVoice) {
-            window.clearInterval(voiceTimer);
-            voiceTimer = null;
-            return;
-          }
-          setVoice();
-        }, 500);
-        window.setTimeout(function () {
-          if (voiceTimer) {
-            window.clearInterval(voiceTimer);
-            voiceTimer = null;
-          }
-        }, 4000);
-      }
-      initTTS();
-      preloadLessonVideos();
-      window.addEventListener("load", preloadLessonVideos);
-      function primeSpeechOnce() {
-        if (speechPrimedOnce) return;
-        speechPrimedOnce = true;
-        primeSpeech();
-      }
-      try {
-        document.addEventListener("pointerdown", primeSpeechOnce, false);
-      } catch (e) {}
-      document.addEventListener("click", primeSpeechOnce, false);
-      document.addEventListener("keydown", primeSpeechOnce, false);
-      document.addEventListener("touchstart", primeSpeechOnce, false);
-
-      function show(i) {
-        idx = Math.max(0, Math.min(screens.length - 1, i));
-        for (var j = 0; j < screens.length; j++) {
-          var s = screens[j];
-          if (j === idx) {
-            s.classList.add("active");
-          } else {
-            s.classList.remove("active");
-          }
-        }
-        var activeVideo = null;
-        if (screens[idx]) {
-          activeVideo = screens[idx].querySelector("video") || null;
-        }
-        if (activeVideo) {
-          var autoplayEnabled =
-            activeVideo.getAttribute("data-autoplay") === "true";
-          if (autoplayEnabled) {
-            playMediaVideo(activeVideo, true);
-          } else {
-            preloadVideo(activeVideo);
-          }
-        }
-        progress.textContent = idx + 1 + " / " + screens.length;
-        document.getElementById("prevBtn").style.visibility =
-          idx === 0 ? "hidden" : "visible";
-        document.getElementById("nextBtn").textContent =
-          idx === screens.length - 1
-            ? "RESTART ↻"
-            : idx === 0
-              ? "START ›"
-              : "NEXT ›";
-        if (idx === 16) buildLetters();
-        if (idx === 19) {
-          document.getElementById("starName").textContent =
-            (childName || "YOUR") + " — ENGLISH STAR";
-        }
-        cancelSpeech();
-        if (idx === 1) {
-          autoPlayIntroVideo();
-        }
-      }
-      function next() {
-        if (idx === screens.length - 1) show(0);
-        else show(idx + 1);
-      }
-      function prev() {
-        show(idx - 1);
-      }
-      function say(text) {
+      function say(text, voice) {
         if (!soundOn) return;
         if (window.tizen && window.tizen.tts) {
           try {
             tizen.tts.speak(String(text), {
               locale: "en-US",
-              rate: 0.9,
-              pitch: 1.1,
+              rate: 0.85,
+              pitch: 1.0,
               type: "TTS_TYPE_SCREEN_READER",
             });
             return;
           } catch (e) {}
         }
         if (synth && typeof SpeechSynthesisUtterance !== "undefined") {
-          if (!speechPrimed) {
-            primeSpeech();
-          }
-          if (synth.speaking) synth.cancel();
+          cancelSpeech();
           var u = new SpeechSynthesisUtterance(text);
           u.lang = "en-US";
-          u.volume = 1.0;
           u.rate = 0.82;
           u.pitch = 1.08;
-          if (defaultVoice) u.voice = defaultVoice;
+          if (voice) u.voice = voice;
+          else if (altVoice) u.voice = altVoice;
           synth.speak(u);
-          return;
         }
-        chime();
       }
+
       function toast(t) {
         var el = document.getElementById("toast");
         el.textContent = t;
@@ -1446,12 +919,46 @@
           el.classList.remove("show");
         }, 1100);
       }
+
+      function addPoints(n) {
+        points += n;
+        if (pointsBadge) pointsBadge.textContent = "⭐ " + points;
+      }
+
+      var captionsPlayed = {};
+      var captionsRewarded = false;
+      function speakCaption(text, key) {
+        say(text);
+        captionsPlayed[key] = true;
+        if (captionsPlayed.sam && captionsPlayed.onza && !captionsRewarded) {
+          captionsRewarded = true;
+          reward("WELL DONE! +1 ⭐");
+        }
+      }
+
+      var greetingsPlayed = {};
+      var greetingsRewarded = false;
+      function speakGreeting(text, key) {
+        say(text, key === "greetOnza" ? altVoice2 : null);
+        greetingsPlayed[key] = true;
+        if (
+          greetingsPlayed.greetSam &&
+          greetingsPlayed.greetQ &&
+          greetingsPlayed.greetOnza &&
+          !greetingsRewarded
+        ) {
+          greetingsRewarded = true;
+          reward("WELL DONE! +1 ⭐");
+        }
+      }
+
       function reward(t) {
+        starsEarned++;
         toast(t);
+        addPoints(1);
         var r = document.getElementById("reward");
         r.innerHTML = "";
-        var i;
-        for (i = 0; i < 24; i++) {
+        for (var i = 0; i < 24; i++) {
           var s = document.createElement("span");
           s.className = "confetti";
           s.textContent = ["⭐", "✨", "🎉", "👏"][i % 4];
@@ -1464,309 +971,134 @@
           r.innerHTML = "";
         }, 2500);
       }
-      function waveVideo() {
-        if (!video) return;
-        try {
-          video.currentTime = 0;
-        } catch (e) {}
-        video.muted = true;
-        try {
-          var p = video.play();
-          if (p && typeof p.catch === "function") {
-            p.catch(function () {});
-          }
-        } catch (e) {}
-      }
-      function playCharacter() {
-        waveVideo();
-        document.getElementById("videoPlay").classList.add("hidden");
-      }
-      function autoPlayIntroVideo() {
-        var videoEl = document.getElementById("introVideo");
-        if (!videoEl) return;
-        playMediaVideo(videoEl, true);
-      }
 
-      function playIntroVideo() {
-        var videoEl = document.getElementById("introVideo");
-        if (!videoEl) return;
-        playMediaVideo(videoEl, true);
-      }
-
-      function repeatIntroVideo() {
-        var videoEl = document.getElementById("introVideo");
-        if (!videoEl) return;
-        playMediaVideo(videoEl, true);
-      }
-
-      function playVideo(id) {
-        var videoEl = document.getElementById(id);
-        if (!videoEl) return;
-        playMediaVideo(videoEl, true);
-      }
-
-      function repeatVideo(id) {
-        playVideo(id);
-      }
-
-      function startIntroVideo() {
-        primeSpeech();
-        show(1);
-        setTimeout(playIntroVideo, 120);
-      }
-
-      function setName() {
-        childName = (document.getElementById("nameInput").value || "").trim();
-        if (!childName) {
-          toast("Type the name first");
-          return;
-        }
-        document.getElementById("nameDisplay").textContent =
-          childName.toUpperCase();
-        say("My name is " + childName + ".");
-        reward("MY NAME IS " + childName.toUpperCase() + "!");
-      }
-      var commands = [
-        ["STAND UP!", "Stand up!"],
-        ["SIT DOWN!", "Sit down!"],
-        ["LOOK!", "Look!"],
-        ["LISTEN!", "Listen!"],
-        ["COME HERE!", "Come here!"],
-      ];
-      var lastIdx = -1;
-      var lastCount = 0;
-      function randomCommand() {
-        var idx = Math.floor(Math.random() * commands.length);
-        if (idx === lastIdx && lastCount >= 2) {
-          var others = [];
-          for (var i = 0; i < commands.length; i++) {
-            if (i !== lastIdx) others.push(i);
-          }
-          idx = others[Math.floor(Math.random() * others.length)];
-        }
-        lastCount = idx === lastIdx ? lastCount + 1 : 1;
-        lastIdx = idx;
-        var x = commands[idx];
-        var el = document.getElementById("commandCard");
-        el.textContent = x[0];
-        el.classList.remove("pop");
-        void el.offsetWidth;
-        el.classList.add("pop");
-        say(x[1]);
-      }
-      var quizzes = [
-        {
-          emoji: "🐱",
-          img: "https://res.cloudinary.com/dp455m4rk/image/upload/v1785846896/cat_memoji_djx2z3.png",
-          q: "IS IT A DOG?",
-          yes: false,
-        },
-        { emoji: "🐶", q: "IS IT A DOG?", yes: true },
-        { emoji: "⚽", q: "IS IT A BALL?", yes: true },
-        { emoji: "🍎", q: "IS IT A CAT?", yes: false },
-      ];
-      var qi = 0;
-      function renderQuizEmoji(q) {
-        var el = document.getElementById("quizEmoji");
-        if (q.img) {
-          el.innerHTML =
-            '<img src="' +
-            q.img +
-            '" style="width:1em;height:1em;object-fit:contain;vertical-align:middle"/>';
-        } else {
-          el.textContent = q.emoji;
-        }
-      }
-      function quizAnswer(v) {
-        var correct = v === quizzes[qi].yes;
-        document.getElementById("quizFeedback").textContent = correct
-          ? "GREAT! ⭐"
-          : "TRY AGAIN!";
-        if (v) {
-          if (correct) {
-            say("Yes! Great!");
-          } else {
-            say("No! Try again!");
-          }
-        } else {
-          if (correct) {
-            say("Great, you are right!");
-          } else {
-            say("No! Try again!");
-          }
-        }
-        if (correct) {
-          reward("GREAT!");
-          document.getElementById("nextQuiz").classList.remove("hidden");
-        }
-      }
-      function nextQuizQuestion() {
-        qi = (qi + 1) % quizzes.length;
-        var q = quizzes[qi];
-        renderQuizEmoji(q);
-        document.getElementById("quizQuestion").textContent = q.q;
-        document.getElementById("quizFeedback").textContent = "";
-        document.getElementById("nextQuiz").classList.add("hidden");
-      }
-      function revealMystery() {
-        document.getElementById("mystery").innerHTML =
-          '<div class="object pop">⚽</div><div class="word">BALL!</div><button class="choice" onclick="say(\'Ball!\');reward(\'BALL!\')">🔊 BALL</button>';
-        say("Ball!");
-      }
-      var num = 1;
-      function nextNumber() {
-        num = num === 3 ? 1 : num + 1;
-        var apples = document.getElementById("apples");
-        if (apples) {
-          var applesText = "";
-          for (var i = 0; i < num; i++) applesText += "🍎";
-          apples.textContent = applesText;
-        }
-        var numberWord = document.getElementById("numberWord");
-        if (numberWord) {
-          numberWord.textContent = ["", "ONE", "TWO", "THREE"][num];
-        }
-        var word = ["", "One", "Two", "Three"][num];
-        say(word);
-      }
-      function showCount() {
-        document.getElementById("countAnswer").classList.remove("hidden");
-        say("Three!");
-        reward("THREE!");
-      }
-      var letterSpeech = { A: "A", B: "B", C: "C" };
-      var lastLetterIdx = -1;
-      var lastLetterCount = 0;
-      var letterFeedbackTimer = null;
-      var letterIntroTimer = null;
-      var letterRoundActive = true;
-
-      function sayLetter(letter) {
-        if (!soundOn || !synth) return;
-        if (synth.speaking) synth.cancel();
-        var u = new SpeechSynthesisUtterance(letterSpeech[letter] || letter);
-        u.lang = "en-US";
-        u.volume = 1.0;
-        u.rate = 0.72;
-        u.pitch = 1.0;
-        if (defaultVoice) u.voice = defaultVoice;
-        synth.speak(u);
-      }
-      function pickTargetLetter() {
-        var letters = ["A", "B", "C"];
-        var idx = Math.floor(Math.random() * letters.length);
-        if (idx === lastLetterIdx && lastLetterCount >= 2) {
-          var others = [];
-          for (var i = 0; i < letters.length; i++) {
-            if (i !== lastLetterIdx) others.push(i);
-          }
-          idx = others[Math.floor(Math.random() * others.length)];
-        }
-        lastLetterCount = idx === lastLetterIdx ? lastLetterCount + 1 : 1;
-        lastLetterIdx = idx;
-        return letters[idx];
-      }
-      function setNewLetterButtonState(enabled) {
-        var btn = document.getElementById("newLetterBtn");
-        if (!btn) return;
-        btn.disabled = !enabled;
-        btn.style.opacity = enabled ? "1" : "0.25";
-        btn.style.cursor = enabled ? "pointer" : "not-allowed";
-        btn.style.pointerEvents = enabled ? "auto" : "none";
-      }
-
-      function buildLetters() {
-        var box = document.getElementById("letters");
-        if (!box) return;
-        box.innerHTML = "";
-        var current = pickTargetLetter();
-        window.currentLetter = current;
-        letterRoundActive = true;
-        setNewLetterButtonState(false);
-        if (letterFeedbackTimer) {
-          window.clearTimeout(letterFeedbackTimer);
-          letterFeedbackTimer = null;
-        }
-        if (letterIntroTimer) {
-          window.clearTimeout(letterIntroTimer);
-          letterIntroTimer = null;
-        }
-        document.getElementById("letterFeedback").textContent = "";
-        var letters = ["A", "B", "C"];
-        letters.sort(function () {
-          return Math.random() - 0.5;
+      var nameVideo = document.getElementById("nameVideo");
+      var nameVideoRewarded = false;
+      if (nameVideo) {
+        nameVideo.addEventListener("ended", function () {
+          if (nameVideoRewarded) return;
+          nameVideoRewarded = true;
+          reward("WELL DONE! +1 ⭐");
         });
-        for (var i = 0; i < letters.length; i++) {
-          (function (letter) {
-            var b = document.createElement("button");
-            b.className = "choice";
-            b.textContent = letter;
-            b.onclick = function () {
-              var target = window.currentLetter || "A";
-              var feedback = document.getElementById("letterFeedback");
-              if (letter === target) {
-                feedback.textContent = "YES! ⭐";
-                letterRoundActive = false;
-                setNewLetterButtonState(true);
-                if (letterIntroTimer) {
-                  window.clearTimeout(letterIntroTimer);
-                  letterIntroTimer = null;
-                }
-                say("Correct - " + letter);
-                reward(letter + "!");
-                if (letterFeedbackTimer) {
-                  window.clearTimeout(letterFeedbackTimer);
-                }
-                letterFeedbackTimer = window.setTimeout(function () {
-                  feedback.textContent = "";
-                  letterFeedbackTimer = null;
-                }, 1200);
-              } else {
-                feedback.textContent = "TRY AGAIN";
-                say("Try again!");
-                setNewLetterButtonState(false);
-                window.setTimeout(function () {
-                  sayLetter(target);
-                }, 900);
-              }
-            };
-            box.appendChild(b);
-          })(letters[i]);
-        }
-        letterIntroTimer = window.setTimeout(function () {
-          sayLetter(window.currentLetter);
-          letterIntroTimer = null;
-        }, 500);
       }
-      function newLetter() {
-        if (!letterRoundActive) {
-          buildLetters();
+
+      var commandsVideo = document.getElementById("commandsVideo");
+      var commandsRewarded = false;
+      if (commandsVideo) {
+        commandsVideo.addEventListener("ended", function () {
+          if (commandsRewarded) return;
+          commandsRewarded = true;
+          reward("WELL DONE! +1 ⭐");
+        });
+      }
+
+      var coloursVideo = document.getElementById("coloursVideo");
+      var coloursVideoRewarded = false;
+      if (coloursVideo) {
+        coloursVideo.addEventListener("ended", function () {
+          if (coloursVideoRewarded) return;
+          coloursVideoRewarded = true;
+          reward("WELL DONE! +1 ⭐");
+        });
+      }
+
+      var colourPressCounts = { red: 0, blue: 0, yellow: 0, green: 0 };
+      var colourPressRewarded = false;
+      function colourPress(colour) {
+        say(colour.charAt(0).toUpperCase() + colour.slice(1));
+        colourPressCounts[colour]++;
+        if (colourPressRewarded) return;
+        var allDone = ["red", "blue", "yellow", "green"].every(
+          function (c) {
+            return colourPressCounts[c] >= 1;
+          },
+        );
+        if (allDone) {
+          colourPressRewarded = true;
+          reward("ALL COLOURS! +1 ⭐");
         }
       }
-      function sayConversation() {
-        var n = childName || "your name";
-        var lines = [
-          "Hello!",
-          "My name is " + n + ".",
-          "I am seven.",
-          "Goodbye!",
-        ];
-        var i = 0;
-        function go() {
-          if (i >= lines.length) {
-            reward("YOU SPOKE ENGLISH!");
-            return;
+
+      function burst(el) {
+        var r = document.getElementById("reward");
+        var rect = el.getBoundingClientRect();
+        var cx = rect.left + rect.width / 2;
+        var cy = rect.top + rect.height / 2;
+        var frag = document.createDocumentFragment();
+        for (var i = 0; i < 18; i++) {
+          var s = document.createElement("span");
+          s.className = "burst";
+          s.textContent = ["⭐", "✨", "🎉", "👏"][i % 4];
+          var ang = Math.random() * Math.PI * 2;
+          var dist = 40 + Math.random() * 80;
+          s.style.setProperty("--bx", Math.cos(ang) * dist + "px");
+          s.style.setProperty("--by", Math.sin(ang) * dist + "px");
+          s.style.left = cx + "px";
+          s.style.top = cy + "px";
+          frag.appendChild(s);
+        }
+        r.appendChild(frag);
+        setTimeout(function () {
+          var list = r.querySelectorAll(".burst");
+          for (var j = 0; j < list.length; j++) {
+            if (list[j].parentNode) list[j].parentNode.removeChild(list[j]);
           }
-          say(lines[i++]);
-          setTimeout(go, 1500);
-        }
-        go();
+        }, 1300);
       }
+
+      var rewardTimer = null;
+      function showRewards() {
+        if (rewardTimer) window.clearTimeout(rewardTimer);
+        var slots = document.getElementById("rewardSlots").querySelectorAll(".slot");
+        for (var i = 0; i < slots.length; i++) {
+          slots[i].classList.remove("filled");
+        }
+        var cupSlot = document.getElementById("rewardCupSlot");
+        cupSlot.classList.remove("filled");
+        var video = document.getElementById("rewardCupVideo");
+        if (typeof video.pause === "function") video.pause();
+        video.style.display = "none";
+        var result = document.getElementById("rewardResult");
+        result.className = "rewardResult";
+        result.textContent = "";
+        var n = starsEarned >= 6 ? 6 : starsEarned;
+        for (var k = 0; k < n; k++) {
+          (function (slotIndex) {
+            rewardTimer = window.setTimeout(function () {
+              slots[slotIndex].classList.add("filled");
+              burst(slots[slotIndex]);
+              if (slotIndex === n - 1) finishRewards(n);
+            }, k * 600);
+          })(k);
+        }
+        if (n === 0) finishRewards(0);
+      }
+
+      function finishRewards(n) {
+        var result = document.getElementById("rewardResult");
+        var cupSlot = document.getElementById("rewardCupSlot");
+        var video = document.getElementById("rewardCupVideo");
+        if (n >= 6) {
+          cupSlot.classList.add("filled");
+          burst(cupSlot);
+          result.className = "rewardResult good";
+          result.textContent = "PERFECT! YOU WON THE CUP! 🏆";
+          video.style.display = "block";
+          playMediaVideo(video, true);
+        } else {
+          result.className = "rewardResult bad";
+          result.textContent =
+            "TRY AGAIN! You earned " + n + "/6 stars. Complete the tasks to win the cup!";
+        }
+      }
+
       document.getElementById("soundBtn").onclick = function () {
         soundOn = !soundOn;
         document.getElementById("soundBtn").textContent = soundOn ? "🔊" : "🔇";
-        if (soundOn) primeSpeech();
-        else cancelSpeech();
+        if (soundOn) {
+          if (synth) synth.cancel();
+        }
+        cancelSpeech();
       };
       document.getElementById("homeBtn").onclick = function () {
         show(0);
