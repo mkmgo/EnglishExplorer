@@ -337,7 +337,7 @@
                 alt="Onza"
               />
               <figcaption onclick="speakCaption('My name is Onza.', 'onza')">
-                🔊 My Names is Onza
+                🔊 My Name is Onza
               </figcaption>
             </figure>
           </div>
@@ -413,11 +413,7 @@
           <p>Tap each line to hear it.</p>
           <div
             class="row"
-            style="
-              flex-direction: column;
-              width: 100%;
-              max-width: 700px;
-            "
+            style="flex-direction: column; width: 100%; max-width: 700px"
           >
             <button
               class="choice"
@@ -436,7 +432,9 @@
             <button
               class="choice"
               style="width: 100%"
-              onclick="speakGreeting('Hello Sam. My name is Onza.', 'greetOnza')"
+              onclick="
+                speakGreeting('Hello Sam. My name is Onza.', 'greetOnza')
+              "
             >
               🔊 Hello Sam. My Name is Onza.
             </button>
@@ -751,7 +749,7 @@
       var commandsVideo = document.getElementById("commandsVideo");
       var commandsRewarded = false;
       if (commandsVideo) {
-        commandsVideo.addEventListener("play", function () {
+        commandsVideo.addEventListener("ended", function () {
           if (commandsRewarded) return;
           commandsRewarded = true;
           reward("WELL DONE! +1 ⭐");
