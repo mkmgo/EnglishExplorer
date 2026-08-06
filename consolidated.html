@@ -1,0 +1,544 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no"
+    />
+    <title>English Explorer</title>
+    <meta name="description" content="English Explorer" />
+    <link
+      rel="icon"
+      type="image/png"
+      href="https://res.cloudinary.com/dp455m4rk/image/upload/v1785849408/sam_favipreview_v2i7l2.png"
+    />
+    <style>
+      :root {
+        --bg: #f5f7fb;
+        --ink: #14213d;
+        --muted: #60708d;
+        --accent: #2878f0;
+        --good: #19a974;
+        --bad: #e05252;
+        --card: #ffffff;
+        --shadow: 0 18px 50px rgba(20, 33, 61, 0.14);
+      }
+      * {
+        box-sizing: border-box;
+      }
+      html,
+      body {
+        margin: 0;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+        background: var(--bg);
+        font-family: Arial, Helvetica, sans-serif;
+        color: var(--ink);
+        touch-action: manipulation;
+      }
+      button {
+        font: inherit;
+        border: 0;
+        cursor: pointer;
+      }
+      #app {
+        width: 100%;
+        height: 100vh;
+        height: 100dvh;
+        position: relative;
+        overflow: hidden;
+      }
+      .screen {
+        position: absolute;
+        inset: 0;
+        display: none;
+        align-items: center;
+        justify-content: center;
+        padding: clamp(10px, 2vh, 24px) clamp(10px, 2vw, 24px);
+      }
+      .screen.active {
+        display: flex;
+      }
+      .content {
+        width: min(1400px, 100%);
+        max-height: 100%;
+        position: relative;
+        text-align: center;
+      }
+      h1 {
+        font-size: clamp(3rem, 7vw, 7rem);
+        margin: 0.1em 0;
+        font-weight: 900;
+        letter-spacing: -0.03em;
+      }
+      h2 {
+        font-size: clamp(1.8rem, 4vw, 4rem);
+        margin: 0.2em 0;
+      }
+      p {
+        font-size: clamp(1.2rem, 2vw, 2.2rem);
+      }
+      .small {
+        font-size: clamp(0.9rem, 1.4vw, 1.4rem);
+        color: var(--muted);
+        font-weight: 700;
+        letter-spacing: 0.18em;
+      }
+      .title-slide {
+        background: #ffdfdf;
+      }
+      .cast {
+        display: flex;
+        justify-content: center;
+        align-items: flex-end;
+        gap: 6vw;
+        margin: 3vh auto 0;
+      }
+      .castMember {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 0.5em;
+        margin: 0;
+      }
+      .character {
+        height: 48vh;
+        max-width: 36vw;
+        object-fit: contain;
+        border-radius: 24px;
+        filter: drop-shadow(0 20px 25px rgba(160, 30, 30, 0.22));
+      }
+      .castMember figcaption {
+        font-size: clamp(1.3rem, 2.6vw, 2.6rem);
+        font-weight: 900;
+        color: #8a1f1f;
+        background: rgba(255, 255, 255, 0.75);
+        padding: 0.35em 1em;
+        border-radius: 999px;
+        box-shadow: 0 6px 18px rgba(138, 31, 31, 0.15);
+        transition: 0.15s transform;
+      }
+      .castMember figcaption:active {
+        transform: scale(0.95);
+      }
+      .mediaPage h1 {
+        font-size: clamp(1.8rem, 3.5vw, 2.8rem);
+        font-weight: 400;
+        margin: 0.15em 0;
+      }
+      .lessonVideo {
+        width: 100%;
+        max-height: 60vh;
+        object-fit: contain;
+        border-radius: 28px;
+        box-shadow: var(--shadow);
+        background: #f0f0f0;
+      }
+      .row {
+        display: flex;
+        gap: 2vw;
+        justify-content: center;
+        align-items: center;
+        flex-wrap: wrap;
+      }
+      .choice {
+        min-width: 160px;
+        min-height: 80px;
+        border-radius: 28px;
+        background: white;
+        box-shadow: var(--shadow);
+        font-size: clamp(1.2rem, 2.2vw, 2.2rem);
+        font-weight: 900;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: 0.5em 1em;
+        transition: 0.15s transform;
+      }
+      .choice:active {
+        transform: scale(0.95);
+      }
+      .yes {
+        background: #dff7ec;
+        color: #087443;
+      }
+      .topbar {
+        position: absolute;
+        top: 2vh;
+        left: 3vw;
+        right: 3vw;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        z-index: 20;
+      }
+      .progress {
+        font-size: 1.1rem;
+        color: var(--muted);
+        background: rgba(255, 255, 255, 0.85);
+        padding: 0.5em 1em;
+        border-radius: 999px;
+        font-weight: bold;
+      }
+      .controls {
+        display: flex;
+        gap: 0.7em;
+      }
+      .ctrl {
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        background: white;
+        box-shadow: 0 5px 18px rgba(0, 0, 0, 0.12);
+        font-size: 1.3rem;
+      }
+      .nav {
+        position: absolute;
+        bottom: 2vh;
+        left: 50%;
+        transform: translateX(-50%);
+        display: flex;
+        gap: 1em;
+        z-index: 30;
+      }
+      .nav button {
+        padding: 0.8em 1.5em;
+        border-radius: 999px;
+        background: white;
+        box-shadow: 0 8px 22px rgba(0, 0, 0, 0.12);
+        font-weight: 700;
+        font-size: 1.1rem;
+      }
+      .nav .primary {
+        background: var(--accent);
+        color: white;
+      }
+      #toast {
+        position: absolute;
+        left: 50%;
+        top: 12%;
+        transform: translateX(-50%);
+        z-index: 100;
+        background: #14213d;
+        color: white;
+        padding: 0.8em 1.5em;
+        border-radius: 999px;
+        font-size: 1.4rem;
+        opacity: 0;
+        pointer-events: none;
+        transition: 0.25s;
+      }
+      #toast.show {
+        opacity: 1;
+      }
+      @media (max-aspect-ratio: 1/1) {
+        .cast {
+          flex-direction: column;
+          align-items: center;
+          gap: 2vh;
+        }
+        .character {
+          height: 30vh;
+          max-width: 60vw;
+        }
+        .castMember figcaption {
+          font-size: clamp(1.1rem, 3.2vw, 1.8rem);
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div id="app">
+      <div id="toast"></div>
+
+      <div class="topbar">
+        <div class="progress" id="progress">1 / 2</div>
+        <div class="controls">
+          <button class="ctrl" id="soundBtn" aria-label="Sound">🔊</button>
+          <button class="ctrl" id="homeBtn" aria-label="Home">⌂</button>
+        </div>
+      </div>
+
+      <!-- 1: Title -->
+      <section class="screen title-slide active">
+        <div class="content">
+          <div class="small">ENGLISH EXPLORER</div>
+          <h1>Welcome</h1>
+          <div class="cast">
+            <figure class="castMember">
+              <img
+                class="character"
+                src="https://res.cloudinary.com/dp455m4rk/image/upload/q_auto/f_auto/v1786010283/sam_3d_awiawr.png"
+                alt="Sam"
+              />
+              <figcaption onclick="say('My name is Sam.')">
+                🔊 My Name is Sam
+              </figcaption>
+            </figure>
+            <figure class="castMember">
+              <img
+                class="character"
+                src="https://res.cloudinary.com/dp455m4rk/image/upload/q_auto/f_auto/v1786010302/onza_3davatar_ipbcid.png"
+                alt="Onza"
+              />
+              <figcaption onclick="say('My name is Onza.')">
+                🔊 My Names is Onza
+              </figcaption>
+            </figure>
+          </div>
+        </div>
+      </section>
+
+      <!-- 2: Video — Sam & Onza introduce themselves -->
+      <section class="screen mediaPage">
+        <div
+          class="content"
+          style="
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 1.4em;
+          "
+        >
+          <div class="small">ENGLISH EXPLORER</div>
+          <h1>Watch the Clip</h1>
+          <div
+            id="nameVideoWrap"
+            style="margin-top: 0.5em; width: 100%; max-width: 760px"
+          >
+            <video
+              id="nameVideo"
+              class="lessonVideo"
+              playsinline
+              webkit-playsinline
+              x5-playsinline
+              preload="auto"
+              controls
+              data-autoplay="false"
+              data-autoplay-mode="manual"
+              src="https://res.cloudinary.com/dp455m4rk/video/upload/q_auto/f_auto/v1785933190/sam_onza_name_ro4vuz.mp4"
+            ></video>
+          </div>
+          <div
+            class="row"
+            style="
+              justify-content: center;
+              gap: 1rem;
+              width: 100%;
+              max-width: 800px;
+            "
+          >
+            <button
+              class="choice yes"
+              style="min-width: 180px"
+              onclick="playVideo('nameVideo')"
+            >
+              ▶ PLAY
+            </button>
+          </div>
+          <p class="small">Use BACK and NEXT to move through the course.</p>
+        </div>
+      </section>
+
+      <div class="nav">
+        <button id="prevBtn" onclick="prev()">‹ BACK</button>
+        <button class="primary" id="nextBtn" onclick="next()">NEXT ›</button>
+      </div>
+    </div>
+
+    <script>
+      var screens = Array.prototype.slice.call(
+        document.querySelectorAll(".screen"),
+      );
+      var idx = 0;
+      var soundOn = true;
+      var progress = document.getElementById("progress");
+      var synth =
+        window.speechSynthesis ||
+        window.webkitSpeechSynthesis ||
+        window.mozSpeechSynthesis ||
+        null;
+      var altVoice = null;
+
+      function setVoice() {
+        if (!synth) return;
+        var voices = synth.getVoices();
+        if (!voices || voices.length === 0) return;
+        var preferred = null;
+        var fallback = null;
+        for (var i = 0; i < voices.length; i++) {
+          var v = voices[i];
+          if (!v || !v.lang) continue;
+          if (v.lang.toLowerCase().indexOf("en") !== 0) continue;
+          if (!fallback) fallback = v;
+          if (v.lang.toLowerCase().indexOf("en-gb") === 0) {
+            preferred = v;
+            break;
+          }
+          if (v.name && v.name.indexOf("Zira") >= 0) preferred = v;
+        }
+        altVoice = preferred || fallback;
+      }
+      if (synth) {
+        setVoice();
+        if (typeof synth.addEventListener === "function") {
+          synth.addEventListener("voiceschanged", setVoice);
+        }
+        var voiceTimer = window.setInterval(function () {
+          if (altVoice) {
+            window.clearInterval(voiceTimer);
+          }
+          setVoice();
+        }, 500);
+        window.setTimeout(function () {
+          window.clearInterval(voiceTimer);
+        }, 4000);
+      }
+
+      function show(i) {
+        idx = Math.max(0, Math.min(screens.length - 1, i));
+        for (var j = 0; j < screens.length; j++) {
+          screens[j].classList.toggle("active", j === idx);
+        }
+        progress.textContent = idx + 1 + " / " + screens.length;
+        document.getElementById("prevBtn").style.visibility =
+          idx === 0 ? "hidden" : "visible";
+        document.getElementById("nextBtn").textContent =
+          idx === screens.length - 1 ? "RESTART ↻" : "NEXT ›";
+        cancelSpeech();
+        var activeVideo = screens[idx].querySelector("video") || null;
+        if (activeVideo) {
+          if (activeVideo.getAttribute("data-autoplay") === "true") {
+            playMediaVideo(activeVideo, true);
+          } else {
+            preloadVideo(activeVideo);
+          }
+        }
+      }
+
+      function preloadVideo(video) {
+        if (!video) return;
+        try {
+          video.preload = "auto";
+          video.setAttribute("preload", "auto");
+          if (typeof video.load === "function") video.load();
+          if (typeof fetch === "function" && video.src.indexOf("http") === 0) {
+            fetch(video.src, { cache: "force-cache" }).catch(function () {});
+          }
+        } catch (e) {}
+      }
+
+      function playMediaVideo(video, preferUnmuted) {
+        if (typeof preferUnmuted === "undefined") preferUnmuted = true;
+        if (!video) return;
+        try {
+          preloadVideo(video);
+          video.currentTime = 0;
+          video.muted = false;
+          video.autoplay = true;
+          video.setAttribute("autoplay", "true");
+          video.setAttribute("playsinline", "true");
+          video.setAttribute("webkit-playsinline", "true");
+          video.setAttribute("x5-playsinline", "true");
+          var attemptPlay = function () {
+            var p = video.play();
+            if (!p || typeof p.then !== "function") return;
+            p.then(function () {
+              video.muted = false;
+            }).catch(function () {
+              if (preferUnmuted) {
+                window.setTimeout(function () {
+                  video.muted = false;
+                  try {
+                    video.play().catch(function () {});
+                  } catch (e) {}
+                }, 150);
+              }
+            });
+          };
+          attemptPlay();
+        } catch (e) {}
+      }
+
+      function playVideo(id) {
+        var videoEl = document.getElementById(id);
+        if (!videoEl) return;
+        playMediaVideo(videoEl, true);
+      }
+
+      function next() {
+        if (idx === screens.length - 1) show(0);
+        else show(idx + 1);
+      }
+
+      function prev() {
+        show(idx - 1);
+      }
+
+      function cancelSpeech() {
+        if (synth && typeof synth.cancel === "function") {
+          try {
+            synth.cancel();
+          } catch (e) {}
+        }
+      }
+
+      function say(text) {
+        if (!soundOn) return;
+        if (window.tizen && window.tizen.tts) {
+          try {
+            tizen.tts.speak(String(text), {
+              locale: "en-US",
+              rate: 0.85,
+              pitch: 1.0,
+              type: "TTS_TYPE_SCREEN_READER",
+            });
+            return;
+          } catch (e) {}
+        }
+        if (synth && typeof SpeechSynthesisUtterance !== "undefined") {
+          cancelSpeech();
+          var u = new SpeechSynthesisUtterance(text);
+          u.lang = "en-US";
+          u.rate = 0.82;
+          u.pitch = 1.08;
+          if (altVoice) u.voice = altVoice;
+          synth.speak(u);
+        }
+      }
+
+      function toast(t) {
+        var el = document.getElementById("toast");
+        el.textContent = t;
+        el.classList.add("show");
+        setTimeout(function () {
+          el.classList.remove("show");
+        }, 1100);
+      }
+
+      document.getElementById("soundBtn").onclick = function () {
+        soundOn = !soundOn;
+        document.getElementById("soundBtn").textContent = soundOn ? "🔊" : "🔇";
+        if (soundOn) {
+          if (synth) synth.cancel();
+        }
+        cancelSpeech();
+      };
+      document.getElementById("homeBtn").onclick = function () {
+        show(0);
+      };
+      document.addEventListener("keydown", function (e) {
+        if (e.key === "ArrowRight" || e.key === " ") {
+          if (e.preventDefault) e.preventDefault();
+          next();
+        }
+        if (e.key === "ArrowLeft") prev();
+        if (e.key === "Escape") show(0);
+      });
+      show(0);
+    </script>
+  </body>
+</html>
