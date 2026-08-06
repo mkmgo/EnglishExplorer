@@ -66,6 +66,13 @@
         max-height: 100%;
         position: relative;
         text-align: center;
+        overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
+        overscroll-behavior: contain;
+        scrollbar-width: none;
+      }
+      .content::-webkit-scrollbar {
+        display: none;
       }
       h1 {
         font-size: clamp(3rem, 7vw, 7rem);
@@ -269,6 +276,9 @@
         }
       }
       @media (max-aspect-ratio: 1/1) {
+        .screen {
+          padding-bottom: 88px;
+        }
         .cast {
           flex-direction: column;
           align-items: center;
@@ -280,6 +290,12 @@
         }
         .castMember figcaption {
           font-size: clamp(1.1rem, 3.2vw, 1.8rem);
+        }
+        .lessonVideo {
+          max-height: 42vh;
+        }
+        .nav {
+          bottom: calc(2vh + env(safe-area-inset-bottom, 0px));
         }
       }
     </style>
@@ -380,6 +396,107 @@
         </div>
       </section>
 
+      <!-- 3: Greetings -->
+      <section class="screen mediaPage">
+        <div
+          class="content"
+          style="
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 1.4em;
+          "
+        >
+          <div class="small">ENGLISH EXPLORER</div>
+          <h1>Greetings</h1>
+          <p>Tap each line to hear it.</p>
+          <div
+            class="row"
+            style="
+              flex-direction: column;
+              width: 100%;
+              max-width: 700px;
+            "
+          >
+            <button
+              class="choice"
+              style="width: 100%"
+              onclick="speakGreeting('Hello. My name is Sam.', 'greetSam')"
+            >
+              🔊 Hello. My Name is Sam.
+            </button>
+            <button
+              class="choice"
+              style="width: 100%"
+              onclick="speakGreeting('What is your name?', 'greetQ')"
+            >
+              🔊 What is your Name?
+            </button>
+            <button
+              class="choice"
+              style="width: 100%"
+              onclick="speakGreeting('Hello Sam. My name is Onza.', 'greetOnza')"
+            >
+              🔊 Hello Sam. My Name is Onza.
+            </button>
+          </div>
+          <p class="small">Use BACK and NEXT to move through the course.</p>
+        </div>
+      </section>
+
+      <!-- 4: Video — Classroom commands -->
+      <section class="screen mediaPage">
+        <div
+          class="content"
+          style="
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 1.4em;
+          "
+        >
+          <div class="small">ENGLISH EXPLORER</div>
+          <h1>Watch the Clip</h1>
+          <div
+            id="commandsVideoWrap"
+            style="margin-top: 0.5em; width: 100%; max-width: 760px"
+          >
+            <video
+              id="commandsVideo"
+              class="lessonVideo"
+              playsinline
+              webkit-playsinline
+              x5-playsinline
+              preload="auto"
+              controls
+              data-autoplay="false"
+              data-autoplay-mode="manual"
+              src="https://res.cloudinary.com/dp455m4rk/video/upload/q_auto,f_auto/v1786019411/classroomcommands_wqls5x.mp4"
+            ></video>
+          </div>
+          <div
+            class="row"
+            style="
+              justify-content: center;
+              gap: 1rem;
+              width: 100%;
+              max-width: 800px;
+            "
+          >
+            <button
+              class="choice yes"
+              style="min-width: 180px"
+              onclick="playVideo('commandsVideo')"
+            >
+              ▶ PLAY
+            </button>
+          </div>
+          <p class="small">Use BACK and NEXT to move through the course.</p>
+        </div>
+      </section>
+
       <div class="nav">
         <button id="prevBtn" onclick="prev()">‹ BACK</button>
         <button class="primary" id="nextBtn" onclick="next()">NEXT ›</button>
@@ -401,6 +518,7 @@
         window.mozSpeechSynthesis ||
         null;
       var altVoice = null;
+      var altVoice2 = null;
 
       function setVoice() {
         if (!synth) return;
@@ -420,6 +538,16 @@
           if (v.name && v.name.indexOf("Zira") >= 0) preferred = v;
         }
         altVoice = preferred || fallback;
+        altVoice2 = null;
+        for (var j = 0; j < voices.length; j++) {
+          var w = voices[j];
+          if (!w || !w.lang) continue;
+          if (w.lang.toLowerCase().indexOf("en") !== 0) continue;
+          if (w === altVoice) continue;
+          altVoice2 = w;
+          break;
+        }
+        if (!altVoice2) altVoice2 = altVoice;
       }
       if (synth) {
         setVoice();
@@ -525,7 +653,7 @@
         }
       }
 
-      function say(text) {
+      function say(text, voice) {
         if (!soundOn) return;
         if (window.tizen && window.tizen.tts) {
           try {
@@ -544,7 +672,8 @@
           u.lang = "en-US";
           u.rate = 0.82;
           u.pitch = 1.08;
-          if (altVoice) u.voice = altVoice;
+          if (voice) u.voice = voice;
+          else if (altVoice) u.voice = altVoice;
           synth.speak(u);
         }
       }
@@ -574,6 +703,22 @@
         }
       }
 
+      var greetingsPlayed = {};
+      var greetingsRewarded = false;
+      function speakGreeting(text, key) {
+        say(text, key === "greetOnza" ? altVoice2 : null);
+        greetingsPlayed[key] = true;
+        if (
+          greetingsPlayed.greetSam &&
+          greetingsPlayed.greetQ &&
+          greetingsPlayed.greetOnza &&
+          !greetingsRewarded
+        ) {
+          greetingsRewarded = true;
+          reward("WELL DONE! +1 ⭐");
+        }
+      }
+
       function reward(t) {
         toast(t);
         addPoints(1);
@@ -599,6 +744,16 @@
         nameVideo.addEventListener("ended", function () {
           if (nameVideoRewarded) return;
           nameVideoRewarded = true;
+          reward("WELL DONE! +1 ⭐");
+        });
+      }
+
+      var commandsVideo = document.getElementById("commandsVideo");
+      var commandsRewarded = false;
+      if (commandsVideo) {
+        commandsVideo.addEventListener("play", function () {
+          if (commandsRewarded) return;
+          commandsRewarded = true;
           reward("WELL DONE! +1 ⭐");
         });
       }
