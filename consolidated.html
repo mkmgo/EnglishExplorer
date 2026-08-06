@@ -185,6 +185,19 @@
       .controls {
         display: flex;
         gap: 0.7em;
+        align-items: center;
+      }
+      .points {
+        font-size: 1.1rem;
+        font-weight: 900;
+        color: #8a4b00;
+        background: #ffeaa7;
+        padding: 0.5em 1em;
+        border-radius: 999px;
+        box-shadow: 0 5px 18px rgba(255, 180, 0, 0.3);
+        display: inline-flex;
+        align-items: center;
+        white-space: nowrap;
       }
       .ctrl {
         width: 50px;
@@ -233,6 +246,28 @@
       #toast.show {
         opacity: 1;
       }
+      #reward {
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+        overflow: hidden;
+        z-index: 50;
+      }
+      .confetti {
+        position: absolute;
+        font-size: 2rem;
+        animation: fall 2.2s linear forwards;
+      }
+      @keyframes fall {
+        0% {
+          transform: translateY(-10vh) rotate(0);
+          opacity: 1;
+        }
+        100% {
+          transform: translateY(110vh) rotate(720deg);
+          opacity: 0;
+        }
+      }
       @media (max-aspect-ratio: 1/1) {
         .cast {
           flex-direction: column;
@@ -252,10 +287,12 @@
   <body>
     <div id="app">
       <div id="toast"></div>
+      <div id="reward"></div>
 
       <div class="topbar">
         <div class="progress" id="progress">1 / 2</div>
         <div class="controls">
+          <span class="points" id="pointsBadge">⭐ 0</span>
           <button class="ctrl" id="soundBtn" aria-label="Sound">🔊</button>
           <button class="ctrl" id="homeBtn" aria-label="Home">⌂</button>
         </div>
@@ -319,7 +356,7 @@
               controls
               data-autoplay="false"
               data-autoplay-mode="manual"
-              src="https://res.cloudinary.com/dp455m4rk/video/upload/q_auto/f_auto/v1785933190/sam_onza_name_ro4vuz.mp4"
+              src="https://res.cloudinary.com/dp455m4rk/video/upload/q_auto/v1785933190/sam_onza_name_ro4vuz.mp4"
             ></video>
           </div>
           <div
@@ -355,6 +392,8 @@
       );
       var idx = 0;
       var soundOn = true;
+      var points = 0;
+      var pointsBadge = document.getElementById("pointsBadge");
       var progress = document.getElementById("progress");
       var synth =
         window.speechSynthesis ||
@@ -517,6 +556,40 @@
         setTimeout(function () {
           el.classList.remove("show");
         }, 1100);
+      }
+
+      function addPoints(n) {
+        points += n;
+        if (pointsBadge) pointsBadge.textContent = "⭐ " + points;
+      }
+
+      function reward(t) {
+        toast(t);
+        addPoints(1);
+        var r = document.getElementById("reward");
+        r.innerHTML = "";
+        for (var i = 0; i < 24; i++) {
+          var s = document.createElement("span");
+          s.className = "confetti";
+          s.textContent = ["⭐", "✨", "🎉", "👏"][i % 4];
+          s.style.left = Math.random() * 100 + "%";
+          s.style.top = -5 - Math.random() * 20 + "%";
+          s.style.animationDelay = Math.random() * 0.4 + "s";
+          r.appendChild(s);
+        }
+        setTimeout(function () {
+          r.innerHTML = "";
+        }, 2500);
+      }
+
+      var nameVideo = document.getElementById("nameVideo");
+      var nameVideoRewarded = false;
+      if (nameVideo) {
+        nameVideo.addEventListener("ended", function () {
+          if (nameVideoRewarded) return;
+          nameVideoRewarded = true;
+          reward("WELL DONE! +1 ⭐");
+        });
       }
 
       document.getElementById("soundBtn").onclick = function () {
