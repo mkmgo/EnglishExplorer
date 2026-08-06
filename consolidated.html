@@ -495,6 +495,58 @@
         </div>
       </section>
 
+      <!-- 5: Video — Colours -->
+      <section class="screen mediaPage">
+        <div
+          class="content"
+          style="
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 1.4em;
+          "
+        >
+          <div class="small">ENGLISH EXPLORER</div>
+          <h1>Watch the Clip</h1>
+          <div
+            id="coloursVideoWrap"
+            style="margin-top: 0.5em; width: 100%; max-width: 760px"
+          >
+            <video
+              id="coloursVideo"
+              class="lessonVideo"
+              playsinline
+              webkit-playsinline
+              x5-playsinline
+              preload="auto"
+              controls
+              data-autoplay="false"
+              data-autoplay-mode="manual"
+              src="https://res.cloudinary.com/dp455m4rk/video/upload/q_auto/v1786027836/colours_jtbfwl.mp4"
+            ></video>
+          </div>
+          <div
+            class="row"
+            style="
+              justify-content: center;
+              gap: 1rem;
+              width: 100%;
+              max-width: 800px;
+            "
+          >
+            <button
+              class="choice yes"
+              style="min-width: 180px"
+              onclick="playVideo('coloursVideo')"
+            >
+              ▶ PLAY
+            </button>
+          </div>
+          <p class="small">Use BACK and NEXT to move through the course.</p>
+        </div>
+      </section>
+
       <div class="nav">
         <button id="prevBtn" onclick="prev()">‹ BACK</button>
         <button class="primary" id="nextBtn" onclick="next()">NEXT ›</button>
@@ -752,6 +804,16 @@
         commandsVideo.addEventListener("ended", function () {
           if (commandsRewarded) return;
           commandsRewarded = true;
+          reward("WELL DONE! +1 ⭐");
+        });
+      }
+
+      var coloursVideo = document.getElementById("coloursVideo");
+      var coloursRewarded = false;
+      if (coloursVideo) {
+        coloursVideo.addEventListener("ended", function () {
+          if (coloursRewarded) return;
+          coloursRewarded = true;
           reward("WELL DONE! +1 ⭐");
         });
       }
