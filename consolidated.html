@@ -123,85 +123,18 @@
       .castMember figcaption:active {
         transform: scale(0.95);
       }
-      .mediaPage {
-        background: linear-gradient(180deg, #eef4ff 0%, #f7f9fc 100%);
-      }
       .mediaPage h1 {
         font-size: clamp(1.8rem, 3.5vw, 2.8rem);
-        font-weight: 800;
+        font-weight: 400;
         margin: 0.15em 0;
-      }
-      .tvWrap {
-        width: 100%;
-        max-width: 780px;
-        border-radius: 22px;
-        background: #ffffff;
-        box-shadow: var(--shadow);
-        overflow: hidden;
-      }
-      .tvHeader {
-        display: flex;
-        align-items: center;
-        gap: 0.5em;
-        padding: 0.7em 1.1em;
-        background: #eef1f6;
-      }
-      .tvDot {
-        width: 12px;
-        height: 12px;
-        border-radius: 50%;
-      }
-      .tvDot1 {
-        background: #ff5f57;
-      }
-      .tvDot2 {
-        background: #febc2e;
-      }
-      .tvDot3 {
-        background: #28c840;
-      }
-      .tvLabel {
-        margin-left: auto;
-        font-weight: 800;
-        font-size: 0.95rem;
-        color: var(--muted);
-        letter-spacing: 0.06em;
-      }
-      .tvScreen {
-        position: relative;
-        background: #0d1220;
       }
       .lessonVideo {
         width: 100%;
-        max-height: 56vh;
-        display: block;
-        margin: 0 auto;
+        max-height: 60vh;
         object-fit: contain;
-      }
-      .bigPlay {
-        position: absolute;
-        left: 50%;
-        top: 50%;
-        transform: translate(-50%, -50%);
-        width: 96px;
-        height: 96px;
-        border-radius: 50%;
-        background: rgba(255, 255, 255, 0.92);
-        color: #14213d;
-        font-size: 2.4rem;
-        font-weight: 900;
-        box-shadow: 0 12px 30px rgba(0, 0, 0, 0.35);
-        z-index: 5;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        padding-left: 0.12em;
-      }
-      .bigPlay:active {
-        transform: translate(-50%, -50%) scale(0.92);
-      }
-      .hidden {
-        display: none !important;
+        border-radius: 28px;
+        box-shadow: var(--shadow);
+        background: #f0f0f0;
       }
       .row {
         display: flex;
@@ -408,36 +341,23 @@
           "
         >
           <div class="small">ENGLISH EXPLORER</div>
-          <h1>Watch Sam &amp; Onza</h1>
-          <div class="tvWrap">
-            <div class="tvHeader">
-              <span class="tvDot tvDot1"></span>
-              <span class="tvDot tvDot2"></span>
-              <span class="tvDot tvDot3"></span>
-              <span class="tvLabel">▶ NAME CLIP</span>
-            </div>
-            <div class="tvScreen">
-              <video
-                id="nameVideo"
-                class="lessonVideo"
-                playsinline
-                webkit-playsinline
-                x5-playsinline
-                preload="auto"
-                controls
-                data-autoplay="false"
-                data-autoplay-mode="manual"
-                src="https://res.cloudinary.com/dp455m4rk/video/upload/q_auto/v1785933190/sam_onza_name_ro4vuz.mp4"
-              ></video>
-              <button
-                class="bigPlay"
-                id="bigPlayBtn"
-                aria-label="Play video"
-                onclick="playVideo('nameVideo')"
-              >
-                ▶
-              </button>
-            </div>
+          <h1>Watch the Clip</h1>
+          <div
+            id="nameVideoWrap"
+            style="margin-top: 0.5em; width: 100%; max-width: 760px"
+          >
+            <video
+              id="nameVideo"
+              class="lessonVideo"
+              playsinline
+              webkit-playsinline
+              x5-playsinline
+              preload="auto"
+              controls
+              data-autoplay="false"
+              data-autoplay-mode="manual"
+              src="https://res.cloudinary.com/dp455m4rk/video/upload/q_auto/v1785933190/sam_onza_name_ro4vuz.mp4"
+            ></video>
           </div>
           <div
             class="row"
@@ -675,19 +595,8 @@
 
       var nameVideo = document.getElementById("nameVideo");
       var nameVideoRewarded = false;
-      function hideBigPlay() {
-        var b = document.getElementById("bigPlayBtn");
-        if (b) b.classList.add("hidden");
-      }
-      function showBigPlay() {
-        var b = document.getElementById("bigPlayBtn");
-        if (b) b.classList.remove("hidden");
-      }
       if (nameVideo) {
-        nameVideo.addEventListener("playing", hideBigPlay);
-        nameVideo.addEventListener("pause", showBigPlay);
         nameVideo.addEventListener("ended", function () {
-          showBigPlay();
           if (nameVideoRewarded) return;
           nameVideoRewarded = true;
           reward("WELL DONE! +1 ⭐");
