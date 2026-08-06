@@ -307,6 +307,98 @@
           opacity: 0;
         }
       }
+      .rewardSlots {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        align-items: center;
+        gap: clamp(10px, 1.5vw, 20px);
+        margin: 2vh auto;
+        padding: 1em;
+      }
+      .slot {
+        width: clamp(58px, 8vw, 110px);
+        height: clamp(58px, 8vw, 110px);
+        border-radius: 26px;
+        background: #eef1f7;
+        box-shadow: inset 0 0 0 3px rgba(20, 33, 61, 0.08);
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        font-size: clamp(1.9rem, 4vw, 3.4rem);
+        opacity: 0.3;
+        transition: opacity 0.3s;
+      }
+      .slot.filled {
+        opacity: 1;
+        background: #fff7e0;
+        box-shadow: 0 12px 28px rgba(255, 180, 0, 0.4),
+          inset 0 0 0 3px #f1c40f;
+        animation: starPop 0.65s cubic-bezier(0.2, 1.6, 0.4, 1);
+      }
+      .slot.cup {
+        font-size: clamp(2.4rem, 5.5vw, 4.2rem);
+      }
+      .slot.cup.filled {
+        background: #fff0d9;
+        box-shadow: 0 16px 34px rgba(255, 150, 0, 0.5),
+          inset 0 0 0 3px #ff9800;
+      }
+      @keyframes starPop {
+        0% {
+          transform: scale(0) rotate(-40deg);
+        }
+        60% {
+          transform: scale(1.35) rotate(10deg);
+        }
+        100% {
+          transform: scale(1) rotate(0);
+        }
+      }
+      .rewardResult {
+        font-size: clamp(1.4rem, 2.6vw, 2.6rem);
+        font-weight: 900;
+        min-height: 3em;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .rewardResult.good {
+        color: var(--good);
+      }
+      .rewardResult.bad {
+        color: var(--bad);
+      }
+      .rewardVideo {
+        max-height: 46vh;
+        margin-top: 1em;
+      }
+      .burst {
+        position: absolute;
+        font-size: 1.7rem;
+        pointer-events: none;
+        z-index: 60;
+        animation: burstFly 1.1s ease-out forwards;
+      }
+      @keyframes burstFly {
+        0% {
+          transform: translate(0, 0) scale(1);
+          opacity: 1;
+        }
+        100% {
+          transform: translate(var(--bx), var(--by)) scale(0.25);
+          opacity: 0;
+        }
+      }
+      .emailResult {
+        margin-top: 0.6em;
+        padding: 0.7em 1.4em;
+        border-radius: 999px;
+        background: var(--accent);
+        color: white;
+        font-weight: 700;
+        font-size: 1.1rem;
+      }
       @media (max-aspect-ratio: 1/1) {
         .screen {
           padding-bottom: 88px;
@@ -583,7 +675,7 @@
       <section class="screen">
         <div class="content card">
           <h1>COLOURS</h1>
-          <p>Tap each colour twice.</p>
+          <p>Tap each colour once.</p>
           <div class="grid">
             <button
               class="choice color-btn c-red"
@@ -613,6 +705,41 @@
         </div>
       </section>
 
+      <!-- 7: Results / big reward page -->
+      <section class="screen" id="resultsScreen">
+        <div class="content card">
+          <h1>YOUR SCORE</h1>
+          <p>Complete the tasks to earn all 6 stars and win the cup!</p>
+          <div class="rewardSlots" id="rewardSlots">
+            <span class="slot">⭐</span>
+            <span class="slot">⭐</span>
+            <span class="slot">⭐</span>
+            <span class="slot">⭐</span>
+            <span class="slot">⭐</span>
+            <span class="slot">⭐</span>
+            <span class="slot cup" id="rewardCupSlot">🏆</span>
+          </div>
+          <div id="rewardResult" class="rewardResult"></div>
+          <video
+            id="rewardCupVideo"
+            class="lessonVideo rewardVideo"
+            playsinline
+            webkit-playsinline
+            x5-playsinline
+            preload="auto"
+            data-autoplay="false"
+            data-autoplay-mode="manual"
+            src="https://res.cloudinary.com/dp455m4rk/video/upload/v1786033998/reward_cup_mv1dsm.mp4"
+            style="display: none"
+          ></video>
+          <div style="margin-top: 0.8em">
+            <button class="emailResult" id="emailBtn" onclick="sendResultEmail()">
+              ✉️ EMAIL RESULT
+            </button>
+          </div>
+        </div>
+      </section>
+
       <div class="nav">
         <button id="prevBtn" onclick="prev()">‹ BACK</button>
         <button class="primary" id="nextBtn" onclick="next()">NEXT ›</button>
@@ -626,6 +753,7 @@
       var idx = 0;
       var soundOn = true;
       var points = 0;
+      var starsEarned = 0;
       var pointsBadge = document.getElementById("pointsBadge");
       var progress = document.getElementById("progress");
       var synth =
@@ -699,6 +827,9 @@
           } else {
             preloadVideo(activeVideo);
           }
+        }
+        if (screens[idx].id === "resultsScreen") {
+          showRewards();
         }
       }
 
@@ -836,6 +967,7 @@
       }
 
       function reward(t) {
+        starsEarned++;
         toast(t);
         addPoints(1);
         var r = document.getElementById("reward");
@@ -892,13 +1024,118 @@
         if (colourPressRewarded) return;
         var allDone = ["red", "blue", "yellow", "green"].every(
           function (c) {
-            return colourPressCounts[c] >= 2;
+            return colourPressCounts[c] >= 1;
           },
         );
         if (allDone) {
           colourPressRewarded = true;
           reward("ALL COLOURS! +1 ⭐");
         }
+      }
+
+      function pad2(n) {
+        return n < 10 ? "0" + n : "" + n;
+      }
+
+      function burst(el) {
+        var r = document.getElementById("reward");
+        var rect = el.getBoundingClientRect();
+        var cx = rect.left + rect.width / 2;
+        var cy = rect.top + rect.height / 2;
+        var frag = document.createDocumentFragment();
+        for (var i = 0; i < 18; i++) {
+          var s = document.createElement("span");
+          s.className = "burst";
+          s.textContent = ["⭐", "✨", "🎉", "👏"][i % 4];
+          var ang = Math.random() * Math.PI * 2;
+          var dist = 40 + Math.random() * 80;
+          s.style.setProperty("--bx", Math.cos(ang) * dist + "px");
+          s.style.setProperty("--by", Math.sin(ang) * dist + "px");
+          s.style.left = cx + "px";
+          s.style.top = cy + "px";
+          frag.appendChild(s);
+        }
+        r.appendChild(frag);
+        setTimeout(function () {
+          var list = r.querySelectorAll(".burst");
+          for (var j = 0; j < list.length; j++) {
+            if (list[j].parentNode) list[j].parentNode.removeChild(list[j]);
+          }
+        }, 1300);
+      }
+
+      var rewardTimer = null;
+      function showRewards() {
+        if (rewardTimer) window.clearTimeout(rewardTimer);
+        var slots = document.getElementById("rewardSlots").querySelectorAll(".slot");
+        for (var i = 0; i < slots.length; i++) {
+          slots[i].classList.remove("filled");
+        }
+        var cupSlot = document.getElementById("rewardCupSlot");
+        cupSlot.classList.remove("filled");
+        var video = document.getElementById("rewardCupVideo");
+        if (typeof video.pause === "function") video.pause();
+        video.style.display = "none";
+        var result = document.getElementById("rewardResult");
+        result.className = "rewardResult";
+        result.textContent = "";
+        var n = starsEarned >= 6 ? 6 : starsEarned;
+        for (var k = 0; k < n; k++) {
+          (function (slotIndex) {
+            rewardTimer = window.setTimeout(function () {
+              slots[slotIndex].classList.add("filled");
+              burst(slots[slotIndex]);
+              if (slotIndex === n - 1) finishRewards(n);
+            }, k * 600);
+          })(k);
+        }
+        if (n === 0) finishRewards(0);
+        sendResultEmail();
+      }
+
+      function finishRewards(n) {
+        var result = document.getElementById("rewardResult");
+        var cupSlot = document.getElementById("rewardCupSlot");
+        var video = document.getElementById("rewardCupVideo");
+        if (n >= 6) {
+          cupSlot.classList.add("filled");
+          burst(cupSlot);
+          result.className = "rewardResult good";
+          result.textContent = "PERFECT! YOU WON THE CUP! 🏆";
+          video.style.display = "block";
+          playMediaVideo(video, true);
+        } else {
+          result.className = "rewardResult bad";
+          result.textContent =
+            "TRY AGAIN! You earned " + n + "/6 stars. Complete the tasks to win the cup!";
+        }
+      }
+
+      function sendResultEmail() {
+        var d = new Date();
+        var dateStr =
+          d.getFullYear() + "-" + pad2(d.getMonth() + 1) + "-" + pad2(d.getDate());
+        var timeStr =
+          pad2(d.getHours()) + ":" + pad2(d.getMinutes()) + ":" + pad2(d.getSeconds());
+        var n = starsEarned >= 6 ? 6 : starsEarned;
+        var subject = "Onza - Score " + dateStr + " " + timeStr + " " + n + "/6";
+        var body =
+          "Onza - Score: " + n + "/6 stars\n" +
+          "Date: " + dateStr + "\n" +
+          "Time: " + timeStr + "\n" +
+          "Captions played: " + (captionsRewarded ? "Yes" : "No") + "\n" +
+          "Greetings played: " + (greetingsRewarded ? "Yes" : "No") + "\n" +
+          "Name video: " + (nameVideoRewarded ? "Yes" : "No") + "\n" +
+          "Commands video: " + (commandsRewarded ? "Yes" : "No") + "\n" +
+          "Colours video: " + (coloursVideoRewarded ? "Yes" : "No") + "\n" +
+          "Colours tapped: " + (colourPressRewarded ? "Yes" : "No") + "\n" +
+          "Total points: " + points;
+        var href =
+          "mailto:mkm-chores@outlook.com?subject=" +
+          encodeURIComponent(subject) +
+          "&body=" +
+          encodeURIComponent(body);
+        window.location.href = href;
       }
 
       document.getElementById("soundBtn").onclick = function () {
