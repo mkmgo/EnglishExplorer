@@ -390,15 +390,6 @@
           opacity: 0;
         }
       }
-      .emailResult {
-        margin-top: 0.6em;
-        padding: 0.7em 1.4em;
-        border-radius: 999px;
-        background: var(--accent);
-        color: white;
-        font-weight: 700;
-        font-size: 1.1rem;
-      }
       @media (max-aspect-ratio: 1/1) {
         .screen {
           padding-bottom: 88px;
@@ -732,11 +723,6 @@
             src="https://res.cloudinary.com/dp455m4rk/video/upload/v1786033998/reward_cup_mv1dsm.mp4"
             style="display: none"
           ></video>
-          <div style="margin-top: 0.8em">
-            <button class="emailResult" id="emailBtn" onclick="sendResultEmail()">
-              ✉️ EMAIL RESULT
-            </button>
-          </div>
         </div>
       </section>
 
@@ -1033,10 +1019,6 @@
         }
       }
 
-      function pad2(n) {
-        return n < 10 ? "0" + n : "" + n;
-      }
-
       function burst(el) {
         var r = document.getElementById("reward");
         var rect = el.getBoundingClientRect();
@@ -1090,7 +1072,6 @@
           })(k);
         }
         if (n === 0) finishRewards(0);
-        sendResultEmail();
       }
 
       function finishRewards(n) {
@@ -1109,33 +1090,6 @@
           result.textContent =
             "TRY AGAIN! You earned " + n + "/6 stars. Complete the tasks to win the cup!";
         }
-      }
-
-      function sendResultEmail() {
-        var d = new Date();
-        var dateStr =
-          d.getFullYear() + "-" + pad2(d.getMonth() + 1) + "-" + pad2(d.getDate());
-        var timeStr =
-          pad2(d.getHours()) + ":" + pad2(d.getMinutes()) + ":" + pad2(d.getSeconds());
-        var n = starsEarned >= 6 ? 6 : starsEarned;
-        var subject = "Onza - Score " + dateStr + " " + timeStr + " " + n + "/6";
-        var body =
-          "Onza - Score: " + n + "/6 stars\n" +
-          "Date: " + dateStr + "\n" +
-          "Time: " + timeStr + "\n" +
-          "Captions played: " + (captionsRewarded ? "Yes" : "No") + "\n" +
-          "Greetings played: " + (greetingsRewarded ? "Yes" : "No") + "\n" +
-          "Name video: " + (nameVideoRewarded ? "Yes" : "No") + "\n" +
-          "Commands video: " + (commandsRewarded ? "Yes" : "No") + "\n" +
-          "Colours video: " + (coloursVideoRewarded ? "Yes" : "No") + "\n" +
-          "Colours tapped: " + (colourPressRewarded ? "Yes" : "No") + "\n" +
-          "Total points: " + points;
-        var href =
-          "mailto:mkm-chores@outlook.com?subject=" +
-          encodeURIComponent(subject) +
-          "&body=" +
-          encodeURIComponent(body);
-        window.location.href = href;
       }
 
       document.getElementById("soundBtn").onclick = function () {
