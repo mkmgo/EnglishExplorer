@@ -1,0 +1,278 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no"
+    />
+    <title>English Explorer — Lesson 6</title>
+    <meta name="description" content="English Explorer Interactive Lesson 6 for Tizen TV" />
+    <link
+      rel="icon"
+      type="image/png"
+      href="https://res.cloudinary.com/dp455m4rk/image/upload/v1785849408/sam_favipreview_v2i7l2.png"
+    />
+    <style>
+      :root {
+        --bg: #f5f7fb;
+        --ink: #14213d;
+        --muted: #60708d;
+        --accent: #2878f0;
+        --card: #ffffff;
+        --shadow: 0 18px 50px rgba(20, 33, 61, 0.14);
+      }
+      * {
+        box-sizing: border-box;
+      }
+      html,
+      body {
+        margin: 0;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+        background: var(--bg);
+        font-family: Arial, Helvetica, sans-serif;
+        color: var(--ink);
+        touch-action: manipulation;
+      }
+      button {
+        font: inherit;
+        border: 0;
+        cursor: pointer;
+      }
+      #app {
+        width: 100%;
+        height: 100vh;
+        height: 100dvh;
+        position: relative;
+        overflow: hidden;
+      }
+      .screen {
+        position: absolute;
+        inset: 0;
+        display: none;
+        align-items: center;
+        justify-content: center;
+        padding: clamp(10px, 2vh, 24px) clamp(10px, 2vw, 24px);
+      }
+      .screen.active {
+        display: flex;
+      }
+      .content {
+        width: min(1400px, 100%);
+        max-height: 100%;
+        position: relative;
+        text-align: center;
+        overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
+        overscroll-behavior: contain;
+        scrollbar-width: none;
+      }
+      .content::-webkit-scrollbar {
+        display: none;
+      }
+      h1 {
+        font-size: clamp(3rem, 7vw, 7rem);
+        margin: 0.1em 0;
+        font-weight: 900;
+        letter-spacing: -0.03em;
+      }
+      p {
+        font-size: clamp(1.2rem, 2vw, 2.2rem);
+      }
+      .photo-slide {
+        background: #fff5cc;
+      }
+      .photo {
+        display: block;
+        width: auto;
+        max-width: 100%;
+        max-height: 82vh;
+        margin: 0 auto;
+        object-fit: contain;
+        border-radius: 28px;
+        box-shadow: var(--shadow);
+      }
+      .topbar {
+        position: absolute;
+        top: 2vh;
+        left: 3vw;
+        right: 3vw;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        z-index: 20;
+      }
+      .progress {
+        font-size: 1.1rem;
+        color: var(--muted);
+        background: rgba(255, 255, 255, 0.85);
+        padding: 0.5em 1em;
+        border-radius: 999px;
+        font-weight: bold;
+      }
+      .controls {
+        display: flex;
+        gap: 0.7em;
+        align-items: center;
+      }
+      .ctrl {
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        background: white;
+        box-shadow: 0 5px 18px rgba(0, 0, 0, 0.12);
+        font-size: 1.3rem;
+      }
+      .nav {
+        position: absolute;
+        bottom: 2vh;
+        left: 50%;
+        transform: translateX(-50%);
+        display: flex;
+        gap: 1em;
+        z-index: 30;
+      }
+      .nav button {
+        padding: 0.8em 1.5em;
+        border-radius: 999px;
+        background: white;
+        box-shadow: 0 8px 22px rgba(0, 0, 0, 0.12);
+        font-weight: 700;
+        font-size: 1.1rem;
+      }
+      .nav .primary {
+        background: var(--accent);
+        color: white;
+      }
+      @media (max-aspect-ratio: 1/1) {
+        .screen {
+          padding-bottom: 88px;
+        }
+        .photo {
+          max-height: 74vh;
+        }
+        .nav {
+          bottom: calc(2vh + env(safe-area-inset-bottom, 0px));
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div id="app">
+      <div class="topbar">
+        <div class="progress" id="progress">1 / 2</div>
+        <div class="controls">
+          <button class="ctrl" id="soundBtn" aria-label="Sound">🔊</button>
+          <button class="ctrl" id="homeBtn" aria-label="Home">⌂</button>
+        </div>
+      </div>
+
+      <!-- 1: Photo 5 -->
+      <section class="screen photo-slide active">
+        <div class="content">
+          <img
+            class="photo"
+            src="https://res.cloudinary.com/dp455m4rk/image/upload/v1786087027/5_xwihwf.png"
+            alt="Photo 5"
+          />
+        </div>
+      </section>
+
+      <!-- 2: Photo 6 -->
+      <section class="screen photo-slide">
+        <div class="content">
+          <img
+            class="photo"
+            src="https://res.cloudinary.com/dp455m4rk/image/upload/v1786087027/6_ew8bbg.png"
+            alt="Photo 6"
+          />
+        </div>
+      </section>
+
+      <div class="nav">
+        <button id="prevBtn" onclick="prev()">‹ BACK</button>
+        <button class="primary" id="nextBtn" onclick="next()">NEXT ›</button>
+      </div>
+    </div>
+
+    <script>
+      var screens = Array.prototype.slice.call(
+        document.querySelectorAll(".screen"),
+      );
+      var idx = 0;
+      var soundOn = true;
+      var progress = document.getElementById("progress");
+      var synth =
+        window.speechSynthesis ||
+        window.webkitSpeechSynthesis ||
+        window.mozSpeechSynthesis ||
+        null;
+
+      function show(i) {
+        idx = Math.max(0, Math.min(screens.length - 1, i));
+        for (var j = 0; j < screens.length; j++) {
+          screens[j].classList.toggle("active", j === idx);
+        }
+        progress.textContent = idx + 1 + " / " + screens.length;
+        document.getElementById("prevBtn").style.visibility =
+          idx === 0 ? "hidden" : "visible";
+        document.getElementById("nextBtn").textContent =
+          idx === screens.length - 1 ? "RESTART ↻" : "NEXT ›";
+      }
+
+      function next() {
+        if (idx === screens.length - 1) show(0);
+        else show(idx + 1);
+      }
+
+      function prev() {
+        show(idx - 1);
+      }
+
+      function say(text) {
+        if (!soundOn) return;
+        if (window.tizen && window.tizen.tts) {
+          try {
+            tizen.tts.speak(String(text), {
+              locale: "en-US",
+              rate: 0.85,
+              pitch: 1.0,
+              type: "TTS_TYPE_SCREEN_READER",
+            });
+            return;
+          } catch (e) {}
+        }
+        if (synth && typeof SpeechSynthesisUtterance !== "undefined") {
+          if (synth.speaking) synth.cancel();
+          var u = new SpeechSynthesisUtterance(text);
+          u.lang = "en-US";
+          u.rate = 0.82;
+          u.pitch = 1.08;
+          synth.speak(u);
+        }
+      }
+
+      document.getElementById("soundBtn").onclick = function () {
+        soundOn = !soundOn;
+        document.getElementById("soundBtn").textContent = soundOn ? "🔊" : "🔇";
+        if (soundOn && synth) synth.cancel();
+      };
+      document.getElementById("homeBtn").onclick = function () {
+        show(0);
+      };
+      document.addEventListener("keydown", function (e) {
+        if (e.key === "ArrowRight" || e.key === " ") {
+          if (e.preventDefault) e.preventDefault();
+          next();
+        }
+        if (e.key === "ArrowLeft") prev();
+        if (e.key === "Escape") show(0);
+        if (e.keyCode === 37) prev();
+        if (e.keyCode === 39) next();
+      });
+      show(0);
+    </script>
+  </body>
+</html>
