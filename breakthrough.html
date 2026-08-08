@@ -285,7 +285,7 @@
                 {
                     id: "slide-1",
                     title: "Who are you?",
-                    text: "Welcome! Today is all about getting to know each other better. There are no right or wrong answers. It is a friendly space to chat, share, and see how to support you on your journey. Let's dive in.",
+                    text: "Welcome! Today is all about getting to know each other better. There are no right or wrong answers. It is a friendly space to chat, share, and see how to support you on your journey. <strong>Let's dive in.</strong>",
                     textZh: "欢迎！今天我们主要是为了更好地了解彼此。答案没有对错之分。这是一个友好交流、分享的空间，让我们看看如何在你的学习之旅中为你提供支持。让我们开始吧。",
                     mediaType: "image",
                     mediaUrl: "https://res.cloudinary.com/dp455m4rk/image/upload/f_auto,q_auto,w_800/v1786219874/showroom_1_hrev1w.png",
@@ -298,6 +298,7 @@
                     textZh: "通过 Cloudinary 参数内置的动态资产管理，可确保在资源受限的电视 WebView 和高密度移动屏幕上实现最佳的图片和 HTML5 视频传输。",
                     mediaType: "image",
                     mediaUrl: "https://res.cloudinary.com/dp455m4rk/image/upload/f_auto,q_auto,w_800/v1786219874/showroom_1_hrev1w.png",
+                    startVideo: "https://res.cloudinary.com/dp455m4rk/video/upload/q_auto,w_800/v1786226737/start-video_dneeah.mp4",
                     interactive: { type: "quiz", question: "Is this runner modular?", answer: true }
                 },
                 {
@@ -318,6 +319,7 @@
                 this.score = 0;
                 this.soundEnabled = false; // Muted by default per instructions
                 this.language = 'en'; // 'en' or 'zh-CN'
+                this.startVideoShown = false; // Session-scoped: start video plays once only
                 this.totalSlides = 0;
                 this.listeners = [];
             }
@@ -401,6 +403,7 @@
                 this.updateLanguageIndicator(this.state.language);
                 this.initInputListeners();
                 this.initGamepadPolling();
+                this.preloadStartVideo();
             }
 
             renderSlides() {
@@ -429,11 +432,52 @@
                     left: cardWidth * index,
                     behavior: 'smooth'
                 });
-                
+
+                this.handleSlideMedia(index);
+
                 setTimeout(() => {
                     const panel = this.viewport.querySelectorAll('.glass-panel')[index];
                     if (panel) panel.focus();
                 }, 300);
+            }
+
+            preloadStartVideo() {
+                const slide = this.content.slides.find(s => s.startVideo);
+                if (!slide) return;
+                const video = document.createElement('video');
+                video.src = slide.startVideo;
+                video.preload = 'auto';
+                video.muted = true;
+                video.style.display = 'none';
+                document.body.appendChild(video);
+                video.load();
+            }
+
+            handleSlideMedia(index) {
+                const slide = this.content.slides[index];
+                if (!slide) return;
+                const panel = this.viewport.querySelectorAll('.glass-panel')[index];
+                if (!panel) return;
+                const mediaContainer = panel.querySelector('.media-container');
+                if (!mediaContainer) return;
+
+                // Always restore the default main image when navigating to a slide.
+                mediaContainer.innerHTML = `<img src="${slide.mediaUrl}" alt="${slide.title}" loading="lazy" />`;
+
+                // Start video plays once per session, in the exact same media space as the main image.
+                if (slide.startVideo && !this.state.startVideoShown) {
+                    const video = document.createElement('video');
+                    video.src = slide.startVideo;
+                    video.preload = 'auto';
+                    video.autoplay = true;
+                    video.setAttribute('playsinline', '');
+                    video.setAttribute('controls', '');
+                    mediaContainer.innerHTML = '';
+                    mediaContainer.appendChild(video);
+                    const playPromise = video.play();
+                    if (playPromise && playPromise.catch) playPromise.catch(() => {});
+                    this.state.startVideoShown = true;
+                }
             }
 
             nextSlide() {
@@ -472,8 +516,9 @@
                 const slide = this.content.slides[index];
                 if (slide && slide.text) {
                     const isZh = this.state.language === 'zh-CN';
+                    const stripHtml = (str) => str.replace(/<[^>]*>/g, '');
                     SpeechWrapper.speak(
-                        isZh ? slide.textZh : slide.text,
+                        stripHtml(isZh ? slide.textZh : slide.text),
                         this.state.soundEnabled,
                         isZh ? 'zh-CN' : 'en-US'
                     );
