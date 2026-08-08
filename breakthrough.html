@@ -1,0 +1,602 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Universal Modular Course Runner Framework</title>
+    <style>
+        /* ==========================================================================
+           1. CSS RESET & GLOBAL VARIABLES
+           ========================================================================== */
+        *, *::before, *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        :root {
+            --bg-url: url('https://res.cloudinary.com/dp455m4rk/image/upload/f_auto,q_auto,w_1920/v1786219874/260808_background_o33gz7.png');
+            --glass-bg: rgba(15, 23, 42, 0.65);
+            --glass-border: rgba(255, 255, 255, 0.12);
+            --glass-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+            --text-primary: #f8fafc;
+            --text-secondary: #94a3b8;
+            --accent-glow: #38bdf8;
+            --accent-yellow: #fde047;
+            --font-stack: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        /* ==========================================================================
+           2. VIEWPORT & TRANSPARENT BACKGROUND LAYER
+           ========================================================================== */
+        html, body {
+            width: 100vw;
+            height: 100vh;
+            overflow: hidden;
+            font-family: var(--font-stack);
+            background-color: transparent;
+            color: var(--text-primary);
+            -webkit-font-smoothing: antialiased;
+        }
+
+        #app-container {
+            position: relative;
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            background-image: var(--bg-url);
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            transform: translateZ(0);
+            will-change: transform;
+        }
+
+        /* ==========================================================================
+           3. HORIZONTAL SNAP-SCROLLING CAROUSEL
+           ========================================================================== */
+        .course-viewport {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            overflow-x: scroll;
+            overflow-y: hidden;
+            scroll-snap-type: x mandatory;
+            scroll-behavior: smooth;
+            -webkit-overflow-scrolling: touch;
+            scrollbar-width: none;
+        }
+
+        .course-viewport::-webkit-scrollbar {
+            display: none;
+        }
+
+        .slide-card {
+            flex: 0 0 100vw;
+            width: 100vw;
+            height: 100vh;
+            scroll-snap-align: start;
+            scroll-snap-stop: always;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 4rem 6rem;
+        }
+
+        /* ==========================================================================
+           4. GLASSMORPHISM CARD CONTAINERS
+           ========================================================================== */
+        .glass-panel {
+            width: 100%;
+            max-width: 1200px;
+            height: 100%;
+            max-height: 720px;
+            background: var(--glass-bg);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
+            box-shadow: var(--glass-shadow);
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 3rem;
+            padding: 3rem;
+            align-items: center;
+            transform: translateZ(0);
+        }
+
+        .slide-content {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .slide-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            letter-spacing: -0.025em;
+            color: var(--text-primary);
+        }
+
+        .slide-text {
+            font-size: 1.125rem;
+            line-height: 1.6;
+            color: var(--text-secondary);
+        }
+
+        .media-container {
+            width: 100%;
+            height: 100%;
+            max-height: 400px;
+            border-radius: 16px;
+            overflow: hidden;
+            background: rgba(0, 0, 0, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .media-container img,
+        .media-container video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        /* ==========================================================================
+           5. GLOBAL HUD & COMBINED PILL COMPONENT
+           ========================================================================== */
+        .framework-hud {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            padding: 2rem 3rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            pointer-events: none;
+            z-index: 10;
+        }
+
+        .hud-brand {
+            font-size: 1.25rem;
+            font-weight: 600;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+            color: var(--accent-glow);
+            text-shadow: 0 2px 10px rgba(56, 189, 248, 0.3);
+        }
+
+        .hud-stats {
+            display: flex;
+            gap: 2rem;
+            pointer-events: auto;
+        }
+
+        /* Combined Pill Widget Style */
+        .stat-pill {
+            background: rgba(15, 23, 42, 0.85);
+            border: 1px solid var(--glass-border);
+            padding: 0.6rem 1.75rem;
+            border-radius: 9999px;
+            font-size: 1rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+        }
+
+        .pill-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .pill-divider {
+            width: 1px;
+            height: 1.2rem;
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .sound-indicator svg {
+            width: 22px;
+            height: 22px;
+            fill: var(--accent-secondary, var(--text-secondary));
+            transition: fill 0.2s ease;
+        }
+
+        .sound-indicator.active svg {
+            fill: var(--accent-glow);
+        }
+
+        .score-text {
+            color: var(--accent-yellow);
+            font-weight: 700;
+            letter-spacing: 0.025em;
+        }
+
+        .slide-counter {
+            color: var(--accent-glow);
+            font-weight: 700;
+        }
+
+        .focusable:focus, .is-focused {
+            outline: none;
+            border-color: var(--accent-glow) !important;
+            box-shadow: 0 0 0 4px rgba(56, 189, 248, 0.3), var(--glass-shadow) !important;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="app-container">
+        <!-- Global HUD Layer -->
+        <header class="framework-hud">
+            <div class="hud-brand" id="course-title">Course Engine</div>
+            <div class="hud-stats">
+                <!-- Unified Status Pill -->
+                <div class="stat-pill">
+                    <div class="pill-item sound-indicator" id="sound-status-icon" title="Sound Muted">
+                        <svg viewBox="0 0 24 24">
+                            <path d="M3.63 3.63a.996.996 0 000 1.41L7.29 8.7 7 9H4c-.55 0-1 .45-1 1v4c0 .55.45 1 1 1h3l3.29 3.29c.63.63 1.71.18 1.71-.71v-4.17l4.18 4.18c-.44.32-.93.58-1.46.77-.33.12-.5.5-.38.83.12.33.5.5.83.38.74-.27 1.43-.68 2.03-1.19l1.98 1.98c.39.39 1.02.39 1.41 0 .39-.39.39-1.02 0-1.41L5.04 3.63c-.39-.39-1.02-.39-1.41 0zM19 12c0 .82-.15 1.61-.41 2.34l1.53 1.53C20.67 14.82 21 13.45 21 12c0-4.28-2.99-7.86-7-8.77v2.06c2.89.86 5 3.54 5 6.71zM12 4.03c-.14 0-.28.03-.42.08L9.9 5.81 12 7.91V4.03z"></path>
+                        </svg>
+                    </div>
+                    <div class="pill-divider"></div>
+                    <div class="pill-item">
+                        <span class="score-text"><span id="val-score">0</span> PTS</span>
+                    </div>
+                    <div class="pill-divider"></div>
+                    <div class="pill-item">
+                        <span class="slide-counter"><span id="val-slide">1</span>/<span id="val-total">1</span></span>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Horizontal Scroll Viewport -->
+        <main class="course-viewport" id="course-viewport" tabindex="0">
+            <!-- Dynamically injected slide cards land here -->
+        </main>
+    </div>
+
+    <script>
+        /**
+         * ==========================================================================
+         * CORE FRAMEWORK ARCHITECTURE: STATE, ENGINE & INPUT MANAGEMENT
+         * ==========================================================================
+         */
+
+        const SampleCourseContent = {
+            meta: {
+                title: "Interactive Systems Architecture",
+                version: "1.0.0"
+            },
+            slides: [
+                {
+                    id: "slide-1",
+                    title: "Welcome to the Tizen Station",
+                    text: "This framework cleanly separates core navigation logic from course content configurations. Control this runner seamlessly using your keyboard, touch gestures, Samsung Smart Remote D-pad, or a connected PS4 controller.",
+                    mediaType: "image",
+                    mediaUrl: "https://res.cloudinary.com/dp455m4rk/image/upload/f_auto,q_auto,w_800/v1786219874/showroom_1_hrev1w.png",
+                    interactive: { type: "none" }
+                },
+                {
+                    id: "slide-2",
+                    title: "High-Performance Media Pipeline",
+                    text: "Built-in dynamic asset management via Cloudinary parameters ensures optimal image and HTML5 video delivery across resource-constrained TV WebViews and high-density mobile displays.",
+                    mediaType: "image",
+                    mediaUrl: "https://res.cloudinary.com/dp455m4rk/image/upload/f_auto,q_auto,w_800/v1786219874/showroom_1_hrev1w.png",
+                    interactive: { type: "quiz", question: "Is this runner modular?", answer: true }
+                },
+                {
+                    id: "slide-3",
+                    title: "Ready for Production",
+                    text: "Featuring hardware-accelerated transitions, transparent background support for TV wallpapers, and Web Speech API text-to-speech accessibility wrappers out of the box.",
+                    mediaType: "image",
+                    mediaUrl: "https://res.cloudinary.com/dp455m4rk/image/upload/f_auto,q_auto,w_800/v1786219874/showroom_1_hrev1w.png",
+                    interactive: { type: "none" }
+                }
+            ]
+        };
+
+        class CourseEngineState {
+            constructor() {
+                this.currentIndex = 0;
+                this.score = 0;
+                this.soundEnabled = false; // Muted by default per instructions
+                this.totalSlides = 0;
+                this.listeners = [];
+            }
+
+            setState(updater) {
+                const prevState = { ...this };
+                if (typeof updater === 'function') {
+                    updater(this);
+                } else {
+                    Object.assign(this, updater);
+                }
+                this.notify(prevState);
+            }
+
+            subscribe(listener) {
+                this.listeners.push(listener);
+            }
+
+            notify(prevState) {
+                this.listeners.forEach(listener => listener(this, prevState));
+            }
+        }
+
+        class SpeechWrapper {
+            static speak(text, enabled) {
+                if ('speechSynthesis' in window) {
+                    window.speechSynthesis.cancel();
+                    if (enabled) {
+                        const utterance = new SpeechSynthesisUtterance(text);
+                        utterance.rate = 1.0;
+                        utterance.pitch = 1.0;
+                        window.speechSynthesis.speak(utterance);
+                    }
+                }
+            }
+        }
+
+        class CourseRunnerApp {
+            constructor(containerId, viewportId, contentData) {
+                this.container = document.getElementById(containerId);
+                this.viewport = document.getElementById(viewportId);
+                this.content = contentData;
+                this.state = new CourseEngineState();
+                
+                this.initEngine();
+            }
+
+            initEngine() {
+                this.state.setState({ totalSlides: this.content.slides.length });
+                document.getElementById('val-total').textContent = this.state.totalSlides;
+                document.getElementById('course-title').textContent = this.content.meta.title;
+
+                this.renderSlides();
+
+                this.state.subscribe((newState, prevState) => {
+                    if (newState.currentIndex !== prevState.currentIndex) {
+                        this.scrollToSlide(newState.currentIndex);
+                        document.getElementById('val-slide').textContent = newState.currentIndex + 1;
+                        this.triggerSlideAudio(newState.currentIndex);
+                    }
+                    if (newState.score !== prevState.score) {
+                        document.getElementById('val-score').textContent = newState.score;
+                    }
+                    if (newState.soundEnabled !== prevState.soundEnabled) {
+                        this.updateSoundIndicator(newState.soundEnabled);
+                        if (newState.soundEnabled) {
+                            this.triggerSlideAudio(newState.currentIndex);
+                        } else {
+                            SpeechWrapper.speak('', false);
+                        }
+                    }
+                });
+
+                this.initInputListeners();
+                this.initGamepadPolling();
+            }
+
+            renderSlides() {
+                this.viewport.innerHTML = '';
+                this.content.slides.forEach((slide, index) => {
+                    const card = document.createElement('div');
+                    card.className = 'slide-card';
+                    card.innerHTML = `
+                        <div class="glass-panel focusable" tabindex="0" data-index="${index}">
+                            <div class="slide-content">
+                                <h2 class="slide-title">${slide.title}</h2>
+                                <p class="slide-text">${slide.text}</p>
+                            </div>
+                            <div class="media-container">
+                                <img src="${slide.mediaUrl}" alt="${slide.title}" loading="lazy" />
+                            </div>
+                        </div>
+                    `;
+                    this.viewport.appendChild(card);
+                });
+            }
+
+            scrollToSlide(index) {
+                const cardWidth = this.viewport.clientWidth;
+                this.viewport.scrollTo({
+                    left: cardWidth * index,
+                    behavior: 'smooth'
+                });
+                
+                setTimeout(() => {
+                    const panel = this.viewport.querySelectorAll('.glass-panel')[index];
+                    if (panel) panel.focus();
+                }, 300);
+            }
+
+            nextSlide() {
+                if (this.state.currentIndex < this.state.totalSlides - 1) {
+                    this.state.setState(s => { s.currentIndex += 1; });
+                }
+            }
+
+            prevSlide() {
+                if (this.state.currentIndex > 0) {
+                    this.state.setState(s => { s.currentIndex -= 1; });
+                }
+            }
+
+            toggleSound() {
+                this.state.setState(s => { s.soundEnabled = !s.soundEnabled; });
+            }
+
+            triggerSlideAudio(index) {
+                const slide = this.content.slides[index];
+                if (slide && slide.text) {
+                    SpeechWrapper.speak(slide.text, this.state.soundEnabled);
+                }
+            }
+
+            updateSoundIndicator(enabled) {
+                const iconContainer = document.getElementById('sound-status-icon');
+                if (enabled) {
+                    iconContainer.classList.add('active');
+                    iconContainer.setAttribute('title', 'Sound Active');
+                    iconContainer.innerHTML = `
+                        <svg viewBox="0 0 24 24">
+                            <path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"></path>
+                        </svg>`;
+                } else {
+                    iconContainer.classList.remove('active');
+                    iconContainer.setAttribute('title', 'Sound Muted');
+                    iconContainer.innerHTML = `
+                        <svg viewBox="0 0 24 24">
+                            <path d="M3.63 3.63a.996.996 0 000 1.41L7.29 8.7 7 9H4c-.55 0-1 .45-1 1v4c0 .55.45 1 1 1h3l3.29 3.29c.63.63 1.71.18 1.71-.71v-4.17l4.18 4.18c-.44.32-.93.58-1.46.77-.33.12-.5.5-.38.83.12.33.5.5.83.38.74-.27 1.43-.68 2.03-1.19l1.98 1.98c.39.39 1.02.39 1.41 0 .39-.39.39-1.02 0-1.41L5.04 3.63c-.39-.39-1.02-.39-1.41 0zM19 12c0 .82-.15 1.61-.41 2.34l1.53 1.53C20.67 14.82 21 13.45 21 12c0-4.28-2.99-7.86-7-8.77v2.06c2.89.86 5 3.54 5 6.71zM12 4.03c-.14 0-.28.03-.42.08L9.9 5.81 12 7.91V4.03z"></path>
+                        </svg>`;
+                }
+            }
+
+            initInputListeners() {
+                // Keyboard: ArrowRight/Left, ArrowUp for sound toggle
+                window.addEventListener('keydown', (e) => {
+                    switch(e.key) {
+                        case 'ArrowRight':
+                        case 'MediaFastForward':
+                            e.preventDefault();
+                            this.nextSlide();
+                            break;
+                        case 'ArrowLeft':
+                        case 'MediaRewind':
+                            e.preventDefault();
+                            this.prevSlide();
+                            break;
+                        case 'ArrowUp':
+                            e.preventDefault();
+                            this.toggleSound();
+                            break;
+                        case 'Enter':
+                        case '13':
+                            e.preventDefault();
+                            this.state.setState(s => { s.score += 10; });
+                            break;
+                    }
+                });
+
+                // Touch Gestures: Swipe for navigation, Long Touch for sound toggle
+                let touchStartX = 0;
+                let touchEndX = 0;
+                let touchTimer = null;
+                let isLongTouch = false;
+
+                this.viewport.addEventListener('touchstart', (e) => {
+                    touchStartX = e.changedTouches[0].screenX;
+                    isLongTouch = false;
+                    touchTimer = setTimeout(() => {
+                        isLongTouch = true;
+                        this.toggleSound();
+                    }, 800); // 800ms threshold for long touch
+                }, { passive: true });
+
+                this.viewport.addEventListener('touchmove', () => {
+                    if (touchTimer) {
+                        clearTimeout(touchTimer);
+                        touchTimer = null;
+                    }
+                }, { passive: true });
+
+                this.viewport.addEventListener('touchend', (e) => {
+                    if (touchTimer) {
+                        clearTimeout(touchTimer);
+                        touchTimer = null;
+                    }
+                    if (isLongTouch) return;
+
+                    touchEndX = e.changedTouches[0].screenX;
+                    const diff = touchStartX - touchEndX;
+                    if (Math.abs(diff) > 50) {
+                        if (diff > 0) {
+                            this.nextSlide();
+                        } else {
+                            this.prevSlide();
+                        }
+                    }
+                }, { passive: true });
+            }
+
+            initGamepadPolling() {
+                let lastButtonStates = {};
+                let squarePressTimer = null;
+                let squareLongTriggered = false;
+
+                const pollGamepad = () => {
+                    const gamepads = navigator.getGamepads ? navigator.getGamepads() : [];
+                    for (let i = 0; i < gamepads.length; i++) {
+                        const gp = gamepads[i];
+                        if (gp) {
+                            const checkPress = (index, action) => {
+                                if (gp.buttons[index] && gp.buttons[index].pressed) {
+                                    if (!lastButtonStates[index]) {
+                                        action();
+                                        lastButtonStates[index] = true;
+                                    }
+                                } else {
+                                    lastButtonStates[index] = false;
+                                }
+                            };
+
+                            // Button 15: D-Pad Right, Button 14: D-Pad Left
+                            // Button 5: R1, Button 4: L1
+                            // Button 0: Cross (Score), Button 2: Square (Sound Toggle via long press simulation)
+                            checkPress(15, () => this.nextSlide());
+                            checkPress(14, () => this.prevSlide());
+                            checkPress(5, () => this.nextSlide());
+                            checkPress(4, () => this.prevSlide());
+                            checkPress(0, () => this.state.setState(s => { s.score += 10; }));
+
+                            // Square Button (Button index 2 on standard DS4 mapping) long-press handling
+                            if (gp.buttons[2] && gp.buttons[2].pressed) {
+                                if (!lastButtonStates[2]) {
+                                    lastButtonStates[2] = true;
+                                    squareLongTriggered = false;
+                                    squarePressTimer = setTimeout(() => {
+                                        squareLongTriggered = true;
+                                        this.toggleSound();
+                                    }, 800);
+                                }
+                            } else {
+                                if (lastButtonStates[2]) {
+                                    if (squarePressTimer) {
+                                        clearTimeout(squarePressTimer);
+                                        squarePressTimer = null;
+                                    }
+                                    lastButtonStates[2] = false;
+                                }
+                            }
+                        }
+                    }
+                    requestAnimationFrame(pollGamepad);
+                };
+
+                window.addEventListener("gamepadconnected", (e) => {
+                    console.log("Gamepad connected:", e.gamepad.id);
+                    requestAnimationFrame(pollGamepad);
+                });
+            }
+        }
+
+        window.addEventListener('DOMContentLoaded', () => {
+            window.courseApp = new CourseRunnerApp('app-container', 'course-viewport', SampleCourseContent);
+        });
+    </script>
+</body>
+</html>
