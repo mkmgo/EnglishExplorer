@@ -488,6 +488,11 @@
                     video.setAttribute('controls', '');
                     mediaContainer.innerHTML = '';
                     mediaContainer.appendChild(video);
+                    video.onended = () => {
+                        if (this.state.currentIndex === index) {
+                            mediaContainer.innerHTML = `<img src="${slide.gallery && slide.gallery.length ? slide.gallery[this.galleryIndex] : slide.mediaUrl}" alt="${slide.title}" loading="lazy" />`;
+                        }
+                    };
                     const playPromise = video.play();
                     if (playPromise && playPromise.catch) playPromise.catch(() => {});
                     this.state.startVideoShown = true;
