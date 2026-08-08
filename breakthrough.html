@@ -278,14 +278,15 @@
 
         const SampleCourseContent = {
             meta: {
-                title: "Interactive Systems Architecture",
+                title: "Breakthrough",
                 version: "1.0.0"
             },
             slides: [
                 {
                     id: "slide-1",
-                    title: "Welcome to the Tizen Station",
-                    text: "This framework cleanly separates core navigation logic from course content configurations. Control this runner seamlessly using your keyboard, touch gestures, Samsung Smart Remote D-pad, or a connected PS4 controller.",
+                    title: "Who are you?",
+                    text: "Welcome! Today is all about getting to know each other better. There are no right or wrong answers. It is a friendly space to chat, share, and see how to support you on your journey. Let's dive in.",
+                    textZh: "欢迎！今天我们主要是为了更好地了解彼此。答案没有对错之分。这是一个友好交流、分享的空间，让我们看看如何在你的学习之旅中为你提供支持。让我们开始吧。",
                     mediaType: "image",
                     mediaUrl: "https://res.cloudinary.com/dp455m4rk/image/upload/f_auto,q_auto,w_800/v1786219874/showroom_1_hrev1w.png",
                     interactive: { type: "none" }
@@ -294,6 +295,7 @@
                     id: "slide-2",
                     title: "High-Performance Media Pipeline",
                     text: "Built-in dynamic asset management via Cloudinary parameters ensures optimal image and HTML5 video delivery across resource-constrained TV WebViews and high-density mobile displays.",
+                    textZh: "通过 Cloudinary 参数内置的动态资产管理，可确保在资源受限的电视 WebView 和高密度移动屏幕上实现最佳的图片和 HTML5 视频传输。",
                     mediaType: "image",
                     mediaUrl: "https://res.cloudinary.com/dp455m4rk/image/upload/f_auto,q_auto,w_800/v1786219874/showroom_1_hrev1w.png",
                     interactive: { type: "quiz", question: "Is this runner modular?", answer: true }
@@ -302,6 +304,7 @@
                     id: "slide-3",
                     title: "Ready for Production",
                     text: "Featuring hardware-accelerated transitions, transparent background support for TV wallpapers, and Web Speech API text-to-speech accessibility wrappers out of the box.",
+                    textZh: "内置硬件加速转场、适用于电视壁纸的透明背景支持，以及开箱即用的 Web Speech API 文字转语音无障碍封装。",
                     mediaType: "image",
                     mediaUrl: "https://res.cloudinary.com/dp455m4rk/image/upload/f_auto,q_auto,w_800/v1786219874/showroom_1_hrev1w.png",
                     interactive: { type: "none" }
@@ -314,6 +317,7 @@
                 this.currentIndex = 0;
                 this.score = 0;
                 this.soundEnabled = false; // Muted by default per instructions
+                this.language = 'en'; // 'en' or 'zh-CN'
                 this.totalSlides = 0;
                 this.listeners = [];
             }
@@ -338,11 +342,12 @@
         }
 
         class SpeechWrapper {
-            static speak(text, enabled) {
+            static speak(text, enabled, lang = 'en-US') {
                 if ('speechSynthesis' in window) {
                     window.speechSynthesis.cancel();
                     if (enabled) {
                         const utterance = new SpeechSynthesisUtterance(text);
+                        utterance.lang = lang;
                         utterance.rate = 1.0;
                         utterance.pitch = 1.0;
                         window.speechSynthesis.speak(utterance);
@@ -377,6 +382,12 @@
                     if (newState.score !== prevState.score) {
                         document.getElementById('val-score').textContent = newState.score;
                     }
+                    if (newState.language !== prevState.language) {
+                        this.updateLanguageIndicator(newState.language);
+                        if (newState.soundEnabled) {
+                            this.triggerSlideAudio(newState.currentIndex);
+                        }
+                    }
                     if (newState.soundEnabled !== prevState.soundEnabled) {
                         this.updateSoundIndicator(newState.soundEnabled);
                         if (newState.soundEnabled) {
@@ -387,6 +398,7 @@
                     }
                 });
 
+                this.updateLanguageIndicator(this.state.language);
                 this.initInputListeners();
                 this.initGamepadPolling();
             }
@@ -437,13 +449,34 @@
             }
 
             toggleSound() {
-                this.state.setState(s => { s.soundEnabled = !s.soundEnabled; });
+                this.state.setState(s => {
+                    s.soundEnabled = !s.soundEnabled;
+                    if (!s.soundEnabled) {
+                        s.language = 'en'; // always return to English output when sound is reactivated
+                    }
+                });
+            }
+
+            toggleLanguage() {
+                if (!this.state.soundEnabled) return; // language switch only applies while sound is active
+                const nextLang = this.state.language === 'en' ? 'zh-CN' : 'en';
+                this.state.setState(s => { s.language = nextLang; });
+            }
+
+            updateLanguageIndicator(lang) {
+                const el = document.getElementById('val-lang');
+                if (el) el.textContent = lang === 'zh-CN' ? '中文' : 'EN';
             }
 
             triggerSlideAudio(index) {
                 const slide = this.content.slides[index];
                 if (slide && slide.text) {
-                    SpeechWrapper.speak(slide.text, this.state.soundEnabled);
+                    const isZh = this.state.language === 'zh-CN';
+                    SpeechWrapper.speak(
+                        isZh ? slide.textZh : slide.text,
+                        this.state.soundEnabled,
+                        isZh ? 'zh-CN' : 'en-US'
+                    );
                 }
             }
 
@@ -483,6 +516,10 @@
                         case 'ArrowUp':
                             e.preventDefault();
                             this.toggleSound();
+                            break;
+                        case 'ArrowDown':
+                            e.preventDefault();
+                            this.toggleLanguage();
                             break;
                         case 'Enter':
                         case '13':
@@ -557,11 +594,13 @@
                             // Button 15: D-Pad Right, Button 14: D-Pad Left
                             // Button 5: R1, Button 4: L1
                             // Button 0: Cross (Score), Button 2: Square (Sound Toggle via long press simulation)
+                            // Button 3: Triangle (Language Switch)
                             checkPress(15, () => this.nextSlide());
                             checkPress(14, () => this.prevSlide());
                             checkPress(5, () => this.nextSlide());
                             checkPress(4, () => this.prevSlide());
                             checkPress(0, () => this.state.setState(s => { s.score += 10; }));
+                            checkPress(3, () => this.toggleLanguage());
 
                             // Square Button (Button index 2 on standard DS4 mapping) long-press handling
                             if (gp.buttons[2] && gp.buttons[2].pressed) {
