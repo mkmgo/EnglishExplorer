@@ -293,11 +293,19 @@
                 },
                 {
                     id: "slide-2",
-                    title: "High-Performance Media Pipeline",
-                    text: "Built-in dynamic asset management via Cloudinary parameters ensures optimal image and HTML5 video delivery across resource-constrained TV WebViews and high-density mobile displays.",
-                    textZh: "通过 Cloudinary 参数内置的动态资产管理，可确保在资源受限的电视 WebView 和高密度移动屏幕上实现最佳的图片和 HTML5 视频传输。",
+                    title: "Do you like this?",
+                    text: "Tell me about your hobbies, the topics you're interested in, and what drives you.",
+                    textZh: "告诉我你的爱好、你感兴趣的话题，以及是什么在激励你。",
                     mediaType: "image",
                     mediaUrl: "https://res.cloudinary.com/dp455m4rk/image/upload/c_crop,w_458,h_384,x_0,y_0/l_text:Trebuchet%20MS_48:Basketball,co_rgb:f7f7f8,g_south,y_7/v1786219889/260808_assessment_02_jwph2g.png",
+                    gallery: [
+                        "https://res.cloudinary.com/dp455m4rk/image/upload/c_crop,w_458,h_384,x_0,y_0/l_text:Trebuchet%20MS_48:Basketball,co_rgb:f7f7f8,g_south,y_7/v1786219889/260808_assessment_02_jwph2g.png",
+                        "https://res.cloudinary.com/dp455m4rk/image/upload/c_crop,w_458,h_384,x_458,y_0/l_text:Trebuchet%20MS_48:Gaming,co_rgb:f7f7f8,g_south,y_7/v1786219889/260808_assessment_02_jwph2g.png",
+                        "https://res.cloudinary.com/dp455m4rk/image/upload/c_crop,w_458,h_384,x_916,y_0/l_text:Trebuchet%20MS_48:Anime,co_rgb:f7f7f8,g_south,y_7/v1786219889/260808_assessment_02_jwph2g.png",
+                        "https://res.cloudinary.com/dp455m4rk/image/upload/c_crop,w_458,h_384,x_0,y_384/l_text:Trebuchet%20MS_48:Space,co_rgb:f7f7f8,g_south,y_7/v1786219889/260808_assessment_02_jwph2g.png",
+                        "https://res.cloudinary.com/dp455m4rk/image/upload/c_crop,w_458,h_384,x_458,y_384/l_text:Trebuchet%20MS_48:Cars,co_rgb:f7f7f8,g_south,y_7/v1786219889/260808_assessment_02_jwph2g.png",
+                        "https://res.cloudinary.com/dp455m4rk/image/upload/c_crop,w_458,h_384,x_916,y_384/l_text:Trebuchet%20MS_48:Music,co_rgb:f7f7f8,g_south,y_7/v1786219889/260808_assessment_02_jwph2g.png"
+                    ],
                     startVideo: "https://res.cloudinary.com/dp455m4rk/video/upload/q_auto,w_800/v1786226737/start-video_dneeah.mp4",
                     interactive: { type: "quiz", question: "Is this runner modular?", answer: true }
                 },
@@ -364,6 +372,7 @@
                 this.viewport = document.getElementById(viewportId);
                 this.content = contentData;
                 this.state = new CourseEngineState();
+                this.galleryIndex = 0;
                 
                 this.initEngine();
             }
@@ -461,8 +470,13 @@
                 const mediaContainer = panel.querySelector('.media-container');
                 if (!mediaContainer) return;
 
-                // Always restore the default main image when navigating to a slide.
-                mediaContainer.innerHTML = `<img src="${slide.mediaUrl}" alt="${slide.title}" loading="lazy" />`;
+                // Always restore the default media when navigating to a slide.
+                if (slide.gallery && slide.gallery.length) {
+                    this.galleryIndex = Math.min(this.galleryIndex, slide.gallery.length - 1);
+                    mediaContainer.innerHTML = `<img src="${slide.gallery[this.galleryIndex]}" alt="${slide.title}" loading="lazy" />`;
+                } else {
+                    mediaContainer.innerHTML = `<img src="${slide.mediaUrl}" alt="${slide.title}" loading="lazy" />`;
+                }
 
                 // Start video plays once per session, in the exact same media space as the main image.
                 if (slide.startVideo && !this.state.startVideoShown) {
@@ -477,6 +491,23 @@
                     const playPromise = video.play();
                     if (playPromise && playPromise.catch) playPromise.catch(() => {});
                     this.state.startVideoShown = true;
+                }
+            }
+
+            cycleSlideMedia(direction) {
+                const slide = this.content.slides[this.state.currentIndex];
+                if (slide.gallery && slide.gallery.length) {
+                    const len = slide.gallery.length;
+                    this.galleryIndex = (this.galleryIndex + direction + len) % len;
+                    const panel = this.viewport.querySelectorAll('.glass-panel')[this.state.currentIndex];
+                    const mediaContainer = panel ? panel.querySelector('.media-container') : null;
+                    if (mediaContainer) {
+                        mediaContainer.innerHTML = `<img src="${slide.gallery[this.galleryIndex]}" alt="${slide.title}" loading="lazy" />`;
+                    }
+                } else if (direction > 0) {
+                    this.nextSlide();
+                } else {
+                    this.prevSlide();
                 }
             }
 
@@ -566,6 +597,14 @@
                             e.preventDefault();
                             this.toggleLanguage();
                             break;
+                        case 'PageDown':
+                            e.preventDefault();
+                            this.cycleSlideMedia(1);
+                            break;
+                        case 'PageUp':
+                            e.preventDefault();
+                            this.cycleSlideMedia(-1);
+                            break;
                         case 'Enter':
                         case '13':
                             e.preventDefault();
@@ -637,13 +676,13 @@
                             };
 
                             // Button 15: D-Pad Right, Button 14: D-Pad Left
-                            // Button 5: R1, Button 4: L1
+                            // Button 5: R1 (Next Gallery Image), Button 4: L1 (Previous Gallery Image)
                             // Button 0: Cross (Score), Button 2: Square (Sound Toggle via long press simulation)
                             // Button 3: Triangle (Language Switch)
                             checkPress(15, () => this.nextSlide());
                             checkPress(14, () => this.prevSlide());
-                            checkPress(5, () => this.nextSlide());
-                            checkPress(4, () => this.prevSlide());
+                            checkPress(5, () => this.cycleSlideMedia(1));
+                            checkPress(4, () => this.cycleSlideMedia(-1));
                             checkPress(0, () => this.state.setState(s => { s.score += 10; }));
                             checkPress(3, () => this.toggleLanguage());
 
