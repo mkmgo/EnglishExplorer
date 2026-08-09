@@ -149,6 +149,15 @@
             object-fit: cover;
         }
 
+        /* Gallery slides: scale the image up slightly so the baked-in border
+           is cropped away and the image fully covers the media box on any system. */
+        .media-container.gallery-mode img {
+            width: 112%;
+            height: 112%;
+            max-width: none;
+            max-height: none;
+        }
+
         /* ==========================================================================
            5. GLOBAL HUD & COMBINED PILL COMPONENT
            ========================================================================== */
@@ -432,7 +441,7 @@
                                 <h2 class="slide-title">${slide.title}</h2>
                                 <p class="slide-text">${slide.text}</p>
                             </div>
-                            <div class="media-container focusable" tabindex="0">
+                            <div class="media-container focusable${slide.gallery && slide.gallery.length ? ' gallery-mode' : ''}" tabindex="0">
                                 <img src="${slide.mediaUrl}" alt="${slide.title}" loading="lazy" />
                             </div>
                         </div>
