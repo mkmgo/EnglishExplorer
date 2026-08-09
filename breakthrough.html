@@ -470,21 +470,29 @@
 
             scrollToSlide(index) {
                 const cardWidth = this.viewport.clientWidth;
+
+                // Mount and start the slide media synchronously, inside the keydown
+                // gesture, so the start video begins the very moment the slide moves
+                // in: the image suddenly comes alive, like a plane starting.
+                this.handleSlideMedia(index);
+
                 this.viewport.scrollTo({
                     left: cardWidth * index,
                     behavior: 'smooth'
                 });
 
-                // Mount the slide media only after the smooth scroll has settled.
-                // If the start video were mounted immediately it would begin playing
-                // mid-scroll, so the user would miss the beginning of it on arrival.
+                // After the smooth scroll settles, move focus onto the new panel.
+                // `settled` guards against the fallback timer and scrollend both
+                // firing (which would otherwise re-run the settle callback).
+                let settled = false;
                 const settle = () => {
+                    if (settled) return;
+                    settled = true;
                     if (this._slideMediaTimer) {
                         clearTimeout(this._slideMediaTimer);
                         this._slideMediaTimer = null;
                     }
                     if (index !== this.state.currentIndex) return;
-                    this.handleSlideMedia(index);
                     const panel = this.viewport.querySelectorAll('.glass-panel')[index];
                     if (panel) panel.focus();
                 };
@@ -519,6 +527,10 @@
                 const mediaContainer = panel.querySelector('.media-container');
                 if (!mediaContainer) return;
 
+                // If a start video is still running on another slide (the user left
+                // before it ended), stop it so it doesn't keep playing offscreen.
+                this.stopOtherSlideVideos(index);
+
                 // Always restore the default media when navigating to a slide.
                 if (slide.gallery && slide.gallery.length) {
                     this.galleryIndex = Math.min(this.galleryIndex, slide.gallery.length - 1);
@@ -528,6 +540,8 @@
                 }
 
                 // Start video plays once per session, in the exact same media space as the main image.
+                // Mounted and started synchronously (inside the keydown gesture) so the
+                // image suddenly comes alive the moment the slide begins moving in.
                 if (slide.startVideo && !this.state.startVideoShown) {
                     const restoreMedia = () => {
                         if (this.state.currentIndex === index) {
@@ -551,6 +565,7 @@
                     // rejected, so retry muted if the first attempt is blocked.
                     const attemptPlay = (withSound) => {
                         if (!withSound) video.muted = true;
+                        video.currentTime = 0;
                         const p = video.play();
                         if (p && p.catch) {
                             p.catch(() => { if (withSound) attemptPlay(false); });
@@ -563,6 +578,19 @@
                         video.addEventListener('canplay', () => attemptPlay(true), { once: true });
                     }
                     this.state.startVideoShown = true;
+                }
+            }
+
+            stopOtherSlideVideos(keepIndex) {
+                const panels = this.viewport.querySelectorAll('.glass-panel');
+                for (let i = 0; i < panels.length; i++) {
+                    if (i === keepIndex) continue;
+                    const video = panels[i].querySelector('video');
+                    if (video) {
+                        video.pause();
+                        video.removeAttribute('src');
+                        video.load();
+                    }
                 }
             }
 
