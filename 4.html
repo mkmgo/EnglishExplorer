@@ -247,7 +247,7 @@
             src="https://res.cloudinary.com/dp455m4rk/video/upload/q_auto,w_1400/v1786261067/book_pensil_roxyrw.mp4"
             controls
             playsinline
-            preload="auto"
+            webkit-playsinline
           ></video>
         </div>
       </section>
@@ -376,10 +376,16 @@
               cur.ontimeupdate = null;
             }
           };
-          setTimeout(function () {
+          try {
+            cur.muted = false;
             var p = cur.play();
-            if (p && p.catch) p.catch(function () {});
-          }, 4);
+            if (p && p.catch)
+              p.catch(function () {
+                cur.muted = true;
+                var q = cur.play();
+                if (q && q.catch) q.catch(function () {});
+              });
+          } catch (e) {}
         }
       }
 
