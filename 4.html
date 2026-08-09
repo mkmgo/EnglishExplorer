@@ -252,6 +252,48 @@
         </div>
       </section>
 
+      <!-- 4: Book -->
+      <section class="screen photo-slide photo-slide-title">
+        <div class="content">
+          <button class="voice-title" onclick="say('Book')">
+            Book
+          </button>
+          <img
+            class="photo"
+            src="https://res.cloudinary.com/dp455m4rk/image/upload/c_crop,w_424,h_421,x_0,y_0/v1786261038/book_pencil_v8ipxw.png"
+            alt="Book"
+          />
+        </div>
+      </section>
+
+      <!-- 5: Pencil -->
+      <section class="screen photo-slide photo-slide-title">
+        <div class="content">
+          <button class="voice-title" onclick="say('Pencil')">
+            Pencil
+          </button>
+          <img
+            class="photo"
+            src="https://res.cloudinary.com/dp455m4rk/image/upload/c_crop,w_424,h_421,x_424,y_0/v1786261038/book_pencil_v8ipxw.png"
+            alt="Pencil"
+          />
+        </div>
+      </section>
+
+      <!-- 6: Table -->
+      <section class="screen photo-slide photo-slide-title">
+        <div class="content">
+          <button class="voice-title" onclick="say('Table')">
+            Table
+          </button>
+          <img
+            class="photo"
+            src="https://res.cloudinary.com/dp455m4rk/image/upload/c_crop,w_424,h_421,x_0,y_842/v1786261038/book_pencil_v8ipxw.png"
+            alt="Table"
+          />
+        </div>
+      </section>
+
       <div class="nav">
         <button id="prevBtn" onclick="prev()">‹ BACK</button>
         <button class="primary" id="nextBtn" onclick="next()">NEXT ›</button>
@@ -286,6 +328,12 @@
         var cur = screens[idx].querySelector("video");
         if (cur) {
           cur.currentTime = 0;
+          cur.ontimeupdate = function () {
+            if (cur.duration && cur.currentTime >= cur.duration - 0.002) {
+              cur.pause();
+              cur.ontimeupdate = null;
+            }
+          };
           setTimeout(function () {
             var p = cur.play();
             if (p && p.catch) p.catch(function () {});
