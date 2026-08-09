@@ -244,10 +244,11 @@
           </button>
           <video
             class="media"
-            src="https://res.cloudinary.com/dp455m4rk/video/upload/q_auto,w_1400/v1786261067/book_pensil_roxyrw.mp4"
+            src="https://res.cloudinary.com/dp455m4rk/video/upload/q_auto,w_1080/v1786261067/book_pensil_roxyrw.mp4"
             controls
             playsinline
             webkit-playsinline
+            preload="auto"
           ></video>
         </div>
       </section>
@@ -354,6 +355,8 @@
         window.webkitSpeechSynthesis ||
         window.mozSpeechSynthesis ||
         null;
+      var curVideo = null;
+      var curTryPlay = null;
 
       function show(i) {
         idx = Math.max(0, Math.min(screens.length - 1, i));
@@ -368,24 +371,38 @@
         var vids = document.querySelectorAll("video");
         for (var v = 0; v < vids.length; v++) vids[v].pause();
         var cur = screens[idx].querySelector("video");
+        if (curVideo && curTryPlay) {
+          curVideo.removeEventListener("canplay", curTryPlay, false);
+        }
+        curVideo = cur;
+        curTryPlay = null;
         if (cur) {
-          cur.currentTime = 0;
+          try {
+            cur.currentTime = 0;
+            cur.muted = false;
+          } catch (e) {}
           cur.ontimeupdate = function () {
             if (cur.duration && cur.currentTime >= cur.duration - 0.002) {
               cur.pause();
               cur.ontimeupdate = null;
             }
           };
-          try {
-            cur.muted = false;
-            var p = cur.play();
+          function attemptPlay(v) {
+            var p = v.play();
             if (p && p.catch)
               p.catch(function () {
-                cur.muted = true;
-                var q = cur.play();
-                if (q && q.catch) q.catch(function () {});
+                if (!v.muted) {
+                  v.muted = true;
+                  var q = v.play();
+                  if (q && q.catch) q.catch(function () {});
+                }
               });
-          } catch (e) {}
+          }
+          curTryPlay = function () {
+            if (curVideo === cur && cur.paused) attemptPlay(cur);
+          };
+          cur.addEventListener("canplay", curTryPlay, false);
+          attemptPlay(cur);
         }
       }
 
@@ -406,7 +423,6 @@
               locale: "en-US",
               rate: 0.85,
               pitch: 1.0,
-              type: "TTS_TYPE_SCREEN_READER",
             });
             return;
           } catch (e) {}
@@ -415,8 +431,7 @@
           if (synth.speaking) synth.cancel();
           var u = new SpeechSynthesisUtterance(text);
           u.lang = "en-US";
-          u.rate = 0.82;
-          u.pitch = 1.08;
+          u.rate = 0.85;
           synth.speak(u);
         }
       }
@@ -438,6 +453,11 @@
         if (e.key === "Escape") show(0);
         if (e.keyCode === 37) prev();
         if (e.keyCode === 39) next();
+        if (e.keyCode === 13) {
+          var activeScreen = screens[idx];
+          var focusedBtn = activeScreen.querySelector(".voice-title");
+          if (focusedBtn) focusedBtn.click();
+        }
       });
       show(0);
     </script>
