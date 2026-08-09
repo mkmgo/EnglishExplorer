@@ -475,12 +475,28 @@
                     behavior: 'smooth'
                 });
 
-                this.handleSlideMedia(index);
-
-                setTimeout(() => {
+                // Mount the slide media only after the smooth scroll has settled.
+                // If the start video were mounted immediately it would begin playing
+                // mid-scroll, so the user would miss the beginning of it on arrival.
+                const settle = () => {
+                    if (this._slideMediaTimer) {
+                        clearTimeout(this._slideMediaTimer);
+                        this._slideMediaTimer = null;
+                    }
+                    if (index !== this.state.currentIndex) return;
+                    this.handleSlideMedia(index);
                     const panel = this.viewport.querySelectorAll('.glass-panel')[index];
                     if (panel) panel.focus();
-                }, 300);
+                };
+
+                if (this._slideMediaTimer) {
+                    clearTimeout(this._slideMediaTimer);
+                }
+                if ('scrollend' in window) {
+                    this.viewport.addEventListener('scrollend', settle, { once: true });
+                }
+                // Safety net for runtimes without the scrollend event.
+                this._slideMediaTimer = setTimeout(settle, 500);
             }
 
             preloadStartVideo() {
