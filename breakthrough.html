@@ -454,8 +454,8 @@
                 const slide = this.content.slides.find(s => s.startVideo);
                 if (!slide) return;
                 const video = document.createElement('video');
-                video.src = slide.startVideo;
                 video.preload = 'auto';
+                video.src = slide.startVideo;
                 video.muted = true;
                 video.style.display = 'none';
                 document.body.appendChild(video);
@@ -480,21 +480,39 @@
 
                 // Start video plays once per session, in the exact same media space as the main image.
                 if (slide.startVideo && !this.state.startVideoShown) {
-                    const video = document.createElement('video');
-                    video.src = slide.startVideo;
-                    video.preload = 'auto';
-                    video.autoplay = true;
-                    video.setAttribute('playsinline', '');
-                    video.setAttribute('controls', '');
-                    mediaContainer.innerHTML = '';
-                    mediaContainer.appendChild(video);
-                    video.onended = () => {
+                    const restoreMedia = () => {
                         if (this.state.currentIndex === index) {
                             mediaContainer.innerHTML = `<img src="${slide.gallery && slide.gallery.length ? slide.gallery[this.galleryIndex] : slide.mediaUrl}" alt="${slide.title}" loading="lazy" />`;
                         }
                     };
-                    const playPromise = video.play();
-                    if (playPromise && playPromise.catch) playPromise.catch(() => {});
+
+                    const video = document.createElement('video');
+                    video.setAttribute('playsinline', '');
+                    video.setAttribute('webkit-playsinline', '');
+                    video.setAttribute('controls', '');
+                    video.autoplay = true;
+                    video.preload = 'auto';
+                    video.src = slide.startVideo;
+                    mediaContainer.innerHTML = '';
+                    mediaContainer.appendChild(video);
+                    video.onended = restoreMedia;
+                    video.onerror = restoreMedia;
+
+                    // Tizen enforces the autoplay policy: unmuted autoplay gets
+                    // rejected, so retry muted if the first attempt is blocked.
+                    const attemptPlay = (withSound) => {
+                        if (!withSound) video.muted = true;
+                        const p = video.play();
+                        if (p && p.catch) {
+                            p.catch(() => { if (withSound) attemptPlay(false); });
+                        }
+                    };
+
+                    if (video.readyState >= 2) {
+                        attemptPlay(true);
+                    } else {
+                        video.addEventListener('canplay', () => attemptPlay(true), { once: true });
+                    }
                     this.state.startVideoShown = true;
                 }
             }
