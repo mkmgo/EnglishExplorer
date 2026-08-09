@@ -29,6 +29,11 @@
         --accent: #2878f0;
         --card: #ffffff;
         --shadow: 0 18px 50px rgba(20, 33, 61, 0.14);
+        /* SUNDAY SETTING - red accent theme.
+           Change these three values to restyle all slides & buttons. */
+        --sunday-bg: #ffd6d6;
+        --sunday-fill: #ffb3b3;
+        --sunday-ink: #8b0000;
       }
       * {
         box-sizing: border-box;
@@ -90,16 +95,16 @@
         font-size: clamp(1.2rem, 2vw, 2.2rem);
       }
       .photo-slide {
-        background: #dff2d8;
+        background: var(--sunday-bg);
       }
-      .photo {
+      .photo,
+      .media {
         display: block;
-        width: auto;
-        max-width: 100%;
-        max-height: 82vh;
+        width: min(68vh, 100%);
+        aspect-ratio: 1 / 1;
         margin: 0 auto;
         object-fit: contain;
-        border-radius: 28px;
+        border-radius: 10px;
         box-shadow: var(--shadow);
       }
       .voice-title {
@@ -109,7 +114,7 @@
         min-width: 150px;
         min-height: 54px;
         border-radius: 10px;
-        background: #2e7d32;
+        background: var(--sunday-ink);
         box-shadow: 0 8px 22px rgba(20, 33, 61, 0.14);
         color: #ffffff;
         font-size: clamp(1.2rem, 2.2vw, 2rem);
@@ -120,9 +125,6 @@
       }
       .voice-title:active {
         transform: scale(0.96);
-      }
-      .photo-slide-title .photo {
-        max-height: 68vh;
       }
       .topbar {
         position: absolute;
@@ -136,8 +138,8 @@
       }
       .progress {
         font-size: 1.1rem;
-        color: var(--muted);
-        background: rgba(255, 255, 255, 0.85);
+        color: var(--sunday-ink);
+        background: var(--sunday-fill);
         padding: 0.5em 1em;
         border-radius: 999px;
         font-weight: bold;
@@ -151,7 +153,8 @@
         width: 50px;
         height: 50px;
         border-radius: 50%;
-        background: white;
+        background: var(--sunday-fill);
+        color: var(--sunday-ink);
         box-shadow: 0 5px 18px rgba(0, 0, 0, 0.12);
         font-size: 1.3rem;
       }
@@ -173,8 +176,8 @@
         font-size: 1.1rem;
       }
       .nav .primary {
-        background: #66bb6a;
-        color: #1b5e20;
+        background: var(--sunday-fill);
+        color: var(--sunday-ink);
       }
       @media (max-aspect-ratio: 1/1) {
         .screen {
@@ -194,7 +197,7 @@
       <div class="topbar">
         <div class="progress" id="progress">1 / 1</div>
         <div class="controls">
-          <button class="ctrl" id="soundBtn" aria-label="Sound">🔊</button>
+          <button class="ctrl" id="soundBtn" aria-label="Sound">♪</button>
           <button class="ctrl" id="homeBtn" aria-label="Home">⌂</button>
         </div>
       </div>
@@ -202,18 +205,32 @@
       <!-- 1: Family photo -->
       <section class="screen photo-slide photo-slide-title active">
         <div class="content">
-          <button class="voice-title" onclick="say('A Family Photograph')">
-            A Family Photograph
+          <button class="voice-title" onclick="say('My Classroom')">
+            My Classroom
           </button>
           <img
             class="photo"
-            src="https://res.cloudinary.com/dp455m4rk/image/upload/v1786085566/family_zj0yw7.png"
-            alt="Family"
+            src="https://res.cloudinary.com/dp455m4rk/image/upload/w_1200,h_1200,c_fill,g_center,q_auto,f_auto/v1786259647/classroom_01_fnsj97.png"
+            alt="Classroom"
           />
         </div>
       </section>
 
-      <!-- 2: Family photo with text -->
+      <!-- 2: Family photo (duplicate) -->
+      <section class="screen photo-slide photo-slide-title">
+        <div class="content">
+          <img
+            class="photo"
+            src="https://res.cloudinary.com/dp455m4rk/image/upload/c_crop,w_469,h_384,x_0,y_0/l_text:Arial_48:One,co_rgb:050505,g_south,y_20/v1786085565/1-6_o6fbzx.png"
+            alt="One"
+          />
+          <button class="voice-title" onclick="say('Repeat the numbers')">
+            Repeat the numbers
+          </button>
+        </div>
+      </section>
+
+      <!-- 3: Family photo with text -->
       <section class="screen photo-slide">
         <div class="content">
           <img
