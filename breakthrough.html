@@ -432,7 +432,7 @@
                                 <h2 class="slide-title">${slide.title}</h2>
                                 <p class="slide-text">${slide.text}</p>
                             </div>
-                            <div class="media-container">
+                            <div class="media-container focusable" tabindex="0">
                                 <img src="${slide.mediaUrl}" alt="${slide.title}" loading="lazy" />
                             </div>
                         </div>
@@ -521,6 +521,14 @@
                     }
                     this.state.startVideoShown = true;
                 }
+            }
+
+            isFocusInMediaBox() {
+                const panel = this.viewport.querySelectorAll('.glass-panel')[this.state.currentIndex];
+                if (!panel) return false;
+                const mediaContainer = panel.querySelector('.media-container');
+                if (!mediaContainer) return false;
+                return mediaContainer.contains(document.activeElement);
             }
 
             cycleSlideMedia(direction) {
@@ -644,7 +652,14 @@
                         case 'Enter':
                         case '13':
                             e.preventDefault();
-                            this.state.setState(s => { s.score += 10; });
+                            // Middle of D-Pad (OK/Enter) on Tizen: advance gallery image
+                            // only when the cursor is focused within the media box.
+                            const currentSlide = this.content.slides[this.state.currentIndex];
+                            if (currentSlide && currentSlide.gallery && currentSlide.gallery.length && this.isFocusInMediaBox()) {
+                                this.cycleSlideMedia(1);
+                            } else {
+                                this.state.setState(s => { s.score += 10; });
+                            }
                             break;
                     }
                 });
