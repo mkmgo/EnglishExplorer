@@ -352,7 +352,7 @@
         }
 
         class SpeechWrapper {
-            static speak(text, enabled, lang = 'en-US') {
+            static speak(text, enabled, lang = 'en-US', onEnd = null) {
                 if ('speechSynthesis' in window) {
                     window.speechSynthesis.cancel();
                     if (enabled) {
@@ -360,6 +360,9 @@
                         utterance.lang = lang;
                         utterance.rate = 1.0;
                         utterance.pitch = 1.0;
+                        if (typeof onEnd === 'function') {
+                            utterance.onend = onEnd;
+                        }
                         window.speechSynthesis.speak(utterance);
                     }
                 }
@@ -571,11 +574,18 @@
                 if (slide && slide.text) {
                     const isZh = this.state.language === 'zh-CN';
                     const stripHtml = (str) => str.replace(/<[^>]*>/g, '');
-                    SpeechWrapper.speak(
-                        stripHtml(isZh ? slide.textZh : slide.text),
-                        this.state.soundEnabled,
-                        isZh ? 'zh-CN' : 'en-US'
-                    );
+                    const lang = isZh ? 'zh-CN' : 'en-US';
+                    const title = stripHtml(slide.title);
+                    const body = stripHtml(isZh ? slide.textZh : slide.text);
+
+                    // Speak the headline first, pause briefly, then read the body.
+                    SpeechWrapper.speak(title, this.state.soundEnabled, lang, () => {
+                        setTimeout(() => {
+                            if (this.state.currentIndex === index) {
+                                SpeechWrapper.speak(body, this.state.soundEnabled, lang);
+                            }
+                        }, 350);
+                    });
                 }
             }
 
