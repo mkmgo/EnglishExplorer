@@ -285,6 +285,7 @@
                 {
                     id: "slide-1",
                     title: "Who are you?",
+                    titleZh: "你是谁？",
                     text: "Welcome! Today is all about getting to know each other better. There are no right or wrong answers. It is a friendly space to chat, share, and see how to support you on your journey. <strong>Let's dive in.</strong>",
                     textZh: "欢迎！今天我们主要是为了更好地了解彼此。答案没有对错之分。这是一个友好交流、分享的空间，让我们看看如何在你的学习之旅中为你提供支持。让我们开始吧。",
                     mediaType: "image",
@@ -294,6 +295,7 @@
                 {
                     id: "slide-2",
                     title: "Do you like this?",
+                    titleZh: "你喜欢这个吗？",
                     text: "Tell me about your hobbies, the topics you're interested in, and what drives you.",
                     textZh: "告诉我你的爱好、你感兴趣的话题，以及是什么在激励你。",
                     mediaType: "image",
@@ -312,6 +314,7 @@
                 {
                     id: "slide-3",
                     title: "Ready for Production",
+                    titleZh: "为生产做好准备",
                     text: "Featuring hardware-accelerated transitions, transparent background support for TV wallpapers, and Web Speech API text-to-speech accessibility wrappers out of the box.",
                     textZh: "内置硬件加速转场、适用于电视壁纸的透明背景支持，以及开箱即用的 Web Speech API 文字转语音无障碍封装。",
                     mediaType: "image",
@@ -575,7 +578,7 @@
                     const isZh = this.state.language === 'zh-CN';
                     const stripHtml = (str) => str.replace(/<[^>]*>/g, '');
                     const lang = isZh ? 'zh-CN' : 'en-US';
-                    const title = stripHtml(slide.title);
+                    const title = stripHtml(isZh && slide.titleZh ? slide.titleZh : slide.title);
                     const body = stripHtml(isZh ? slide.textZh : slide.text);
 
                     // Speak the headline first, pause briefly, then read the body.
