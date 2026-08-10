@@ -125,7 +125,7 @@
         background: var(--accent);
         padding: 0.35em 1em;
         border-radius: 30px;
-        border: 2pt solid var(--accent2);
+        border: 1pt solid rgba(96, 112, 141, 0.5);
         box-shadow: 0 6px 18px rgba(138, 138, 138, 0.35);
         text-transform: uppercase;
         transition: 0.15s transform;
@@ -311,23 +311,35 @@
       }
       .points {
         font-size: 1.1rem;
-        font-weight: 900;
-        color: #8a4b00;
+        font-weight: 700;
+        color: var(--ink);
         background: var(--accent2);
         padding: 0.3em 0.7em;
         border-radius: 999px;
         box-shadow: 0 5px 18px rgba(255, 180, 0, 0.3);
         display: inline-flex;
         align-items: center;
+        gap: 0.35em;
         white-space: nowrap;
       }
       .ctrl {
-        width: 50px;
-        height: 50px;
-        border-radius: 50%;
+        padding: 0.3em 0.7em;
+        border-radius: 999px;
         background: white;
         box-shadow: 0 5px 18px rgba(0, 0, 0, 0.12);
-        font-size: 1.3rem;
+        font-size: 1.1rem;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .progress,
+      .points,
+      .ctrl {
+        line-height: 1;
+        height: 2.2rem;
+        display: inline-flex;
+        align-items: center;
+        border: 1px solid rgba(96, 112, 141, 0.5);
       }
       .nav {
         position: absolute;
@@ -352,7 +364,7 @@
       }
       .nav .primary {
         background: var(--accent);
-        color: white;
+        color: var(--accent2);
       }
       .nav #prevBtn {
         background: var(--accent2);
@@ -509,7 +521,34 @@
           width: min(84vw, 420px);
           min-height: 24vh;
         }
-        .lessonVideo {
+      .mediaWrap {
+        width: min(84vw, 900px);
+        min-height: 50vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: #f0f0f0;
+        border-radius: 28px;
+        box-shadow: var(--shadow);
+        overflow: hidden;
+        margin: 2vh auto 0;
+      }
+      .mediaWrap .mediaPlaceholder {
+        font-size: clamp(3rem, 6vw, 5rem);
+        opacity: 0.35;
+      }
+      .mediaWrap img,
+      .mediaWrap video,
+      .mediaWrap audio {
+        max-width: 100%;
+        max-height: 58vh;
+        object-fit: contain;
+      }
+      .mediaWrap video,
+      .mediaWrap audio {
+        width: 100%;
+      }
+      .lessonVideo {
           max-height: 42vh;
         }
         .nav {
@@ -526,11 +565,48 @@
       <div class="topbar">
         <div class="stats">
           <div class="progress" id="progress">1 / 2</div>
-          <span class="points" id="pointsBadge">⭐ 0</span>
+          <span class="points" id="pointsBadge">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="1.1em"
+              height="1.1em"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              style="vertical-align: -0.1em"
+            >
+              <path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6" />
+              <path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18" />
+              <path d="M4 22h16" />
+              <path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22" />
+              <path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22" />
+              <path d="M18 2H6v7a6 6 0 0 0 12 0V2Z" />
+            </svg>
+            <span id="pointsNum">0</span>
+          </span>
         </div>
         <div class="small">ENGLISH EXPLORER</div>
         <div class="controls">
-          <button class="ctrl" id="soundBtn" aria-label="Sound">🔊</button>
+          <button class="ctrl" id="soundBtn" aria-label="Sound">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="1.2em"
+              height="1.2em"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              style="vertical-align: -0.2em"
+            >
+              <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" />
+              <path d="M15.54 8.46a5 5 0 0 1 0 7.07" />
+            </svg>
+          </button>
           <button class="ctrl" id="homeBtn" aria-label="Home">
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -611,61 +687,39 @@
         </div>
       </section>
 
-      <!-- 2: Title (copy) -->
-      <section class="screen title-slide">
+      <!-- 2: Media (paste Cloudinary asset link) -->
+      <section class="screen mediaPage title-slide">
         <div class="content">
-          <h2>Welcome</h2>
-          <div class="cast">
-            <figure class="castMember">
-              <img
-                class="character"
-                src="https://res.cloudinary.com/dp455m4rk/image/upload/c_scale,w_800/q_auto/f_auto/e_bgremoval/v1786010283/sam_3d_awiawr.png"
-                alt="Sam"
-              />
-              <figcaption onclick="speakCaption('My name is Sam.', 'sam')">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="1.2em"
-                  height="1.2em"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-width="2"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  style="vertical-align: -0.2em"
-                >
-                  <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" />
-                  <path d="M15.54 8.46a5 5 0 0 1 0 7.07" />
-                </svg>
-                My Name is Sam
-              </figcaption>
-            </figure>
-            <figure class="castMember">
-              <img
-                class="character"
-                src="https://res.cloudinary.com/dp455m4rk/image/upload/c_scale,w_800/q_auto/f_auto/e_bgremoval/v1786010302/onza_3davatar_ipbcid.png"
-                alt="Onza"
-              />
-              <figcaption onclick="speakCaption('My name is Onza.', 'onza')">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="1.2em"
-                  height="1.2em"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-width="2"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  style="vertical-align: -0.2em"
-                >
-                  <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" />
-                  <path d="M15.54 8.46a5 5 0 0 1 0 7.07" />
-                </svg>
-                My Name is Onza
-              </figcaption>
-            </figure>
+          <button
+            id="mediaBtn"
+            class="translate-btn"
+            onclick="pasteMedia()"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="1.2em"
+              height="1.2em"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              style="vertical-align: -0.2em"
+            >
+              <rect width="18" height="18" x="3" y="3" rx="2" />
+              <path d="M7 3v18" />
+              <path d="M3 7.5h4" />
+              <path d="M3 12h18" />
+              <path d="M3 16.5h4" />
+              <path d="M17 3v18" />
+              <path d="M17 7.5h4" />
+              <path d="M17 16.5h4" />
+            </svg>
+            Media
+          </button>
+          <div id="mediaWrap" class="mediaWrap">
+            <span class="mediaPlaceholder">🎬</span>
           </div>
         </div>
       </section>
@@ -1043,6 +1097,7 @@
       var points = 0;
       var starsEarned = 0;
       var pointsBadge = document.getElementById("pointsBadge");
+      var pointsNum = document.getElementById("pointsNum");
       var progress = document.getElementById("progress");
       var synth =
         window.speechSynthesis ||
@@ -1107,6 +1162,10 @@
         '<svg xmlns="http://www.w3.org/2000/svg" width="1.2em" height="1.2em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: -0.2em"><circle cx="12" cy="12" r="10"/><path d="m16 12-4-4-4 4"/><path d="M12 16V8"/></svg>';
       var ICON_HOME_DOWN =
         '<svg xmlns="http://www.w3.org/2000/svg" width="1.2em" height="1.2em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: -0.2em"><circle cx="12" cy="12" r="10"/><path d="M12 8v8"/><path d="m8 12 4 4 4-4"/></svg>';
+      var ICON_VOLUME_ON =
+        '<svg xmlns="http://www.w3.org/2000/svg" width="1.2em" height="1.2em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: -0.2em"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/></svg>';
+      var ICON_VOLUME_OFF =
+        '<svg xmlns="http://www.w3.org/2000/svg" width="1.2em" height="1.2em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: -0.2em"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><line x1="22" x2="16" y1="9" y2="15"/><line x1="16" x2="22" y1="9" y2="15"/></svg>';
 
       function show(i) {
         var prevIdx = idx;
@@ -1246,7 +1305,7 @@
 
       function addPoints(n) {
         points += n;
-        if (pointsBadge) pointsBadge.textContent = "⭐ " + points;
+        if (pointsNum) pointsNum.textContent = points;
       }
 
       var captionsPlayed = {};
@@ -1442,6 +1501,84 @@
         else say(lastSrcText);
       }
 
+      function extractUrl(text) {
+        var m = String(text).match(/https?:\/\/[^\s"<>]+/);
+        return m ? m[0] : null;
+      }
+
+      function pasteMedia() {
+        var getUrl = function () {
+          var typed = window.prompt("Paste the Cloudinary asset link:");
+          if (typed === null || typed === undefined) return null;
+          return extractUrl(typed);
+        };
+        var run = function (u) {
+          if (u) injectMedia(u);
+        };
+        if (
+          navigator.clipboard &&
+          typeof navigator.clipboard.readText === "function"
+        ) {
+          navigator.clipboard
+            .readText()
+            .then(function (txt) {
+              var u = extractUrl(String(txt || ""));
+              if (!u) {
+                var fb = getUrl();
+                if (fb) run(fb);
+                return;
+              }
+              run(u);
+            })
+            .catch(function () {
+              var fb = getUrl();
+              if (fb) run(fb);
+            });
+        } else {
+          var fb = getUrl();
+          if (fb) run(fb);
+        }
+      }
+
+      function injectMedia(url) {
+        var wrap = document.getElementById("mediaWrap");
+        if (!wrap) return;
+        wrap.innerHTML = "";
+        var lower = url.toLowerCase();
+        var isVideo =
+          /\/video\//.test(lower) ||
+          /\.(mp4|webm|mov|m4v|ogv)(\?|#|$)/.test(lower);
+        var isAudio =
+          /\/audio\//.test(lower) ||
+          /\.(mp3|wav|ogg|m4a|aac)(\?|#|$)/.test(lower);
+        var el;
+        if (isVideo) {
+          el = document.createElement("video");
+          el.controls = true;
+          el.preload = "auto";
+          el.playsInline = true;
+          el.setAttribute("playsinline", "true");
+          el.setAttribute("webkit-playsinline", "true");
+          el.src = url;
+        } else if (isAudio) {
+          el = document.createElement("audio");
+          el.controls = true;
+          el.preload = "auto";
+          el.src = url;
+        } else {
+          el = document.createElement("img");
+          el.src = url;
+          el.alt = "media";
+        }
+        wrap.appendChild(el);
+        if (isVideo) {
+          try {
+            var p = el.play();
+            if (p && typeof p.catch === "function") p.catch(function () {});
+          } catch (e) {}
+        }
+      }
+
       function speakChinese(text) {
         if (!soundOn) return;
         if (window.tizen && window.tizen.tts) {
@@ -1552,7 +1689,9 @@
 
       document.getElementById("soundBtn").onclick = function () {
         soundOn = !soundOn;
-        document.getElementById("soundBtn").textContent = soundOn ? "🔊" : "🔇";
+        document.getElementById("soundBtn").innerHTML = soundOn
+          ? ICON_VOLUME_ON
+          : ICON_VOLUME_OFF;
         if (soundOn) {
           if (synth) synth.cancel();
         }
