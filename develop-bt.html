@@ -521,34 +521,34 @@
           width: min(84vw, 420px);
           min-height: 24vh;
         }
-      .mediaWrap {
-        width: min(84vw, 900px);
-        min-height: 50vh;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        background: #f0f0f0;
-        border-radius: 28px;
-        box-shadow: var(--shadow);
-        overflow: hidden;
-        margin: 2vh auto 0;
-      }
-      .mediaWrap .mediaPlaceholder {
-        font-size: clamp(3rem, 6vw, 5rem);
-        opacity: 0.35;
-      }
-      .mediaWrap img,
-      .mediaWrap video,
-      .mediaWrap audio {
-        max-width: 100%;
-        max-height: 58vh;
-        object-fit: contain;
-      }
-      .mediaWrap video,
-      .mediaWrap audio {
-        width: 100%;
-      }
-      .lessonVideo {
+        .mediaWrap {
+          width: min(84vw, 900px);
+          min-height: 50vh;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          background: #f0f0f0;
+          border-radius: 28px;
+          box-shadow: var(--shadow);
+          overflow: hidden;
+          margin: 2vh auto 0;
+        }
+        .mediaWrap .mediaPlaceholder {
+          font-size: clamp(3rem, 6vw, 5rem);
+          opacity: 0.35;
+        }
+        .mediaWrap img,
+        .mediaWrap video,
+        .mediaWrap audio {
+          max-width: 100%;
+          max-height: 58vh;
+          object-fit: contain;
+        }
+        .mediaWrap video,
+        .mediaWrap audio {
+          width: 100%;
+        }
+        .lessonVideo {
           max-height: 42vh;
         }
         .nav {
@@ -581,8 +581,12 @@
               <path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6" />
               <path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18" />
               <path d="M4 22h16" />
-              <path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22" />
-              <path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22" />
+              <path
+                d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"
+              />
+              <path
+                d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"
+              />
               <path d="M18 2H6v7a6 6 0 0 0 12 0V2Z" />
             </svg>
             <span id="pointsNum">0</span>
@@ -690,11 +694,7 @@
       <!-- 2: Media (paste Cloudinary asset link) -->
       <section class="screen mediaPage title-slide">
         <div class="content">
-          <button
-            id="mediaBtn"
-            class="translate-btn"
-            onclick="pasteMedia()"
-          >
+          <button id="mediaBtn" class="translate-btn" onclick="pasteMedia()">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               width="1.2em"
