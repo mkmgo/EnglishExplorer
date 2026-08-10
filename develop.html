@@ -1,0 +1,1117 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no"
+    />
+    <title>English Explorer</title>
+    <meta name="description" content="English Explorer" />
+    <link
+      rel="icon"
+      type="image/png"
+      href="https://res.cloudinary.com/dp455m4rk/image/upload/v1785849408/sam_favipreview_v2i7l2.png"
+    />
+    <style>
+      :root {
+        --bg: #f5f7fb;
+        --ink: #14213d;
+        --muted: #60708d;
+        --accent: #2878f0;
+        --good: #19a974;
+        --bad: #e05252;
+        --card: #ffffff;
+        --shadow: 0 18px 50px rgba(20, 33, 61, 0.14);
+      }
+      * {
+        box-sizing: border-box;
+      }
+      html,
+      body {
+        margin: 0;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+        background: var(--bg);
+        font-family: Arial, Helvetica, sans-serif;
+        color: var(--ink);
+        touch-action: manipulation;
+      }
+      button {
+        font: inherit;
+        border: 0;
+        cursor: pointer;
+      }
+      #app {
+        width: 100%;
+        height: 100vh;
+        height: 100dvh;
+        position: relative;
+        overflow: hidden;
+      }
+      .screen {
+        position: absolute;
+        inset: 0;
+        display: none;
+        align-items: center;
+        justify-content: center;
+        padding: clamp(10px, 2vh, 24px) clamp(10px, 2vw, 24px);
+      }
+      .screen.active {
+        display: flex;
+      }
+      .content {
+        width: min(1400px, 100%);
+        max-height: 100%;
+        position: relative;
+        text-align: center;
+        overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
+        overscroll-behavior: contain;
+        scrollbar-width: none;
+      }
+      .content::-webkit-scrollbar {
+        display: none;
+      }
+      h1 {
+        font-size: clamp(3rem, 7vw, 7rem);
+        margin: 0.1em 0;
+        font-weight: 900;
+        letter-spacing: -0.03em;
+      }
+      h2 {
+        font-size: clamp(1.8rem, 4vw, 4rem);
+        margin: 0.2em 0;
+      }
+      p {
+        font-size: clamp(1.2rem, 2vw, 2.2rem);
+      }
+      .small {
+        font-size: clamp(0.9rem, 1.4vw, 1.4rem);
+        color: var(--muted);
+        font-weight: 700;
+        letter-spacing: 0.18em;
+      }
+      .title-slide {
+        background: #ffdfdf;
+      }
+      .cast {
+        display: flex;
+        justify-content: center;
+        align-items: flex-end;
+        gap: 6vw;
+        margin: 3vh auto 0;
+      }
+      .castMember {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 0.5em;
+        margin: 0;
+      }
+      .character {
+        height: 48vh;
+        max-width: 36vw;
+        object-fit: contain;
+        border-radius: 24px;
+        filter: drop-shadow(0 20px 25px rgba(160, 30, 30, 0.22));
+      }
+      .castMember figcaption {
+        font-size: clamp(1.3rem, 2.6vw, 2.6rem);
+        font-weight: 900;
+        color: #8a1f1f;
+        background: rgba(255, 255, 255, 0.75);
+        padding: 0.35em 1em;
+        border-radius: 999px;
+        box-shadow: 0 6px 18px rgba(138, 31, 31, 0.15);
+        transition: 0.15s transform;
+      }
+      .castMember figcaption:active {
+        transform: scale(0.95);
+      }
+      .mediaPage h1 {
+        font-size: clamp(1.8rem, 3.5vw, 2.8rem);
+        font-weight: 400;
+        margin: 0.15em 0;
+      }
+      .lessonVideo {
+        width: 100%;
+        max-height: 60vh;
+        object-fit: contain;
+        border-radius: 28px;
+        box-shadow: var(--shadow);
+        background: #f0f0f0;
+      }
+      .row {
+        display: flex;
+        gap: 2vw;
+        justify-content: center;
+        align-items: center;
+        flex-wrap: wrap;
+      }
+      .choice {
+        min-width: 160px;
+        min-height: 80px;
+        border-radius: 28px;
+        background: white;
+        box-shadow: var(--shadow);
+        font-size: clamp(1.2rem, 2.2vw, 2.2rem);
+        font-weight: 900;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: 0.5em 1em;
+        transition: 0.15s transform;
+      }
+      .choice:active {
+        transform: scale(0.95);
+      }
+      .yes {
+        background: #dff7ec;
+        color: #087443;
+      }
+      .grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+        gap: 15px;
+        width: 100%;
+        max-width: 900px;
+        margin: 1em auto 0;
+      }
+      .card {
+        background: var(--card);
+        border-radius: 32px;
+        padding: clamp(1.2rem, 2.2vw, 2.6rem);
+        box-shadow: var(--shadow);
+      }
+      .color-btn {
+        color: white;
+        text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+      }
+      .c-red {
+        background: #e05252;
+      }
+      .c-blue {
+        background: #2878f0;
+      }
+      .c-yellow {
+        background: #f1c40f;
+        color: #14213d;
+        text-shadow: none;
+      }
+      .c-green {
+        background: #19a974;
+      }
+      .topbar {
+        position: absolute;
+        top: 2vh;
+        left: 3vw;
+        right: 3vw;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        z-index: 20;
+      }
+      .progress {
+        font-size: 1.1rem;
+        color: var(--muted);
+        background: rgba(255, 255, 255, 0.85);
+        padding: 0.5em 1em;
+        border-radius: 999px;
+        font-weight: bold;
+      }
+      .controls {
+        display: flex;
+        gap: 0.7em;
+        align-items: center;
+      }
+      .points {
+        font-size: 1.1rem;
+        font-weight: 900;
+        color: #8a4b00;
+        background: #ffeaa7;
+        padding: 0.5em 1em;
+        border-radius: 999px;
+        box-shadow: 0 5px 18px rgba(255, 180, 0, 0.3);
+        display: inline-flex;
+        align-items: center;
+        white-space: nowrap;
+      }
+      .ctrl {
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        background: white;
+        box-shadow: 0 5px 18px rgba(0, 0, 0, 0.12);
+        font-size: 1.3rem;
+      }
+      .nav {
+        position: absolute;
+        bottom: 2vh;
+        left: 50%;
+        transform: translateX(-50%);
+        display: flex;
+        gap: 1em;
+        z-index: 30;
+      }
+      .nav button {
+        padding: 0.8em 1.5em;
+        border-radius: 999px;
+        background: white;
+        box-shadow: 0 8px 22px rgba(0, 0, 0, 0.12);
+        font-weight: 700;
+        font-size: 1.1rem;
+      }
+      .nav .primary {
+        background: var(--accent);
+        color: white;
+      }
+      #toast {
+        position: absolute;
+        left: 50%;
+        top: 12%;
+        transform: translateX(-50%);
+        z-index: 100;
+        background: #14213d;
+        color: white;
+        padding: 0.8em 1.5em;
+        border-radius: 999px;
+        font-size: 1.4rem;
+        opacity: 0;
+        pointer-events: none;
+        transition: 0.25s;
+      }
+      #toast.show {
+        opacity: 1;
+      }
+      #reward {
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+        overflow: hidden;
+        z-index: 50;
+      }
+      .confetti {
+        position: absolute;
+        font-size: 2rem;
+        animation: fall 2.2s linear forwards;
+      }
+      @keyframes fall {
+        0% {
+          transform: translateY(-10vh) rotate(0);
+          opacity: 1;
+        }
+        100% {
+          transform: translateY(110vh) rotate(720deg);
+          opacity: 0;
+        }
+      }
+      .rewardSlots {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        align-items: center;
+        gap: clamp(10px, 1.5vw, 20px);
+        margin: 2vh auto;
+        padding: 1em;
+      }
+      .slot {
+        width: clamp(58px, 8vw, 110px);
+        height: clamp(58px, 8vw, 110px);
+        border-radius: 26px;
+        background: #eef1f7;
+        box-shadow: inset 0 0 0 3px rgba(20, 33, 61, 0.08);
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        font-size: clamp(1.9rem, 4vw, 3.4rem);
+        opacity: 0.3;
+        transition: opacity 0.3s;
+      }
+      .slot.filled {
+        opacity: 1;
+        background: #fff7e0;
+        box-shadow: 0 12px 28px rgba(255, 180, 0, 0.4),
+          inset 0 0 0 3px #f1c40f;
+        animation: starPop 0.65s cubic-bezier(0.2, 1.6, 0.4, 1);
+      }
+      .slot.cup {
+        font-size: clamp(2.4rem, 5.5vw, 4.2rem);
+      }
+      .slot.cup.filled {
+        background: #fff0d9;
+        box-shadow: 0 16px 34px rgba(255, 150, 0, 0.5),
+          inset 0 0 0 3px #ff9800;
+      }
+      @keyframes starPop {
+        0% {
+          transform: scale(0) rotate(-40deg);
+        }
+        60% {
+          transform: scale(1.35) rotate(10deg);
+        }
+        100% {
+          transform: scale(1) rotate(0);
+        }
+      }
+      .rewardResult {
+        font-size: clamp(1.4rem, 2.6vw, 2.6rem);
+        font-weight: 900;
+        min-height: 3em;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .rewardResult.good {
+        color: var(--good);
+      }
+      .rewardResult.bad {
+        color: var(--bad);
+      }
+      .rewardVideo {
+        max-height: 46vh;
+        margin-top: 1em;
+      }
+      .burst {
+        position: absolute;
+        font-size: 1.7rem;
+        pointer-events: none;
+        z-index: 60;
+        animation: burstFly 1.1s ease-out forwards;
+      }
+      @keyframes burstFly {
+        0% {
+          transform: translate(0, 0) scale(1);
+          opacity: 1;
+        }
+        100% {
+          transform: translate(var(--bx), var(--by)) scale(0.25);
+          opacity: 0;
+        }
+      }
+      @media (max-aspect-ratio: 1/1) {
+        .screen {
+          padding-bottom: 88px;
+        }
+        .cast {
+          flex-direction: column;
+          align-items: center;
+          gap: 2vh;
+        }
+        .character {
+          height: 30vh;
+          max-width: 60vw;
+        }
+        .castMember figcaption {
+          font-size: clamp(1.1rem, 3.2vw, 1.8rem);
+        }
+        .lessonVideo {
+          max-height: 42vh;
+        }
+        .nav {
+          bottom: calc(2vh + env(safe-area-inset-bottom, 0px));
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div id="app">
+      <div id="toast"></div>
+      <div id="reward"></div>
+
+      <div class="topbar">
+        <div class="progress" id="progress">1 / 2</div>
+        <div class="controls">
+          <span class="points" id="pointsBadge">⭐ 0</span>
+          <button class="ctrl" id="soundBtn" aria-label="Sound">🔊</button>
+          <button class="ctrl" id="homeBtn" aria-label="Home">⌂</button>
+        </div>
+      </div>
+
+      <!-- 1: Title -->
+      <section class="screen title-slide active">
+        <div class="content">
+          <div class="small">ENGLISH EXPLORER</div>
+          <h1>Welcome</h1>
+          <div class="cast">
+            <figure class="castMember">
+              <img
+                class="character"
+                src="https://res.cloudinary.com/dp455m4rk/image/upload/q_auto/f_auto/v1786010283/sam_3d_awiawr.png"
+                alt="Sam"
+              />
+              <figcaption onclick="speakCaption('My name is Sam.', 'sam')">
+                🔊 My Name is Sam
+              </figcaption>
+            </figure>
+            <figure class="castMember">
+              <img
+                class="character"
+                src="https://res.cloudinary.com/dp455m4rk/image/upload/q_auto/f_auto/v1786010302/onza_3davatar_ipbcid.png"
+                alt="Onza"
+              />
+              <figcaption onclick="speakCaption('My name is Onza.', 'onza')">
+                🔊 My Name is Onza
+              </figcaption>
+            </figure>
+          </div>
+        </div>
+      </section>
+
+      <!-- 2: Video — Sam & Onza introduce themselves -->
+      <section class="screen mediaPage">
+        <div
+          class="content"
+          style="
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 1.4em;
+          "
+        >
+          <div class="small">ENGLISH EXPLORER</div>
+          <h1>Watch the Clip</h1>
+          <div
+            id="nameVideoWrap"
+            style="margin-top: 0.5em; width: 100%; max-width: 760px"
+          >
+            <video
+              id="nameVideo"
+              class="lessonVideo"
+              playsinline
+              webkit-playsinline
+              x5-playsinline
+              preload="auto"
+              controls
+              data-autoplay="false"
+              data-autoplay-mode="manual"
+              src="https://res.cloudinary.com/dp455m4rk/video/upload/q_auto/v1785933190/sam_onza_name_ro4vuz.mp4"
+            ></video>
+          </div>
+          <div
+            class="row"
+            style="
+              justify-content: center;
+              gap: 1rem;
+              width: 100%;
+              max-width: 800px;
+            "
+          >
+            <button
+              class="choice yes"
+              style="min-width: 180px"
+              onclick="playVideo('nameVideo')"
+            >
+              ▶ PLAY
+            </button>
+          </div>
+          <p class="small">Use BACK and NEXT to move through the course.</p>
+        </div>
+      </section>
+
+      <!-- 3: Greetings -->
+      <section class="screen mediaPage">
+        <div
+          class="content"
+          style="
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 1.4em;
+          "
+        >
+          <div class="small">ENGLISH EXPLORER</div>
+          <h1>Greetings</h1>
+          <p>Tap each line to hear it.</p>
+          <div
+            class="row"
+            style="flex-direction: column; width: 100%; max-width: 700px"
+          >
+            <button
+              class="choice"
+              style="width: 100%"
+              onclick="speakGreeting('Hello. My name is Sam.', 'greetSam')"
+            >
+              🔊 Hello. My Name is Sam.
+            </button>
+            <button
+              class="choice"
+              style="width: 100%"
+              onclick="speakGreeting('What is your name?', 'greetQ')"
+            >
+              🔊 What is your Name?
+            </button>
+            <button
+              class="choice"
+              style="width: 100%"
+              onclick="
+                speakGreeting('Hello Sam. My name is Onza.', 'greetOnza')
+              "
+            >
+              🔊 Hello Sam. My Name is Onza.
+            </button>
+          </div>
+          <p class="small">Use BACK and NEXT to move through the course.</p>
+        </div>
+      </section>
+
+      <!-- 4: Video — Classroom commands -->
+      <section class="screen mediaPage">
+        <div
+          class="content"
+          style="
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 1.4em;
+          "
+        >
+          <div class="small">ENGLISH EXPLORER</div>
+          <h1>Watch the Clip</h1>
+          <div
+            id="commandsVideoWrap"
+            style="margin-top: 0.5em; width: 100%; max-width: 760px"
+          >
+            <video
+              id="commandsVideo"
+              class="lessonVideo"
+              playsinline
+              webkit-playsinline
+              x5-playsinline
+              preload="auto"
+              controls
+              data-autoplay="false"
+              data-autoplay-mode="manual"
+              src="https://res.cloudinary.com/dp455m4rk/video/upload/q_auto,f_auto/v1786019411/classroomcommands_wqls5x.mp4"
+            ></video>
+          </div>
+          <div
+            class="row"
+            style="
+              justify-content: center;
+              gap: 1rem;
+              width: 100%;
+              max-width: 800px;
+            "
+          >
+            <button
+              class="choice yes"
+              style="min-width: 180px"
+              onclick="playVideo('commandsVideo')"
+            >
+              ▶ PLAY
+            </button>
+          </div>
+          <p class="small">Use BACK and NEXT to move through the course.</p>
+        </div>
+      </section>
+
+      <!-- 5: Video — Colours -->
+      <section class="screen mediaPage">
+        <div
+          class="content"
+          style="
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 1.4em;
+          "
+        >
+          <div class="small">ENGLISH EXPLORER</div>
+          <h1>Watch the Clip</h1>
+          <div
+            id="coloursVideoWrap"
+            style="margin-top: 0.5em; width: 100%; max-width: 760px"
+          >
+            <video
+              id="coloursVideo"
+              class="lessonVideo"
+              playsinline
+              webkit-playsinline
+              x5-playsinline
+              preload="auto"
+              controls
+              data-autoplay="false"
+              data-autoplay-mode="manual"
+              src="https://res.cloudinary.com/dp455m4rk/video/upload/q_auto/v1786027836/colours_jtbfwl.mp4"
+            ></video>
+          </div>
+          <div
+            class="row"
+            style="
+              justify-content: center;
+              gap: 1rem;
+              width: 100%;
+              max-width: 800px;
+            "
+          >
+            <button
+              class="choice yes"
+              style="min-width: 180px"
+              onclick="playVideo('coloursVideo')"
+            >
+              ▶ PLAY
+            </button>
+          </div>
+          <p class="small">Use BACK and NEXT to move through the course.</p>
+        </div>
+      </section>
+
+      <!-- 6: Colours check -->
+      <section class="screen">
+        <div class="content card">
+          <h1>COLOURS</h1>
+          <p>Tap each colour once.</p>
+          <div class="grid">
+            <button
+              class="choice color-btn c-red"
+              onclick="colourPress('red')"
+            >
+              RED
+            </button>
+            <button
+              class="choice color-btn c-blue"
+              onclick="colourPress('blue')"
+            >
+              BLUE
+            </button>
+            <button
+              class="choice color-btn c-yellow"
+              onclick="colourPress('yellow')"
+            >
+              YELLOW
+            </button>
+            <button
+              class="choice color-btn c-green"
+              onclick="colourPress('green')"
+            >
+              GREEN
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <!-- 7: Results / big reward page -->
+      <section class="screen" id="resultsScreen">
+        <div class="content card">
+          <h1>YOUR SCORE</h1>
+          <p>Complete the tasks to earn all 6 stars and win the cup!</p>
+          <div class="rewardSlots" id="rewardSlots">
+            <span class="slot">⭐</span>
+            <span class="slot">⭐</span>
+            <span class="slot">⭐</span>
+            <span class="slot">⭐</span>
+            <span class="slot">⭐</span>
+            <span class="slot">⭐</span>
+            <span class="slot cup" id="rewardCupSlot">🏆</span>
+          </div>
+          <div id="rewardResult" class="rewardResult"></div>
+          <video
+            id="rewardCupVideo"
+            class="lessonVideo rewardVideo"
+            playsinline
+            webkit-playsinline
+            x5-playsinline
+            preload="auto"
+            data-autoplay="false"
+            data-autoplay-mode="manual"
+            src="https://res.cloudinary.com/dp455m4rk/video/upload/v1786033998/reward_cup_mv1dsm.mp4"
+            style="display: none"
+          ></video>
+        </div>
+      </section>
+
+      <div class="nav">
+        <button id="prevBtn" onclick="prev()">‹ BACK</button>
+        <button class="primary" id="nextBtn" onclick="next()">NEXT ›</button>
+      </div>
+    </div>
+
+    <script>
+      var screens = Array.prototype.slice.call(
+        document.querySelectorAll(".screen"),
+      );
+      var idx = 0;
+      var soundOn = true;
+      var points = 0;
+      var starsEarned = 0;
+      var pointsBadge = document.getElementById("pointsBadge");
+      var progress = document.getElementById("progress");
+      var synth =
+        window.speechSynthesis ||
+        window.webkitSpeechSynthesis ||
+        window.mozSpeechSynthesis ||
+        null;
+      var altVoice = null;
+      var altVoice2 = null;
+
+      function setVoice() {
+        if (!synth) return;
+        var voices = synth.getVoices();
+        if (!voices || voices.length === 0) return;
+        var preferred = null;
+        var fallback = null;
+        for (var i = 0; i < voices.length; i++) {
+          var v = voices[i];
+          if (!v || !v.lang) continue;
+          if (v.lang.toLowerCase().indexOf("en") !== 0) continue;
+          if (!fallback) fallback = v;
+          if (v.lang.toLowerCase().indexOf("en-gb") === 0) {
+            preferred = v;
+            break;
+          }
+          if (v.name && v.name.indexOf("Zira") >= 0) preferred = v;
+        }
+        altVoice = preferred || fallback;
+        altVoice2 = null;
+        for (var j = 0; j < voices.length; j++) {
+          var w = voices[j];
+          if (!w || !w.lang) continue;
+          if (w.lang.toLowerCase().indexOf("en") !== 0) continue;
+          if (w === altVoice) continue;
+          altVoice2 = w;
+          break;
+        }
+        if (!altVoice2) altVoice2 = altVoice;
+      }
+      if (synth) {
+        setVoice();
+        if (typeof synth.addEventListener === "function") {
+          synth.addEventListener("voiceschanged", setVoice);
+        }
+        var voiceTimer = window.setInterval(function () {
+          if (altVoice) {
+            window.clearInterval(voiceTimer);
+          }
+          setVoice();
+        }, 500);
+        window.setTimeout(function () {
+          window.clearInterval(voiceTimer);
+        }, 4000);
+      }
+
+      function show(i) {
+        idx = Math.max(0, Math.min(screens.length - 1, i));
+        for (var j = 0; j < screens.length; j++) {
+          screens[j].classList.toggle("active", j === idx);
+        }
+        progress.textContent = idx + 1 + " / " + screens.length;
+        document.getElementById("prevBtn").style.visibility =
+          idx === 0 ? "hidden" : "visible";
+        document.getElementById("nextBtn").textContent =
+          idx === screens.length - 1 ? "RESTART ↻" : "NEXT ›";
+        cancelSpeech();
+        var activeVideo = screens[idx].querySelector("video") || null;
+        if (activeVideo) {
+          if (activeVideo.getAttribute("data-autoplay") === "true") {
+            playMediaVideo(activeVideo, true);
+          } else {
+            preloadVideo(activeVideo);
+          }
+        }
+        if (screens[idx].id === "resultsScreen") {
+          showRewards();
+        }
+      }
+
+      function preloadVideo(video) {
+        if (!video) return;
+        try {
+          video.preload = "auto";
+          video.setAttribute("preload", "auto");
+          if (typeof video.load === "function") video.load();
+          if (typeof fetch === "function" && video.src.indexOf("http") === 0) {
+            fetch(video.src, { cache: "force-cache" }).catch(function () {});
+          }
+        } catch (e) {}
+      }
+
+      function playMediaVideo(video, preferUnmuted) {
+        if (typeof preferUnmuted === "undefined") preferUnmuted = true;
+        if (!video) return;
+        try {
+          preloadVideo(video);
+          video.currentTime = 0;
+          video.muted = false;
+          video.autoplay = true;
+          video.setAttribute("autoplay", "true");
+          video.setAttribute("playsinline", "true");
+          video.setAttribute("webkit-playsinline", "true");
+          video.setAttribute("x5-playsinline", "true");
+          var attemptPlay = function () {
+            var p = video.play();
+            if (!p || typeof p.then !== "function") return;
+            p.then(function () {
+              video.muted = false;
+            }).catch(function () {
+              if (preferUnmuted) {
+                window.setTimeout(function () {
+                  video.muted = false;
+                  try {
+                    video.play().catch(function () {});
+                  } catch (e) {}
+                }, 150);
+              }
+            });
+          };
+          attemptPlay();
+        } catch (e) {}
+      }
+
+      function playVideo(id) {
+        var videoEl = document.getElementById(id);
+        if (!videoEl) return;
+        playMediaVideo(videoEl, true);
+      }
+
+      function next() {
+        if (idx === screens.length - 1) show(0);
+        else show(idx + 1);
+      }
+
+      function prev() {
+        show(idx - 1);
+      }
+
+      function cancelSpeech() {
+        if (synth && typeof synth.cancel === "function") {
+          try {
+            synth.cancel();
+          } catch (e) {}
+        }
+      }
+
+      function say(text, voice) {
+        if (!soundOn) return;
+        if (window.tizen && window.tizen.tts) {
+          try {
+            tizen.tts.speak(String(text), {
+              locale: "en-US",
+              rate: 0.85,
+              pitch: 1.0,
+              type: "TTS_TYPE_SCREEN_READER",
+            });
+            return;
+          } catch (e) {}
+        }
+        if (synth && typeof SpeechSynthesisUtterance !== "undefined") {
+          cancelSpeech();
+          var u = new SpeechSynthesisUtterance(text);
+          u.lang = "en-US";
+          u.rate = 0.82;
+          u.pitch = 1.08;
+          if (voice) u.voice = voice;
+          else if (altVoice) u.voice = altVoice;
+          synth.speak(u);
+        }
+      }
+
+      function toast(t) {
+        var el = document.getElementById("toast");
+        el.textContent = t;
+        el.classList.add("show");
+        setTimeout(function () {
+          el.classList.remove("show");
+        }, 1100);
+      }
+
+      function addPoints(n) {
+        points += n;
+        if (pointsBadge) pointsBadge.textContent = "⭐ " + points;
+      }
+
+      var captionsPlayed = {};
+      var captionsRewarded = false;
+      function speakCaption(text, key) {
+        say(text);
+        captionsPlayed[key] = true;
+        if (captionsPlayed.sam && captionsPlayed.onza && !captionsRewarded) {
+          captionsRewarded = true;
+          reward("WELL DONE! +1 ⭐");
+        }
+      }
+
+      var greetingsPlayed = {};
+      var greetingsRewarded = false;
+      function speakGreeting(text, key) {
+        say(text, key === "greetOnza" ? altVoice2 : null);
+        greetingsPlayed[key] = true;
+        if (
+          greetingsPlayed.greetSam &&
+          greetingsPlayed.greetQ &&
+          greetingsPlayed.greetOnza &&
+          !greetingsRewarded
+        ) {
+          greetingsRewarded = true;
+          reward("WELL DONE! +1 ⭐");
+        }
+      }
+
+      function reward(t) {
+        starsEarned++;
+        toast(t);
+        addPoints(1);
+        var r = document.getElementById("reward");
+        r.innerHTML = "";
+        for (var i = 0; i < 24; i++) {
+          var s = document.createElement("span");
+          s.className = "confetti";
+          s.textContent = ["⭐", "✨", "🎉", "👏"][i % 4];
+          s.style.left = Math.random() * 100 + "%";
+          s.style.top = -5 - Math.random() * 20 + "%";
+          s.style.animationDelay = Math.random() * 0.4 + "s";
+          r.appendChild(s);
+        }
+        setTimeout(function () {
+          r.innerHTML = "";
+        }, 2500);
+      }
+
+      var nameVideo = document.getElementById("nameVideo");
+      var nameVideoRewarded = false;
+      if (nameVideo) {
+        nameVideo.addEventListener("ended", function () {
+          if (nameVideoRewarded) return;
+          nameVideoRewarded = true;
+          reward("WELL DONE! +1 ⭐");
+        });
+      }
+
+      var commandsVideo = document.getElementById("commandsVideo");
+      var commandsRewarded = false;
+      if (commandsVideo) {
+        commandsVideo.addEventListener("ended", function () {
+          if (commandsRewarded) return;
+          commandsRewarded = true;
+          reward("WELL DONE! +1 ⭐");
+        });
+      }
+
+      var coloursVideo = document.getElementById("coloursVideo");
+      var coloursVideoRewarded = false;
+      if (coloursVideo) {
+        coloursVideo.addEventListener("ended", function () {
+          if (coloursVideoRewarded) return;
+          coloursVideoRewarded = true;
+          reward("WELL DONE! +1 ⭐");
+        });
+      }
+
+      var colourPressCounts = { red: 0, blue: 0, yellow: 0, green: 0 };
+      var colourPressRewarded = false;
+      function colourPress(colour) {
+        say(colour.charAt(0).toUpperCase() + colour.slice(1));
+        colourPressCounts[colour]++;
+        if (colourPressRewarded) return;
+        var allDone = ["red", "blue", "yellow", "green"].every(
+          function (c) {
+            return colourPressCounts[c] >= 1;
+          },
+        );
+        if (allDone) {
+          colourPressRewarded = true;
+          reward("ALL COLOURS! +1 ⭐");
+        }
+      }
+
+      function burst(el) {
+        var r = document.getElementById("reward");
+        var rect = el.getBoundingClientRect();
+        var cx = rect.left + rect.width / 2;
+        var cy = rect.top + rect.height / 2;
+        var frag = document.createDocumentFragment();
+        for (var i = 0; i < 18; i++) {
+          var s = document.createElement("span");
+          s.className = "burst";
+          s.textContent = ["⭐", "✨", "🎉", "👏"][i % 4];
+          var ang = Math.random() * Math.PI * 2;
+          var dist = 40 + Math.random() * 80;
+          s.style.setProperty("--bx", Math.cos(ang) * dist + "px");
+          s.style.setProperty("--by", Math.sin(ang) * dist + "px");
+          s.style.left = cx + "px";
+          s.style.top = cy + "px";
+          frag.appendChild(s);
+        }
+        r.appendChild(frag);
+        setTimeout(function () {
+          var list = r.querySelectorAll(".burst");
+          for (var j = 0; j < list.length; j++) {
+            if (list[j].parentNode) list[j].parentNode.removeChild(list[j]);
+          }
+        }, 1300);
+      }
+
+      var rewardTimer = null;
+      function showRewards() {
+        if (rewardTimer) window.clearTimeout(rewardTimer);
+        var slots = document.getElementById("rewardSlots").querySelectorAll(".slot");
+        for (var i = 0; i < slots.length; i++) {
+          slots[i].classList.remove("filled");
+        }
+        var cupSlot = document.getElementById("rewardCupSlot");
+        cupSlot.classList.remove("filled");
+        var video = document.getElementById("rewardCupVideo");
+        if (typeof video.pause === "function") video.pause();
+        video.style.display = "none";
+        var result = document.getElementById("rewardResult");
+        result.className = "rewardResult";
+        result.textContent = "";
+        var n = starsEarned >= 6 ? 6 : starsEarned;
+        for (var k = 0; k < n; k++) {
+          (function (slotIndex) {
+            rewardTimer = window.setTimeout(function () {
+              slots[slotIndex].classList.add("filled");
+              burst(slots[slotIndex]);
+              if (slotIndex === n - 1) finishRewards(n);
+            }, k * 600);
+          })(k);
+        }
+        if (n === 0) finishRewards(0);
+      }
+
+      function finishRewards(n) {
+        var result = document.getElementById("rewardResult");
+        var cupSlot = document.getElementById("rewardCupSlot");
+        var video = document.getElementById("rewardCupVideo");
+        if (n >= 6) {
+          cupSlot.classList.add("filled");
+          burst(cupSlot);
+          result.className = "rewardResult good";
+          result.textContent = "PERFECT! YOU WON THE CUP! 🏆";
+          video.style.display = "block";
+          playMediaVideo(video, true);
+        } else {
+          result.className = "rewardResult bad";
+          result.textContent =
+            "TRY AGAIN! You earned " + n + "/6 stars. Complete the tasks to win the cup!";
+        }
+      }
+
+      document.getElementById("soundBtn").onclick = function () {
+        soundOn = !soundOn;
+        document.getElementById("soundBtn").textContent = soundOn ? "🔊" : "🔇";
+        if (soundOn) {
+          if (synth) synth.cancel();
+        }
+        cancelSpeech();
+      };
+      document.getElementById("homeBtn").onclick = function () {
+        show(0);
+      };
+      document.addEventListener("keydown", function (e) {
+        if (e.key === "ArrowRight" || e.key === " ") {
+          if (e.preventDefault) e.preventDefault();
+          next();
+        }
+        if (e.key === "ArrowLeft") prev();
+        if (e.key === "Escape") show(0);
+      });
+      show(0);
+    </script>
+  </body>
+</html>
