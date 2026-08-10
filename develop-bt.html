@@ -154,6 +154,7 @@
       .translateBox {
         width: min(34vw, 400px);
         min-height: 38vh;
+        max-height: 60vh;
         display: flex;
         flex-direction: column;
         align-items: center;
@@ -176,6 +177,31 @@
       }
       .translateBox.filled {
         border-color: var(--accent);
+      }
+      .translateBox.left {
+        align-items: flex-start;
+        text-align: left;
+      }
+      .listen-btn {
+        font-size: clamp(0.95rem, 1.6vw, 1.4rem);
+        font-weight: 700;
+        color: #14213d;
+        background: var(--accent2);
+        padding: 0.3em 1em;
+        border-radius: 30px;
+        border: 2pt solid var(--accent);
+        box-shadow: 0 6px 18px rgba(138, 138, 138, 0.35);
+        display: inline-flex;
+        align-items: center;
+        gap: 0.45em;
+        text-transform: uppercase;
+        transition: 0.15s transform;
+      }
+      .listen-btn:active {
+        transform: scale(0.95);
+      }
+      .listen-btn svg {
+        vertical-align: -0.2em;
       }
       .mediaPage h1 {
         font-size: clamp(1.8rem, 3.5vw, 2.8rem);
@@ -475,6 +501,9 @@
         }
         .translate-btn {
           font-size: clamp(1.2rem, 3.2vw, 1.8rem);
+        }
+        .listen-btn {
+          font-size: clamp(1.05rem, 3vw, 1.5rem);
         }
         .translateBox {
           width: min(84vw, 420px);
@@ -875,15 +904,51 @@
           </button>
           <div class="cast">
             <figure class="castMember">
-              <div class="translateBox" id="srcLangBox">
+              <div class="translateBox left" id="srcLangBox">
                 <span class="translatePlaceholder">🔤</span>
               </div>
+              <button class="listen-btn" onclick="speakTranslate('en')">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="1.2em"
+                  height="1.2em"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  style="vertical-align: -0.2em"
+                >
+                  <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" />
+                  <path d="M15.54 8.46a5 5 0 0 1 0 7.07" />
+                </svg>
+                Listen
+              </button>
               <figcaption>English</figcaption>
             </figure>
             <figure class="castMember">
-              <div class="translateBox" id="zhLangBox">
+              <div class="translateBox left" id="zhLangBox">
                 <span class="translatePlaceholder">中文</span>
               </div>
+              <button class="listen-btn" onclick="speakTranslate('zh')">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="1.2em"
+                  height="1.2em"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  style="vertical-align: -0.2em"
+                >
+                  <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" />
+                  <path d="M15.54 8.46a5 5 0 0 1 0 7.07" />
+                </svg>
+                Listen
+              </button>
               <figcaption>中文</figcaption>
             </figure>
           </div>
@@ -1253,7 +1318,22 @@
         }
       }
 
+      var lastSrcText = "";
+      var lastZhText = "";
+
+      function equalizeBoxes() {
+        var a = document.getElementById("srcLangBox");
+        var b = document.getElementById("zhLangBox");
+        if (!a || !b) return;
+        a.style.height = "";
+        b.style.height = "";
+        var h = Math.max(a.scrollHeight, b.scrollHeight);
+        a.style.height = h + "px";
+        b.style.height = h + "px";
+      }
+
       function doTranslate(text) {
+        lastSrcText = text;
         var srcBox = document.getElementById("srcLangBox");
         var zhBox = document.getElementById("zhLangBox");
         if (srcBox) {
@@ -1264,12 +1344,14 @@
           zhBox.textContent = "…";
           zhBox.classList.add("filled");
         }
+        equalizeBoxes();
         var url =
           "https://translate.googleapis.com/translate_a/single" +
           "?client=gtx&sl=auto&tl=zh-CN&dt=t&q=" +
           encodeURIComponent(text);
         if (typeof fetch !== "function") {
           if (zhBox) zhBox.textContent = "Translation failed";
+          equalizeBoxes();
           return;
         }
         fetch(url)
@@ -1285,12 +1367,20 @@
               }
             } catch (e) {}
             if (!translated) translated = text;
+            lastZhText = translated;
             if (zhBox) zhBox.textContent = translated;
+            equalizeBoxes();
             speakChinese(translated);
           })
           .catch(function () {
             if (zhBox) zhBox.textContent = "Translation failed";
+            equalizeBoxes();
           });
+      }
+
+      function speakTranslate(lang) {
+        if (lang === "zh") speakChinese(lastZhText);
+        else say(lastSrcText);
       }
 
       function speakChinese(text) {
@@ -1421,6 +1511,9 @@
         }
         if (e.key === "ArrowLeft") prev();
         if (e.key === "Escape") show(0);
+      });
+      window.addEventListener("resize", function () {
+        if (lastSrcText) equalizeBoxes();
       });
       show(0);
     </script>
