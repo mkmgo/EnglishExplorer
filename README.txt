@@ -1,4 +1,4 @@
-ENGLISH ADVENTURE — LESSON 1
+ENGLISH EXPLORER ADVANCED
 Tizen-friendly offline HTML presentation
 
 Files:
