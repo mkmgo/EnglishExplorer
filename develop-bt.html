@@ -19,6 +19,7 @@
         --ink: #14213d;
         --muted: #60708d;
         --accent: #e43703;
+        --accent2: #ffb866;
         --good: #19a974;
         --bad: #e05252;
         --card: #ffffff;
@@ -124,7 +125,7 @@
         background: var(--accent);
         padding: 0.35em 1em;
         border-radius: 30px;
-        border: 2pt solid #446a96;
+        border: 2pt solid var(--accent2);
         box-shadow: 0 6px 18px rgba(138, 138, 138, 0.35);
         text-transform: uppercase;
         transition: 0.15s transform;
@@ -242,7 +243,7 @@
         font-size: 1.1rem;
         font-weight: 900;
         color: #8a4b00;
-        background: #6fa1e2;
+        background: var(--accent2);
         padding: 0.3em 0.7em;
         border-radius: 999px;
         box-shadow: 0 5px 18px rgba(255, 180, 0, 0.3);
@@ -282,6 +283,10 @@
       .nav .primary {
         background: var(--accent);
         color: white;
+      }
+      .nav #prevBtn {
+        background: var(--accent2);
+        color: var(--accent);
       }
       #toast {
         position: absolute;
