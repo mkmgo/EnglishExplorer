@@ -18,7 +18,7 @@
         --bg: #f5f7fb;
         --ink: #14213d;
         --muted: #60708d;
-        --accent: #4f4f50;
+        --accent: #1d3557;
         --good: #19a974;
         --bad: #e05252;
         --card: #ffffff;
@@ -214,7 +214,7 @@
         justify-content: space-between;
         align-items: center;
         padding: 1.5vh 3vw;
-        background: #1d3557;
+        background: var(--accent);
         z-index: 20;
       }
       .topbar .small {
@@ -268,12 +268,16 @@
         z-index: 30;
       }
       .nav button {
-        padding: 0.8em 1.2em;
+        padding: 0.35em;
         border-radius: 999px;
-        background: white;
+        background: (---muted);
         box-shadow: 0 8px 22px rgba(0, 0, 0, 0.12);
-        font-weight: 600;
-        font-size: 1rem;
+        font-weight: 500;
+        font-size: 0.9rem;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        line-height: 0;
       }
       .nav .primary {
         background: var(--accent);
@@ -768,8 +772,8 @@
       </section>
 
       <div class="nav">
-        <button id="prevBtn" onclick="prev()">‹ BACK</button>
-        <button class="primary" id="nextBtn" onclick="next()">NEXT ›</button>
+        <button id="prevBtn" onclick="prev()"></button>
+        <button class="primary" id="nextBtn" onclick="next()"></button>
       </div>
     </div>
 
@@ -836,16 +840,24 @@
         }, 4000);
       }
 
+      var ICON_ARROW_LEFT =
+        '<svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M16 12H8"/><path d="m12 8-4 4 4 4"/></svg>';
+      var ICON_ARROW_RIGHT =
+        '<svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M8 12h8"/><path d="m12 16 4-4-4-4"/></svg>';
+      var ICON_RESTART =
+        '<svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>';
+
       function show(i) {
         idx = Math.max(0, Math.min(screens.length - 1, i));
         for (var j = 0; j < screens.length; j++) {
           screens[j].classList.toggle("active", j === idx);
         }
         progress.textContent = idx + 1 + " / " + screens.length;
+        document.getElementById("prevBtn").innerHTML = ICON_ARROW_LEFT;
         document.getElementById("prevBtn").style.visibility =
           idx === 0 ? "hidden" : "visible";
-        document.getElementById("nextBtn").textContent =
-          idx === screens.length - 1 ? "RESTART ↻" : "NEXT ›";
+        document.getElementById("nextBtn").innerHTML =
+          idx === screens.length - 1 ? ICON_RESTART : ICON_ARROW_RIGHT;
         cancelSpeech();
         var activeVideo = screens[idx].querySelector("video") || null;
         if (activeVideo) {
