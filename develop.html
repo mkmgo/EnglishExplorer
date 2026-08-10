@@ -119,12 +119,13 @@
         filter: drop-shadow(0 20px 25px rgba(160, 30, 30, 0.22));
       }
       .castMember figcaption {
-        font-size: clamp(1rem, 1.8vw, 1.8rem);
-        font-weight: 900;
-        color: #ffffff;
-        background: #8a8a8a;
+        font-size: clamp(1rem, 1.5vw, 1.5rem);
+        font-weight: 500;
+        color: #ffffff; 
+        background: #a8a8a8;
         padding: 0.35em 1em;
         border-radius: 12px;
+        border: 2px solid #555;
         box-shadow: 0 6px 18px rgba(138, 138, 138, 0.35);
         transition: 0.15s transform;
       }
@@ -333,7 +334,8 @@
       .slot.filled {
         opacity: 1;
         background: #fff7e0;
-        box-shadow: 0 12px 28px rgba(255, 180, 0, 0.4),
+        box-shadow:
+          0 12px 28px rgba(255, 180, 0, 0.4),
           inset 0 0 0 3px #f1c40f;
         animation: starPop 0.65s cubic-bezier(0.2, 1.6, 0.4, 1);
       }
@@ -342,7 +344,8 @@
       }
       .slot.cup.filled {
         background: #fff0d9;
-        box-shadow: 0 16px 34px rgba(255, 150, 0, 0.5),
+        box-shadow:
+          0 16px 34px rgba(255, 150, 0, 0.5),
           inset 0 0 0 3px #ff9800;
       }
       @keyframes starPop {
@@ -434,7 +437,7 @@
       <section class="screen title-slide active">
         <div class="content">
           <div class="small">ENGLISH EXPLORER</div>
-          <h1>Welcome</h1>
+          <h2>Welcome</h2>
           <div class="cast">
             <figure class="castMember">
               <img
@@ -667,10 +670,7 @@
           <h1>COLOURS</h1>
           <p>Tap each colour once.</p>
           <div class="grid">
-            <button
-              class="choice color-btn c-red"
-              onclick="colourPress('red')"
-            >
+            <button class="choice color-btn c-red" onclick="colourPress('red')">
               RED
             </button>
             <button
@@ -1007,11 +1007,9 @@
         say(colour.charAt(0).toUpperCase() + colour.slice(1));
         colourPressCounts[colour]++;
         if (colourPressRewarded) return;
-        var allDone = ["red", "blue", "yellow", "green"].every(
-          function (c) {
-            return colourPressCounts[c] >= 1;
-          },
-        );
+        var allDone = ["red", "blue", "yellow", "green"].every(function (c) {
+          return colourPressCounts[c] >= 1;
+        });
         if (allDone) {
           colourPressRewarded = true;
           reward("ALL COLOURS! +1 ⭐");
@@ -1048,7 +1046,9 @@
       var rewardTimer = null;
       function showRewards() {
         if (rewardTimer) window.clearTimeout(rewardTimer);
-        var slots = document.getElementById("rewardSlots").querySelectorAll(".slot");
+        var slots = document
+          .getElementById("rewardSlots")
+          .querySelectorAll(".slot");
         for (var i = 0; i < slots.length; i++) {
           slots[i].classList.remove("filled");
         }
@@ -1087,7 +1087,9 @@
         } else {
           result.className = "rewardResult bad";
           result.textContent =
-            "TRY AGAIN! You earned " + n + "/6 stars. Complete the tasks to win the cup!";
+            "TRY AGAIN! You earned " +
+            n +
+            "/6 stars. Complete the tasks to win the cup!";
         }
       }
 
