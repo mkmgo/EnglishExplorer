@@ -121,10 +121,10 @@
         font-size: clamp(1rem, 1.5vw, 1.5rem);
         font-weight: 550;
         color: #3e3e3e;
-        background: #fcfbfa;
+        background: #6fa1e2;
         padding: 0.35em 1em;
-        border-radius: 25px;
-        border: 1px solid #a5a4a4;
+        border-radius: 40px;
+        border: 1px solid #1d3557;
         box-shadow: 0 6px 18px rgba(138, 138, 138, 0.35);
         transition: 0.15s transform;
       }
@@ -206,13 +206,18 @@
       }
       .topbar {
         position: absolute;
-        top: 2vh;
-        left: 3vw;
-        right: 3vw;
+        top: 0;
+        left: 0;
+        right: 0;
         display: flex;
         justify-content: space-between;
         align-items: center;
+        padding: 1.5vh 3vw;
+        background: #1d3557;
         z-index: 20;
+      }
+      .topbar .small {
+        color: #ffffff;
       }
       .progress {
         font-size: 1.1rem;
@@ -227,11 +232,16 @@
         gap: 0.7em;
         align-items: center;
       }
+      .stats {
+        display: flex;
+        gap: 0.7em;
+        align-items: center;
+      }
       .points {
         font-size: 1.1rem;
         font-weight: 900;
         color: #8a4b00;
-        background: #ffeaa7;
+        background: #6fa1e2;
         padding: 0.5em 1em;
         border-radius: 999px;
         box-shadow: 0 5px 18px rgba(255, 180, 0, 0.3);
@@ -424,9 +434,12 @@
       <div id="reward"></div>
 
       <div class="topbar">
-        <div class="progress" id="progress">1 / 2</div>
-        <div class="controls">
+        <div class="stats">
+          <div class="progress" id="progress">1 / 2</div>
           <span class="points" id="pointsBadge">⭐ 0</span>
+        </div>
+        <div class="small">ENGLISH EXPLORER</div>
+        <div class="controls">
           <button class="ctrl" id="soundBtn" aria-label="Sound">🔊</button>
           <button class="ctrl" id="homeBtn" aria-label="Home">⌂</button>
         </div>
@@ -435,7 +448,6 @@
       <!-- 1: Title -->
       <section class="screen title-slide active">
         <div class="content">
-          <div class="small">ENGLISH EXPLORER</div>
           <h2>Welcome</h2>
           <div class="cast">
             <figure class="castMember">
