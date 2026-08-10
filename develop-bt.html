@@ -446,7 +446,24 @@
         <div class="small">ENGLISH EXPLORER</div>
         <div class="controls">
           <button class="ctrl" id="soundBtn" aria-label="Sound">🔊</button>
-          <button class="ctrl" id="homeBtn" aria-label="Home">⌂</button>
+          <button class="ctrl" id="homeBtn" aria-label="Home">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="1.2em"
+              height="1.2em"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              style="vertical-align: -0.2em"
+            >
+              <circle cx="12" cy="12" r="10" />
+              <path d="m16 12-4-4-4 4" />
+              <path d="M12 16V8" />
+            </svg>
+          </button>
         </div>
       </div>
 
@@ -771,6 +788,65 @@
         </div>
       </section>
 
+      <!-- 8: Title (repeat, not counted in progress) -->
+      <section class="screen mediaPage title-slide" data-nocount>
+        <div class="content">
+          <h1>Translator</h1>
+          <div class="cast">
+            <figure class="castMember">
+              <img
+                class="character"
+                src="https://res.cloudinary.com/dp455m4rk/image/upload/c_scale,w_800/q_auto/f_auto/e_bgremoval/v1786010283/sam_3d_awiawr.png"
+                alt="Sam"
+              />
+              <figcaption onclick="speakCaption('My name is Sam.', 'sam')">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="1.2em"
+                  height="1.2em"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  style="vertical-align: -0.2em"
+                >
+                  <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" />
+                  <path d="M15.54 8.46a5 5 0 0 1 0 7.07" />
+                </svg>
+                My Name is Sam
+              </figcaption>
+            </figure>
+            <figure class="castMember">
+              <img
+                class="character"
+                src="https://res.cloudinary.com/dp455m4rk/image/upload/c_scale,w_800/q_auto/f_auto/e_bgremoval/v1786010302/onza_3davatar_ipbcid.png"
+                alt="Onza"
+              />
+              <figcaption onclick="speakCaption('My name is Onza.', 'onza')">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="1.2em"
+                  height="1.2em"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  style="vertical-align: -0.2em"
+                >
+                  <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" />
+                  <path d="M15.54 8.46a5 5 0 0 1 0 7.07" />
+                </svg>
+                My Name is Onza
+              </figcaption>
+            </figure>
+          </div>
+        </div>
+      </section>
+
       <div class="nav">
         <button id="prevBtn" onclick="prev()"></button>
         <button class="primary" id="nextBtn" onclick="next()"></button>
@@ -781,6 +857,20 @@
       var screens = Array.prototype.slice.call(
         document.querySelectorAll(".screen"),
       );
+      var countTotal = 0;
+      var nocountIdx = -1;
+      var lastCounted = screens.length - 1;
+      for (var s = 0; s < screens.length; s++) {
+        if (screens[s].hasAttribute("data-nocount")) {
+          if (nocountIdx < 0) nocountIdx = s;
+        } else {
+          countTotal++;
+          lastCounted = s;
+        }
+      }
+      var slide8From = 0;
+      var homeBtn = document.getElementById("homeBtn");
+      var navEl = document.querySelector(".nav");
       var idx = 0;
       var soundOn = true;
       var points = 0;
@@ -846,18 +936,30 @@
         '<svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M8 12h8"/><path d="m12 16 4-4-4-4"/></svg>';
       var ICON_RESTART =
         '<svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>';
+      var ICON_HOME_UP =
+        '<svg xmlns="http://www.w3.org/2000/svg" width="1.2em" height="1.2em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: -0.2em"><circle cx="12" cy="12" r="10"/><path d="m16 12-4-4-4 4"/><path d="M12 16V8"/></svg>';
+      var ICON_HOME_DOWN =
+        '<svg xmlns="http://www.w3.org/2000/svg" width="1.2em" height="1.2em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: -0.2em"><circle cx="12" cy="12" r="10"/><path d="M12 8v8"/><path d="m8 12 4 4 4-4"/></svg>';
 
       function show(i) {
+        var prevIdx = idx;
         idx = Math.max(0, Math.min(screens.length - 1, i));
+        if (idx === nocountIdx && prevIdx !== idx) slide8From = prevIdx;
         for (var j = 0; j < screens.length; j++) {
           screens[j].classList.toggle("active", j === idx);
         }
-        progress.textContent = idx + 1 + " / " + screens.length;
+        var shown = idx + 1;
+        if (shown > countTotal) shown = countTotal;
+        progress.textContent = shown + " / " + countTotal;
         document.getElementById("prevBtn").innerHTML = ICON_ARROW_LEFT;
         document.getElementById("prevBtn").style.visibility =
           idx === 0 ? "hidden" : "visible";
         document.getElementById("nextBtn").innerHTML =
-          idx === screens.length - 1 ? ICON_RESTART : ICON_ARROW_RIGHT;
+          idx === lastCounted ? ICON_RESTART : ICON_ARROW_RIGHT;
+        if (navEl) navEl.style.display = idx === nocountIdx ? "none" : "flex";
+        if (homeBtn)
+          homeBtn.innerHTML =
+            idx === nocountIdx ? ICON_HOME_DOWN : ICON_HOME_UP;
         cancelSpeech();
         var activeVideo = screens[idx].querySelector("video") || null;
         if (activeVideo) {
@@ -923,11 +1025,13 @@
       }
 
       function next() {
-        if (idx === screens.length - 1) show(0);
+        if (idx === nocountIdx) return;
+        if (idx === lastCounted) show(0);
         else show(idx + 1);
       }
 
       function prev() {
+        if (idx === nocountIdx) return;
         show(idx - 1);
       }
 
@@ -1156,9 +1260,11 @@
         cancelSpeech();
       };
       document.getElementById("homeBtn").onclick = function () {
-        show(0);
+        if (idx === nocountIdx) show(slide8From);
+        else show(nocountIdx);
       };
       document.addEventListener("keydown", function (e) {
+        if (idx === nocountIdx) return;
         if (e.key === "ArrowRight" || e.key === " ") {
           if (e.preventDefault) e.preventDefault();
           next();
@@ -1173,6 +1279,7 @@
       lucide.createIcons({
         icons: {
           telescope: lucide.telescope,
+          circleArrowUp: lucide.circleArrowUp,
         },
       });
     </script>
