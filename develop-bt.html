@@ -135,8 +135,7 @@
       }
       .icardst {
         font-size: clamp(0.9rem, 1.5vw, 1.5rem);
-        font-weight: 700;
-        color: var(--card);
+        color: var(--accent2);
         background: var(--accent);
         padding: 0.35em 1em;
         border-radius: 999px;
@@ -145,11 +144,18 @@
         display: inline-flex;
         align-items: center;
         gap: 0.5em;
-        text-transform: uppercase;
         transition: 0.15s transform;
       }
       .icardst:active {
         transform: scale(0.95);
+      }
+      .icardtext {
+        font-family: Verdana, "Trebuchet MS", sans-serif;
+        font-weight: 400;
+        font-size: clamp(0.9rem, 1.5vw, 1.5rem);
+        letter-spacing: 0.05em;
+        text-transform: uppercase;
+        color: var(--accent2);
       }
       .translate-btn {
         font-size: clamp(1.1rem, 2vw, 1.8rem);
@@ -826,7 +832,7 @@
                   <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" />
                   <path d="M15.54 8.46a5 5 0 0 1 0 7.07" />
                 </svg>
-                My Name is Sam
+                <span class="icardtext">My Name is Sam</span>
               </button>
             </figure>
             <figure class="castMember">
@@ -854,7 +860,7 @@
                   <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" />
                   <path d="M15.54 8.46a5 5 0 0 1 0 7.07" />
                 </svg>
-                My Name is Onza
+                <span class="icardtext">My Name is Onza</span>
               </button>
             </figure>
           </div>
