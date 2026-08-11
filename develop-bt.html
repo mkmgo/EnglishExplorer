@@ -133,10 +133,28 @@
       .castMember figcaption:active {
         transform: scale(0.95);
       }
+      .icardst {
+        font-size: clamp(0.9rem, 1.5vw, 1.5rem);
+        font-weight: 700;
+        color: var(--card);
+        background: var(--accent);
+        padding: 0.35em 1em;
+        border-radius: 999px;
+        border: 1pt solid var(--accent2);
+        box-shadow: 0 6px 18px rgba(138, 138, 138, 0.35);
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5em;
+        text-transform: uppercase;
+        transition: 0.15s transform;
+      }
+      .icardst:active {
+        transform: scale(0.95);
+      }
       .translate-btn {
         font-size: clamp(1.1rem, 2vw, 1.8rem);
         font-weight: 700;
-        color: #14213d;
+        color: var(--ink);
         background: var(--accent2);
         padding: 0.35em 1.2em;
         border-radius: 30px;
@@ -185,7 +203,7 @@
       .listen-btn {
         font-size: clamp(0.95rem, 1.6vw, 1.4rem);
         font-weight: 700;
-        color: #14213d;
+        color: var(--ink);
         background: var(--accent2);
         padding: 0.3em 1em;
         border-radius: 30px;
@@ -227,7 +245,7 @@
         min-width: 160px;
         min-height: 80px;
         border-radius: 28px;
-        background: white;
+        background: var(--card);
         box-shadow: var(--shadow);
         font-size: clamp(1.2rem, 2.2vw, 2.2rem);
         font-weight: 900;
@@ -239,6 +257,51 @@
       }
       .choice:active {
         transform: scale(0.95);
+      }
+      .tabs {
+        min-width: 160px;
+        min-height: 80px;
+        border-radius: 6px;
+        color: var(--ink);
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: 0.5em 1em;
+        box-shadow: var(--shadow);
+        transition: 0.15s transform;
+      }
+      .tabs:active {
+        transform: scale(0.95);
+      }
+      .tabtext {
+        text-transform: uppercase;
+        font-weight: 400;
+        font-size: clamp(1.2rem, 2.2vw, 2.2rem);
+        letter-spacing: 0.08em;
+      }
+      .tab-alphabet {
+        background: #34d399;
+        border: 4px solid #059669;
+      }
+      .tab-numbers {
+        background: #60a5fa;
+        border: 4px solid #2563eb;
+      }
+      .tab-colours {
+        background: #f472b6;
+        border: 4px solid #db2777;
+      }
+      .tab-months {
+        background: #fbbf24;
+        border: 4px solid #d97706;
+      }
+      .tab-words {
+        background: #a78bfa;
+        border: 4px solid #7c3aed;
+      }
+      .tab-conversation {
+        background: #fb7185;
+        border: 4px solid #e11d48;
       }
       .yes {
         background: #dff7ec;
@@ -252,7 +315,8 @@
         max-width: 700px;
         margin: 1em auto 0;
       }
-      .grid .choice {
+      .grid .choice,
+      .grid .tabs {
         min-width: 0;
       }
       .grid-4 {
@@ -264,7 +328,7 @@
       }
       .c-jan {
         background: #f1c40f;
-        color: #14213d;
+        color: var(--ink);
         text-shadow: none;
       }
       .c-feb {
@@ -292,11 +356,11 @@
         background: #1e8449;
       }
       .c-oct {
-        background: #19a974;
+        background: var(--good);
       }
       .c-nov {
         background: #7dcea0;
-        color: #14213d;
+        color: var(--ink);
         text-shadow: none;
       }
       .c-dec {
@@ -313,18 +377,18 @@
         text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
       }
       .c-red {
-        background: #e05252;
+        background: var(--bad);
       }
       .c-blue {
         background: #2878f0;
       }
       .c-yellow {
         background: #f1c40f;
-        color: #14213d;
+        color: var(--ink);
         text-shadow: none;
       }
       .c-green {
-        background: #19a974;
+        background: var(--good);
       }
       .c-brown {
         background: #8b5a2b;
@@ -336,8 +400,8 @@
         background: #e91e8c;
       }
       .c-white {
-        background: #ffffff;
-        color: #14213d;
+        background: var(--card);
+        color: var(--ink);
         text-shadow: none;
         border: 2px solid #d0d0d0;
       }
@@ -357,7 +421,7 @@
         z-index: 20;
       }
       .topbar .small {
-        color: #ffffff;
+        color: var(--card);
       }
       .progress {
         font-size: 1.1rem;
@@ -393,7 +457,7 @@
       .ctrl {
         padding: 0.3em 0.7em;
         border-radius: 999px;
-        background: white;
+        background: var(--card);
         box-shadow: 0 5px 18px rgba(0, 0, 0, 0.12);
         font-size: 1.1rem;
         display: inline-flex;
@@ -421,7 +485,7 @@
       .nav button {
         padding: 0.32em;
         border-radius: 999px;
-        background: (---muted);
+        background: var(--muted);
         box-shadow: 0 8px 22px rgba(0, 0, 0, 0.12);
         font-weight: 500;
         font-size: 1rem;
@@ -444,7 +508,7 @@
         top: 12%;
         transform: translateX(-50%);
         z-index: 100;
-        background: #14213d;
+        background: var(--ink);
         color: white;
         padding: 0.8em 1.5em;
         border-radius: 999px;
@@ -710,12 +774,24 @@
           <h1>Index</h1>
           <p>Tap a topic to begin.</p>
           <div class="grid">
-            <button class="choice">Alphabet</button>
-            <button class="choice">Numbers</button>
-            <button class="choice" onclick="goColours()">Colours</button>
-            <button class="choice" onclick="goMonths()">Months</button>
-            <button class="choice">Words</button>
-            <button class="choice">Conversation</button>
+            <button class="tabs tab-alphabet">
+              <span class="tabtext">Alphabet</span>
+            </button>
+            <button class="tabs tab-numbers">
+              <span class="tabtext">Numbers</span>
+            </button>
+            <button class="tabs tab-colours" onclick="goColours()">
+              <span class="tabtext">Colours</span>
+            </button>
+            <button class="tabs tab-months" onclick="goMonths()">
+              <span class="tabtext">Months</span>
+            </button>
+            <button class="tabs tab-words">
+              <span class="tabtext">Words</span>
+            </button>
+            <button class="tabs tab-conversation">
+              <span class="tabtext">Conversation</span>
+            </button>
           </div>
         </div>
       </section>
@@ -731,7 +807,10 @@
                 src="https://res.cloudinary.com/dp455m4rk/image/upload/c_scale,w_800/q_auto/f_auto/e_bgremoval/v1786010283/sam_3d_awiawr.png"
                 alt="Sam"
               />
-              <figcaption onclick="speakCaption('My name is Sam.', 'sam')">
+              <button
+                class="icardst"
+                onclick="speakCaption('My name is Sam.', 'sam')"
+              >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   width="1.2em"
@@ -748,7 +827,7 @@
                   <path d="M15.54 8.46a5 5 0 0 1 0 7.07" />
                 </svg>
                 My Name is Sam
-              </figcaption>
+              </button>
             </figure>
             <figure class="castMember">
               <img
@@ -756,7 +835,10 @@
                 src="https://res.cloudinary.com/dp455m4rk/image/upload/c_scale,w_800/q_auto/f_auto/e_bgremoval/v1786010302/onza_3davatar_ipbcid.png"
                 alt="Onza"
               />
-              <figcaption onclick="speakCaption('My name is Onza.', 'onza')">
+              <button
+                class="icardst"
+                onclick="speakCaption('My name is Onza.', 'onza')"
+              >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   width="1.2em"
@@ -773,7 +855,7 @@
                   <path d="M15.54 8.46a5 5 0 0 1 0 7.07" />
                 </svg>
                 My Name is Onza
-              </figcaption>
+              </button>
             </figure>
           </div>
         </div>
