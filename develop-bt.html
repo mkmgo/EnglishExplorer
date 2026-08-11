@@ -246,11 +246,61 @@
       }
       .grid {
         display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+        grid-template-columns: repeat(3, 1fr);
         gap: 15px;
         width: 100%;
-        max-width: 900px;
+        max-width: 700px;
         margin: 1em auto 0;
+      }
+      .grid .choice {
+        min-width: 0;
+      }
+      .grid-4 {
+        grid-template-columns: repeat(4, 1fr);
+        max-width: 900px;
+      }
+      .month-btn {
+        font-size: clamp(0.85rem, 1.5vw, 1.4rem);
+      }
+      .c-jan {
+        background: #f1c40f;
+        color: #14213d;
+        text-shadow: none;
+      }
+      .c-feb {
+        background: #e67e22;
+      }
+      .c-mar {
+        background: #d35400;
+      }
+      .c-apr {
+        background: #a0522d;
+      }
+      .c-may {
+        background: #8b5a2b;
+      }
+      .c-jun {
+        background: #2c3e50;
+      }
+      .c-jul {
+        background: #2878f0;
+      }
+      .c-aug {
+        background: #5dade2;
+      }
+      .c-sep {
+        background: #1e8449;
+      }
+      .c-oct {
+        background: #19a974;
+      }
+      .c-nov {
+        background: #7dcea0;
+        color: #14213d;
+        text-shadow: none;
+      }
+      .c-dec {
+        background: #f39c12;
       }
       .card {
         background: var(--card);
@@ -275,6 +325,24 @@
       }
       .c-green {
         background: #19a974;
+      }
+      .c-brown {
+        background: #8b5a2b;
+      }
+      .c-orange {
+        background: #f39c12;
+      }
+      .c-pink {
+        background: #e91e8c;
+      }
+      .c-white {
+        background: #ffffff;
+        color: #14213d;
+        text-shadow: none;
+        border: 2px solid #d0d0d0;
+      }
+      .c-black {
+        background: #222222;
       }
       .topbar {
         position: absolute;
@@ -636,8 +704,24 @@
         </div>
       </div>
 
-      <!-- 1: Title -->
+      <!-- Index -->
       <section class="screen title-slide active">
+        <div class="content">
+          <h1>Index</h1>
+          <p>Tap a topic to begin.</p>
+          <div class="grid">
+            <button class="choice">Alphabet</button>
+            <button class="choice">Numbers</button>
+            <button class="choice" onclick="goColours()">Colours</button>
+            <button class="choice" onclick="goMonths()">Months</button>
+            <button class="choice">Words</button>
+            <button class="choice">Conversation</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- 1: Title -->
+      <section class="screen title-slide">
         <div class="content">
           <h2>Welcome</h2>
           <div class="cast">
@@ -929,11 +1013,55 @@
         </div>
       </section>
 
-      <!-- 6: Colours check -->
-      <section class="screen">
+      <!-- Months -->
+      <section class="screen" id="monthsScreen">
         <div class="content card">
-          <h1>COLOURS</h1>
-          <p>Tap each colour once.</p>
+          <h2>THE MONTHS</h2>
+          <div class="grid grid-4">
+            <button class="choice color-btn month-btn c-jan" onclick="say('January')">
+              January
+            </button>
+            <button class="choice color-btn month-btn c-feb" onclick="say('February')">
+              February
+            </button>
+            <button class="choice color-btn month-btn c-mar" onclick="say('March')">
+              March
+            </button>
+            <button class="choice color-btn month-btn c-apr" onclick="say('April')">
+              April
+            </button>
+            <button class="choice color-btn month-btn c-may" onclick="say('May')">
+              May
+            </button>
+            <button class="choice color-btn month-btn c-jun" onclick="say('June')">
+              June
+            </button>
+            <button class="choice color-btn month-btn c-jul" onclick="say('July')">
+              July
+            </button>
+            <button class="choice color-btn month-btn c-aug" onclick="say('August')">
+              August
+            </button>
+            <button class="choice color-btn month-btn c-sep" onclick="say('September')">
+              September
+            </button>
+            <button class="choice color-btn month-btn c-oct" onclick="say('October')">
+              October
+            </button>
+            <button class="choice color-btn month-btn c-nov" onclick="say('November')">
+              November
+            </button>
+            <button class="choice color-btn month-btn c-dec" onclick="say('December')">
+              December
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <!-- 6: Colours check -->
+      <section class="screen" id="coloursScreen">
+        <div class="content card">
+          <h2>COLOURS</h2>
           <div class="grid">
             <button class="choice color-btn c-red" onclick="colourPress('red')">
               RED
@@ -955,6 +1083,36 @@
               onclick="colourPress('green')"
             >
               GREEN
+            </button>
+            <button
+              class="choice color-btn c-brown"
+              onclick="colourPress('brown')"
+            >
+              BROWN
+            </button>
+            <button
+              class="choice color-btn c-orange"
+              onclick="colourPress('orange')"
+            >
+              ORANGE
+            </button>
+            <button
+              class="choice color-btn c-pink"
+              onclick="colourPress('pink')"
+            >
+              PINK
+            </button>
+            <button
+              class="choice color-btn c-white"
+              onclick="colourPress('white')"
+            >
+              WHITE
+            </button>
+            <button
+              class="choice color-btn c-black"
+              onclick="colourPress('black')"
+            >
+              BLACK
             </button>
           </div>
         </div>
@@ -1170,6 +1328,24 @@
         '<svg xmlns="http://www.w3.org/2000/svg" width="1.2em" height="1.2em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: -0.2em"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/></svg>';
       var ICON_VOLUME_OFF =
         '<svg xmlns="http://www.w3.org/2000/svg" width="1.2em" height="1.2em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: -0.2em"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><line x1="22" x2="16" y1="9" y2="15"/><line x1="16" x2="22" y1="9" y2="15"/></svg>';
+
+      function goColours() {
+        for (var i = 0; i < screens.length; i++) {
+          if (screens[i].id === "coloursScreen") {
+            show(i);
+            return;
+          }
+        }
+      }
+
+      function goMonths() {
+        for (var i = 0; i < screens.length; i++) {
+          if (screens[i].id === "monthsScreen") {
+            show(i);
+            return;
+          }
+        }
+      }
 
       function show(i) {
         var prevIdx = idx;
@@ -1389,13 +1565,33 @@
         });
       }
 
-      var colourPressCounts = { red: 0, blue: 0, yellow: 0, green: 0 };
+      var colourPressCounts = {
+        red: 0,
+        blue: 0,
+        yellow: 0,
+        green: 0,
+        brown: 0,
+        orange: 0,
+        pink: 0,
+        white: 0,
+        black: 0,
+      };
       var colourPressRewarded = false;
       function colourPress(colour) {
         say(colour.charAt(0).toUpperCase() + colour.slice(1));
         colourPressCounts[colour]++;
         if (colourPressRewarded) return;
-        var allDone = ["red", "blue", "yellow", "green"].every(function (c) {
+        var allDone = [
+          "red",
+          "blue",
+          "yellow",
+          "green",
+          "brown",
+          "orange",
+          "pink",
+          "white",
+          "black",
+        ].every(function (c) {
           return colourPressCounts[c] >= 1;
         });
         if (allDone) {
