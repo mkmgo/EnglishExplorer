@@ -347,8 +347,8 @@
       .tabtext {
         text-transform: uppercase;
         font-weight: 400;
-        font-size: clamp(1.2rem, 2.2vw, 2.2rem);
-        letter-spacing: 0.08em;
+        font-size: clamp(0.7rem, 3.2vw, 2.2rem);
+        letter-spacing: 0.04em;
       }
       .tab-alphabet {
         background: #34d399;
@@ -381,7 +381,7 @@
       .grid {
         --cols: 3;
         display: grid;
-        grid-template-columns: repeat(var(--cols), 1fr);
+        grid-template-columns: repeat(var(--cols), minmax(0, 1fr));
         gap: clamp(10px, 1.5vw, 20px);
         width: 100%;
         max-width: 900px;
@@ -740,6 +740,9 @@
         .grid--4 {
           --cols: 3;
         }
+        .grid-tabs {
+          --cols: 2;
+        }
         .lessonVideo {
           max-height: 42vh;
         }
@@ -836,7 +839,7 @@
         <div class="content">
           <h1 class="pageTitle">Index</h1>
           <div class="stage">
-            <div class="grid">
+            <div class="grid grid-tabs">
               <button class="tabs tab-alphabet">
                 <span class="tabtext">Alphabet</span>
               </button>
