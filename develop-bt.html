@@ -54,6 +54,7 @@
       .screen {
         position: absolute;
         inset: 0;
+        background: var(--bg);
         display: none;
         align-items: center;
         justify-content: center;
@@ -116,9 +117,6 @@
       .stage > .cast {
         margin: 0;
       }
-      .title-slide {
-        background: #dff0ff;
-      }
       .cast {
         display: flex;
         justify-content: center;
@@ -139,21 +137,6 @@
         object-fit: contain;
         border-radius: 24px;
         filter: drop-shadow(0 20px 25px rgba(160, 30, 30, 0.22));
-      }
-      .castMember figcaption {
-        font-size: clamp(0.9rem, 1.5vw, 1.5rem);
-        font-weight: 550;
-        color: #dff0ff;
-        background: var(--accent);
-        padding: 0.35em 1em;
-        border-radius: 30px;
-        border: 1pt solid rgba(96, 112, 141, 0.5);
-        box-shadow: 0 6px 18px rgba(138, 138, 138, 0.35);
-        text-transform: uppercase;
-        transition: 0.15s transform;
-      }
-      .castMember figcaption:active {
-        transform: scale(0.95);
       }
       .icardst {
         font-size: clamp(0.9rem, 1.5vw, 1.5rem);
@@ -743,9 +726,6 @@
         .character {
           height: 30vh;
           max-width: 60vw;
-        }
-        .castMember figcaption {
-          font-size: clamp(1.1rem, 3.2vw, 1.8rem);
         }
         .clipcard {
           font-size: clamp(1.2rem, 3.2vw, 1.8rem);
