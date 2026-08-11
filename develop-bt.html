@@ -157,6 +157,30 @@
         text-transform: uppercase;
         color: var(--accent2);
       }
+      .icardstb {
+        font-size: clamp(0.9rem, 1.5vw, 1.5rem);
+        color: var(--accent);
+        background: var(--accent2);
+        padding: 0.35em 1em;
+        border-radius: 999px;
+        border: 1pt solid var(--accent);
+        box-shadow: 0 6px 18px rgba(138, 138, 138, 0.35);
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5em;
+        transition: 0.15s transform;
+      }
+      .icardstb:active {
+        transform: scale(0.95);
+      }
+      .icardtextb {
+        font-family: Verdana, "Trebuchet MS", sans-serif;
+        font-weight: 400;
+        font-size: clamp(0.9rem, 1.5vw, 1.5rem);
+        letter-spacing: 0.05em;
+        text-transform: uppercase;
+        color: var(--accent);
+      }
       .icardbas {
         min-width: 160px;
         min-height: 80px;
@@ -989,31 +1013,82 @@
           <h1>Greetings</h1>
           <p>Tap each line to hear it.</p>
           <div
-            class="row"
-            style="flex-direction: column; width: 100%; max-width: 700px"
+            style="
+              display: grid;
+              grid-template-columns: 1fr 1fr;
+              gap: 1em 2vw;
+              width: 100%;
+              max-width: 900px;
+              margin: 0 auto;
+            "
           >
             <button
-              class="choice"
-              style="width: 100%"
+              class="icardst"
               onclick="speakGreeting('Hello. My name is Sam.', 'greetSam')"
             >
-              🔊 Hello. My Name is Sam.
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="1.2em"
+                height="1.2em"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                style="vertical-align: -0.2em"
+              >
+                <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" />
+                <path d="M15.54 8.46a5 5 0 0 1 0 7.07" />
+              </svg>
+              <span class="icardtext">Hello. My Name is Sam.</span>
             </button>
+            <div></div>
             <button
-              class="choice"
-              style="width: 100%"
+              class="icardst"
               onclick="speakGreeting('What is your name?', 'greetQ')"
             >
-              🔊 What is your Name?
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="1.2em"
+                height="1.2em"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                style="vertical-align: -0.2em"
+              >
+                <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" />
+                <path d="M15.54 8.46a5 5 0 0 1 0 7.07" />
+              </svg>
+              <span class="icardtext">What is your Name?</span>
             </button>
+            <div></div>
+            <div></div>
             <button
-              class="choice"
-              style="width: 100%"
+              class="icardstb"
               onclick="
                 speakGreeting('Hello Sam. My name is Onza.', 'greetOnza')
               "
             >
-              🔊 Hello Sam. My Name is Onza.
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="1.2em"
+                height="1.2em"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                style="vertical-align: -0.2em"
+              >
+                <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" />
+                <path d="M15.54 8.46a5 5 0 0 1 0 7.07" />
+              </svg>
+              <span class="icardtextb">Hello Sam. My Name is Onza.</span>
             </button>
           </div>
           <p class="small">Use BACK and NEXT to move through the course.</p>
@@ -1581,6 +1656,10 @@
           else if (altVoice) u.voice = altVoice;
           synth.speak(u);
         }
+      }
+
+      function sayOther(text) {
+        say(text, altVoice2);
       }
 
       function toast(t) {
