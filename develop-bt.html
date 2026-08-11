@@ -261,7 +261,8 @@
       }
       .mediaWrap {
         width: fit-content;
-        max-width: min(84vw, 900px);
+        max-width: min(90vw, 1000px);
+        max-height: 80vh;
         min-height: 22vh;
         display: flex;
         align-items: center;
@@ -279,7 +280,7 @@
       .mediaWrap img,
       .mediaWrap video {
         max-width: 100%;
-        max-height: 50vh;
+        max-height: min(76vh, 820px);
         width: auto;
         height: auto;
         object-fit: contain;
@@ -734,7 +735,7 @@
         }
         .mediaWrap img,
         .mediaWrap video {
-          max-height: 36vh;
+          max-height: 54vh;
         }
         .grid--4 {
           --cols: 3;
