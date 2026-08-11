@@ -157,6 +157,28 @@
         text-transform: uppercase;
         color: var(--accent2);
       }
+      .icardbas {
+        min-width: 160px;
+        min-height: 80px;
+        border-radius: 28px;
+        border: 0;
+        font-size: clamp(1.2rem, 2.2vw, 2.2rem);
+        box-shadow: var(--shadow);
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: 0.5em 1em;
+        transition: 0.15s transform;
+      }
+      .icardbas:active {
+        transform: scale(0.95);
+      }
+      .icardbastext {
+        font-family: Verdana, "Trebuchet MS", sans-serif;
+        font-weight: 400;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+      }
       .translate-btn {
         font-size: clamp(1.1rem, 2vw, 1.8rem);
         font-weight: 700;
@@ -322,7 +344,8 @@
         margin: 1em auto 0;
       }
       .grid .choice,
-      .grid .tabs {
+      .grid .tabs,
+      .grid .icardbas {
         min-width: 0;
       }
       .grid-4 {
@@ -1106,41 +1129,41 @@
         <div class="content card">
           <h2>THE MONTHS</h2>
           <div class="grid grid-4">
-            <button class="choice color-btn month-btn c-jan" onclick="say('January')">
-              January
+            <button class="icardbas color-btn month-btn c-jan" onclick="say('January')">
+              <span class="icardbastext">JANUARY</span>
             </button>
-            <button class="choice color-btn month-btn c-feb" onclick="say('February')">
-              February
+            <button class="icardbas color-btn month-btn c-feb" onclick="say('February')">
+              <span class="icardbastext">FEBRUARY</span>
             </button>
-            <button class="choice color-btn month-btn c-mar" onclick="say('March')">
-              March
+            <button class="icardbas color-btn month-btn c-mar" onclick="say('March')">
+              <span class="icardbastext">MARCH</span>
             </button>
-            <button class="choice color-btn month-btn c-apr" onclick="say('April')">
-              April
+            <button class="icardbas color-btn month-btn c-apr" onclick="say('April')">
+              <span class="icardbastext">APRIL</span>
             </button>
-            <button class="choice color-btn month-btn c-may" onclick="say('May')">
-              May
+            <button class="icardbas color-btn month-btn c-may" onclick="say('May')">
+              <span class="icardbastext">MAY</span>
             </button>
-            <button class="choice color-btn month-btn c-jun" onclick="say('June')">
-              June
+            <button class="icardbas color-btn month-btn c-jun" onclick="say('June')">
+              <span class="icardbastext">JUNE</span>
             </button>
-            <button class="choice color-btn month-btn c-jul" onclick="say('July')">
-              July
+            <button class="icardbas color-btn month-btn c-jul" onclick="say('July')">
+              <span class="icardbastext">JULY</span>
             </button>
-            <button class="choice color-btn month-btn c-aug" onclick="say('August')">
-              August
+            <button class="icardbas color-btn month-btn c-aug" onclick="say('August')">
+              <span class="icardbastext">AUGUST</span>
             </button>
-            <button class="choice color-btn month-btn c-sep" onclick="say('September')">
-              September
+            <button class="icardbas color-btn month-btn c-sep" onclick="say('September')">
+              <span class="icardbastext">SEPTEMBER</span>
             </button>
-            <button class="choice color-btn month-btn c-oct" onclick="say('October')">
-              October
+            <button class="icardbas color-btn month-btn c-oct" onclick="say('October')">
+              <span class="icardbastext">OCTOBER</span>
             </button>
-            <button class="choice color-btn month-btn c-nov" onclick="say('November')">
-              November
+            <button class="icardbas color-btn month-btn c-nov" onclick="say('November')">
+              <span class="icardbastext">NOVEMBER</span>
             </button>
-            <button class="choice color-btn month-btn c-dec" onclick="say('December')">
-              December
+            <button class="icardbas color-btn month-btn c-dec" onclick="say('December')">
+              <span class="icardbastext">DECEMBER</span>
             </button>
           </div>
         </div>
@@ -1151,56 +1174,56 @@
         <div class="content card">
           <h2>COLOURS</h2>
           <div class="grid">
-            <button class="choice color-btn c-red" onclick="colourPress('red')">
-              RED
+            <button class="icardbas color-btn c-red" onclick="colourPress('red')">
+              <span class="icardbastext">RED</span>
             </button>
             <button
-              class="choice color-btn c-blue"
+              class="icardbas color-btn c-blue"
               onclick="colourPress('blue')"
             >
-              BLUE
+              <span class="icardbastext">BLUE</span>
             </button>
             <button
-              class="choice color-btn c-yellow"
+              class="icardbas color-btn c-yellow"
               onclick="colourPress('yellow')"
             >
-              YELLOW
+              <span class="icardbastext">YELLOW</span>
             </button>
             <button
-              class="choice color-btn c-green"
+              class="icardbas color-btn c-green"
               onclick="colourPress('green')"
             >
-              GREEN
+              <span class="icardbastext">GREEN</span>
             </button>
             <button
-              class="choice color-btn c-brown"
+              class="icardbas color-btn c-brown"
               onclick="colourPress('brown')"
             >
-              BROWN
+              <span class="icardbastext">BROWN</span>
             </button>
             <button
-              class="choice color-btn c-orange"
+              class="icardbas color-btn c-orange"
               onclick="colourPress('orange')"
             >
-              ORANGE
+              <span class="icardbastext">ORANGE</span>
             </button>
             <button
-              class="choice color-btn c-pink"
+              class="icardbas color-btn c-pink"
               onclick="colourPress('pink')"
             >
-              PINK
+              <span class="icardbastext">PINK</span>
             </button>
             <button
-              class="choice color-btn c-white"
+              class="icardbas color-btn c-white"
               onclick="colourPress('white')"
             >
-              WHITE
+              <span class="icardbastext">WHITE</span>
             </button>
             <button
-              class="choice color-btn c-black"
+              class="icardbas color-btn c-black"
               onclick="colourPress('black')"
             >
-              BLACK
+              <span class="icardbastext">BLACK</span>
             </button>
           </div>
         </div>
@@ -1270,7 +1293,7 @@
               <div class="translateBox left" id="srcLangBox">
                 <span class="translatePlaceholder">🔤</span>
               </div>
-              <button class="listen-btn" onclick="speakTranslate('en')">
+              <button class="icardst" onclick="speakTranslate('en')">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   width="1.2em"
@@ -1286,15 +1309,14 @@
                   <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" />
                   <path d="M15.54 8.46a5 5 0 0 1 0 7.07" />
                 </svg>
-                Listen
+                <span class="icardtext">ENGLISH</span>
               </button>
-              <figcaption>English</figcaption>
             </figure>
             <figure class="castMember">
               <div class="translateBox left" id="zhLangBox">
                 <span class="translatePlaceholder">中文</span>
               </div>
-              <button class="listen-btn" onclick="speakTranslate('zh')">
+              <button class="icardst" onclick="speakTranslate('zh')">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   width="1.2em"
@@ -1310,9 +1332,8 @@
                   <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" />
                   <path d="M15.54 8.46a5 5 0 0 1 0 7.07" />
                 </svg>
-                Listen
+                <span class="icardtext">中文</span>
               </button>
-              <figcaption>中文</figcaption>
             </figure>
           </div>
         </div>
