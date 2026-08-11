@@ -179,14 +179,13 @@
         text-transform: uppercase;
         letter-spacing: 0.05em;
       }
-      .translate-btn {
+      .clipcard {
         font-size: clamp(1.1rem, 2vw, 1.8rem);
         font-weight: 700;
         color: var(--ink);
-        background: var(--accent2);
+        background: var(--muted);
         padding: 0.35em 1.2em;
-        border-radius: 30px;
-        border: 2pt solid var(--accent);
+        border-radius: 8px;
         box-shadow: 0 6px 18px rgba(138, 138, 138, 0.35);
         display: inline-flex;
         align-items: center;
@@ -194,7 +193,7 @@
         text-transform: uppercase;
         transition: 0.15s transform;
       }
-      .translate-btn:active {
+      .clipcard:active {
         transform: scale(0.95);
       }
       .translateBox {
@@ -672,7 +671,7 @@
         .castMember figcaption {
           font-size: clamp(1.1rem, 3.2vw, 1.8rem);
         }
-        .translate-btn {
+        .clipcard {
           font-size: clamp(1.2rem, 3.2vw, 1.8rem);
         }
         .listen-btn {
@@ -893,7 +892,7 @@
       <!-- 2: Media (paste Cloudinary asset link) -->
       <section class="screen mediaPage title-slide">
         <div class="content">
-          <button id="mediaBtn" class="translate-btn" onclick="pasteMedia()">
+          <button id="mediaBtn" class="clipcard" onclick="pasteMedia()">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               width="1.2em"
@@ -1264,7 +1263,7 @@
         <div class="content">
           <button
             id="translateBtn"
-            class="translate-btn"
+            class="clipcard"
             onclick="translateClipboard()"
           >
             <svg
