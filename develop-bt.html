@@ -58,7 +58,8 @@
         display: none;
         align-items: flex-start;
         justify-content: center;
-        padding: clamp(10px, 2vh, 24px) clamp(10px, 2vw, 24px);
+        padding: clamp(56px, 8vh, 76px) clamp(10px, 2vw, 24px)
+          clamp(10px, 2vh, 24px);
       }
       .screen.active {
         display: flex;
@@ -499,91 +500,74 @@
         display: flex;
         justify-content: space-between;
         align-items: center;
-        padding: 1.5vh 3vw;
+        padding: 1vh 2vw;
         background: var(--accent);
         z-index: 20;
       }
-      .topbar .small {
-        color: var(--card);
+      .statusCapsule {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.6em;
+        height: 1.9rem;
+        padding: 0 0.8em;
+        background: #ffffffd9;
+        border: 1px solid rgba(96, 112, 141, 0.5);
+        border-radius: 999px;
+      }
+      .capsuleDivider {
+        width: 1px;
+        height: 1.1em;
+        background: rgba(96, 112, 141, 0.5);
       }
       .progress {
-        font-size: 1.1rem;
+        font-size: 0.9rem;
         color: var(--muted);
-        background: #ffffffd9;
-        padding: 0.3em 0.7em;
-        border-radius: 999px;
         font-weight: bold;
-      }
-      .controls {
-        display: flex;
-        gap: 0.7em;
-        align-items: center;
-      }
-      .stats {
-        display: flex;
-        gap: 0.7em;
-        align-items: center;
+        line-height: 1;
+        white-space: nowrap;
       }
       .points {
-        font-size: 1.1rem;
+        font-size: 0.9rem;
         font-weight: 700;
         color: var(--ink);
-        background: var(--accent2);
-        padding: 0.3em 0.7em;
-        border-radius: 999px;
-        box-shadow: 0 5px 18px rgba(255, 180, 0, 0.3);
         display: inline-flex;
         align-items: center;
         gap: 0.35em;
         white-space: nowrap;
+        line-height: 1;
+      }
+      .controls {
+        display: flex;
+        gap: 0.5em;
+        align-items: center;
+      }
+      .navGroup {
+        display: flex;
+        gap: 0.4em;
+        align-items: center;
       }
       .ctrl {
-        padding: 0.3em 0.7em;
+        height: 1.9rem;
+        padding: 0 0.6em;
         border-radius: 999px;
         background: var(--card);
         box-shadow: 0 5px 18px rgba(0, 0, 0, 0.12);
-        font-size: 1.1rem;
+        font-size: 0.95rem;
         display: inline-flex;
         align-items: center;
         justify-content: center;
-      }
-      .progress,
-      .points,
-      .ctrl {
         line-height: 1;
-        height: 2.2rem;
-        display: inline-flex;
-        align-items: center;
         border: 1px solid rgba(96, 112, 141, 0.5);
       }
-      .nav {
-        position: absolute;
-        bottom: 2vh;
-        left: 50%;
-        transform: translateX(-50%);
-        display: flex;
-        gap: 1em;
-        z-index: 30;
-      }
-      .nav button {
-        padding: 0.32em;
-        border-radius: 999px;
-        background: var(--muted);
-        box-shadow: 0 8px 22px rgba(0, 0, 0, 0.12);
-        font-weight: 500;
-        font-size: 1rem;
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        line-height: 0;
-      }
-      .nav .primary {
-        background: var(--accent);
-        color: var(--accent2);
-      }
-      .nav #prevBtn {
+      .navCtrl {
+        width: 1.9rem;
+        padding: 0;
         background: var(--accent2);
         color: var(--accent);
+      }
+      .navCtrl.primary {
+        background: var(--accent);
+        color: var(--accent2);
       }
       #toast {
         position: absolute;
@@ -711,9 +695,6 @@
         }
       }
       @media (max-aspect-ratio: 1/1) {
-        .screen {
-          padding-bottom: 88px;
-        }
         .content,
         .stage {
           gap: 1.2em;
@@ -744,9 +725,6 @@
         .lessonVideo {
           max-height: 42vh;
         }
-        .nav {
-          bottom: calc(2vh + env(safe-area-inset-bottom, 0px));
-        }
       }
     </style>
   </head>
@@ -756,8 +734,9 @@
       <div id="reward"></div>
 
       <div class="topbar">
-        <div class="stats">
-          <div class="progress" id="progress">1 / 2</div>
+        <div class="statusCapsule">
+          <span class="progress" id="progress">1 / 2</span>
+          <span class="capsuleDivider"></span>
           <span class="points" id="pointsBadge">
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -785,8 +764,15 @@
             <span id="pointsNum">0</span>
           </span>
         </div>
-        <div class="small">ENGLISH EXPLORER</div>
         <div class="controls">
+          <div class="navGroup">
+            <button class="ctrl navCtrl" id="prevBtn" onclick="prev()"></button>
+            <button
+              class="ctrl navCtrl primary"
+              id="nextBtn"
+              onclick="next()"
+            ></button>
+          </div>
           <button class="ctrl" id="soundBtn" aria-label="Sound">
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -1352,10 +1338,6 @@
         </div>
       </section>
 
-      <div class="nav">
-        <button id="prevBtn" onclick="prev()"></button>
-        <button class="primary" id="nextBtn" onclick="next()"></button>
-      </div>
     </div>
 
     <script>
@@ -1375,7 +1357,7 @@
       }
       var slide8From = 0;
       var homeBtn = document.getElementById("homeBtn");
-      var navEl = document.querySelector(".nav");
+      var navEl = document.querySelector(".navGroup");
       var idx = 0;
       var soundOn = true;
       var points = 0;
@@ -2028,13 +2010,25 @@
         else show(nocountIdx);
       };
       document.addEventListener("keydown", function (e) {
-        if (idx === nocountIdx) return;
-        if (e.key === "ArrowRight" || e.key === " ") {
+        var k = e.key || "";
+        var kc = e.keyCode || e.which || 0;
+        if (k === "ArrowRight" || kc === 39 || k === " " || kc === 32) {
           if (e.preventDefault) e.preventDefault();
           next();
+        } else if (k === "ArrowLeft" || kc === 37) {
+          prev();
+        } else if (k === "ArrowUp" || kc === 38) {
+          if (idx === nocountIdx) show(0);
+          else show(nocountIdx);
+        } else if (k === "ArrowDown" || kc === 40) {
+          if (idx === nocountIdx) show(slide8From);
+        } else if (k === "Escape" || kc === 27 || kc === 10009) {
+          if (idx === nocountIdx) show(slide8From);
+          else show(0);
+        } else if (kc === 13 || kc === 29443 || k === "Enter") {
+          var el = document.activeElement;
+          if (el && el.tagName === "BUTTON" && !el.disabled) el.click();
         }
-        if (e.key === "ArrowLeft") prev();
-        if (e.key === "Escape") show(0);
       });
       window.addEventListener("resize", function () {
         if (lastSrcText) equalizeBoxes();
