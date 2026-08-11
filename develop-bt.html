@@ -67,6 +67,11 @@
         max-height: 100%;
         position: relative;
         text-align: center;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: flex-start;
+        gap: 1.4em;
         overflow-y: auto;
         -webkit-overflow-scrolling: touch;
         overscroll-behavior: contain;
@@ -93,6 +98,23 @@
         color: var(--muted);
         font-weight: 700;
         letter-spacing: 0.18em;
+      }
+      .pageTitle {
+        font-size: clamp(1.8rem, 3.5vw, 2.8rem);
+        font-weight: 900;
+        letter-spacing: -0.02em;
+        margin: 0.15em 0;
+      }
+      .stage {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 1.4em;
+        width: 100%;
+      }
+      .stage > .cast {
+        margin: 0;
       }
       .title-slide {
         background: #dff0ff;
@@ -252,31 +274,49 @@
         align-items: flex-start;
         text-align: left;
       }
-      .listen-btn {
-        font-size: clamp(0.95rem, 1.6vw, 1.4rem);
-        font-weight: 700;
-        color: var(--ink);
-        background: var(--accent2);
-        padding: 0.3em 1em;
-        border-radius: 30px;
-        border: 2pt solid var(--accent);
-        box-shadow: 0 6px 18px rgba(138, 138, 138, 0.35);
-        display: inline-flex;
+      .mediaWrap {
+        width: fit-content;
+        max-width: min(84vw, 900px);
+        min-height: 22vh;
+        display: flex;
         align-items: center;
-        gap: 0.45em;
-        text-transform: uppercase;
-        transition: 0.15s transform;
+        justify-content: center;
+        background: #f0f0f0;
+        border-radius: 28px;
+        box-shadow: var(--shadow);
+        overflow: hidden;
+        padding: 0.5em;
       }
-      .listen-btn:active {
-        transform: scale(0.95);
+      .mediaWrap .mediaPlaceholder {
+        font-size: clamp(3rem, 6vw, 5rem);
+        opacity: 0.35;
       }
-      .listen-btn svg {
-        vertical-align: -0.2em;
+      .mediaWrap img,
+      .mediaWrap video {
+        max-width: 100%;
+        max-height: 50vh;
+        width: auto;
+        height: auto;
+        object-fit: contain;
+        border-radius: 20px;
       }
-      .mediaPage h1 {
-        font-size: clamp(1.8rem, 3.5vw, 2.8rem);
-        font-weight: 400;
-        margin: 0.15em 0;
+      .mediaWrap audio {
+        width: min(60vw, 640px);
+        max-width: 100%;
+      }
+      .videoWrap {
+        width: 100%;
+        max-width: 760px;
+      }
+      .playRow {
+        display: flex;
+        justify-content: center;
+        gap: 1rem;
+        width: 100%;
+        max-width: 800px;
+      }
+      .playRow .choice {
+        min-width: 180px;
       }
       .lessonVideo {
         width: 100%;
@@ -285,13 +325,6 @@
         border-radius: 28px;
         box-shadow: var(--shadow);
         background: #f0f0f0;
-      }
-      .row {
-        display: flex;
-        gap: 2vw;
-        justify-content: center;
-        align-items: center;
-        flex-wrap: wrap;
       }
       .choice {
         min-width: 160px;
@@ -360,21 +393,33 @@
         color: #087443;
       }
       .grid {
+        --cols: 3;
         display: grid;
-        grid-template-columns: repeat(3, 1fr);
-        gap: 15px;
+        grid-template-columns: repeat(var(--cols), 1fr);
+        gap: clamp(10px, 1.5vw, 20px);
         width: 100%;
-        max-width: 700px;
-        margin: 1em auto 0;
+        max-width: 900px;
+        margin: 0 auto;
+      }
+      .grid--2 {
+        --cols: 2;
+      }
+      .grid--4 {
+        --cols: 4;
       }
       .grid .choice,
       .grid .tabs,
       .grid .icardbas {
         min-width: 0;
       }
-      .grid-4 {
-        grid-template-columns: repeat(4, 1fr);
-        max-width: 900px;
+      button:focus-visible {
+        outline: 3px solid var(--accent2);
+        outline-offset: 3px;
+      }
+      @media (hover: hover) {
+        button:hover {
+          transform: translateY(-2px);
+        }
       }
       .month-btn {
         font-size: clamp(0.85rem, 1.5vw, 1.4rem);
@@ -419,11 +464,13 @@
       .c-dec {
         background: #f39c12;
       }
-      .card {
+      .panel {
         background: var(--card);
         border-radius: 32px;
         padding: clamp(1.2rem, 2.2vw, 2.6rem);
         box-shadow: var(--shadow);
+        width: 100%;
+        max-width: 900px;
       }
       .color-btn {
         color: white;
@@ -684,6 +731,10 @@
         .screen {
           padding-bottom: 88px;
         }
+        .content,
+        .stage {
+          gap: 1.2em;
+        }
         .cast {
           flex-direction: column;
           align-items: center;
@@ -699,44 +750,17 @@
         .clipcard {
           font-size: clamp(1.2rem, 3.2vw, 1.8rem);
         }
-        .listen-btn {
-          font-size: clamp(1.05rem, 3vw, 1.5rem);
-        }
         .translateBox {
           width: min(84vw, 420px);
           min-height: 24vh;
         }
-      .mediaWrap {
-        width: fit-content;
-        max-width: min(84vw, 900px);
-        min-height: 22vh;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        background: #f0f0f0;
-        border-radius: 28px;
-        box-shadow: var(--shadow);
-        overflow: hidden;
-        margin: 2vh auto 0;
-        padding: 0.5em;
-      }
-      .mediaWrap .mediaPlaceholder {
-        font-size: clamp(3rem, 6vw, 5rem);
-        opacity: 0.35;
-      }
-      .mediaWrap img,
-      .mediaWrap video {
-        max-width: 100%;
-        max-height: 36vh;
-        width: auto;
-        height: auto;
-        object-fit: contain;
-        border-radius: 20px;
-      }
-      .mediaWrap audio {
-        width: min(60vw, 640px);
-        max-width: 100%;
-      }
+        .mediaWrap img,
+        .mediaWrap video {
+          max-height: 36vh;
+        }
+        .grid--4 {
+          --cols: 3;
+        }
         .lessonVideo {
           max-height: 42vh;
         }
@@ -824,27 +848,29 @@
       <!-- Index -->
       <section class="screen title-slide active">
         <div class="content">
-          <h1>Index</h1>
-          <p>Tap a topic to begin.</p>
-          <div class="grid">
-            <button class="tabs tab-alphabet">
-              <span class="tabtext">Alphabet</span>
-            </button>
-            <button class="tabs tab-numbers">
-              <span class="tabtext">Numbers</span>
-            </button>
-            <button class="tabs tab-colours" onclick="goColours()">
-              <span class="tabtext">Colours</span>
-            </button>
-            <button class="tabs tab-months" onclick="goMonths()">
-              <span class="tabtext">Months</span>
-            </button>
-            <button class="tabs tab-words">
-              <span class="tabtext">Words</span>
-            </button>
-            <button class="tabs tab-conversation">
-              <span class="tabtext">Conversation</span>
-            </button>
+          <h1 class="pageTitle">Index</h1>
+          <div class="stage">
+            <p>Tap a topic to begin.</p>
+            <div class="grid">
+              <button class="tabs tab-alphabet">
+                <span class="tabtext">Alphabet</span>
+              </button>
+              <button class="tabs tab-numbers">
+                <span class="tabtext">Numbers</span>
+              </button>
+              <button class="tabs tab-colours" onclick="goColours()">
+                <span class="tabtext">Colours</span>
+              </button>
+              <button class="tabs tab-months" onclick="goMonths()">
+                <span class="tabtext">Months</span>
+              </button>
+              <button class="tabs tab-words">
+                <span class="tabtext">Words</span>
+              </button>
+              <button class="tabs tab-conversation">
+                <span class="tabtext">Conversation</span>
+              </button>
+            </div>
           </div>
         </div>
       </section>
@@ -852,9 +878,10 @@
       <!-- 1: Title -->
       <section class="screen title-slide">
         <div class="content">
-          <h2>Welcome</h2>
-          <div class="cast">
-            <figure class="castMember">
+          <h1 class="pageTitle">Welcome</h1>
+          <div class="stage">
+            <div class="cast">
+              <figure class="castMember">
               <img
                 class="character"
                 src="https://res.cloudinary.com/dp455m4rk/image/upload/c_scale,w_800/q_auto/f_auto/e_bgremoval/v1786010283/sam_3d_awiawr.png"
@@ -910,13 +937,15 @@
                 <span class="icardtext">My Name is Onza</span>
               </button>
             </figure>
+            </div>
           </div>
         </div>
       </section>
 
       <!-- 2: Media (paste Cloudinary asset link) -->
-      <section class="screen mediaPage title-slide">
+      <section class="screen title-slide">
         <div class="content">
+          <div class="stage">
           <button id="mediaBtn" class="clipcard" onclick="pasteMedia()">
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -944,84 +973,46 @@
           <div id="mediaWrap" class="mediaWrap">
             <span class="mediaPlaceholder">🎬</span>
           </div>
+          </div>
         </div>
       </section>
 
       <!-- 3: Video — Sam & Onza introduce themselves -->
-      <section class="screen mediaPage">
-        <div
-          class="content"
-          style="
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            gap: 1.4em;
-          "
-        >
-          <div class="small">ENGLISH EXPLORER</div>
-          <h1>Watch the Clip</h1>
-          <div
-            id="nameVideoWrap"
-            style="margin-top: 0.5em; width: 100%; max-width: 760px"
-          >
-            <video
-              id="nameVideo"
-              class="lessonVideo"
-              playsinline
-              webkit-playsinline
-              x5-playsinline
-              preload="auto"
-              controls
-              src="https://res.cloudinary.com/dp455m4rk/video/upload/q_auto/v1785933190/sam_onza_name_ro4vuz.mp4"
-            ></video>
-          </div>
-          <div
-            class="row"
-            style="
-              justify-content: center;
-              gap: 1rem;
-              width: 100%;
-              max-width: 800px;
-            "
-          >
-            <button
-              class="choice yes"
-              style="min-width: 180px"
-              onclick="playVideo('nameVideo')"
-            >
-              ▶ PLAY
-            </button>
+      <section class="screen">
+        <div class="content">
+          <span class="small">ENGLISH EXPLORER</span>
+          <h1 class="pageTitle">Watch the Clip</h1>
+          <div class="stage">
+            <div id="nameVideoWrap" class="videoWrap">
+              <video
+                id="nameVideo"
+                class="lessonVideo"
+                playsinline
+                webkit-playsinline
+                x5-playsinline
+                preload="auto"
+                controls
+                src="https://res.cloudinary.com/dp455m4rk/video/upload/q_auto/v1785933190/sam_onza_name_ro4vuz.mp4"
+              ></video>
+            </div>
+            <div class="playRow">
+              <button class="choice yes" onclick="playVideo('nameVideo')">
+                ▶ PLAY
+              </button>
+            </div>
           </div>
           <p class="small">Use BACK and NEXT to move through the course.</p>
         </div>
       </section>
 
       <!-- 3: Greetings -->
-      <section class="screen mediaPage">
-        <div
-          class="content"
-          style="
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            gap: 1.4em;
-          "
-        >
-          <div class="small">ENGLISH EXPLORER</div>
-          <h1>Greetings</h1>
-          <p>Tap each line to hear it.</p>
-          <div
-            style="
-              display: grid;
-              grid-template-columns: 1fr 1fr;
-              gap: 1em 2vw;
-              width: 100%;
-              max-width: 900px;
-              margin: 0 auto;
-            "
-          >
+      <section class="screen">
+        <div class="content">
+          <span class="small">ENGLISH EXPLORER</span>
+          <h1 class="pageTitle">Greetings</h1>
+          <div class="stage">
+            <p>Tap each line to hear it.</p>
+            <div class="grid grid--2">
             <button
               class="icardst"
               onclick="speakGreeting('Hello. My name is Sam.', 'greetSam')"
@@ -1091,109 +1082,66 @@
               <span class="icardtextb">Hello Sam. My Name is Onza.</span>
             </button>
           </div>
+          </div>
           <p class="small">Use BACK and NEXT to move through the course.</p>
         </div>
       </section>
 
       <!-- 4: Video — Classroom commands -->
-      <section class="screen mediaPage">
-        <div
-          class="content"
-          style="
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            gap: 1.4em;
-          "
-        >
-          <div class="small">ENGLISH EXPLORER</div>
-          <h1>Watch the Clip</h1>
-          <div
-            id="commandsVideoWrap"
-            style="margin-top: 0.5em; width: 100%; max-width: 760px"
-          >
-            <video
-              id="commandsVideo"
-              class="lessonVideo"
-              playsinline
-              webkit-playsinline
-              x5-playsinline
-              preload="auto"
-              controls
-              data-autoplay="false"
-              data-autoplay-mode="manual"
-              src="https://res.cloudinary.com/dp455m4rk/video/upload/q_auto,f_auto/v1786019411/classroomcommands_wqls5x.mp4"
-            ></video>
-          </div>
-          <div
-            class="row"
-            style="
-              justify-content: center;
-              gap: 1rem;
-              width: 100%;
-              max-width: 800px;
-            "
-          >
-            <button
-              class="choice yes"
-              style="min-width: 180px"
-              onclick="playVideo('commandsVideo')"
-            >
-              ▶ PLAY
-            </button>
+      <section class="screen">
+        <div class="content">
+          <span class="small">ENGLISH EXPLORER</span>
+          <h1 class="pageTitle">Watch the Clip</h1>
+          <div class="stage">
+            <div id="commandsVideoWrap" class="videoWrap">
+              <video
+                id="commandsVideo"
+                class="lessonVideo"
+                playsinline
+                webkit-playsinline
+                x5-playsinline
+                preload="auto"
+                controls
+                data-autoplay="false"
+                data-autoplay-mode="manual"
+                src="https://res.cloudinary.com/dp455m4rk/video/upload/q_auto,f_auto/v1786019411/classroomcommands_wqls5x.mp4"
+              ></video>
+            </div>
+            <div class="playRow">
+              <button class="choice yes" onclick="playVideo('commandsVideo')">
+                ▶ PLAY
+              </button>
+            </div>
           </div>
           <p class="small">Use BACK and NEXT to move through the course.</p>
         </div>
       </section>
 
       <!-- 5: Video — Colours -->
-      <section class="screen mediaPage">
-        <div
-          class="content"
-          style="
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            gap: 1.4em;
-          "
-        >
-          <div class="small">ENGLISH EXPLORER</div>
-          <h1>Watch the Clip</h1>
-          <div
-            id="coloursVideoWrap"
-            style="margin-top: 0.5em; width: 100%; max-width: 760px"
-          >
-            <video
-              id="coloursVideo"
-              class="lessonVideo"
-              playsinline
-              webkit-playsinline
-              x5-playsinline
-              preload="auto"
-              controls
-              data-autoplay="false"
-              data-autoplay-mode="manual"
-              src="https://res.cloudinary.com/dp455m4rk/video/upload/q_auto/v1786027836/colours_jtbfwl.mp4"
-            ></video>
-          </div>
-          <div
-            class="row"
-            style="
-              justify-content: center;
-              gap: 1rem;
-              width: 100%;
-              max-width: 800px;
-            "
-          >
-            <button
-              class="choice yes"
-              style="min-width: 180px"
-              onclick="playVideo('coloursVideo')"
-            >
-              ▶ PLAY
-            </button>
+      <section class="screen">
+        <div class="content">
+          <span class="small">ENGLISH EXPLORER</span>
+          <h1 class="pageTitle">Watch the Clip</h1>
+          <div class="stage">
+            <div id="coloursVideoWrap" class="videoWrap">
+              <video
+                id="coloursVideo"
+                class="lessonVideo"
+                playsinline
+                webkit-playsinline
+                x5-playsinline
+                preload="auto"
+                controls
+                data-autoplay="false"
+                data-autoplay-mode="manual"
+                src="https://res.cloudinary.com/dp455m4rk/video/upload/q_auto/v1786027836/colours_jtbfwl.mp4"
+              ></video>
+            </div>
+            <div class="playRow">
+              <button class="choice yes" onclick="playVideo('coloursVideo')">
+                ▶ PLAY
+              </button>
+            </div>
           </div>
           <p class="small">Use BACK and NEXT to move through the course.</p>
         </div>
@@ -1201,9 +1149,11 @@
 
       <!-- Months -->
       <section class="screen" id="monthsScreen">
-        <div class="content card">
-          <h2>THE MONTHS</h2>
-          <div class="grid grid-4">
+        <div class="content">
+          <h1 class="pageTitle">THE MONTHS</h1>
+          <div class="stage">
+            <div class="panel">
+              <div class="grid grid--4">
             <button class="icardbas color-btn month-btn c-jan" onclick="say('January')">
               <span class="icardbastext">JANUARY</span>
             </button>
@@ -1241,14 +1191,18 @@
               <span class="icardbastext">DECEMBER</span>
             </button>
           </div>
+            </div>
+          </div>
         </div>
       </section>
 
       <!-- 6: Colours check -->
       <section class="screen" id="coloursScreen">
-        <div class="content card">
-          <h2>COLOURS</h2>
-          <div class="grid">
+        <div class="content">
+          <h1 class="pageTitle">COLOURS</h1>
+          <div class="stage">
+            <div class="panel">
+              <div class="grid">
             <button class="icardbas color-btn c-red" onclick="colourPress('red')">
               <span class="icardbastext">RED</span>
             </button>
@@ -1301,14 +1255,18 @@
               <span class="icardbastext">BLACK</span>
             </button>
           </div>
+            </div>
+          </div>
         </div>
       </section>
 
       <!-- 7: Results / big reward page -->
       <section class="screen" id="resultsScreen">
-        <div class="content card">
-          <h1>YOUR SCORE</h1>
-          <p>Complete the tasks to earn all 6 stars and win the cup!</p>
+        <div class="content">
+          <h1 class="pageTitle">YOUR SCORE</h1>
+          <div class="stage">
+            <div class="panel">
+              <p>Complete the tasks to earn all 6 stars and win the cup!</p>
           <div class="rewardSlots" id="rewardSlots">
             <span class="slot">⭐</span>
             <span class="slot">⭐</span>
@@ -1331,12 +1289,15 @@
             src="https://res.cloudinary.com/dp455m4rk/video/upload/v1786033998/reward_cup_mv1dsm.mp4"
             style="display: none"
           ></video>
+            </div>
+          </div>
         </div>
       </section>
 
       <!-- 8: Translator (repeat, not counted in progress) -->
-      <section class="screen mediaPage title-slide" data-nocount>
+      <section class="screen title-slide" data-nocount>
         <div class="content">
+          <div class="stage">
           <button
             id="translateBtn"
             class="clipcard"
@@ -1410,6 +1371,7 @@
                 <span class="icardtext">中文</span>
               </button>
             </figure>
+            </div>
           </div>
         </div>
       </section>
