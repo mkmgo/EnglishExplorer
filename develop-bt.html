@@ -409,6 +409,18 @@
       .month-btn {
         font-size: clamp(0.85rem, 1.5vw, 1.4rem);
       }
+      .word-btn {
+        min-height: 52px;
+        font-size: clamp(0.9rem, 1.4vw, 1.3rem);
+        background: #eef1f7;
+        color: var(--ink);
+      }
+      .wordPage {
+        font-size: 0.5em;
+        color: var(--muted);
+        font-weight: 400;
+        letter-spacing: 0;
+      }
       .c-jan {
         background: #f1c40f;
         color: var(--ink);
@@ -831,7 +843,7 @@
               <button class="tabs tab-months" onclick="goMonths()">
                 <span class="tabtext">Months</span>
               </button>
-              <button class="tabs tab-words">
+              <button class="tabs tab-words" onclick="goWords()">
                 <span class="tabtext">Words</span>
               </button>
               <button class="tabs tab-conversation">
@@ -1223,6 +1235,8 @@
         </div>
       </section>
 
+      <div id="wordSlides"></div>
+
       <!-- 7: Results / big reward page -->
       <section class="screen" id="resultsScreen">
         <div class="content">
@@ -1342,6 +1356,72 @@
     </div>
 
     <script>
+      var wordGroups = [
+        {
+          id: "people",
+          title: "People",
+          words: [
+            "Family",
+            "Mom",
+            "Dad",
+            "Boy",
+            "Girl",
+            "Baby",
+            "Friends",
+            "Teacher",
+            "Friend",
+          ],
+        },
+      ];
+      (function () {
+        var host = document.getElementById("wordSlides");
+        if (!host) return;
+        var pageSize = 16;
+        wordGroups.forEach(function (group) {
+          var pages = Math.max(1, Math.ceil(group.words.length / pageSize));
+          for (var p = 0; p < pages; p++) {
+            var slice = group.words.slice(p * pageSize, (p + 1) * pageSize);
+            var sec = document.createElement("section");
+            sec.className = "screen word-screen";
+            sec.id = "words-" + group.id + "-" + (p + 1);
+            var content = document.createElement("div");
+            content.className = "content";
+            var h = document.createElement("h1");
+            h.className = "pageTitle";
+            h.innerHTML =
+              group.title.toUpperCase() +
+              ' <span class="wordPage">· ' +
+              (p + 1) +
+              "/" +
+              pages +
+              "</span>";
+            var stage = document.createElement("div");
+            stage.className = "stage";
+            var panel = document.createElement("div");
+            panel.className = "panel";
+            var grid = document.createElement("div");
+            grid.className = "grid grid--4";
+            slice.forEach(function (w) {
+              var b = document.createElement("button");
+              b.className = "icardbas word-btn";
+              b.setAttribute("data-word", w);
+              var s = document.createElement("span");
+              s.className = "icardbastext";
+              s.textContent = w.toUpperCase();
+              b.appendChild(s);
+              grid.appendChild(b);
+            });
+            panel.appendChild(grid);
+            stage.appendChild(panel);
+            content.appendChild(h);
+            content.appendChild(stage);
+            sec.appendChild(content);
+            host.appendChild(sec);
+          }
+        });
+      })();
+    </script>
+    <script>
       var screens = Array.prototype.slice.call(
         document.querySelectorAll(".screen"),
       );
@@ -1451,6 +1531,26 @@
           }
         }
       }
+
+      function goWords() {
+        for (var i = 0; i < screens.length; i++) {
+          if (screens[i].classList.contains("word-screen")) {
+            show(i);
+            return;
+          }
+        }
+      }
+
+      document.getElementById("app").addEventListener("click", function (e) {
+        var t = e.target;
+        while (t && t !== this) {
+          if (t.getAttribute && t.getAttribute("data-word")) {
+            say(t.getAttribute("data-word"));
+            return;
+          }
+          t = t.parentNode;
+        }
+      });
 
       function show(i) {
         var prevIdx = idx;
