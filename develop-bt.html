@@ -1610,29 +1610,29 @@
         try {
           preloadVideo(video);
           video.currentTime = 0;
-          video.muted = false;
           video.autoplay = true;
           video.setAttribute("autoplay", "true");
           video.setAttribute("playsinline", "true");
           video.setAttribute("webkit-playsinline", "true");
           video.setAttribute("x5-playsinline", "true");
-          var attemptPlay = function () {
+          var attempt = function (muted) {
+            video.muted = muted;
             var p = video.play();
-            if (!p || typeof p.then !== "function") return;
+            if (!p || typeof p.then !== "function") {
+              if (!muted) video.muted = false;
+              return;
+            }
             p.then(function () {
-              video.muted = false;
-            }).catch(function () {
-              if (preferUnmuted) {
-                window.setTimeout(function () {
-                  video.muted = false;
-                  try {
-                    video.play().catch(function () {});
-                  } catch (e) {}
-                }, 150);
+              if (preferUnmuted && muted) {
+                video.muted = false;
+                var p2 = video.play();
+                if (p2 && typeof p2.catch === "function") p2.catch(function () {});
               }
+            }).catch(function () {
+              if (!muted) attempt(true);
             });
           };
-          attemptPlay();
+          attempt(!preferUnmuted);
         } catch (e) {}
       }
 
@@ -1973,6 +1973,7 @@
           el.controls = true;
           el.preload = "auto";
           el.playsInline = true;
+          el.muted = true;
           el.setAttribute("playsinline", "true");
           el.setAttribute("webkit-playsinline", "true");
           el.src = url;
@@ -1988,10 +1989,7 @@
         }
         wrap.appendChild(el);
         if (isVideo) {
-          try {
-            var p = el.play();
-            if (p && typeof p.catch === "function") p.catch(function () {});
-          } catch (e) {}
+          playMediaVideo(el, false);
         }
       }
 
@@ -2138,6 +2136,41 @@
           if (el && el.tagName === "BUTTON" && !el.disabled) el.click();
         }
       });
+      var touchStart = null;
+      var appEl = document.getElementById("app");
+      if (appEl && "ontouchstart" in window) {
+        appEl.addEventListener(
+          "touchstart",
+          function (e) {
+            var t = e.touches && e.touches[0];
+            if (!t) return;
+            touchStart = { x: t.clientX, y: t.clientY, t: Date.now() };
+          },
+          { passive: true },
+        );
+        appEl.addEventListener(
+          "touchend",
+          function (e) {
+            if (!touchStart) return;
+            var t = e.changedTouches && e.changedTouches[0];
+            if (!t) return;
+            var dx = t.clientX - touchStart.x;
+            var dy = t.clientY - touchStart.y;
+            var dt = Date.now() - touchStart.t;
+            touchStart = null;
+            if (dt > 900) return;
+            if (Math.abs(dx) < 40 && Math.abs(dy) < 40) return;
+            if (Math.abs(dx) > Math.abs(dy)) {
+              if (dx < 0) next();
+              else prev();
+            } else if (dy < 0) {
+              if (idx === nocountIdx) show(0);
+              else show(nocountIdx);
+            }
+          },
+          { passive: true },
+        );
+      }
       window.addEventListener("resize", function () {
         if (lastSrcText) equalizeBoxes();
       });
