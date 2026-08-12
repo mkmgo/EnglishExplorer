@@ -1,9 +1,8 @@
-ENGLISH EXPLORER ADVANCED
+ENGLISH EXPLORER (ADVANCED)
 Tizen-friendly offline HTML presentation
 
 Files:
 - index.html
-- character.mp4
 
 How to use:
 1. Keep both files in the same folder.
