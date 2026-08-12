@@ -2203,7 +2203,7 @@
         b.onclick = function () {
           restoreClip(en, zh);
         };
-        clipList.appendChild(b);
+        clipList.insertBefore(b, clipList.firstChild);
       }
 
       function restoreClip(en, zh) {
