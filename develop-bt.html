@@ -157,8 +157,8 @@
         transform: scale(0.95);
       }
       .icardtext {
-        font-family: Verdana, "Trebuchet MS", sans-serif;
-        font-weight: 400;
+        font-family: Arial, Helvetica, sans-serif;
+        font-weight: bold;
         font-size: clamp(0.9rem, 1.5vw, 1.5rem);
         letter-spacing: 0.05em;
         text-transform: uppercase;
@@ -181,8 +181,8 @@
         transform: scale(0.95);
       }
       .icardtextb {
-        font-family: Verdana, "Trebuchet MS", sans-serif;
-        font-weight: 400;
+        font-family: Arial, Helvetica, sans-serif;
+        font-weight: bold;
         font-size: clamp(0.9rem, 1.5vw, 1.5rem);
         letter-spacing: 0.05em;
         text-transform: uppercase;
@@ -388,6 +388,9 @@
         margin: 0 auto;
       }
       .grid--2 {
+        --cols: 2;
+      }
+      .grid-tabs {
         --cols: 2;
       }
       .grid--4 {
@@ -605,6 +608,70 @@
       #toast.show {
         opacity: 1;
       }
+      #inputModal {
+        position: absolute;
+        inset: 0;
+        z-index: 90;
+        display: none;
+        align-items: center;
+        justify-content: center;
+        background: rgba(20, 33, 61, 0.55);
+      }
+      #inputModal.show {
+        display: flex;
+      }
+      .inputBox {
+        width: min(86vw, 560px);
+        background: var(--card);
+        border-radius: 24px;
+        border: 2pt solid var(--accent2);
+        box-shadow: var(--shadow);
+        padding: 1.4em;
+        display: flex;
+        flex-direction: column;
+        gap: 1em;
+      }
+      .inputBox h2 {
+        margin: 0;
+        font-size: clamp(1.2rem, 2.4vw, 1.8rem);
+        text-align: center;
+      }
+      .inputBox textarea {
+        width: 100%;
+        min-height: 120px;
+        font: inherit;
+        font-size: clamp(1.1rem, 2vw, 1.6rem);
+        color: var(--ink);
+        background: #eef1f7;
+        border: 2px solid #c3cbd9;
+        border-radius: 14px;
+        padding: 0.7em;
+        resize: vertical;
+      }
+      .inputBox textarea:focus-visible {
+        outline: 3px solid var(--accent2);
+        outline-offset: 2px;
+      }
+      .inputBtns {
+        display: flex;
+        justify-content: center;
+        gap: 1rem;
+      }
+      .inputBtns button {
+        min-width: 120px;
+        min-height: 56px;
+        border-radius: 999px;
+        font-size: clamp(1.1rem, 2vw, 1.6rem);
+        font-weight: 900;
+      }
+      .inputBtns .okBtn {
+        background: var(--accent);
+        color: var(--accent2);
+      }
+      .inputBtns .cancelBtn {
+        background: #eef1f7;
+        color: var(--ink);
+      }
       #reward {
         position: absolute;
         inset: 0;
@@ -754,6 +821,17 @@
       <div id="toast"></div>
       <div id="reward"></div>
 
+      <div id="inputModal">
+        <div class="inputBox">
+          <h2 id="inputTitle">Type or paste your input</h2>
+          <textarea id="inputField" placeholder="Type here or paste from clipboard…"></textarea>
+          <div class="inputBtns">
+            <button class="cancelBtn" onclick="closeInputModal()">Cancel</button>
+            <button class="okBtn" onclick="submitInputModal()">OK</button>
+          </div>
+        </div>
+      </div>
+
       <div class="topbar">
         <div class="barLeft">
           <button class="ctrl navCtrl" id="prevBtn" onclick="prev()"></button>
@@ -863,8 +941,8 @@
         </div>
       </section>
 
-      <!-- 1: Title -->
-      <section class="screen title-slide">
+      <!-- 1: Title (retired) -->
+      <section class="screen title-slide" data-retired>
         <div class="content">
           <h1 class="pageTitle">Welcome</h1>
           <div class="stage">
@@ -965,8 +1043,8 @@
         </div>
       </section>
 
-      <!-- 3: Video — Sam & Onza introduce themselves -->
-      <section class="screen">
+      <!-- 3: Video — Sam & Onza introduce themselves (retired) -->
+      <section class="screen" data-retired>
         <div class="content">
           <h1 class="pageTitle">Watch the Clip</h1>
           <div class="stage">
@@ -1071,8 +1149,8 @@
         </div>
       </section>
 
-      <!-- 4: Video — Classroom commands -->
-      <section class="screen">
+      <!-- 4: Video — Classroom commands (retired) -->
+      <section class="screen" data-retired>
         <div class="content">
           <h1 class="pageTitle">Watch the Clip</h1>
           <div class="stage">
@@ -1099,8 +1177,8 @@
         </div>
       </section>
 
-      <!-- 5: Video — Colours -->
-      <section class="screen">
+      <!-- 5: Video — Colours (retired) -->
+      <section class="screen" data-retired>
         <div class="content">
           <h1 class="pageTitle">Watch the Clip</h1>
           <div class="stage">
@@ -1471,12 +1549,16 @@
       var countTotal = 0;
       var nocountIdx = -1;
       var lastCounted = screens.length - 1;
+      var activeIdx = [];
       for (var s = 0; s < screens.length; s++) {
         if (screens[s].hasAttribute("data-nocount")) {
           if (nocountIdx < 0) nocountIdx = s;
+        } else if (screens[s].hasAttribute("data-retired")) {
+          continue;
         } else {
           countTotal++;
           lastCounted = s;
+          activeIdx.push(s);
         }
       }
       var slide8From = 0;
@@ -1601,8 +1683,8 @@
         for (var j = 0; j < screens.length; j++) {
           screens[j].classList.toggle("active", j === idx);
         }
-        var shown = idx + 1;
-        if (shown > countTotal) shown = countTotal;
+        var shown = activeIdx.indexOf(idx) + 1;
+        if (shown < 1) shown = countTotal;
         progress.textContent = shown + " / " + countTotal;
         var isNoCount = idx === nocountIdx;
         document.getElementById("prevBtn").innerHTML = ICON_ARROW_LEFT;
@@ -1683,12 +1765,16 @@
       function next() {
         if (idx === nocountIdx) return;
         if (idx === lastCounted) show(0);
-        else show(idx + 1);
+        else {
+          var nextActive = activeIdx.indexOf(idx) + 1;
+          show(activeIdx[nextActive] === undefined ? 0 : activeIdx[nextActive]);
+        }
       }
 
       function prev() {
         if (idx === nocountIdx) return;
-        show(idx - 1);
+        var prevActive = activeIdx.indexOf(idx) - 1;
+        show(prevActive < 0 ? 0 : activeIdx[prevActive]);
       }
 
       function cancelSpeech() {
@@ -1854,14 +1940,37 @@
         }
       }
 
+      var inputCallback = null;
+
+      function openInputModal(title, cb) {
+        inputCallback = cb || null;
+        var t = document.getElementById("inputTitle");
+        if (t) t.textContent = title;
+        var f = document.getElementById("inputField");
+        if (f) {
+          f.value = "";
+          f.focus();
+        }
+        document.getElementById("inputModal").classList.add("show");
+      }
+
+      function closeInputModal() {
+        document.getElementById("inputModal").classList.remove("show");
+        inputCallback = null;
+      }
+
+      function submitInputModal() {
+        var f = document.getElementById("inputField");
+        var val = f ? f.value.trim() : "";
+        document.getElementById("inputModal").classList.remove("show");
+        if (inputCallback) {
+          var cb = inputCallback;
+          inputCallback = null;
+          cb(val);
+        }
+      }
+
       function translateClipboard() {
-        var getText = function () {
-          var typed = window.prompt(
-            "Clipboard is not available. Paste or type the text to translate:",
-          );
-          if (typed === null || typed === undefined) return null;
-          return typed.trim();
-        };
         var run = function (txt) {
           if (txt) doTranslate(txt);
         };
@@ -1874,19 +1983,25 @@
             .then(function (txt) {
               txt = String(txt || "").trim();
               if (!txt) {
-                var fb = getText();
-                if (fb) run(fb);
+                openInputModal(
+                  "Clipboard is empty. Type or paste the text to translate:",
+                  run,
+                );
                 return;
               }
               run(txt);
             })
             .catch(function () {
-              var fb = getText();
-              if (fb) run(fb);
+              openInputModal(
+                "Clipboard is empty. Type or paste the text to translate:",
+                run,
+              );
             });
         } else {
-          var fb = getText();
-          if (fb) run(fb);
+          openInputModal(
+            "Clipboard is empty. Type or paste the text to translate:",
+            run,
+          );
         }
       }
 
@@ -1961,11 +2076,6 @@
       }
 
       function pasteMedia() {
-        var getUrl = function () {
-          var typed = window.prompt("Paste the Cloudinary asset link:");
-          if (typed === null || typed === undefined) return null;
-          return extractUrl(typed);
-        };
         var run = function (u) {
           if (u) injectMedia(u);
         };
@@ -1978,19 +2088,31 @@
             .then(function (txt) {
               var u = extractUrl(String(txt || ""));
               if (!u) {
-                var fb = getUrl();
-                if (fb) run(fb);
+                openInputModal(
+                  "Clipboard is empty. Type or paste the Cloudinary asset link:",
+                  function (v) {
+                    run(extractUrl(v));
+                  },
+                );
                 return;
               }
               run(u);
             })
             .catch(function () {
-              var fb = getUrl();
-              if (fb) run(fb);
+              openInputModal(
+                "Clipboard is empty. Type or paste the Cloudinary asset link:",
+                function (v) {
+                  run(extractUrl(v));
+                },
+              );
             });
         } else {
-          var fb = getUrl();
-          if (fb) run(fb);
+          openInputModal(
+            "Clipboard is empty. Type or paste the Cloudinary asset link:",
+            function (v) {
+              run(extractUrl(v));
+            },
+          );
         }
       }
 
@@ -2156,6 +2278,16 @@
       document.addEventListener("keydown", function (e) {
         var k = e.key || "";
         var kc = e.keyCode || e.which || 0;
+        if (document.getElementById("inputModal").classList.contains("show")) {
+          if (k === "Escape" || kc === 27 || kc === 10009) {
+            closeInputModal();
+            return;
+          }
+          if (kc === 13 || kc === 29443 || k === "Enter") {
+            submitInputModal();
+            return;
+          }
+        }
         if (k === "ArrowRight" || kc === 39 || k === " " || kc === 32) {
           if (e.preventDefault) e.preventDefault();
           next();
