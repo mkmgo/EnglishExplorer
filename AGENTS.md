@@ -1,5 +1,11 @@
 # English Explorer — Dev Conventions
 
+## Platforms
+
+- Must work on **Tizen** smart TVs and **mobile devices** (iOS/Android phones and tablets).
+- When a feature behaves differently per platform (e.g., clipboard, dialogs, video autoplay), test and handle both: Tizen first, then mobile. Avoid `window.prompt`/`window.confirm` on Tizen — use in-page modals (e.g., `#inputModal`) so users can type or paste.
+- Keep layouts responsive: desktop, tablet, and portrait/landscape phones must all fit without overflow.
+
 ## Dialogue layout (slide 3 "Greeting and Introduction" and similar)
 
 - Dialogue bubbles alternate sides: Sam speaks on the **left** (`icardst` / accent background), Onza speaks on the **right** (`icardstb` / accent2 background).
