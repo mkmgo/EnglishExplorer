@@ -629,6 +629,14 @@
         border-radius: 6px;
         background: #fff;
       }
+      .miniChip .miniImg.big {
+        width: 2em;
+        height: 2em;
+      }
+      .miniChip .miniImg.small {
+        width: 1em;
+        height: 1em;
+      }
       .gameArea {
         display: flex;
         flex-direction: column;
@@ -1611,10 +1619,21 @@
                 </button>
                 <div></div>
               </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Theme 3: MY KITE / YOUR KITE — chips (present) -->
+      <section class="screen" id="toysChipsScreen">
+        <div class="content">
+          <h1 class="pageTitle">MY KITE / YOUR KITE</h1>
+          <div class="stage">
+            <div class="panel">
               <div class="miniRow">
                 <button class="miniChip" onclick="say('Big car')">
                   <img
-                    class="miniImg"
+                    class="miniImg big"
                     src="https://res.cloudinary.com/dqwm4pdbz/image/upload/c_crop,w_421,h_424,x_0,y_0/r_max/bo_5px_solid_white/v1786599929/260813_toys_01_txjh3y.png"
                     alt="car"
                   />
@@ -1622,7 +1641,7 @@
                 </button>
                 <button class="miniChip" onclick="say('Small car')">
                   <img
-                    class="miniImg"
+                    class="miniImg small"
                     src="https://res.cloudinary.com/dqwm4pdbz/image/upload/c_crop,w_421,h_424,x_0,y_0/r_max/bo_5px_solid_white/v1786599929/260813_toys_01_txjh3y.png"
                     alt="car"
                   />
@@ -1650,7 +1669,7 @@
         </div>
       </section>
 
-      <!-- Theme 3: BIG OR SMALL? (mini-game) -->
+      <!-- Theme 4: BIG OR SMALL? (mini-game) -->
       <section class="screen" id="toysBigSmallScreen">
         <div class="content">
           <h1 class="pageTitle">BIG OR SMALL?</h1>
@@ -1672,7 +1691,7 @@
         </div>
       </section>
 
-      <!-- Theme 4: DO YOU HAVE A...? (exercise) -->
+      <!-- Theme 5: DO YOU HAVE A...? (exercise) -->
       <section class="screen" id="toysYesNoScreen">
         <div class="content">
           <h1 class="pageTitle">DO YOU HAVE A…?</h1>
@@ -1694,7 +1713,7 @@
         </div>
       </section>
 
-      <!-- Theme 5: I HAVE A... (exercise) -->
+      <!-- Theme 6: I HAVE A... (exercise) -->
       <section class="screen" id="toysHaveScreen">
         <div class="content">
           <h1 class="pageTitle">I HAVE A…</h1>
@@ -1713,7 +1732,7 @@
         </div>
       </section>
 
-      <!-- Theme 6: WHERE IS THE...? (exercise) -->
+      <!-- Theme 7: WHERE IS THE...? (exercise) -->
       <section class="screen" id="toysWhereScreen">
         <div class="content">
           <h1 class="pageTitle">WHERE IS THE…?</h1>
