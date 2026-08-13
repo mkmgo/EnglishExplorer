@@ -15,7 +15,7 @@
     />
     <style>
       :root {
-        --bg: #FAF7F2;
+        --bg: #faf7f2;
         --ink: #14213d;
         --muted: #60708d;
         --accent: #e43703;
@@ -495,10 +495,10 @@
       .grid .icardbas {
         min-width: 0;
       }
-      [dialogue] .grid--2 > :nth-child(n+3) {
+      [dialogue] .grid--2 > :nth-child(n + 3) {
         margin-top: -1.4em;
       }
-      #toysPhrasesScreen .grid--2 > :nth-child(n+3) {
+      #toysPhrasesScreen .grid--2 > :nth-child(n + 3) {
         margin-top: -3em;
       }
       button:focus-visible {
@@ -1270,9 +1270,14 @@
       <div id="inputModal">
         <div class="inputBox">
           <h2 id="inputTitle">Type or paste your input</h2>
-          <textarea id="inputField" placeholder="Type here or paste from clipboard…"></textarea>
+          <textarea
+            id="inputField"
+            placeholder="Type here or paste from clipboard…"
+          ></textarea>
           <div class="inputBtns">
-            <button class="cancelBtn" onclick="closeInputModal()">Cancel</button>
+            <button class="cancelBtn" onclick="closeInputModal()">
+              Cancel
+            </button>
             <button class="okBtn" onclick="submitInputModal()">OK</button>
           </div>
         </div>
@@ -1363,25 +1368,27 @@
         <div class="content">
           <h1 class="pageTitle">Index</h1>
           <div class="stage">
-            <div class="grid grid-tabs">
-              <button class="tabs tab-alphabet">
-                <span class="tabtext">Alphabet</span>
-              </button>
-              <button class="tabs tab-numbers">
-                <span class="tabtext">Numbers</span>
-              </button>
-              <button class="tabs tab-colours" onclick="goColours()">
-                <span class="tabtext">Colours</span>
-              </button>
-              <button class="tabs tab-months" onclick="goMonths()">
-                <span class="tabtext">Months</span>
-              </button>
-              <button class="tabs tab-words" onclick="goWords()">
-                <span class="tabtext">Words</span>
-              </button>
-              <button class="tabs tab-theme" onclick="goToys()">
-                <span class="tabtext">Theme</span>
-              </button>
+            <div class="panel origami">
+              <div class="grid grid-tabs">
+                <button class="tabs tab-alphabet">
+                  <span class="tabtext">Alphabet</span>
+                </button>
+                <button class="tabs tab-numbers">
+                  <span class="tabtext">Numbers</span>
+                </button>
+                <button class="tabs tab-colours" onclick="goColours()">
+                  <span class="tabtext">Colours</span>
+                </button>
+                <button class="tabs tab-months" onclick="goMonths()">
+                  <span class="tabtext">Months</span>
+                </button>
+                <button class="tabs tab-words" onclick="goWords()">
+                  <span class="tabtext">Words</span>
+                </button>
+                <button class="tabs tab-theme" onclick="goToys()">
+                  <span class="tabtext">Theme</span>
+                </button>
+              </div>
             </div>
           </div>
         </div>
@@ -1454,41 +1461,6 @@
         </div>
       </section>
 
-      <!-- 2: Media (paste Cloudinary asset link) -->
-      <section class="screen title-slide">
-        <div class="content">
-          <div class="stage">
-            <button id="mediaBtn" class="clipcard" onclick="pasteMedia()">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="1.2em"
-                height="1.2em"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="2"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                style="vertical-align: -0.2em"
-              >
-                <rect width="18" height="18" x="3" y="3" rx="2" />
-                <path d="M7 3v18" />
-                <path d="M3 7.5h4" />
-                <path d="M3 12h18" />
-                <path d="M3 16.5h4" />
-                <path d="M17 3v18" />
-                <path d="M17 7.5h4" />
-                <path d="M17 16.5h4" />
-              </svg>
-              Media
-            </button>
-            <div id="mediaWrap" class="mediaWrap">
-              <span class="mediaPlaceholder">🎬</span>
-            </div>
-          </div>
-        </div>
-      </section>
-
       <!-- 3: Video — Sam & Onza introduce themselves (retired) -->
       <section class="screen" data-retired>
         <div class="content">
@@ -1521,10 +1493,10 @@
           <h1 class="pageTitle">Greeting and Introduction</h1>
           <div class="stage">
             <div class="panel origami">
-            <div class="grid grid--2">
-              <button
-                class="icardst"
-                onclick="speakGreeting('Hello. My name is Sam.', 'greetSam')"
+              <div class="grid grid--2">
+                <button
+                  class="icardst"
+                  onclick="speakGreeting('Hello. My name is Sam.', 'greetSam')"
                 >
                   <img
                     class="phraseAvatar"
@@ -1532,23 +1504,23 @@
                     alt="Sam"
                   />
                   <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="1.2em"
-                  height="1.2em"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-width="2"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  style="vertical-align: -0.2em"
-                >
-                  <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" />
-                  <path d="M15.54 8.46a5 5 0 0 1 0 7.07" />
-                </svg>
-                <span class="icardtext">Hello. My Name is Sam.</span>
-              </button>
-              <div></div>
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="1.2em"
+                    height="1.2em"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    style="vertical-align: -0.2em"
+                  >
+                    <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" />
+                    <path d="M15.54 8.46a5 5 0 0 1 0 7.07" />
+                  </svg>
+                  <span class="icardtext">Hello. My Name is Sam.</span>
+                </button>
+                <div></div>
                 <button
                   class="icardst"
                   onclick="speakGreeting('What is your name?', 'greetQ')"
@@ -1559,47 +1531,47 @@
                     alt="Sam"
                   />
                   <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="1.2em"
-                  height="1.2em"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-width="2"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  style="vertical-align: -0.2em"
-                >
-                  <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" />
-                  <path d="M15.54 8.46a5 5 0 0 1 0 7.07" />
-                </svg>
-                <span class="icardtext">What is your Name?</span>
-              </button>
-              <div></div>
-              <div></div>
-              <button class="icardstb">
-                <img
-                  class="phraseAvatar"
-                  src="https://res.cloudinary.com/dqwm4pdbz/image/upload/c_scale,w_400/q_auto/f_auto/v1786623812/onza_3avface_gyyay8.png"
-                  alt="Onza"
-                />
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="1.2em"
-                  height="1.2em"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-width="2"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  style="vertical-align: -0.2em"
-                >
-                  <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" />
-                  <path d="M15.54 8.46a5 5 0 0 1 0 7.07" />
-                </svg>
-                <span class="icardtextb">Hello Sam. My Name is Onza.</span>
-              </button>
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="1.2em"
+                    height="1.2em"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    style="vertical-align: -0.2em"
+                  >
+                    <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" />
+                    <path d="M15.54 8.46a5 5 0 0 1 0 7.07" />
+                  </svg>
+                  <span class="icardtext">What is your Name?</span>
+                </button>
+                <div></div>
+                <div></div>
+                <button class="icardstb">
+                  <img
+                    class="phraseAvatar"
+                    src="https://res.cloudinary.com/dqwm4pdbz/image/upload/c_scale,w_400/q_auto/f_auto/v1786623812/onza_3avface_gyyay8.png"
+                    alt="Onza"
+                  />
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="1.2em"
+                    height="1.2em"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    style="vertical-align: -0.2em"
+                  >
+                    <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" />
+                    <path d="M15.54 8.46a5 5 0 0 1 0 7.07" />
+                  </svg>
+                  <span class="icardtextb">Hello Sam. My Name is Onza.</span>
+                </button>
                 <button
                   class="icardst"
                   onclick="say('Hello Onza. How old are you?')"
@@ -1610,54 +1582,137 @@
                     alt="Sam"
                   />
                   <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="1.2em"
-                  height="1.2em"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-width="2"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  style="vertical-align: -0.2em"
-                >
-                  <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" />
-                  <path d="M15.54 8.46a5 5 0 0 1 0 7.07" />
-                </svg>
-                <span class="icardtext">Hello Onza. How old are you?</span>
-              </button>
-              <div></div>
-              <div></div>
-              <button class="icardstb">
-                <img
-                  class="phraseAvatar"
-                  src="https://res.cloudinary.com/dqwm4pdbz/image/upload/c_scale,w_400/q_auto/f_auto/v1786623812/onza_3avface_gyyay8.png"
-                  alt="Onza"
-                />
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="1.2em"
-                  height="1.2em"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-width="2"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  style="vertical-align: -0.2em"
-                >
-                  <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" />
-                  <path d="M15.54 8.46a5 5 0 0 1 0 7.07" />
-                </svg>
-                <span class="icardtextb">I am 7 years old.</span>
-              </button>
-            </div>
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="1.2em"
+                    height="1.2em"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    style="vertical-align: -0.2em"
+                  >
+                    <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" />
+                    <path d="M15.54 8.46a5 5 0 0 1 0 7.07" />
+                  </svg>
+                  <span class="icardtext">Hello Onza. How old are you?</span>
+                </button>
+                <div></div>
+                <div></div>
+                <button class="icardstb">
+                  <img
+                    class="phraseAvatar"
+                    src="https://res.cloudinary.com/dqwm4pdbz/image/upload/c_scale,w_400/q_auto/f_auto/v1786623812/onza_3avface_gyyay8.png"
+                    alt="Onza"
+                  />
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="1.2em"
+                    height="1.2em"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    style="vertical-align: -0.2em"
+                  >
+                    <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" />
+                    <path d="M15.54 8.46a5 5 0 0 1 0 7.07" />
+                  </svg>
+                  <span class="icardtextb">I am 7 years old.</span>
+                </button>
+              </div>
             </div>
           </div>
         </div>
       </section>
 
-      <!-- Theme 1: MY TOYS — vocabulary (present) -->
+      <!-- Segment 1: ANIMALS — vocabulary (present) -->
+      <section class="screen" id="animalsIntroScreen">
+        <div class="content">
+          <h1 class="pageTitle">Animals</h1>
+          <div class="stage">
+            <div class="panel">
+              <div class="toyGrid">
+                <button class="toyBtn" onclick="animalPress('dog')">
+                  <img
+                    class="toyImg"
+                    src="https://res.cloudinary.com/dp455m4rk/image/upload/c_crop,w_469,h_384,x_0,y_384/r_max/v1786050302/A-F_yhrs9s.png"
+                    alt="dog"
+                  />
+                  <span class="toyName">Dog</span>
+                </button>
+                <button class="toyBtn" onclick="animalPress('cat')">
+                  <img
+                    class="toyImg"
+                    src="https://res.cloudinary.com/dp455m4rk/image/upload/c_crop,w_469,h_384,x_938,y_0/r_max/v1786050302/A-F_yhrs9s.png"
+                    alt="cat"
+                  />
+                  <span class="toyName">Cat</span>
+                </button>
+                <button class="toyBtn" onclick="animalPress('bird')">
+                  <img
+                    class="toyImg"
+                    src="https://res.cloudinary.com/dp455m4rk/image/upload/c_crop,w_421,h_424,x_0,y_0/r_max/v1786346044/lesson6_ywgsxn.png"
+                    alt="bird"
+                  />
+                  <span class="toyName">Bird</span>
+                </button>
+                <button class="toyBtn" onclick="animalPress('fish')">
+                  <img
+                    class="toyImg"
+                    src="https://res.cloudinary.com/dp455m4rk/image/upload/c_crop,w_421,h_424,x_421,y_0/r_max/v1786346044/lesson6_ywgsxn.png"
+                    alt="fish"
+                  />
+                  <span class="toyName">Fish</span>
+                </button>
+                <button class="toyBtn" onclick="animalPress('lion')">
+                  <img
+                    class="toyImg"
+                    src="https://res.cloudinary.com/dp455m4rk/image/upload/c_crop,w_421,h_424,x_842,y_0/r_max/v1786346044/lesson6_ywgsxn.png"
+                    alt="lion"
+                  />
+                  <span class="toyName">Lion</span>
+                </button>
+                <button class="toyBtn" onclick="animalPress('elephant')">
+                  <img
+                    class="toyImg"
+                    src="https://res.cloudinary.com/dp455m4rk/image/upload/c_crop,w_469,h_384,x_469,y_384/r_max/v1786050302/A-F_yhrs9s.png"
+                    alt="elephant"
+                  />
+                  <span class="toyName">Elephant</span>
+                </button>
+                <button class="toyBtn" onclick="animalPress('monkey')">
+                  <img
+                    class="toyImg"
+                    src="https://res.cloudinary.com/dp455m4rk/image/upload/c_crop,w_421,h_424,x_421,y_424/r_max/v1786346044/lesson6_ywgsxn.png"
+                    alt="monkey"
+                  />
+                  <span class="toyName">Monkey</span>
+                </button>
+                <button class="toyBtn" onclick="animalPress('rabbit')">
+                  <img
+                    class="toyImg"
+                    src="https://res.cloudinary.com/dp455m4rk/image/upload/c_crop,w_421,h_424,x_842,y_424/r_max/v1786346044/lesson6_ywgsxn.png"
+                    alt="rabbit"
+                  />
+                  <span class="toyName">Rabbit</span>
+                </button>
+              </div>
+              <div class="miniRow">
+                <button class="miniChip" onclick="listenAnimals()">
+                  <i data-lucide="volume1" width="1.2em" height="1.2em"></i>
+                  HEAR ALL
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Segment 1: MY TOYS — vocabulary (present) -->
       <section class="screen" id="toysIntroScreen">
         <div class="content">
           <h1 class="pageTitle">My Toys and Things</h1>
@@ -1714,14 +1769,17 @@
                 </button>
               </div>
               <div class="miniRow">
-                <button class="miniChip" onclick="listenToys()"><i data-lucide="volume1" width="1.2em" height="1.2em"></i> HEAR ALL</button>
+                <button class="miniChip" onclick="listenToys()">
+                  <i data-lucide="volume1" width="1.2em" height="1.2em"></i>
+                  HEAR ALL
+                </button>
               </div>
             </div>
           </div>
         </div>
       </section>
 
-      <!-- Theme 2: WHAT DO YOU HAVE? — phrases (present) -->
+      <!-- Segment 2: WHAT DO YOU HAVE? — phrases (present) -->
       <section class="screen" id="toysPhrasesScreen">
         <div class="content">
           <h1 class="pageTitle">What Do You Have?</h1>
@@ -1972,7 +2030,7 @@
         </div>
       </section>
 
-      <!-- Theme 3: MY KITE / YOUR KITE (educational) -->
+      <!-- Segment 3: MY KITE / YOUR KITE (educational) -->
       <section class="screen" id="toysChipsScreen">
         <div class="content">
           <h1 class="pageTitle">Big and Small</h1>
@@ -2016,7 +2074,10 @@
                   </button>
                 </div>
                 <div class="toyPair">
-                  <button class="toySizeBtn" onclick="edToyPress('Small robot')">
+                  <button
+                    class="toySizeBtn"
+                    onclick="edToyPress('Small robot')"
+                  >
                     <img
                       class="small"
                       src="https://res.cloudinary.com/dqwm4pdbz/image/upload/c_crop,w_421,h_424,x_0,y_424/r_max/bo_5px_solid_white/v1786599929/260813_toys_01_txjh3y.png"
@@ -2057,7 +2118,7 @@
         </div>
       </section>
 
-      <!-- Theme 4: BIG OR SMALL? (mini-game) -->
+      <!--Segment  4: BIG OR SMALL? (excercise) -->
       <section class="screen" id="toysBigSmallScreen">
         <div class="content">
           <h1 class="pageTitle" id="bsTitle">Big or Small?</h1>
@@ -2070,7 +2131,9 @@
                 </div>
                 <div class="gameRow">
                   <button class="choice" onclick="bsAnswer('big')">BIG</button>
-                  <button class="choice" onclick="bsAnswer('small')">SMALL</button>
+                  <button class="choice" onclick="bsAnswer('small')">
+                    SMALL
+                  </button>
                 </div>
               </div>
             </div>
@@ -2078,7 +2141,7 @@
         </div>
       </section>
 
-      <!-- Theme 5: DO YOU HAVE A...? (exercise) -->
+      <!-- Segment 5: DO YOU HAVE A...? (exercise) -->
       <section class="screen" id="toysYesNoScreen">
         <div class="content">
           <h1 class="pageTitle" id="ynTitle">Do You Have A…?</h1>
@@ -2110,7 +2173,9 @@
                   </div>
                 </div>
                 <div class="gameRow">
-                  <button class="choice yes" onclick="ynAnswer(true)">YES</button>
+                  <button class="choice yes" onclick="ynAnswer(true)">
+                    YES
+                  </button>
                   <button class="choice" onclick="ynAnswer(false)">NO</button>
                 </div>
               </div>
@@ -2119,7 +2184,7 @@
         </div>
       </section>
 
-      <!-- Theme 6: I HAVE A... (exercise) -->
+      <!-- Segment 6: I HAVE A... (exercise) -->
       <section class="screen" id="toysHaveScreen">
         <div class="content">
           <h1 class="pageTitle" id="haveTitle">I Have A…</h1>
@@ -2137,7 +2202,7 @@
         </div>
       </section>
 
-      <!-- Theme 7: WHERE IS THE...? (exercise) -->
+      <!-- Segment 7: WHERE IS THE...? (exercise) -->
       <section class="screen" id="toysWhereScreen">
         <div class="content">
           <h1 class="pageTitle" id="whereTitle">Where Is The…?</h1>
@@ -2398,7 +2463,7 @@
       <div id="wordSlides"></div>
 
       <!-- 8: Translator (repeat, not counted in progress) -->
-      <section class="screen title-slide" data-nocount>
+      <section class="screen title-slide" id="translatorScreen" data-nocount>
         <div class="content">
           <div class="stage">
             <button
@@ -2429,54 +2494,89 @@
             </button>
             <div class="panel">
               <div class="cast">
-              <figure class="castMember">
-                <div class="translateBox left" id="srcLangBox">
-                  <span class="translatePlaceholder">🔤</span>
-                </div>
-                <button class="icardst" onclick="speakTranslate('en')">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="1.2em"
-                    height="1.2em"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-width="2"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    style="vertical-align: -0.2em"
-                  >
-                    <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" />
-                    <path d="M15.54 8.46a5 5 0 0 1 0 7.07" />
-                  </svg>
-                  <span class="icardtext">ENGLISH</span>
-                </button>
-              </figure>
-              <figure class="castMember">
-                <div class="translateBox left" id="zhLangBox">
-                  <span class="translatePlaceholder">中文</span>
-                </div>
-                <button class="icardst" onclick="speakTranslate('zh')">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="1.2em"
-                    height="1.2em"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-width="2"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    style="vertical-align: -0.2em"
-                  >
-                    <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" />
-                    <path d="M15.54 8.46a5 5 0 0 1 0 7.07" />
-                  </svg>
-                  <span class="icardtext">中文</span>
-                </button>
-              </figure>
+                <figure class="castMember">
+                  <div class="translateBox left" id="srcLangBox">
+                    <span class="translatePlaceholder">🔤</span>
+                  </div>
+                  <button class="icardst" onclick="speakTranslate('en')">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="1.2em"
+                      height="1.2em"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      style="vertical-align: -0.2em"
+                    >
+                      <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" />
+                      <path d="M15.54 8.46a5 5 0 0 1 0 7.07" />
+                    </svg>
+                    <span class="icardtext">ENGLISH</span>
+                  </button>
+                </figure>
+                <figure class="castMember">
+                  <div class="translateBox left" id="zhLangBox">
+                    <span class="translatePlaceholder">中文</span>
+                  </div>
+                  <button class="icardst" onclick="speakTranslate('zh')">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="1.2em"
+                      height="1.2em"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      style="vertical-align: -0.2em"
+                    >
+                      <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" />
+                      <path d="M15.54 8.46a5 5 0 0 1 0 7.07" />
+                    </svg>
+                    <span class="icardtext">中文</span>
+                  </button>
+                </figure>
               </div>
               <div class="clipList" id="clipList"></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Media clipper (tutor tool, not counted in progress) -->
+      <section class="screen title-slide" id="mediaScreen" data-nocount>
+        <div class="content">
+          <div class="stage">
+            <button id="mediaBtn" class="clipcard" onclick="pasteMedia()">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="1.2em"
+                height="1.2em"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                style="vertical-align: -0.2em"
+              >
+                <rect width="18" height="18" x="3" y="3" rx="2" />
+                <path d="M7 3v18" />
+                <path d="M3 7.5h4" />
+                <path d="M3 12h18" />
+                <path d="M3 16.5h4" />
+                <path d="M17 3v18" />
+                <path d="M17 7.5h4" />
+                <path d="M17 16.5h4" />
+              </svg>
+              Media
+            </button>
+            <div id="mediaWrap" class="mediaWrap">
+              <span class="mediaPlaceholder">🎬</span>
             </div>
           </div>
         </div>
@@ -2554,12 +2654,12 @@
         document.querySelectorAll(".screen"),
       );
       var countTotal = 0;
-      var nocountIdx = -1;
+      var nocountIdxArr = [];
       var lastCounted = screens.length - 1;
       var activeIdx = [];
       for (var s = 0; s < screens.length; s++) {
         if (screens[s].hasAttribute("data-nocount")) {
-          if (nocountIdx < 0) nocountIdx = s;
+          nocountIdxArr.push(s);
         } else if (screens[s].hasAttribute("data-retired")) {
           continue;
         } else {
@@ -2568,7 +2668,17 @@
           activeIdx.push(s);
         }
       }
-      var slide8From = 0;
+      function isNoCount(i) {
+        return nocountIdxArr.indexOf(i) !== -1;
+      }
+      function screenIndexById(id) {
+        for (var s = 0; s < screens.length; s++) {
+          if (screens[s].id === id) return s;
+        }
+        return -1;
+      }
+      var translatorIdx = screenIndexById("translatorScreen");
+      var mediaIdx = screenIndexById("mediaScreen");
       var homeBtn = document.getElementById("homeBtn");
       var idx = 0;
       var soundOn = true;
@@ -2698,26 +2808,24 @@
       });
 
       function show(i) {
-        var prevIdx = idx;
         idx = Math.max(0, Math.min(screens.length - 1, i));
-        if (idx === nocountIdx && prevIdx !== idx) slide8From = prevIdx;
         for (var j = 0; j < screens.length; j++) {
           screens[j].classList.toggle("active", j === idx);
         }
         var shown = activeIdx.indexOf(idx) + 1;
         if (shown < 1) shown = countTotal;
         progress.textContent = shown + " / " + countTotal;
-        var isNoCount = idx === nocountIdx;
+        var isNoCountNow = isNoCount(idx);
         document.getElementById("prevBtn").innerHTML = ICON_ARROW_LEFT;
         document.getElementById("prevBtn").style.visibility =
-          isNoCount || idx === 0 ? "hidden" : "visible";
+          isNoCountNow || idx === 0 ? "hidden" : "visible";
         document.getElementById("nextBtn").innerHTML =
           idx === lastCounted ? ICON_RESTART : ICON_ARROW_RIGHT;
-        document.getElementById("nextBtn").style.visibility = isNoCount
+        document.getElementById("nextBtn").style.visibility = isNoCountNow
           ? "hidden"
           : "visible";
         if (homeBtn)
-          homeBtn.innerHTML = isNoCount ? ICON_HOME_DOWN : ICON_HOME_UP;
+          homeBtn.innerHTML = isNoCountNow ? ICON_HOME_DOWN : ICON_HOME_UP;
         cancelSpeech();
         var activeVideo = screens[idx].querySelector("video") || null;
         if (activeVideo) {
@@ -2788,7 +2896,7 @@
       }
 
       function next() {
-        if (idx === nocountIdx) return;
+        if (isNoCount(idx)) return;
         if (idx === lastCounted) show(0);
         else {
           var nextActive = activeIdx.indexOf(idx) + 1;
@@ -2797,7 +2905,7 @@
       }
 
       function prev() {
-        if (idx === nocountIdx) return;
+        if (isNoCount(idx)) return;
         var prevActive = activeIdx.indexOf(idx) - 1;
         show(prevActive < 0 ? 0 : activeIdx[prevActive]);
       }
@@ -3393,7 +3501,8 @@
               p.catch(function () {
                 video.muted = true;
                 var p2 = video.play();
-                if (p2 && typeof p2.catch === "function") p2.catch(function () {});
+                if (p2 && typeof p2.catch === "function")
+                  p2.catch(function () {});
               });
             }
           }, 1500);
@@ -3417,8 +3526,7 @@
         cancelSpeech();
       };
       document.getElementById("homeBtn").onclick = function () {
-        if (idx === nocountIdx) show(slide8From);
-        else show(0);
+        show(0);
       };
       document.addEventListener("keydown", function (e) {
         var k = e.key || "";
@@ -3440,14 +3548,14 @@
         } else if (k === "ArrowLeft" || kc === 37) {
           prev();
         } else if (k === "ArrowUp" || kc === 38) {
-          if (idx === nocountIdx) show(0);
-          else if (idx === 0 || idx === 1) show(nocountIdx);
+          if (isNoCount(idx)) show(0);
+          else if (idx === 0 && translatorIdx >= 0) show(translatorIdx);
           else show(0);
         } else if (k === "ArrowDown" || kc === 40) {
-          if (idx === nocountIdx) show(slide8From);
+          if (isNoCount(idx)) show(0);
+          else if (idx === 0 && mediaIdx >= 0) show(mediaIdx);
         } else if (k === "Escape" || kc === 27 || kc === 10009) {
-          if (idx === nocountIdx) show(slide8From);
-          else show(0);
+          show(0);
         } else if (kc === 13 || kc === 29443 || k === "Enter") {
           var el = document.activeElement;
           if (el && el.tagName === "BUTTON" && !el.disabled) el.click();
@@ -3481,11 +3589,12 @@
               if (dx < 0) next();
               else prev();
             } else if (dy < 0) {
-              if (idx === nocountIdx) show(0);
-              else if (idx === 0 || idx === 1) show(nocountIdx);
+              if (isNoCount(idx)) show(0);
+              else if (idx === 0 && translatorIdx >= 0) show(translatorIdx);
               else show(0);
             } else if (dy > 0) {
-              if (idx === nocountIdx) show(slide8From);
+              if (isNoCount(idx)) show(0);
+              else if (idx === 0 && mediaIdx >= 0) show(mediaIdx);
             }
           },
           { passive: true },
@@ -3500,12 +3609,30 @@
       var TOY_ICON_SPEAKER =
         '<svg xmlns="http://www.w3.org/2000/svg" width="1.2em" height="1.2em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-0.2em"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/></svg>';
       var TOYS = [
-        { name: "car", img: "https://res.cloudinary.com/dqwm4pdbz/image/upload/c_crop,w_421,h_424,x_0,y_0/r_max/bo_5px_solid_white/v1786599929/260813_toys_01_txjh3y.png" },
-        { name: "rocket", img: "https://res.cloudinary.com/dqwm4pdbz/image/upload/c_crop,w_421,h_424,x_421,y_0/r_max/bo_5px_solid_white/v1786599929/260813_toys_01_txjh3y.png" },
-        { name: "teddy bear", img: "https://res.cloudinary.com/dqwm4pdbz/image/upload/c_crop,w_421,h_424,x_842,y_0/r_max/bo_5px_solid_white/v1786599929/260813_toys_01_txjh3y.png" },
-        { name: "robot", img: "https://res.cloudinary.com/dqwm4pdbz/image/upload/c_crop,w_421,h_424,x_0,y_424/r_max/bo_5px_solid_white/v1786599929/260813_toys_01_txjh3y.png" },
-        { name: "bike", img: "https://res.cloudinary.com/dqwm4pdbz/image/upload/c_crop,w_421,h_424,x_421,y_424/r_max/bo_5px_solid_white/v1786599929/260813_toys_01_txjh3y.png" },
-        { name: "kite", img: "https://res.cloudinary.com/dqwm4pdbz/image/upload/c_crop,w_421,h_424,x_842,y_424/r_max/bo_5px_solid_white/v1786599929/260813_toys_01_txjh3y.png" },
+        {
+          name: "car",
+          img: "https://res.cloudinary.com/dqwm4pdbz/image/upload/c_crop,w_421,h_424,x_0,y_0/r_max/bo_5px_solid_white/v1786599929/260813_toys_01_txjh3y.png",
+        },
+        {
+          name: "rocket",
+          img: "https://res.cloudinary.com/dqwm4pdbz/image/upload/c_crop,w_421,h_424,x_421,y_0/r_max/bo_5px_solid_white/v1786599929/260813_toys_01_txjh3y.png",
+        },
+        {
+          name: "teddy bear",
+          img: "https://res.cloudinary.com/dqwm4pdbz/image/upload/c_crop,w_421,h_424,x_842,y_0/r_max/bo_5px_solid_white/v1786599929/260813_toys_01_txjh3y.png",
+        },
+        {
+          name: "robot",
+          img: "https://res.cloudinary.com/dqwm4pdbz/image/upload/c_crop,w_421,h_424,x_0,y_424/r_max/bo_5px_solid_white/v1786599929/260813_toys_01_txjh3y.png",
+        },
+        {
+          name: "bike",
+          img: "https://res.cloudinary.com/dqwm4pdbz/image/upload/c_crop,w_421,h_424,x_421,y_424/r_max/bo_5px_solid_white/v1786599929/260813_toys_01_txjh3y.png",
+        },
+        {
+          name: "kite",
+          img: "https://res.cloudinary.com/dqwm4pdbz/image/upload/c_crop,w_421,h_424,x_842,y_424/r_max/bo_5px_solid_white/v1786599929/260813_toys_01_txjh3y.png",
+        },
       ];
 
       function toyImg(name) {
@@ -3571,6 +3698,85 @@
         }
         window.setTimeout(function () {
           toyListenBusy = false;
+        }, t + 200);
+      }
+
+      var ANIMALS = [
+        {
+          name: "dog",
+          img: "https://res.cloudinary.com/dp455m4rk/image/upload/c_crop,w_469,h_384,x_0,y_384/r_max/v1786050302/A-F_yhrs9s.png",
+        },
+        {
+          name: "cat",
+          img: "https://res.cloudinary.com/dp455m4rk/image/upload/c_crop,w_469,h_384,x_938,y_0/r_max/v1786050302/A-F_yhrs9s.png",
+        },
+        {
+          name: "bird",
+          img: "https://res.cloudinary.com/dp455m4rk/image/upload/c_crop,w_421,h_424,x_0,y_0/r_max/v1786346044/lesson6_ywgsxn.png",
+        },
+        {
+          name: "fish",
+          img: "https://res.cloudinary.com/dp455m4rk/image/upload/c_crop,w_421,h_424,x_421,y_0/r_max/v1786346044/lesson6_ywgsxn.png",
+        },
+        {
+          name: "lion",
+          img: "https://res.cloudinary.com/dp455m4rk/image/upload/c_crop,w_421,h_424,x_842,y_0/r_max/v1786346044/lesson6_ywgsxn.png",
+        },
+        {
+          name: "elephant",
+          img: "https://res.cloudinary.com/dp455m4rk/image/upload/c_crop,w_469,h_384,x_469,y_384/r_max/v1786050302/A-F_yhrs9s.png",
+        },
+        {
+          name: "monkey",
+          img: "https://res.cloudinary.com/dp455m4rk/image/upload/c_crop,w_421,h_424,x_421,y_424/r_max/v1786346044/lesson6_ywgsxn.png",
+        },
+        {
+          name: "rabbit",
+          img: "https://res.cloudinary.com/dp455m4rk/image/upload/c_crop,w_421,h_424,x_842,y_424/r_max/v1786346044/lesson6_ywgsxn.png",
+        },
+      ];
+
+      var animalsCount = {};
+      var animalsHeardAll = false;
+      var animalsHeardRewarded = false;
+      var animalListenBusy = false;
+      function animalPress(name) {
+        sayOther(name);
+        animalsCount[name] = (animalsCount[name] || 0) + 1;
+        maybeAnimalsReward();
+      }
+
+      function maybeAnimalsReward() {
+        if (animalsHeardRewarded) return;
+        var allOnce = true;
+        var allTwice = true;
+        for (var i = 0; i < ANIMALS.length; i++) {
+          var c = animalsCount[ANIMALS[i].name] || 0;
+          if (c < 1) allOnce = false;
+          if (c < 2) allTwice = false;
+        }
+        if (allTwice || (allOnce && animalsHeardAll)) {
+          animalsHeardRewarded = true;
+          reward("ALL ANIMALS! +1 ⭐");
+        }
+      }
+
+      function listenAnimals() {
+        if (animalListenBusy) return;
+        animalListenBusy = true;
+        animalsHeardAll = true;
+        maybeAnimalsReward();
+        var t = 0;
+        for (var i = 0; i < ANIMALS.length; i++) {
+          (function (n, delay) {
+            window.setTimeout(function () {
+              sayOther(n);
+            }, delay);
+          })(ANIMALS[i].name, t);
+          t += 700 + ANIMALS[i].name.length * 80;
+        }
+        window.setTimeout(function () {
+          animalListenBusy = false;
         }, t + 200);
       }
 
@@ -3944,10 +4150,7 @@
       }
       function whereStart() {
         if (whereIdx >= whereOrder.length) return;
-        setHeadline(
-          "whereTitle",
-          "Where is the " + whereOrder[whereIdx] + "?",
-        );
+        setHeadline("whereTitle", "Where is the " + whereOrder[whereIdx] + "?");
         whereTries = 0;
         setPips("wherePips", whereResults, whereIdx);
       }
