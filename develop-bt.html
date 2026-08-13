@@ -189,6 +189,65 @@
         text-transform: uppercase;
         color: var(--accent);
       }
+      .dialogueHead {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        max-width: 900px;
+        margin: 0 auto clamp(0.6em, 1.5vh, 1.2em);
+        padding: 0 0.5em;
+      }
+      .dialogueSpeaker {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 0.3em;
+      }
+      .dialogueAvatar {
+        width: clamp(60px, 8vw, 104px);
+        height: auto;
+        border-radius: 50%;
+        border: 3px solid var(--accent);
+        background: #fff;
+        box-shadow: var(--shadow);
+      }
+      .dialogueSpeaker.onza .dialogueAvatar {
+        border-color: var(--accent2);
+      }
+      .dialogueName {
+        font-weight: 900;
+        font-size: clamp(0.9rem, 1.6vw, 1.2rem);
+        color: var(--ink);
+      }
+      .grid .phraseCard {
+        flex-wrap: wrap;
+        justify-content: center;
+      }
+      .phraseToyWrap {
+        position: relative;
+        display: inline-block;
+        line-height: 0;
+      }
+      .phraseToyWrap.no::after {
+        content: "";
+        position: absolute;
+        top: 50%;
+        left: -10%;
+        right: -10%;
+        height: 4px;
+        background: #d9534f;
+        transform: rotate(-12deg);
+        border-radius: 2px;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.35);
+      }
+      .phraseToy {
+        width: clamp(44px, 5.5vw, 68px);
+        height: auto;
+        object-fit: contain;
+        background: #fff;
+        border-radius: 10px;
+        padding: 2px;
+      }
       .icardbas {
         min-width: 160px;
         min-height: 80px;
@@ -694,6 +753,102 @@
       .gameVisual img.small {
         width: 38%;
         height: auto;
+      }
+      .ynCast {
+        display: flex;
+        align-items: flex-start;
+        justify-content: center;
+        gap: clamp(8px, 1.5vw, 20px);
+        width: 100%;
+      }
+      .ynCastMember {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 0.35em;
+        flex: 0 0 auto;
+        width: clamp(64px, 9vw, 130px);
+      }
+      .ynAvatar {
+        width: clamp(48px, 7vw, 96px);
+        height: auto;
+        border-radius: 50%;
+        border: 3px solid var(--accent);
+        background: #fff;
+        box-shadow: var(--shadow);
+      }
+      .ynCastMember.onza .ynAvatar {
+        border-color: var(--accent2);
+      }
+      .ynCastMember.owner .ynAvatar {
+        box-shadow: 0 0 0 4px var(--mediocre);
+      }
+      .ynName {
+        font-weight: 900;
+        font-size: clamp(0.95rem, 1.7vw, 1.3rem);
+        color: var(--ink);
+      }
+      .ynToys {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 5px;
+      }
+      .ynToys img {
+        width: clamp(40px, 4.5vw, 62px);
+        height: auto;
+        object-fit: contain;
+        background: #fff;
+        border-radius: 10px;
+        box-shadow: 0 2px 6px rgba(20, 33, 61, 0.12);
+      }
+      .gameVisual.ynVisual {
+        width: min(260px, 52vw);
+        height: min(210px, 40vh);
+      }
+      .toyEdu {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        align-items: flex-end;
+        gap: clamp(16px, 2.2vw, 30px);
+        width: 100%;
+      }
+      .toyPair {
+        display: flex;
+        align-items: flex-end;
+        gap: clamp(8px, 1.2vw, 16px);
+      }
+      .toySizeBtn {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 0.5em;
+        background: #fff;
+        border: 3px solid rgba(96, 112, 141, 0.35);
+        border-radius: 18px;
+        padding: 0.6em 0.9em;
+        cursor: pointer;
+        transition: 0.15s transform;
+        box-shadow: var(--shadow);
+        font-family: inherit;
+        font-weight: 800;
+        font-size: clamp(0.95rem, 1.6vw, 1.3rem);
+        color: var(--ink);
+      }
+      .toySizeBtn:active {
+        transform: scale(0.95);
+      }
+      .toySizeBtn img {
+        width: clamp(52px, 6.5vw, 80px);
+        height: auto;
+        object-fit: contain;
+      }
+      .toySizeBtn img.small {
+        width: clamp(34px, 4.5vw, 54px);
+      }
+      .toySizeBtn img.big {
+        width: clamp(64px, 8vw, 100px);
       }
       .gameRow {
         display: flex;
@@ -1503,12 +1658,30 @@
       <!-- Theme 2: WHAT DO YOU HAVE? — phrases (present) -->
       <section class="screen" id="toysPhrasesScreen">
         <div class="content">
-          <h1 class="pageTitle">WHAT DO YOU HAVE?</h1>
+          <h1 class="pageTitle">What Do You Have?</h1>
           <div class="stage">
             <div class="panel">
+              <div class="dialogueHead">
+                <div class="dialogueSpeaker">
+                  <img
+                    class="dialogueAvatar"
+                    src="https://res.cloudinary.com/dqwm4pdbz/image/upload/c_scale,w_450,h_437/q_auto/f_auto/v1786623813/sam_3davface_irvdlj.png"
+                    alt="Sam"
+                  />
+                  <span class="dialogueName">Sam</span>
+                </div>
+                <div class="dialogueSpeaker onza">
+                  <img
+                    class="dialogueAvatar"
+                    src="https://res.cloudinary.com/dqwm4pdbz/image/upload/c_scale,w_400/q_auto/f_auto/v1786623812/onza_3avface_gyyay8.png"
+                    alt="Onza"
+                  />
+                  <span class="dialogueName">Onza</span>
+                </div>
+              </div>
               <div class="grid grid--2">
                 <button
-                  class="icardst"
+                  class="icardst phraseCard"
                   onclick="speakPhrase('I have a car.', 't1')"
                 >
                   <svg
@@ -1527,11 +1700,18 @@
                     <path d="M15.54 8.46a5 5 0 0 1 0 7.07" />
                   </svg>
                   <span class="icardtext">I have a car.</span>
+                  <span class="phraseToyWrap">
+                    <img
+                      class="phraseToy"
+                      src="https://res.cloudinary.com/dqwm4pdbz/image/upload/c_crop,w_421,h_424,x_0,y_0/r_max/bo_5px_solid_white/v1786599929/260813_toys_01_txjh3y.png"
+                      alt="car"
+                    />
+                  </span>
                 </button>
                 <div></div>
                 <div></div>
                 <button
-                  class="icardstb"
+                  class="icardstb phraseCard"
                   onclick="speakPhrase('I have a teddy bear.', 't2', 'onza')"
                 >
                   <svg
@@ -1550,9 +1730,16 @@
                     <path d="M15.54 8.46a5 5 0 0 1 0 7.07" />
                   </svg>
                   <span class="icardtextb">I have a teddy bear.</span>
+                  <span class="phraseToyWrap">
+                    <img
+                      class="phraseToy"
+                      src="https://res.cloudinary.com/dqwm4pdbz/image/upload/c_crop,w_421,h_424,x_842,y_0/r_max/bo_5px_solid_white/v1786599929/260813_toys_01_txjh3y.png"
+                      alt="teddy bear"
+                    />
+                  </span>
                 </button>
                 <button
-                  class="icardst"
+                  class="icardst phraseCard"
                   onclick="speakPhrase('Do you have a robot?', 't3')"
                 >
                   <svg
@@ -1571,11 +1758,18 @@
                     <path d="M15.54 8.46a5 5 0 0 1 0 7.07" />
                   </svg>
                   <span class="icardtext">Do you have a robot?</span>
+                  <span class="phraseToyWrap">
+                    <img
+                      class="phraseToy"
+                      src="https://res.cloudinary.com/dqwm4pdbz/image/upload/c_crop,w_421,h_424,x_0,y_424/r_max/bo_5px_solid_white/v1786599929/260813_toys_01_txjh3y.png"
+                      alt="robot"
+                    />
+                  </span>
                 </button>
                 <div></div>
                 <div></div>
                 <button
-                  class="icardstb"
+                  class="icardstb phraseCard"
                   onclick="speakPhrase('Yes! I have a robot.', 't4', 'onza')"
                 >
                   <svg
@@ -1594,9 +1788,16 @@
                     <path d="M15.54 8.46a5 5 0 0 1 0 7.07" />
                   </svg>
                   <span class="icardtextb">Yes! I have a robot.</span>
+                  <span class="phraseToyWrap">
+                    <img
+                      class="phraseToy"
+                      src="https://res.cloudinary.com/dqwm4pdbz/image/upload/c_crop,w_421,h_424,x_0,y_424/r_max/bo_5px_solid_white/v1786599929/260813_toys_01_txjh3y.png"
+                      alt="robot"
+                    />
+                  </span>
                 </button>
                 <button
-                  class="icardst"
+                  class="icardst phraseCard"
                   onclick="speakPhrase('I don\'t have a bike.', 't5')"
                 >
                   <svg
@@ -1615,11 +1816,18 @@
                     <path d="M15.54 8.46a5 5 0 0 1 0 7.07" />
                   </svg>
                   <span class="icardtext">I don't have a bike.</span>
+                  <span class="phraseToyWrap no">
+                    <img
+                      class="phraseToy"
+                      src="https://res.cloudinary.com/dqwm4pdbz/image/upload/c_crop,w_421,h_424,x_421,y_424/r_max/bo_5px_solid_white/v1786599929/260813_toys_01_txjh3y.png"
+                      alt="bike"
+                    />
+                  </span>
                 </button>
                 <div></div>
                 <div></div>
                 <button
-                  class="icardstb"
+                  class="icardstb phraseCard"
                   onclick="speakPhrase('Where is the kite?', 't6', 'onza')"
                 >
                   <svg
@@ -1638,9 +1846,16 @@
                     <path d="M15.54 8.46a5 5 0 0 1 0 7.07" />
                   </svg>
                   <span class="icardtextb">Where is the kite?</span>
+                  <span class="phraseToyWrap">
+                    <img
+                      class="phraseToy"
+                      src="https://res.cloudinary.com/dqwm4pdbz/image/upload/c_crop,w_421,h_424,x_842,y_424/r_max/bo_5px_solid_white/v1786599929/260813_toys_01_txjh3y.png"
+                      alt="kite"
+                    />
+                  </span>
                 </button>
                 <button
-                  class="icardst"
+                  class="icardst phraseCard"
                   onclick="speakPhrase('Here!', 't7')"
                 >
                   <svg
@@ -1659,6 +1874,13 @@
                     <path d="M15.54 8.46a5 5 0 0 1 0 7.07" />
                   </svg>
                   <span class="icardtext">Here!</span>
+                  <span class="phraseToyWrap">
+                    <img
+                      class="phraseToy"
+                      src="https://res.cloudinary.com/dqwm4pdbz/image/upload/c_crop,w_421,h_424,x_842,y_424/r_max/bo_5px_solid_white/v1786599929/260813_toys_01_txjh3y.png"
+                      alt="kite"
+                    />
+                  </span>
                 </button>
                 <div></div>
               </div>
@@ -1667,77 +1889,85 @@
         </div>
       </section>
 
-      <!-- Theme 3: MY KITE / YOUR KITE — chips (present) -->
+      <!-- Theme 3: MY KITE / YOUR KITE (educational) -->
       <section class="screen" id="toysChipsScreen">
         <div class="content">
-          <h1 class="pageTitle">MY KITE / YOUR KITE</h1>
+          <h1 class="pageTitle">My Kite / Your Kite</h1>
           <div class="stage">
             <div class="panel">
-              <div class="miniRow chipsGrid">
-                <button class="miniChip" onclick="say('Big car')">
-                  <img
-                    class="miniImg big"
-                    src="https://res.cloudinary.com/dqwm4pdbz/image/upload/c_crop,w_421,h_424,x_0,y_0/r_max/bo_5px_solid_white/v1786599929/260813_toys_01_txjh3y.png"
-                    alt="car"
-                  />
-                  Big car
-                </button>
-                <button class="miniChip" onclick="say('Small car')">
-                  <img
-                    class="miniImg small"
-                    src="https://res.cloudinary.com/dqwm4pdbz/image/upload/c_crop,w_421,h_424,x_0,y_0/r_max/bo_5px_solid_white/v1786599929/260813_toys_01_txjh3y.png"
-                    alt="car"
-                  />
-                  Small car
-                </button>
-                <button class="miniChip" onclick="say('My kite')">
-                  <img
-                    class="miniImg"
-                    src="https://res.cloudinary.com/dqwm4pdbz/image/upload/c_crop,w_421,h_424,x_842,y_424/r_max/bo_5px_solid_white/v1786599929/260813_toys_01_txjh3y.png"
-                    alt="kite"
-                  />
-                  My kite
-                </button>
-                <button class="miniChip" onclick="say('Your kite')">
-                  <img
-                    class="miniImg"
-                    src="https://res.cloudinary.com/dqwm4pdbz/image/upload/c_crop,w_421,h_424,x_842,y_424/r_max/bo_5px_solid_white/v1786599929/260813_toys_01_txjh3y.png"
-                    alt="kite"
-                  />
-                  Your kite
-                </button>
-                <button class="miniChip" onclick="say('Big robot')">
-                  <img
-                    class="miniImg big"
-                    src="https://res.cloudinary.com/dqwm4pdbz/image/upload/c_crop,w_421,h_424,x_0,y_424/r_max/bo_5px_solid_white/v1786599929/260813_toys_01_txjh3y.png"
-                    alt="robot"
-                  />
-                  Big robot
-                </button>
-                <button class="miniChip" onclick="say('Small robot')">
-                  <img
-                    class="miniImg small"
-                    src="https://res.cloudinary.com/dqwm4pdbz/image/upload/c_crop,w_421,h_424,x_0,y_424/r_max/bo_5px_solid_white/v1786599929/260813_toys_01_txjh3y.png"
-                    alt="robot"
-                  />
-                  Small robot
-                </button>
-                <button class="miniChip" onclick="say('My bike')">
-                  <img
-                    class="miniImg"
-                    src="https://res.cloudinary.com/dqwm4pdbz/image/upload/c_crop,w_421,h_424,x_421,y_424/r_max/bo_5px_solid_white/v1786599929/260813_toys_01_txjh3y.png"
-                    alt="bike"
-                  />
-                  My bike
-                </button>
-                <button class="miniChip" onclick="say('Your bike')">
-                  <img
-                    class="miniImg"
-                    src="https://res.cloudinary.com/dqwm4pdbz/image/upload/c_crop,w_421,h_424,x_421,y_424/r_max/bo_5px_solid_white/v1786599929/260813_toys_01_txjh3y.png"
-                    alt="bike"
-                  />
-                  Your bike
-                </button>
+              <div class="toyEdu">
+                <div class="toyPair">
+                  <button class="toySizeBtn" onclick="edToyPress('Small car')">
+                    <img
+                      class="small"
+                      src="https://res.cloudinary.com/dqwm4pdbz/image/upload/c_crop,w_421,h_424,x_0,y_0/r_max/bo_5px_solid_white/v1786599929/260813_toys_01_txjh3y.png"
+                      alt="car"
+                    />
+                    <span>Small car</span>
+                  </button>
+                  <button class="toySizeBtn" onclick="edToyPress('Big car')">
+                    <img
+                      class="big"
+                      src="https://res.cloudinary.com/dqwm4pdbz/image/upload/c_crop,w_421,h_424,x_0,y_0/r_max/bo_5px_solid_white/v1786599929/260813_toys_01_txjh3y.png"
+                      alt="car"
+                    />
+                    <span>Big car</span>
+                  </button>
+                </div>
+                <div class="toyPair">
+                  <button class="toySizeBtn" onclick="edToyPress('Small kite')">
+                    <img
+                      class="small"
+                      src="https://res.cloudinary.com/dqwm4pdbz/image/upload/c_crop,w_421,h_424,x_842,y_424/r_max/bo_5px_solid_white/v1786599929/260813_toys_01_txjh3y.png"
+                      alt="kite"
+                    />
+                    <span>Small kite</span>
+                  </button>
+                  <button class="toySizeBtn" onclick="edToyPress('Big kite')">
+                    <img
+                      class="big"
+                      src="https://res.cloudinary.com/dqwm4pdbz/image/upload/c_crop,w_421,h_424,x_842,y_424/r_max/bo_5px_solid_white/v1786599929/260813_toys_01_txjh3y.png"
+                      alt="kite"
+                    />
+                    <span>Big kite</span>
+                  </button>
+                </div>
+                <div class="toyPair">
+                  <button class="toySizeBtn" onclick="edToyPress('Small robot')">
+                    <img
+                      class="small"
+                      src="https://res.cloudinary.com/dqwm4pdbz/image/upload/c_crop,w_421,h_424,x_0,y_424/r_max/bo_5px_solid_white/v1786599929/260813_toys_01_txjh3y.png"
+                      alt="robot"
+                    />
+                    <span>Small robot</span>
+                  </button>
+                  <button class="toySizeBtn" onclick="edToyPress('Big robot')">
+                    <img
+                      class="big"
+                      src="https://res.cloudinary.com/dqwm4pdbz/image/upload/c_crop,w_421,h_424,x_0,y_424/r_max/bo_5px_solid_white/v1786599929/260813_toys_01_txjh3y.png"
+                      alt="robot"
+                    />
+                    <span>Big robot</span>
+                  </button>
+                </div>
+                <div class="toyPair">
+                  <button class="toySizeBtn" onclick="edToyPress('Small bike')">
+                    <img
+                      class="small"
+                      src="https://res.cloudinary.com/dqwm4pdbz/image/upload/c_crop,w_421,h_424,x_421,y_424/r_max/bo_5px_solid_white/v1786599929/260813_toys_01_txjh3y.png"
+                      alt="bike"
+                    />
+                    <span>Small bike</span>
+                  </button>
+                  <button class="toySizeBtn" onclick="edToyPress('Big bike')">
+                    <img
+                      class="big"
+                      src="https://res.cloudinary.com/dqwm4pdbz/image/upload/c_crop,w_421,h_424,x_421,y_424/r_max/bo_5px_solid_white/v1786599929/260813_toys_01_txjh3y.png"
+                      alt="bike"
+                    />
+                    <span>Big bike</span>
+                  </button>
+                </div>
               </div>
             </div>
           </div>
@@ -1747,7 +1977,7 @@
       <!-- Theme 4: BIG OR SMALL? (mini-game) -->
       <section class="screen" id="toysBigSmallScreen">
         <div class="content">
-          <h1 class="pageTitle" id="bsTitle">BIG OR SMALL?</h1>
+          <h1 class="pageTitle" id="bsTitle">Big or Small?</h1>
           <div class="stage">
             <div class="panel">
               <div class="roundPips" id="bsPips"></div>
@@ -1768,13 +1998,33 @@
       <!-- Theme 5: DO YOU HAVE A...? (exercise) -->
       <section class="screen" id="toysYesNoScreen">
         <div class="content">
-          <h1 class="pageTitle" id="ynTitle">DO YOU HAVE A…?</h1>
+          <h1 class="pageTitle" id="ynTitle">Do You Have A…?</h1>
           <div class="stage">
             <div class="panel">
               <div class="roundPips" id="ynPips"></div>
               <div class="gameArea">
-                <div class="gameVisual">
-                  <img id="ynImg" alt="toy" />
+                <div class="ynCast">
+                  <div class="ynCastMember" id="ynSam">
+                    <img
+                      class="ynAvatar"
+                      src="https://res.cloudinary.com/dqwm4pdbz/image/upload/c_scale,w_450,h_437/q_auto/f_auto/v1786623813/sam_3davface_irvdlj.png"
+                      alt="Sam"
+                    />
+                    <span class="ynName">Sam</span>
+                    <div class="ynToys" id="ynSamToys"></div>
+                  </div>
+                  <div class="gameVisual ynVisual">
+                    <img id="ynImg" alt="toy" />
+                  </div>
+                  <div class="ynCastMember onza" id="ynOnza">
+                    <img
+                      class="ynAvatar"
+                      src="https://res.cloudinary.com/dqwm4pdbz/image/upload/c_scale,w_400/q_auto/f_auto/v1786623812/onza_3avface_gyyay8.png"
+                      alt="Onza"
+                    />
+                    <span class="ynName">Onza</span>
+                    <div class="ynToys" id="ynOnzaToys"></div>
+                  </div>
                 </div>
                 <div class="gameRow">
                   <button class="choice yes" onclick="ynAnswer(true)">YES</button>
@@ -1789,7 +2039,7 @@
       <!-- Theme 6: I HAVE A... (exercise) -->
       <section class="screen" id="toysHaveScreen">
         <div class="content">
-          <h1 class="pageTitle" id="haveTitle">I HAVE A…</h1>
+          <h1 class="pageTitle" id="haveTitle">I Have A…</h1>
           <div class="stage">
             <div class="panel">
               <div class="roundPips" id="havePips"></div>
@@ -1807,7 +2057,7 @@
       <!-- Theme 7: WHERE IS THE...? (exercise) -->
       <section class="screen" id="toysWhereScreen">
         <div class="content">
-          <h1 class="pageTitle" id="whereTitle">WHERE IS THE…?</h1>
+          <h1 class="pageTitle" id="whereTitle">Where Is The…?</h1>
           <div class="stage">
             <div class="panel">
               <div class="roundPips" id="wherePips"></div>
@@ -1878,7 +2128,7 @@
       <!-- Months -->
       <section class="screen" id="monthsScreen">
         <div class="content">
-          <h1 class="pageTitle">THE MONTHS</h1>
+          <h1 class="pageTitle">The Months</h1>
           <div class="stage">
             <div class="panel">
               <div class="grid grid--4">
@@ -1963,7 +2213,7 @@
       <!-- 6: Colours check -->
       <section class="screen" id="coloursScreen">
         <div class="content">
-          <h1 class="pageTitle">COLOURS</h1>
+          <h1 class="pageTitle">Colours</h1>
           <div class="stage">
             <div class="panel">
               <div class="grid">
@@ -2032,7 +2282,7 @@
       <!-- 7: Results / big reward page -->
       <section class="screen" id="resultsScreen">
         <div class="content">
-          <h1 class="pageTitle">YOUR SCORE</h1>
+          <h1 class="pageTitle">Your Score</h1>
           <div class="stage">
             <div class="panel">
               <p>Complete the tasks to earn all 6 stars and win the cup!</p>
@@ -3243,6 +3493,29 @@
         return bad === 0 && greens >= results.length - 1;
       }
 
+      var edToyPhrases = [
+        "Small car",
+        "Big car",
+        "Small kite",
+        "Big kite",
+        "Small robot",
+        "Big robot",
+        "Small bike",
+        "Big bike",
+      ];
+      var edToyHeard = {};
+      var edToyRewarded = false;
+      function edToyPress(phrase) {
+        say(phrase);
+        edToyHeard[phrase] = true;
+        if (edToyRewarded) return;
+        for (var i = 0; i < edToyPhrases.length; i++) {
+          if (!edToyHeard[edToyPhrases[i]]) return;
+        }
+        edToyRewarded = true;
+        reward("WELL DONE! +1 ⭐");
+      }
+
       var bsRounds = [
         { name: "car", size: "big" },
         { name: "kite", size: "small" },
@@ -3347,6 +3620,30 @@
       var ynRewarded = false;
       var ynResults = [];
       var ynTries = 0;
+      var ynOwned = {
+        sam: ["robot", "teddy bear", "rocket"],
+        onza: ["car", "kite", "bike"],
+      };
+      function ynFillToys(sel, names) {
+        var box = document.getElementById(sel);
+        if (!box) return;
+        for (var i = 0; i < names.length; i++) {
+          (function (name) {
+            var img = document.createElement("img");
+            img.src = toyImg(name);
+            img.alt = name;
+            img.title = toyCap(name);
+            box.appendChild(img);
+          })(names[i]);
+        }
+      }
+      function ynSetOwner(name) {
+        var sam = document.getElementById("ynSam");
+        var onza = document.getElementById("ynOnza");
+        var isSam = ynOwned.sam.indexOf(name) !== -1;
+        if (sam) sam.classList.toggle("owner", isSam);
+        if (onza) onza.classList.toggle("owner", !isSam);
+      }
       function ynReset() {
         buildPips("ynPips", ynRounds.length);
         ynIdx = 0;
@@ -3364,6 +3661,7 @@
           img.alt = r.name;
         }
         setHeadline("ynTitle", "Do you have a " + r.name + "?");
+        ynSetOwner(r.name);
         ynTries = 0;
         setPips("ynPips", ynResults, ynIdx);
       }
@@ -3558,6 +3856,10 @@
             grid.appendChild(b);
           })(TOYS[i]);
         }
+      })();
+      (function () {
+        ynFillToys("ynSamToys", ynOwned.sam);
+        ynFillToys("ynOnzaToys", ynOwned.onza);
       })();
     </script>
     <script src="https://unpkg.com/lucide@latest"></script>
