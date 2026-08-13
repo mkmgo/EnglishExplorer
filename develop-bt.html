@@ -1726,12 +1726,11 @@
       <!-- Theme 4: BIG OR SMALL? (mini-game) -->
       <section class="screen" id="toysBigSmallScreen">
         <div class="content">
-          <h1 class="pageTitle">BIG OR SMALL?</h1>
+          <h1 class="pageTitle" id="bsTitle">BIG OR SMALL?</h1>
           <div class="stage">
             <div class="panel">
               <div class="roundPips" id="bsPips"></div>
               <div class="gameArea">
-                <button class="icardstb" id="bsAsk"></button>
                 <div class="gameVisual">
                   <img id="bsImg" alt="toy" />
                 </div>
@@ -3013,7 +3012,7 @@
       };
       document.getElementById("homeBtn").onclick = function () {
         if (idx === nocountIdx) show(slide8From);
-        else show(nocountIdx);
+        else show(0);
       };
       document.addEventListener("keydown", function (e) {
         var k = e.key || "";
@@ -3036,7 +3035,8 @@
           prev();
         } else if (k === "ArrowUp" || kc === 38) {
           if (idx === nocountIdx) show(0);
-          else show(nocountIdx);
+          else if (idx === 0 || idx === 1) show(nocountIdx);
+          else show(0);
         } else if (k === "ArrowDown" || kc === 40) {
           if (idx === nocountIdx) show(slide8From);
         } else if (k === "Escape" || kc === 27 || kc === 10009) {
@@ -3076,7 +3076,10 @@
               else prev();
             } else if (dy < 0) {
               if (idx === nocountIdx) show(0);
-              else show(nocountIdx);
+              else if (idx === 0 || idx === 1) show(nocountIdx);
+              else show(0);
+            } else if (dy > 0) {
+              if (idx === nocountIdx) show(slide8From);
             }
           },
           { passive: true },
@@ -3205,26 +3208,53 @@
       ];
       var bsIdx = 0;
       var bsRewarded = false;
+      var bsBusy = false;
+      var bsGen = 0;
       function bsReset() {
         buildPips("bsPips", bsRounds.length);
         bsIdx = 0;
+        bsBusy = false;
+        bsGen++;
+        setBsEnabled(true);
         bsStart();
+      }
+      function setBsEnabled(on) {
+        var btns = document.querySelectorAll("#toysBigSmallScreen .choice");
+        for (var i = 0; i < btns.length; i++) {
+          btns[i].disabled = !on;
+        }
       }
       function bsStart() {
         if (bsIdx >= bsRounds.length) return;
         var r = bsRounds[bsIdx];
         var img = document.getElementById("bsImg");
-        if (img) {
-          img.src = toyImg(r.name);
-          img.className = r.size;
-          img.alt = r.name;
-        }
-        setBubble("bsAsk", "Big or small?");
-        sayOther("Big or small?");
+        var show = function (size) {
+          if (img) {
+            img.src = toyImg(r.name);
+            img.className = size;
+            img.alt = r.name;
+          }
+        };
+        setHeadline("bsTitle", "Big or small?");
         setPips("bsPips", bsIdx);
+        if (r.size === "big") {
+          var gen = ++bsGen;
+          bsBusy = true;
+          setBsEnabled(false);
+          show("small");
+          window.setTimeout(function () {
+            if (gen !== bsGen || bsIdx >= bsRounds.length) return;
+            bsBusy = false;
+            setBsEnabled(true);
+            show("big");
+          }, 3000);
+        } else {
+          show("small");
+        }
       }
       function bsAnswer(size) {
         if (bsIdx >= bsRounds.length) return;
+        if (bsBusy) return;
         var r = bsRounds[bsIdx];
         if (size !== r.size) {
           toast("Try again!");
@@ -3236,7 +3266,7 @@
         bsIdx++;
         setPips("bsPips", bsIdx);
         if (bsIdx >= bsRounds.length) {
-          setBubble("bsAsk", "Well done!");
+          setHeadline("bsTitle", "Well done!");
           if (!bsRewarded) {
             bsRewarded = true;
             reward("BIG OR SMALL! +1 ⭐");
