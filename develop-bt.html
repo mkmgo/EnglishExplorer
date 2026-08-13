@@ -370,9 +370,9 @@
         background: #a78bfa;
         border: 4px solid #7c3aed;
       }
-      .tab-conversation {
-        background: #fb7185;
-        border: 4px solid #e11d48;
+      .tab-theme {
+        background: #5eead4;
+        border: 4px solid #0d9488;
       }
       .yes {
         background: #dff7ec;
@@ -556,6 +556,157 @@
       }
       .c-black {
         background: #222222;
+      }
+      .toyBtn {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 0.4em;
+        min-height: 120px;
+        padding: 0.7em;
+        border-radius: 26px;
+        background: var(--panel);
+        box-shadow: var(--shadow);
+        transition: 0.15s transform;
+      }
+      .toyBtn:active {
+        transform: scale(0.95);
+      }
+      .toyBtn .toyName {
+        font-size: clamp(0.95rem, 1.6vw, 1.5rem);
+        font-weight: 900;
+        letter-spacing: 0.02em;
+        color: var(--ink);
+        text-transform: uppercase;
+      }
+      .toyImg {
+        width: clamp(74px, 10vw, 140px);
+        height: clamp(74px, 10vw, 140px);
+        object-fit: contain;
+        background: #fff;
+        border-radius: 18px;
+      }
+      .toyGrid {
+        --cols: 3;
+        display: grid;
+        grid-template-columns: repeat(var(--cols), minmax(0, 1fr));
+        gap: clamp(10px, 1.5vw, 20px);
+        width: 100%;
+        max-width: 760px;
+        margin: 0 auto;
+      }
+      .toyGrid .toyBtn {
+        min-width: 0;
+      }
+      .miniRow {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: clamp(8px, 1.2vw, 16px);
+        margin-top: 1em;
+      }
+      .miniChip {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5em;
+        background: #eef1f7;
+        color: var(--ink);
+        border: 2px solid rgba(96, 112, 141, 0.35);
+        border-radius: 999px;
+        padding: 0.5em 1.1em;
+        font-size: clamp(1rem, 1.7vw, 1.5rem);
+        font-weight: 800;
+        transition: 0.15s transform;
+      }
+      .miniChip:active {
+        transform: scale(0.95);
+      }
+      .miniChip .miniImg {
+        width: 1.5em;
+        height: 1.5em;
+        object-fit: contain;
+        border-radius: 6px;
+        background: #fff;
+      }
+      .gameArea {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 1.2em;
+        width: 100%;
+      }
+      .gameVisual {
+        width: min(300px, 60vw);
+        height: min(240px, 46vh);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: var(--panel);
+        border-radius: 28px;
+        box-shadow: var(--shadow);
+        border: 3px solid var(--accent2);
+        overflow: hidden;
+      }
+      .gameVisual img {
+        width: 62%;
+        height: auto;
+        object-fit: contain;
+        transition: width 0.25s ease;
+      }
+      .gameVisual img.big {
+        width: 76%;
+        height: auto;
+      }
+      .gameVisual img.small {
+        width: 38%;
+        height: auto;
+      }
+      .gameRow {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 1rem;
+        width: 100%;
+        max-width: 640px;
+      }
+      .gameRow .choice {
+        min-width: 170px;
+      }
+      .gameHint {
+        font-size: clamp(1rem, 1.8vw, 1.6rem);
+        color: var(--muted);
+        font-weight: 800;
+      }
+      .roundPips {
+        display: flex;
+        gap: 0.5em;
+        justify-content: center;
+      }
+      .pip {
+        width: 22px;
+        height: 22px;
+        border-radius: 50%;
+        background: #eef1f7;
+        box-shadow: inset 0 0 0 2px rgba(20, 33, 61, 0.15);
+      }
+      .pip.done {
+        background: #f1c40f;
+        box-shadow:
+          0 0 0 2px #fff,
+          inset 0 0 0 2px #b8860b;
+      }
+      @media (max-aspect-ratio: 1/1) {
+        .toyGrid {
+          --cols: 3;
+        }
+        .toyBtn .toyName {
+          font-size: clamp(0.75rem, 3vw, 1rem);
+        }
+        .toyImg {
+          width: clamp(60px, 18vw, 96px);
+          height: clamp(60px, 18vw, 96px);
+        }
       }
       .topbar {
         position: absolute;
@@ -981,8 +1132,8 @@
               <button class="tabs tab-words" onclick="goWords()">
                 <span class="tabtext">Words</span>
               </button>
-              <button class="tabs tab-conversation">
-                <span class="tabtext">Conversation</span>
+              <button class="tabs tab-theme" onclick="goToys()">
+                <span class="tabtext">Theme</span>
               </button>
             </div>
           </div>
@@ -1229,6 +1380,350 @@
                 <span class="icardtextb">I am 7 years old.</span>
               </button>
             </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Theme 1: MY TOYS — vocabulary (present) -->
+      <section class="screen" id="toysIntroScreen">
+        <div class="content">
+          <h1 class="pageTitle">MY TOYS</h1>
+          <div class="stage">
+            <div class="panel">
+              <div class="toyGrid">
+                <button class="toyBtn" onclick="toyPress('car')">
+                  <img
+                    class="toyImg"
+                    src="https://res.cloudinary.com/dqwm4pdbz/image/upload/c_crop,w_421,h_424,x_0,y_0/r_max/bo_5px_solid_white/v1786599929/260813_toys_01_txjh3y.png"
+                    alt="car"
+                  />
+                  <span class="toyName">Car</span>
+                </button>
+                <button class="toyBtn" onclick="toyPress('rocket')">
+                  <img
+                    class="toyImg"
+                    src="https://res.cloudinary.com/dqwm4pdbz/image/upload/c_crop,w_421,h_424,x_421,y_0/r_max/bo_5px_solid_white/v1786599929/260813_toys_01_txjh3y.png"
+                    alt="rocket"
+                  />
+                  <span class="toyName">Rocket</span>
+                </button>
+                <button class="toyBtn" onclick="toyPress('teddy bear')">
+                  <img
+                    class="toyImg"
+                    src="https://res.cloudinary.com/dqwm4pdbz/image/upload/c_crop,w_421,h_424,x_842,y_0/r_max/bo_5px_solid_white/v1786599929/260813_toys_01_txjh3y.png"
+                    alt="teddy bear"
+                  />
+                  <span class="toyName">Teddy Bear</span>
+                </button>
+                <button class="toyBtn" onclick="toyPress('robot')">
+                  <img
+                    class="toyImg"
+                    src="https://res.cloudinary.com/dqwm4pdbz/image/upload/c_crop,w_421,h_424,x_0,y_424/r_max/bo_5px_solid_white/v1786599929/260813_toys_01_txjh3y.png"
+                    alt="robot"
+                  />
+                  <span class="toyName">Robot</span>
+                </button>
+                <button class="toyBtn" onclick="toyPress('bike')">
+                  <img
+                    class="toyImg"
+                    src="https://res.cloudinary.com/dqwm4pdbz/image/upload/c_crop,w_421,h_424,x_421,y_424/r_max/bo_5px_solid_white/v1786599929/260813_toys_01_txjh3y.png"
+                    alt="bike"
+                  />
+                  <span class="toyName">Bike</span>
+                </button>
+                <button class="toyBtn" onclick="toyPress('kite')">
+                  <img
+                    class="toyImg"
+                    src="https://res.cloudinary.com/dqwm4pdbz/image/upload/c_crop,w_421,h_424,x_842,y_424/r_max/bo_5px_solid_white/v1786599929/260813_toys_01_txjh3y.png"
+                    alt="kite"
+                  />
+                  <span class="toyName">Kite</span>
+                </button>
+              </div>
+              <div class="miniRow">
+                <button class="miniChip" onclick="listenToys()">▶ HEAR ALL</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Theme 2: WHAT DO YOU HAVE? — phrases (present) -->
+      <section class="screen" id="toysPhrasesScreen">
+        <div class="content">
+          <h1 class="pageTitle">WHAT DO YOU HAVE?</h1>
+          <div class="stage">
+            <div class="panel">
+              <div class="grid grid--2">
+                <button
+                  class="icardst"
+                  onclick="speakPhrase('I have a car.', 't1')"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="1.2em"
+                    height="1.2em"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    style="vertical-align: -0.2em"
+                  >
+                    <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" />
+                    <path d="M15.54 8.46a5 5 0 0 1 0 7.07" />
+                  </svg>
+                  <span class="icardtext">I have a car.</span>
+                </button>
+                <div></div>
+                <div></div>
+                <button
+                  class="icardstb"
+                  onclick="speakPhrase('I have a teddy bear.', 't2', 'onza')"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="1.2em"
+                    height="1.2em"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    style="vertical-align: -0.2em"
+                  >
+                    <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" />
+                    <path d="M15.54 8.46a5 5 0 0 1 0 7.07" />
+                  </svg>
+                  <span class="icardtextb">I have a teddy bear.</span>
+                </button>
+                <button
+                  class="icardst"
+                  onclick="speakPhrase('Do you have a robot?', 't3')"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="1.2em"
+                    height="1.2em"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    style="vertical-align: -0.2em"
+                  >
+                    <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" />
+                    <path d="M15.54 8.46a5 5 0 0 1 0 7.07" />
+                  </svg>
+                  <span class="icardtext">Do you have a robot?</span>
+                </button>
+                <div></div>
+                <div></div>
+                <button
+                  class="icardstb"
+                  onclick="speakPhrase('Yes! I have a robot.', 't4', 'onza')"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="1.2em"
+                    height="1.2em"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    style="vertical-align: -0.2em"
+                  >
+                    <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" />
+                    <path d="M15.54 8.46a5 5 0 0 1 0 7.07" />
+                  </svg>
+                  <span class="icardtextb">Yes! I have a robot.</span>
+                </button>
+                <button
+                  class="icardst"
+                  onclick="speakPhrase('I don\'t have a bike.', 't5')"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="1.2em"
+                    height="1.2em"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    style="vertical-align: -0.2em"
+                  >
+                    <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" />
+                    <path d="M15.54 8.46a5 5 0 0 1 0 7.07" />
+                  </svg>
+                  <span class="icardtext">I don't have a bike.</span>
+                </button>
+                <div></div>
+                <div></div>
+                <button
+                  class="icardstb"
+                  onclick="speakPhrase('Where is the kite?', 't6', 'onza')"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="1.2em"
+                    height="1.2em"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    style="vertical-align: -0.2em"
+                  >
+                    <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" />
+                    <path d="M15.54 8.46a5 5 0 0 1 0 7.07" />
+                  </svg>
+                  <span class="icardtextb">Where is the kite?</span>
+                </button>
+                <button
+                  class="icardst"
+                  onclick="speakPhrase('Here!', 't7')"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="1.2em"
+                    height="1.2em"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    style="vertical-align: -0.2em"
+                  >
+                    <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" />
+                    <path d="M15.54 8.46a5 5 0 0 1 0 7.07" />
+                  </svg>
+                  <span class="icardtext">Here!</span>
+                </button>
+                <div></div>
+              </div>
+              <div class="miniRow">
+                <button class="miniChip" onclick="say('Big car')">
+                  <img
+                    class="miniImg"
+                    src="https://res.cloudinary.com/dqwm4pdbz/image/upload/c_crop,w_421,h_424,x_0,y_0/r_max/bo_5px_solid_white/v1786599929/260813_toys_01_txjh3y.png"
+                    alt="car"
+                  />
+                  Big car
+                </button>
+                <button class="miniChip" onclick="say('Small car')">
+                  <img
+                    class="miniImg"
+                    src="https://res.cloudinary.com/dqwm4pdbz/image/upload/c_crop,w_421,h_424,x_0,y_0/r_max/bo_5px_solid_white/v1786599929/260813_toys_01_txjh3y.png"
+                    alt="car"
+                  />
+                  Small car
+                </button>
+                <button class="miniChip" onclick="say('My kite')">
+                  <img
+                    class="miniImg"
+                    src="https://res.cloudinary.com/dqwm4pdbz/image/upload/c_crop,w_421,h_424,x_842,y_424/r_max/bo_5px_solid_white/v1786599929/260813_toys_01_txjh3y.png"
+                    alt="kite"
+                  />
+                  My kite
+                </button>
+                <button class="miniChip" onclick="say('Your kite')">
+                  <img
+                    class="miniImg"
+                    src="https://res.cloudinary.com/dqwm4pdbz/image/upload/c_crop,w_421,h_424,x_842,y_424/r_max/bo_5px_solid_white/v1786599929/260813_toys_01_txjh3y.png"
+                    alt="kite"
+                  />
+                  Your kite
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Theme 3: BIG OR SMALL? (mini-game) -->
+      <section class="screen" id="toysBigSmallScreen">
+        <div class="content">
+          <h1 class="pageTitle">BIG OR SMALL?</h1>
+          <div class="stage">
+            <div class="panel">
+              <div class="roundPips" id="bsPips"></div>
+              <div class="gameArea">
+                <button class="icardstb" id="bsAsk"></button>
+                <div class="gameVisual">
+                  <img id="bsImg" alt="toy" />
+                </div>
+                <div class="gameRow">
+                  <button class="choice" onclick="bsAnswer('big')">BIG</button>
+                  <button class="choice" onclick="bsAnswer('small')">SMALL</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Theme 4: DO YOU HAVE A...? (exercise) -->
+      <section class="screen" id="toysYesNoScreen">
+        <div class="content">
+          <h1 class="pageTitle">DO YOU HAVE A…?</h1>
+          <div class="stage">
+            <div class="panel">
+              <div class="roundPips" id="ynPips"></div>
+              <div class="gameArea">
+                <button class="icardstb" id="ynAsk"></button>
+                <div class="gameVisual">
+                  <img id="ynImg" alt="toy" />
+                </div>
+                <div class="gameRow">
+                  <button class="choice yes" onclick="ynAnswer(true)">YES</button>
+                  <button class="choice" onclick="ynAnswer(false)">NO</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Theme 5: I HAVE A... (exercise) -->
+      <section class="screen" id="toysHaveScreen">
+        <div class="content">
+          <h1 class="pageTitle">I HAVE A…</h1>
+          <div class="stage">
+            <div class="panel">
+              <div class="roundPips" id="havePips"></div>
+              <div class="gameArea">
+                <button class="icardstb" id="haveAsk"></button>
+                <div class="gameVisual">
+                  <img id="haveImg" alt="toy" />
+                </div>
+                <div class="gameRow" id="haveOptions"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Theme 6: WHERE IS THE...? (exercise) -->
+      <section class="screen" id="toysWhereScreen">
+        <div class="content">
+          <h1 class="pageTitle">WHERE IS THE…?</h1>
+          <div class="stage">
+            <div class="panel">
+              <div class="roundPips" id="wherePips"></div>
+              <div class="gameArea">
+                <button class="icardstb" id="whereAsk"></button>
+                <div class="toyGrid" id="whereGrid"></div>
+              </div>
             </div>
           </div>
         </div>
@@ -1764,6 +2259,7 @@
               return;
             }
             if (t.classList && t.classList.contains("icardstb")) {
+              if (t.getAttribute("onclick")) return;
               var txt = t.getAttribute("data-speak") || "";
               if (!txt) {
                 var span = t.querySelector(".icardtextb");
@@ -1807,6 +2303,10 @@
             preloadVideo(activeVideo);
           }
         }
+        if (screens[idx].id === "toysBigSmallScreen") bsReset();
+        else if (screens[idx].id === "toysYesNoScreen") ynReset();
+        else if (screens[idx].id === "toysHaveScreen") haveReset();
+        else if (screens[idx].id === "toysWhereScreen") whereReset();
         if (screens[idx].id === "resultsScreen") {
           showRewards();
         }
@@ -2497,6 +2997,343 @@
         if (lastSrcText) equalizeBoxes();
       });
       show(0);
+    </script>
+    <script>
+      var TOY_ICON_SPEAKER =
+        '<svg xmlns="http://www.w3.org/2000/svg" width="1.2em" height="1.2em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-0.2em"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/></svg>';
+      var TOYS = [
+        { name: "car", img: "https://res.cloudinary.com/dqwm4pdbz/image/upload/c_crop,w_421,h_424,x_0,y_0/r_max/bo_5px_solid_white/v1786599929/260813_toys_01_txjh3y.png" },
+        { name: "rocket", img: "https://res.cloudinary.com/dqwm4pdbz/image/upload/c_crop,w_421,h_424,x_421,y_0/r_max/bo_5px_solid_white/v1786599929/260813_toys_01_txjh3y.png" },
+        { name: "teddy bear", img: "https://res.cloudinary.com/dqwm4pdbz/image/upload/c_crop,w_421,h_424,x_842,y_0/r_max/bo_5px_solid_white/v1786599929/260813_toys_01_txjh3y.png" },
+        { name: "robot", img: "https://res.cloudinary.com/dqwm4pdbz/image/upload/c_crop,w_421,h_424,x_0,y_424/r_max/bo_5px_solid_white/v1786599929/260813_toys_01_txjh3y.png" },
+        { name: "bike", img: "https://res.cloudinary.com/dqwm4pdbz/image/upload/c_crop,w_421,h_424,x_421,y_424/r_max/bo_5px_solid_white/v1786599929/260813_toys_01_txjh3y.png" },
+        { name: "kite", img: "https://res.cloudinary.com/dqwm4pdbz/image/upload/c_crop,w_421,h_424,x_842,y_424/r_max/bo_5px_solid_white/v1786599929/260813_toys_01_txjh3y.png" },
+      ];
+
+      function toyImg(name) {
+        for (var i = 0; i < TOYS.length; i++) {
+          if (TOYS[i].name === name) return TOYS[i].img;
+        }
+        return "";
+      }
+
+      function toyCap(name) {
+        return name.charAt(0).toUpperCase() + name.slice(1);
+      }
+
+      function goToys() {
+        for (var i = 0; i < screens.length; i++) {
+          if (screens[i].id === "toysIntroScreen") {
+            show(i);
+            return;
+          }
+        }
+      }
+
+      var toysHeard = {};
+      var toysHeardRewarded = false;
+      var toyListenBusy = false;
+      function toyPress(name) {
+        say(name);
+        toysHeard[name] = true;
+        if (toysHeardRewarded) return;
+        for (var i = 0; i < TOYS.length; i++) {
+          if (!toysHeard[TOYS[i].name]) return;
+        }
+        toysHeardRewarded = true;
+        reward("ALL TOYS! +1 ⭐");
+      }
+
+      function listenToys() {
+        if (toyListenBusy) return;
+        toyListenBusy = true;
+        var t = 0;
+        for (var i = 0; i < TOYS.length; i++) {
+          (function (n, delay) {
+            window.setTimeout(function () {
+              toyPress(n);
+            }, delay);
+          })(TOYS[i].name, t);
+          t += 700 + TOYS[i].name.length * 80;
+        }
+        window.setTimeout(function () {
+          toyListenBusy = false;
+        }, t + 200);
+      }
+
+      var toysPhrases = ["t1", "t2", "t3", "t4", "t5", "t6", "t7"];
+      var toysPhrasesHeard = {};
+      var toysPhrasesRewarded = false;
+      function speakPhrase(text, key, who) {
+        say(text, who === "onza" ? altVoice2 : null);
+        toysPhrasesHeard[key] = true;
+        if (toysPhrasesRewarded) return;
+        for (var i = 0; i < toysPhrases.length; i++) {
+          if (!toysPhrasesHeard[toysPhrases[i]]) return;
+        }
+        toysPhrasesRewarded = true;
+        reward("ALL PHRASES! +1 ⭐");
+      }
+
+      function setBubble(id, text) {
+        var b = document.getElementById(id);
+        if (!b) return;
+        b.innerHTML =
+          TOY_ICON_SPEAKER + '<span class="icardtextb">' + text + "</span>";
+      }
+
+      function buildPips(id, n) {
+        var el = document.getElementById(id);
+        if (!el) return;
+        el.innerHTML = "";
+        for (var i = 0; i < n; i++) {
+          var s = document.createElement("span");
+          s.className = "pip";
+          el.appendChild(s);
+        }
+      }
+
+      function setPips(id, doneCount) {
+        var el = document.getElementById(id);
+        if (!el) return;
+        for (var i = 0; i < el.children.length; i++) {
+          el.children[i].classList.toggle("done", i < doneCount);
+        }
+      }
+
+      var bsRounds = [
+        { name: "car", size: "big" },
+        { name: "kite", size: "small" },
+        { name: "robot", size: "big" },
+        { name: "teddy bear", size: "small" },
+        { name: "bike", size: "big" },
+        { name: "rocket", size: "small" },
+      ];
+      var bsIdx = 0;
+      var bsRewarded = false;
+      function bsReset() {
+        buildPips("bsPips", bsRounds.length);
+        bsIdx = 0;
+        bsStart();
+      }
+      function bsStart() {
+        if (bsIdx >= bsRounds.length) return;
+        var r = bsRounds[bsIdx];
+        var img = document.getElementById("bsImg");
+        if (img) {
+          img.src = toyImg(r.name);
+          img.className = r.size;
+          img.alt = r.name;
+        }
+        setBubble("bsAsk", "Big or small?");
+        sayOther("Big or small?");
+        setPips("bsPips", bsIdx);
+      }
+      function bsAnswer(size) {
+        if (bsIdx >= bsRounds.length) return;
+        var r = bsRounds[bsIdx];
+        if (size !== r.size) {
+          toast("Try again!");
+          say("Try again.");
+          return;
+        }
+        toast("WELL DONE!");
+        say("Yes! It's " + r.size + "!");
+        bsIdx++;
+        setPips("bsPips", bsIdx);
+        if (bsIdx >= bsRounds.length) {
+          setBubble("bsAsk", "Well done!");
+          if (!bsRewarded) {
+            bsRewarded = true;
+            reward("BIG OR SMALL! +1 ⭐");
+          }
+        } else {
+          bsStart();
+        }
+      }
+
+      var ynRounds = [
+        { name: "car", answer: true },
+        { name: "robot", answer: false },
+        { name: "kite", answer: true },
+        { name: "teddy bear", answer: false },
+        { name: "bike", answer: true },
+        { name: "rocket", answer: false },
+      ];
+      var ynIdx = 0;
+      var ynRewarded = false;
+      function ynReset() {
+        buildPips("ynPips", ynRounds.length);
+        ynIdx = 0;
+        ynStart();
+      }
+      function ynStart() {
+        if (ynIdx >= ynRounds.length) return;
+        var r = ynRounds[ynIdx];
+        var img = document.getElementById("ynImg");
+        if (img) {
+          img.src = toyImg(r.name);
+          img.className = "";
+          img.alt = r.name;
+        }
+        setBubble("ynAsk", "Do you have a " + r.name + "?");
+        sayOther("Do you have a " + r.name + "?");
+        setPips("ynPips", ynIdx);
+      }
+      function ynAnswer(yes) {
+        if (ynIdx >= ynRounds.length) return;
+        var r = ynRounds[ynIdx];
+        if (yes !== r.answer) {
+          toast("Try again!");
+          say("Try again.");
+          return;
+        }
+        toast("WELL DONE!");
+        say(r.answer ? "Yes!" : "No!");
+        ynIdx++;
+        setPips("ynPips", ynIdx);
+        if (ynIdx >= ynRounds.length) {
+          setBubble("ynAsk", "Well done!");
+          if (!ynRewarded) {
+            ynRewarded = true;
+            reward("DO YOU HAVE A…? +1 ⭐");
+          }
+        } else {
+          ynStart();
+        }
+      }
+
+      var haveRounds = [
+        { name: "car", options: ["car", "kite", "robot"] },
+        { name: "teddy bear", options: ["car", "teddy bear", "bike"] },
+        { name: "robot", options: ["rocket", "robot", "teddy bear"] },
+        { name: "kite", options: ["kite", "car", "bike"] },
+        { name: "bike", options: ["bike", "robot", "rocket"] },
+        { name: "rocket", options: ["car", "rocket", "teddy bear"] },
+      ];
+      var haveIdx = 0;
+      var haveRewarded = false;
+      function haveReset() {
+        buildPips("havePips", haveRounds.length);
+        haveIdx = 0;
+        haveStart();
+      }
+      function haveStart() {
+        if (haveIdx >= haveRounds.length) return;
+        var r = haveRounds[haveIdx];
+        var img = document.getElementById("haveImg");
+        if (img) {
+          img.src = toyImg(r.name);
+          img.className = "";
+          img.alt = r.name;
+        }
+        setBubble("haveAsk", "What do you have?");
+        sayOther("What do you have?");
+        setPips("havePips", haveIdx);
+        var box = document.getElementById("haveOptions");
+        if (!box) return;
+        box.innerHTML = "";
+        var shuffle = r.options.slice();
+        for (var i = shuffle.length - 1; i > 0; i--) {
+          var j = Math.floor(Math.random() * (i + 1));
+          var tmp = shuffle[i];
+          shuffle[i] = shuffle[j];
+          shuffle[j] = tmp;
+        }
+        for (var k = 0; k < shuffle.length; k++) {
+          (function (opt) {
+            var b = document.createElement("button");
+            b.className = "choice";
+            b.textContent = "I have a " + opt + ".";
+            b.onclick = function () {
+              haveAnswer(opt);
+            };
+            box.appendChild(b);
+          })(shuffle[k]);
+        }
+      }
+      function haveAnswer(opt) {
+        if (haveIdx >= haveRounds.length) return;
+        var r = haveRounds[haveIdx];
+        if (opt !== r.name) {
+          toast("Try again!");
+          say("Try again.");
+          return;
+        }
+        toast("WELL DONE!");
+        say("I have a " + r.name + ".");
+        haveIdx++;
+        setPips("havePips", haveIdx);
+        if (haveIdx >= haveRounds.length) {
+          setBubble("haveAsk", "Well done!");
+          if (!haveRewarded) {
+            haveRewarded = true;
+            reward("I HAVE A…! +1 ⭐");
+          }
+        } else {
+          haveStart();
+        }
+      }
+
+      var whereOrder = ["bike", "kite", "teddy bear", "robot", "car", "rocket"];
+      var whereIdx = 0;
+      var whereRewarded = false;
+      function whereReset() {
+        buildPips("wherePips", whereOrder.length);
+        whereIdx = 0;
+        whereStart();
+      }
+      function whereStart() {
+        if (whereIdx >= whereOrder.length) return;
+        setBubble("whereAsk", "Where is the " + whereOrder[whereIdx] + "?");
+        sayOther("Where is the " + whereOrder[whereIdx] + "?");
+        setPips("wherePips", whereIdx);
+      }
+      function whereAnswer(name) {
+        if (whereIdx >= whereOrder.length) return;
+        if (name !== whereOrder[whereIdx]) {
+          toast("Try again!");
+          say("Try again.");
+          return;
+        }
+        toast("HERE!");
+        say("Here!");
+        whereIdx++;
+        setPips("wherePips", whereIdx);
+        if (whereIdx >= whereOrder.length) {
+          setBubble("whereAsk", "Well done!");
+          if (!whereRewarded) {
+            whereRewarded = true;
+            reward("WHERE IS IT? +1 ⭐");
+          }
+        } else {
+          whereStart();
+        }
+      }
+
+      (function () {
+        var grid = document.getElementById("whereGrid");
+        if (!grid) return;
+        for (var i = 0; i < TOYS.length; i++) {
+          (function (toy) {
+            var b = document.createElement("button");
+            b.className = "toyBtn";
+            b.onclick = function () {
+              whereAnswer(toy.name);
+            };
+            var img = document.createElement("img");
+            img.className = "toyImg";
+            img.src = toy.img;
+            img.alt = toy.name;
+            var span = document.createElement("span");
+            span.className = "toyName";
+            span.textContent = toyCap(toy.name);
+            b.appendChild(img);
+            b.appendChild(span);
+            grid.appendChild(b);
+          })(TOYS[i]);
+        }
+      })();
     </script>
     <script src="https://unpkg.com/lucide@latest"></script>
     <script>
