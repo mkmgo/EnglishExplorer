@@ -22,6 +22,7 @@
         --accent2: #ffb866;
         --good: #19a974;
         --bad: #e05252;
+        --mediocre: #f39c12;
         --panel: #ffffff;
         --shadow: 0 18px 50px rgba(20, 33, 61, 0.14);
       }
@@ -590,7 +591,6 @@
         font-weight: 900;
         letter-spacing: 0.02em;
         color: var(--ink);
-        text-transform: uppercase;
       }
       .toyImg {
         width: clamp(74px, 10vw, 140px);
@@ -630,6 +630,9 @@
         font-size: clamp(1rem, 1.7vw, 1.5rem);
         font-weight: 800;
         transition: 0.15s transform;
+      }
+      #toysIntroScreen .miniChip {
+        font-size: clamp(0.88rem, 1.5vw, 1.3rem);
       }
       .miniChip:active {
         transform: scale(0.95);
@@ -712,6 +715,7 @@
         display: flex;
         gap: 0.5em;
         justify-content: center;
+        margin-bottom: clamp(1.4em, 4vh, 2.4em);
       }
       .pip {
         width: 22px;
@@ -720,11 +724,28 @@
         background: #eef1f7;
         box-shadow: inset 0 0 0 2px rgba(20, 33, 61, 0.15);
       }
-      .pip.done {
-        background: #f1c40f;
+      .pip.pip-good {
+        background: var(--good);
         box-shadow:
           0 0 0 2px #fff,
-          inset 0 0 0 2px #b8860b;
+          inset 0 0 0 2px #0f8a60;
+      }
+      .pip.pip-med {
+        background: var(--mediocre);
+        box-shadow:
+          0 0 0 2px #fff,
+          inset 0 0 0 2px #c07800;
+      }
+      .pip.pip-bad {
+        background: var(--bad);
+        box-shadow:
+          0 0 0 2px #fff,
+          inset 0 0 0 2px #b03a3a;
+      }
+      .pip.pip-current {
+        box-shadow:
+          0 0 0 3px var(--accent2),
+          inset 0 0 0 2px rgba(20, 33, 61, 0.25);
       }
       @media (max-aspect-ratio: 1/1) {
         .toyGrid {
@@ -1418,7 +1439,7 @@
       <!-- Theme 1: MY TOYS — vocabulary (present) -->
       <section class="screen" id="toysIntroScreen">
         <div class="content">
-          <h1 class="pageTitle">MY TOYS</h1>
+          <h1 class="pageTitle">My Toys and Things</h1>
           <div class="stage">
             <div class="panel">
               <div class="toyGrid">
@@ -1472,7 +1493,7 @@
                 </button>
               </div>
               <div class="miniRow">
-                <button class="miniChip" onclick="listenToys()">▶ HEAR ALL</button>
+                <button class="miniChip" onclick="listenToys()"><i data-lucide="volume1" width="1.2em" height="1.2em"></i> HEAR ALL</button>
               </div>
             </div>
           </div>
@@ -3110,7 +3131,9 @@
       }
 
       function toyCap(name) {
-        return name.charAt(0).toUpperCase() + name.slice(1);
+        return name.replace(/\w\S*/g, function (w) {
+          return w.charAt(0).toUpperCase() + w.slice(1);
+        });
       }
 
       function goToys() {
@@ -3190,12 +3213,34 @@
         }
       }
 
-      function setPips(id, doneCount) {
+      function setPips(id, results, current) {
         var el = document.getElementById(id);
         if (!el) return;
         for (var i = 0; i < el.children.length; i++) {
-          el.children[i].classList.toggle("done", i < doneCount);
+          var p = el.children[i];
+          p.className = "pip";
+          if (i < results.length) {
+            p.classList.add(
+              results[i] === "good"
+                ? "pip-good"
+                : results[i] === "mediocre"
+                  ? "pip-med"
+                  : "pip-bad",
+            );
+          } else if (i === current) {
+            p.classList.add("pip-current");
+          }
         }
+      }
+
+      function qualifies(results) {
+        var greens = 0;
+        var bad = 0;
+        for (var i = 0; i < results.length; i++) {
+          if (results[i] === "good") greens++;
+          else if (results[i] === "bad") bad++;
+        }
+        return bad === 0 && greens >= results.length - 1;
       }
 
       var bsRounds = [
@@ -3210,10 +3255,14 @@
       var bsRewarded = false;
       var bsBusy = false;
       var bsGen = 0;
+      var bsResults = [];
+      var bsTries = 0;
       function bsReset() {
         buildPips("bsPips", bsRounds.length);
         bsIdx = 0;
         bsBusy = false;
+        bsResults = [];
+        bsTries = 0;
         bsGen++;
         setBsEnabled(true);
         bsStart();
@@ -3236,7 +3285,8 @@
           }
         };
         setHeadline("bsTitle", "Big or small?");
-        setPips("bsPips", bsIdx);
+        bsTries = 0;
+        setPips("bsPips", bsResults, bsIdx);
         if (r.size === "big") {
           var gen = ++bsGen;
           bsBusy = true;
@@ -3252,28 +3302,37 @@
           show("small");
         }
       }
-      function bsAnswer(size) {
-        if (bsIdx >= bsRounds.length) return;
-        if (bsBusy) return;
-        var r = bsRounds[bsIdx];
-        if (size !== r.size) {
-          toast("Try again!");
-          say("Try again.");
-          return;
-        }
-        toast("WELL DONE!");
-        say("Yes! It's " + r.size + "!");
+      function bsAdvance() {
         bsIdx++;
-        setPips("bsPips", bsIdx);
+        setPips("bsPips", bsResults, bsIdx);
         if (bsIdx >= bsRounds.length) {
           setHeadline("bsTitle", "Well done!");
-          if (!bsRewarded) {
+          if (!bsRewarded && qualifies(bsResults)) {
             bsRewarded = true;
             reward("BIG OR SMALL! +1 ⭐");
           }
         } else {
           bsStart();
         }
+      }
+      function bsAnswer(size) {
+        if (bsIdx >= bsRounds.length) return;
+        if (bsBusy) return;
+        var r = bsRounds[bsIdx];
+        if (size !== r.size) {
+          bsTries++;
+          toast("Try again!");
+          say("Try again.");
+          if (bsTries >= 2) {
+            bsResults.push("bad");
+            bsAdvance();
+          }
+          return;
+        }
+        bsResults.push(bsTries === 0 ? "good" : "mediocre");
+        toast("WELL DONE!");
+        say("Yes! It's " + r.size + "!");
+        bsAdvance();
       }
 
       var ynRounds = [
@@ -3286,9 +3345,13 @@
       ];
       var ynIdx = 0;
       var ynRewarded = false;
+      var ynResults = [];
+      var ynTries = 0;
       function ynReset() {
         buildPips("ynPips", ynRounds.length);
         ynIdx = 0;
+        ynResults = [];
+        ynTries = 0;
         ynStart();
       }
       function ynStart() {
@@ -3301,29 +3364,39 @@
           img.alt = r.name;
         }
         setHeadline("ynTitle", "Do you have a " + r.name + "?");
-        setPips("ynPips", ynIdx);
+        ynTries = 0;
+        setPips("ynPips", ynResults, ynIdx);
       }
-      function ynAnswer(yes) {
-        if (ynIdx >= ynRounds.length) return;
-        var r = ynRounds[ynIdx];
-        if (yes !== r.answer) {
-          toast("Try again!");
-          say("Try again.");
-          return;
-        }
-        toast("WELL DONE!");
-        say(r.answer ? "Yes!" : "No!");
+      function ynAdvance() {
         ynIdx++;
-        setPips("ynPips", ynIdx);
+        setPips("ynPips", ynResults, ynIdx);
         if (ynIdx >= ynRounds.length) {
           setHeadline("ynTitle", "Well done!");
-          if (!ynRewarded) {
+          if (!ynRewarded && qualifies(ynResults)) {
             ynRewarded = true;
             reward("DO YOU HAVE A…? +1 ⭐");
           }
         } else {
           ynStart();
         }
+      }
+      function ynAnswer(yes) {
+        if (ynIdx >= ynRounds.length) return;
+        var r = ynRounds[ynIdx];
+        if (yes !== r.answer) {
+          ynTries++;
+          toast("Try again!");
+          say("Try again.");
+          if (ynTries >= 2) {
+            ynResults.push("bad");
+            ynAdvance();
+          }
+          return;
+        }
+        ynResults.push(ynTries === 0 ? "good" : "mediocre");
+        toast("WELL DONE!");
+        say(r.answer ? "Yes!" : "No!");
+        ynAdvance();
       }
 
       var haveRounds = [
@@ -3336,9 +3409,13 @@
       ];
       var haveIdx = 0;
       var haveRewarded = false;
+      var haveResults = [];
+      var haveTries = 0;
       function haveReset() {
         buildPips("havePips", haveRounds.length);
         haveIdx = 0;
+        haveResults = [];
+        haveTries = 0;
         haveStart();
       }
       function haveStart() {
@@ -3351,7 +3428,8 @@
           img.alt = r.name;
         }
         setHeadline("haveTitle", "What do you have?");
-        setPips("havePips", haveIdx);
+        haveTries = 0;
+        setPips("havePips", haveResults, haveIdx);
         var box = document.getElementById("haveOptions");
         if (!box) return;
         box.innerHTML = "";
@@ -3374,21 +3452,12 @@
           })(shuffle[k]);
         }
       }
-      function haveAnswer(opt) {
-        if (haveIdx >= haveRounds.length) return;
-        var r = haveRounds[haveIdx];
-        if (opt !== r.name) {
-          toast("Try again!");
-          say("Try again.");
-          return;
-        }
-        toast("WELL DONE!");
-        say("I have a " + r.name + ".");
+      function haveAdvance() {
         haveIdx++;
-        setPips("havePips", haveIdx);
+        setPips("havePips", haveResults, haveIdx);
         if (haveIdx >= haveRounds.length) {
           setHeadline("haveTitle", "Well done!");
-          if (!haveRewarded) {
+          if (!haveRewarded && qualifies(haveResults)) {
             haveRewarded = true;
             reward("I HAVE A…! +1 ⭐");
           }
@@ -3396,13 +3465,35 @@
           haveStart();
         }
       }
+      function haveAnswer(opt) {
+        if (haveIdx >= haveRounds.length) return;
+        var r = haveRounds[haveIdx];
+        if (opt !== r.name) {
+          haveTries++;
+          toast("Try again!");
+          say("Try again.");
+          if (haveTries >= 2) {
+            haveResults.push("bad");
+            haveAdvance();
+          }
+          return;
+        }
+        haveResults.push(haveTries === 0 ? "good" : "mediocre");
+        toast("WELL DONE!");
+        say("I have a " + r.name + ".");
+        haveAdvance();
+      }
 
       var whereOrder = ["bike", "kite", "teddy bear", "robot", "car", "rocket"];
       var whereIdx = 0;
       var whereRewarded = false;
+      var whereResults = [];
+      var whereTries = 0;
       function whereReset() {
         buildPips("wherePips", whereOrder.length);
         whereIdx = 0;
+        whereResults = [];
+        whereTries = 0;
         whereStart();
       }
       function whereStart() {
@@ -3411,28 +3502,38 @@
           "whereTitle",
           "Where is the " + whereOrder[whereIdx] + "?",
         );
-        setPips("wherePips", whereIdx);
+        whereTries = 0;
+        setPips("wherePips", whereResults, whereIdx);
       }
-      function whereAnswer(name) {
-        if (whereIdx >= whereOrder.length) return;
-        if (name !== whereOrder[whereIdx]) {
-          toast("Try again!");
-          say("Try again.");
-          return;
-        }
-        toast("HERE!");
-        say("Here!");
+      function whereAdvance() {
         whereIdx++;
-        setPips("wherePips", whereIdx);
+        setPips("wherePips", whereResults, whereIdx);
         if (whereIdx >= whereOrder.length) {
           setHeadline("whereTitle", "Well done!");
-          if (!whereRewarded) {
+          if (!whereRewarded && qualifies(whereResults)) {
             whereRewarded = true;
             reward("WHERE IS IT? +1 ⭐");
           }
         } else {
           whereStart();
         }
+      }
+      function whereAnswer(name) {
+        if (whereIdx >= whereOrder.length) return;
+        if (name !== whereOrder[whereIdx]) {
+          whereTries++;
+          toast("Try again!");
+          say("Try again.");
+          if (whereTries >= 2) {
+            whereResults.push("bad");
+            whereAdvance();
+          }
+          return;
+        }
+        whereResults.push(whereTries === 0 ? "good" : "mediocre");
+        toast("HERE!");
+        say("Here!");
+        whereAdvance();
       }
 
       (function () {
@@ -3465,6 +3566,7 @@
         icons: {
           telescope: lucide.telescope,
           circleArrowUp: lucide.circleArrowUp,
+          Volume1: lucide.Volume1,
         },
       });
     </script>
