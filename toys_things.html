@@ -1941,8 +1941,6 @@
           next();
         } else if (k === "ArrowLeft" || kc === 37) {
           prev();
-        } else if (k === "ArrowUp" || kc === 38) {
-          show(0);
         } else if (k === "Escape" || kc === 27 || kc === 10009) {
           show(0);
         } else if (kc === 13 || kc === 29443 || k === "Enter") {
@@ -1977,8 +1975,6 @@
             if (Math.abs(dx) > Math.abs(dy)) {
               if (dx < 0) next();
               else prev();
-            } else if (dy < 0) {
-              show(0);
             }
           },
           { passive: true },
