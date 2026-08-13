@@ -1845,8 +1845,10 @@
       }
 
       var rewardTimer = null;
+      var cupResetArmed = false;
       function showRewards() {
         if (rewardTimer) window.clearTimeout(rewardTimer);
+        cupResetArmed = true;
         var slots = document
           .getElementById("rewardSlots")
           .querySelectorAll(".slot");
@@ -1899,6 +1901,7 @@
                 if (p2 && typeof p2.catch === "function") p2.catch(function () {});
               });
             }
+            scheduleCupReset(video, resultsEl);
           }, 1500);
         } else {
           result.className = "rewardResult bad";
@@ -1907,6 +1910,27 @@
             n +
             "/7 stars. Complete the tasks to win the cup!";
         }
+      }
+
+      function scheduleCupReset(video, resultsEl) {
+        if (!cupResetArmed) return;
+        cupResetArmed = false;
+        var fired = false;
+        var fire = function () {
+          if (fired) return;
+          fired = true;
+          if (!resultsEl || !resultsEl.classList.contains("active")) return;
+          scheduleReset(1000, "Super. Start Over.");
+        };
+        if (video && typeof video.addEventListener === "function") {
+          video.addEventListener("ended", fire);
+        }
+        window.setTimeout(function () {
+          if (video && typeof video.removeEventListener === "function") {
+            video.removeEventListener("ended", fire);
+          }
+          fire();
+        }, 20000);
       }
 
       document.addEventListener("keydown", function (e) {
@@ -2007,7 +2031,6 @@
         if (allTwice || (allOnce && toysHeardAll)) {
           toysHeardRewarded = true;
           reward("ALL TOYS! +1 ⭐");
-          scheduleReset(1000, "Super! Start Over");
         }
       }
 
