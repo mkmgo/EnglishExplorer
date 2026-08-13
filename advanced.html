@@ -15,7 +15,7 @@
     />
     <style>
       :root {
-        --bg: #faf7f2;
+        --bg: #FAF7F2;
         --ink: #14213d;
         --muted: #60708d;
         --accent: #e43703;
@@ -495,10 +495,10 @@
       .grid .icardbas {
         min-width: 0;
       }
-      [dialogue] .grid--2 > :nth-child(n + 3) {
+      [dialogue] .grid--2 > :nth-child(n+3) {
         margin-top: -1.4em;
       }
-      #toysPhrasesScreen .grid--2 > :nth-child(n + 3) {
+      #toysPhrasesScreen .grid--2 > :nth-child(n+3) {
         margin-top: -3em;
       }
       button:focus-visible {
@@ -1270,14 +1270,9 @@
       <div id="inputModal">
         <div class="inputBox">
           <h2 id="inputTitle">Type or paste your input</h2>
-          <textarea
-            id="inputField"
-            placeholder="Type here or paste from clipboard…"
-          ></textarea>
+          <textarea id="inputField" placeholder="Type here or paste from clipboard…"></textarea>
           <div class="inputBtns">
-            <button class="cancelBtn" onclick="closeInputModal()">
-              Cancel
-            </button>
+            <button class="cancelBtn" onclick="closeInputModal()">Cancel</button>
             <button class="okBtn" onclick="submitInputModal()">OK</button>
           </div>
         </div>
@@ -1526,10 +1521,10 @@
           <h1 class="pageTitle">Greeting and Introduction</h1>
           <div class="stage">
             <div class="panel origami">
-              <div class="grid grid--2">
-                <button
-                  class="icardst"
-                  onclick="speakGreeting('Hello. My name is Sam.', 'greetSam')"
+            <div class="grid grid--2">
+              <button
+                class="icardst"
+                onclick="speakGreeting('Hello. My name is Sam.', 'greetSam')"
                 >
                   <img
                     class="phraseAvatar"
@@ -1537,23 +1532,23 @@
                     alt="Sam"
                   />
                   <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="1.2em"
-                    height="1.2em"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-width="2"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    style="vertical-align: -0.2em"
-                  >
-                    <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" />
-                    <path d="M15.54 8.46a5 5 0 0 1 0 7.07" />
-                  </svg>
-                  <span class="icardtext">Hello. My Name is Sam.</span>
-                </button>
-                <div></div>
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="1.2em"
+                  height="1.2em"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  style="vertical-align: -0.2em"
+                >
+                  <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" />
+                  <path d="M15.54 8.46a5 5 0 0 1 0 7.07" />
+                </svg>
+                <span class="icardtext">Hello. My Name is Sam.</span>
+              </button>
+              <div></div>
                 <button
                   class="icardst"
                   onclick="speakGreeting('What is your name?', 'greetQ')"
@@ -1564,47 +1559,47 @@
                     alt="Sam"
                   />
                   <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="1.2em"
-                    height="1.2em"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-width="2"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    style="vertical-align: -0.2em"
-                  >
-                    <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" />
-                    <path d="M15.54 8.46a5 5 0 0 1 0 7.07" />
-                  </svg>
-                  <span class="icardtext">What is your Name?</span>
-                </button>
-                <div></div>
-                <div></div>
-                <button class="icardstb">
-                  <img
-                    class="phraseAvatar"
-                    src="https://res.cloudinary.com/dqwm4pdbz/image/upload/c_scale,w_400/q_auto/f_auto/v1786623812/onza_3avface_gyyay8.png"
-                    alt="Onza"
-                  />
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="1.2em"
-                    height="1.2em"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-width="2"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    style="vertical-align: -0.2em"
-                  >
-                    <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" />
-                    <path d="M15.54 8.46a5 5 0 0 1 0 7.07" />
-                  </svg>
-                  <span class="icardtextb">Hello Sam. My Name is Onza.</span>
-                </button>
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="1.2em"
+                  height="1.2em"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  style="vertical-align: -0.2em"
+                >
+                  <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" />
+                  <path d="M15.54 8.46a5 5 0 0 1 0 7.07" />
+                </svg>
+                <span class="icardtext">What is your Name?</span>
+              </button>
+              <div></div>
+              <div></div>
+              <button class="icardstb">
+                <img
+                  class="phraseAvatar"
+                  src="https://res.cloudinary.com/dqwm4pdbz/image/upload/c_scale,w_400/q_auto/f_auto/v1786623812/onza_3avface_gyyay8.png"
+                  alt="Onza"
+                />
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="1.2em"
+                  height="1.2em"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  style="vertical-align: -0.2em"
+                >
+                  <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" />
+                  <path d="M15.54 8.46a5 5 0 0 1 0 7.07" />
+                </svg>
+                <span class="icardtextb">Hello Sam. My Name is Onza.</span>
+              </button>
                 <button
                   class="icardst"
                   onclick="say('Hello Onza. How old are you?')"
@@ -1615,48 +1610,48 @@
                     alt="Sam"
                   />
                   <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="1.2em"
-                    height="1.2em"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-width="2"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    style="vertical-align: -0.2em"
-                  >
-                    <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" />
-                    <path d="M15.54 8.46a5 5 0 0 1 0 7.07" />
-                  </svg>
-                  <span class="icardtext">Hello Onza. How old are you?</span>
-                </button>
-                <div></div>
-                <div></div>
-                <button class="icardstb">
-                  <img
-                    class="phraseAvatar"
-                    src="https://res.cloudinary.com/dqwm4pdbz/image/upload/c_scale,w_400/q_auto/f_auto/v1786623812/onza_3avface_gyyay8.png"
-                    alt="Onza"
-                  />
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="1.2em"
-                    height="1.2em"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-width="2"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    style="vertical-align: -0.2em"
-                  >
-                    <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" />
-                    <path d="M15.54 8.46a5 5 0 0 1 0 7.07" />
-                  </svg>
-                  <span class="icardtextb">I am 7 years old.</span>
-                </button>
-              </div>
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="1.2em"
+                  height="1.2em"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  style="vertical-align: -0.2em"
+                >
+                  <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" />
+                  <path d="M15.54 8.46a5 5 0 0 1 0 7.07" />
+                </svg>
+                <span class="icardtext">Hello Onza. How old are you?</span>
+              </button>
+              <div></div>
+              <div></div>
+              <button class="icardstb">
+                <img
+                  class="phraseAvatar"
+                  src="https://res.cloudinary.com/dqwm4pdbz/image/upload/c_scale,w_400/q_auto/f_auto/v1786623812/onza_3avface_gyyay8.png"
+                  alt="Onza"
+                />
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="1.2em"
+                  height="1.2em"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  style="vertical-align: -0.2em"
+                >
+                  <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" />
+                  <path d="M15.54 8.46a5 5 0 0 1 0 7.07" />
+                </svg>
+                <span class="icardtextb">I am 7 years old.</span>
+              </button>
+            </div>
             </div>
           </div>
         </div>
@@ -1719,10 +1714,7 @@
                 </button>
               </div>
               <div class="miniRow">
-                <button class="miniChip" onclick="listenToys()">
-                  <i data-lucide="volume1" width="1.2em" height="1.2em"></i>
-                  HEAR ALL
-                </button>
+                <button class="miniChip" onclick="listenToys()"><i data-lucide="volume1" width="1.2em" height="1.2em"></i> HEAR ALL</button>
               </div>
             </div>
           </div>
@@ -2024,10 +2016,7 @@
                   </button>
                 </div>
                 <div class="toyPair">
-                  <button
-                    class="toySizeBtn"
-                    onclick="edToyPress('Small robot')"
-                  >
+                  <button class="toySizeBtn" onclick="edToyPress('Small robot')">
                     <img
                       class="small"
                       src="https://res.cloudinary.com/dqwm4pdbz/image/upload/c_crop,w_421,h_424,x_0,y_424/r_max/bo_5px_solid_white/v1786599929/260813_toys_01_txjh3y.png"
@@ -2081,9 +2070,7 @@
                 </div>
                 <div class="gameRow">
                   <button class="choice" onclick="bsAnswer('big')">BIG</button>
-                  <button class="choice" onclick="bsAnswer('small')">
-                    SMALL
-                  </button>
+                  <button class="choice" onclick="bsAnswer('small')">SMALL</button>
                 </div>
               </div>
             </div>
@@ -2123,9 +2110,7 @@
                   </div>
                 </div>
                 <div class="gameRow">
-                  <button class="choice yes" onclick="ynAnswer(true)">
-                    YES
-                  </button>
+                  <button class="choice yes" onclick="ynAnswer(true)">YES</button>
                   <button class="choice" onclick="ynAnswer(false)">NO</button>
                 </div>
               </div>
@@ -2444,52 +2429,52 @@
             </button>
             <div class="panel">
               <div class="cast">
-                <figure class="castMember">
-                  <div class="translateBox left" id="srcLangBox">
-                    <span class="translatePlaceholder">🔤</span>
-                  </div>
-                  <button class="icardst" onclick="speakTranslate('en')">
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      width="1.2em"
-                      height="1.2em"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      stroke-width="2"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      style="vertical-align: -0.2em"
-                    >
-                      <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" />
-                      <path d="M15.54 8.46a5 5 0 0 1 0 7.07" />
-                    </svg>
-                    <span class="icardtext">ENGLISH</span>
-                  </button>
-                </figure>
-                <figure class="castMember">
-                  <div class="translateBox left" id="zhLangBox">
-                    <span class="translatePlaceholder">中文</span>
-                  </div>
-                  <button class="icardst" onclick="speakTranslate('zh')">
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      width="1.2em"
-                      height="1.2em"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      stroke-width="2"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      style="vertical-align: -0.2em"
-                    >
-                      <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" />
-                      <path d="M15.54 8.46a5 5 0 0 1 0 7.07" />
-                    </svg>
-                    <span class="icardtext">中文</span>
-                  </button>
-                </figure>
+              <figure class="castMember">
+                <div class="translateBox left" id="srcLangBox">
+                  <span class="translatePlaceholder">🔤</span>
+                </div>
+                <button class="icardst" onclick="speakTranslate('en')">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="1.2em"
+                    height="1.2em"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    style="vertical-align: -0.2em"
+                  >
+                    <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" />
+                    <path d="M15.54 8.46a5 5 0 0 1 0 7.07" />
+                  </svg>
+                  <span class="icardtext">ENGLISH</span>
+                </button>
+              </figure>
+              <figure class="castMember">
+                <div class="translateBox left" id="zhLangBox">
+                  <span class="translatePlaceholder">中文</span>
+                </div>
+                <button class="icardst" onclick="speakTranslate('zh')">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="1.2em"
+                    height="1.2em"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    style="vertical-align: -0.2em"
+                  >
+                    <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" />
+                    <path d="M15.54 8.46a5 5 0 0 1 0 7.07" />
+                  </svg>
+                  <span class="icardtext">中文</span>
+                </button>
+              </figure>
               </div>
               <div class="clipList" id="clipList"></div>
             </div>
@@ -3408,8 +3393,7 @@
               p.catch(function () {
                 video.muted = true;
                 var p2 = video.play();
-                if (p2 && typeof p2.catch === "function")
-                  p2.catch(function () {});
+                if (p2 && typeof p2.catch === "function") p2.catch(function () {});
               });
             }
           }, 1500);
@@ -3516,30 +3500,12 @@
       var TOY_ICON_SPEAKER =
         '<svg xmlns="http://www.w3.org/2000/svg" width="1.2em" height="1.2em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-0.2em"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/></svg>';
       var TOYS = [
-        {
-          name: "car",
-          img: "https://res.cloudinary.com/dqwm4pdbz/image/upload/c_crop,w_421,h_424,x_0,y_0/r_max/bo_5px_solid_white/v1786599929/260813_toys_01_txjh3y.png",
-        },
-        {
-          name: "rocket",
-          img: "https://res.cloudinary.com/dqwm4pdbz/image/upload/c_crop,w_421,h_424,x_421,y_0/r_max/bo_5px_solid_white/v1786599929/260813_toys_01_txjh3y.png",
-        },
-        {
-          name: "teddy bear",
-          img: "https://res.cloudinary.com/dqwm4pdbz/image/upload/c_crop,w_421,h_424,x_842,y_0/r_max/bo_5px_solid_white/v1786599929/260813_toys_01_txjh3y.png",
-        },
-        {
-          name: "robot",
-          img: "https://res.cloudinary.com/dqwm4pdbz/image/upload/c_crop,w_421,h_424,x_0,y_424/r_max/bo_5px_solid_white/v1786599929/260813_toys_01_txjh3y.png",
-        },
-        {
-          name: "bike",
-          img: "https://res.cloudinary.com/dqwm4pdbz/image/upload/c_crop,w_421,h_424,x_421,y_424/r_max/bo_5px_solid_white/v1786599929/260813_toys_01_txjh3y.png",
-        },
-        {
-          name: "kite",
-          img: "https://res.cloudinary.com/dqwm4pdbz/image/upload/c_crop,w_421,h_424,x_842,y_424/r_max/bo_5px_solid_white/v1786599929/260813_toys_01_txjh3y.png",
-        },
+        { name: "car", img: "https://res.cloudinary.com/dqwm4pdbz/image/upload/c_crop,w_421,h_424,x_0,y_0/r_max/bo_5px_solid_white/v1786599929/260813_toys_01_txjh3y.png" },
+        { name: "rocket", img: "https://res.cloudinary.com/dqwm4pdbz/image/upload/c_crop,w_421,h_424,x_421,y_0/r_max/bo_5px_solid_white/v1786599929/260813_toys_01_txjh3y.png" },
+        { name: "teddy bear", img: "https://res.cloudinary.com/dqwm4pdbz/image/upload/c_crop,w_421,h_424,x_842,y_0/r_max/bo_5px_solid_white/v1786599929/260813_toys_01_txjh3y.png" },
+        { name: "robot", img: "https://res.cloudinary.com/dqwm4pdbz/image/upload/c_crop,w_421,h_424,x_0,y_424/r_max/bo_5px_solid_white/v1786599929/260813_toys_01_txjh3y.png" },
+        { name: "bike", img: "https://res.cloudinary.com/dqwm4pdbz/image/upload/c_crop,w_421,h_424,x_421,y_424/r_max/bo_5px_solid_white/v1786599929/260813_toys_01_txjh3y.png" },
+        { name: "kite", img: "https://res.cloudinary.com/dqwm4pdbz/image/upload/c_crop,w_421,h_424,x_842,y_424/r_max/bo_5px_solid_white/v1786599929/260813_toys_01_txjh3y.png" },
       ];
 
       function toyImg(name) {
@@ -3978,7 +3944,10 @@
       }
       function whereStart() {
         if (whereIdx >= whereOrder.length) return;
-        setHeadline("whereTitle", "Where is the " + whereOrder[whereIdx] + "?");
+        setHeadline(
+          "whereTitle",
+          "Where is the " + whereOrder[whereIdx] + "?",
+        );
         whereTries = 0;
         setPips("wherePips", whereResults, whereIdx);
       }
