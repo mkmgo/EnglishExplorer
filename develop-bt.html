@@ -2732,7 +2732,6 @@
             if (zhBox) zhBox.textContent = translated;
             equalizeBoxes();
             addClip(text, translated);
-            speakChinese(translated);
           })
           .catch(function () {
             if (zhBox) zhBox.textContent = "Translation failed";
@@ -3031,6 +3030,7 @@
             submitInputModal();
             return;
           }
+          return;
         }
         if (k === "ArrowRight" || kc === 39 || k === " " || kc === 32) {
           if (e.preventDefault) e.preventDefault();
