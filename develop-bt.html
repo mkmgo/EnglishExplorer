@@ -1748,12 +1748,11 @@
       <!-- Theme 5: DO YOU HAVE A...? (exercise) -->
       <section class="screen" id="toysYesNoScreen">
         <div class="content">
-          <h1 class="pageTitle">DO YOU HAVE A…?</h1>
+          <h1 class="pageTitle" id="ynTitle">DO YOU HAVE A…?</h1>
           <div class="stage">
             <div class="panel">
               <div class="roundPips" id="ynPips"></div>
               <div class="gameArea">
-                <button class="icardstb" id="ynAsk"></button>
                 <div class="gameVisual">
                   <img id="ynImg" alt="toy" />
                 </div>
@@ -1770,12 +1769,11 @@
       <!-- Theme 6: I HAVE A... (exercise) -->
       <section class="screen" id="toysHaveScreen">
         <div class="content">
-          <h1 class="pageTitle">I HAVE A…</h1>
+          <h1 class="pageTitle" id="haveTitle">I HAVE A…</h1>
           <div class="stage">
             <div class="panel">
               <div class="roundPips" id="havePips"></div>
               <div class="gameArea">
-                <button class="icardstb" id="haveAsk"></button>
                 <div class="gameVisual">
                   <img id="haveImg" alt="toy" />
                 </div>
@@ -1789,12 +1787,11 @@
       <!-- Theme 7: WHERE IS THE...? (exercise) -->
       <section class="screen" id="toysWhereScreen">
         <div class="content">
-          <h1 class="pageTitle">WHERE IS THE…?</h1>
+          <h1 class="pageTitle" id="whereTitle">WHERE IS THE…?</h1>
           <div class="stage">
             <div class="panel">
               <div class="roundPips" id="wherePips"></div>
               <div class="gameArea">
-                <button class="icardstb" id="whereAsk"></button>
                 <div class="toyGrid" id="whereGrid"></div>
               </div>
             </div>
@@ -3174,6 +3171,11 @@
           TOY_ICON_SPEAKER + '<span class="icardtextb">' + text + "</span>";
       }
 
+      function setHeadline(id, text) {
+        var h = document.getElementById(id);
+        if (h) h.textContent = text;
+      }
+
       function buildPips(id, n) {
         var el = document.getElementById(id);
         if (!el) return;
@@ -3268,8 +3270,7 @@
           img.className = "";
           img.alt = r.name;
         }
-        setBubble("ynAsk", "Do you have a " + r.name + "?");
-        sayOther("Do you have a " + r.name + "?");
+        setHeadline("ynTitle", "Do you have a " + r.name + "?");
         setPips("ynPips", ynIdx);
       }
       function ynAnswer(yes) {
@@ -3285,7 +3286,7 @@
         ynIdx++;
         setPips("ynPips", ynIdx);
         if (ynIdx >= ynRounds.length) {
-          setBubble("ynAsk", "Well done!");
+          setHeadline("ynTitle", "Well done!");
           if (!ynRewarded) {
             ynRewarded = true;
             reward("DO YOU HAVE A…? +1 ⭐");
@@ -3319,8 +3320,7 @@
           img.className = "";
           img.alt = r.name;
         }
-        setBubble("haveAsk", "What do you have?");
-        sayOther("What do you have?");
+        setHeadline("haveTitle", "What do you have?");
         setPips("havePips", haveIdx);
         var box = document.getElementById("haveOptions");
         if (!box) return;
@@ -3357,7 +3357,7 @@
         haveIdx++;
         setPips("havePips", haveIdx);
         if (haveIdx >= haveRounds.length) {
-          setBubble("haveAsk", "Well done!");
+          setHeadline("haveTitle", "Well done!");
           if (!haveRewarded) {
             haveRewarded = true;
             reward("I HAVE A…! +1 ⭐");
@@ -3377,8 +3377,10 @@
       }
       function whereStart() {
         if (whereIdx >= whereOrder.length) return;
-        setBubble("whereAsk", "Where is the " + whereOrder[whereIdx] + "?");
-        sayOther("Where is the " + whereOrder[whereIdx] + "?");
+        setHeadline(
+          "whereTitle",
+          "Where is the " + whereOrder[whereIdx] + "?",
+        );
         setPips("wherePips", whereIdx);
       }
       function whereAnswer(name) {
@@ -3393,7 +3395,7 @@
         whereIdx++;
         setPips("wherePips", whereIdx);
         if (whereIdx >= whereOrder.length) {
-          setBubble("whereAsk", "Well done!");
+          setHeadline("whereTitle", "Well done!");
           if (!whereRewarded) {
             whereRewarded = true;
             reward("WHERE IS IT? +1 ⭐");
