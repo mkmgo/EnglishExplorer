@@ -145,7 +145,7 @@
         color: var(--accent2);
         background: var(--accent);
         padding: 0.35em 1em;
-        border-radius: 999px;
+        border-radius: 6px;
         border: 1pt solid var(--accent2);
         box-shadow: 0 6px 18px rgba(138, 138, 138, 0.35);
         display: inline-flex;
@@ -169,7 +169,7 @@
         color: var(--accent);
         background: var(--accent2);
         padding: 0.35em 1em;
-        border-radius: 999px;
+        border-radius: 6px;
         border: 1pt solid var(--accent);
         box-shadow: 0 6px 18px rgba(138, 138, 138, 0.35);
         display: inline-flex;
@@ -289,6 +289,18 @@
       .mediaWrap audio {
         width: min(60vw, 640px);
         max-width: 100%;
+      }
+      .mediaWrap.withArt {
+        flex-direction: column;
+        gap: 0.6em;
+        overflow-y: auto;
+        scrollbar-width: none;
+      }
+      .mediaWrap.withArt::-webkit-scrollbar {
+        display: none;
+      }
+      .mediaWrap.withArt img {
+        max-height: 48vh;
       }
       .videoWrap {
         width: 100%;
@@ -636,6 +648,16 @@
       .miniChip .miniImg.small {
         width: 1em;
         height: 1em;
+      }
+      .chipsGrid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        max-width: 640px;
+        margin: 0 auto;
+      }
+      .chipsGrid .miniChip {
+        justify-content: center;
+        width: 100%;
       }
       .gameArea {
         display: flex;
@@ -1630,7 +1652,7 @@
           <h1 class="pageTitle">MY KITE / YOUR KITE</h1>
           <div class="stage">
             <div class="panel">
-              <div class="miniRow">
+              <div class="miniRow chipsGrid">
                 <button class="miniChip" onclick="say('Big car')">
                   <img
                     class="miniImg big"
@@ -2791,6 +2813,7 @@
         var wrap = document.getElementById("mediaWrap");
         if (!wrap) return;
         wrap.innerHTML = "";
+        wrap.classList.remove("withArt");
         var lower = url.toLowerCase();
         var isVideo =
           /\/video\//.test(lower) ||
@@ -2822,6 +2845,27 @@
         if (isVideo) {
           playMediaVideo(el, true);
         }
+        if (isAudio) {
+          requestArtwork();
+        }
+      }
+
+      function requestArtwork() {
+        openInputModal(
+          "Audio added. Type or paste an image link to show with the audio:",
+          function (v) {
+            var u = extractUrl(String(v || ""));
+            if (!u) return;
+            var wrap = document.getElementById("mediaWrap");
+            if (!wrap) return;
+            var img = document.createElement("img");
+            img.src = u;
+            img.alt = "artwork";
+            img.loading = "lazy";
+            wrap.insertBefore(img, wrap.firstChild);
+            wrap.classList.add("withArt");
+          },
+        );
       }
 
       function speakChinese(text) {
