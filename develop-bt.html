@@ -1685,6 +1685,38 @@
                   />
                   Your kite
                 </button>
+                <button class="miniChip" onclick="say('Big robot')">
+                  <img
+                    class="miniImg big"
+                    src="https://res.cloudinary.com/dqwm4pdbz/image/upload/c_crop,w_421,h_424,x_0,y_424/r_max/bo_5px_solid_white/v1786599929/260813_toys_01_txjh3y.png"
+                    alt="robot"
+                  />
+                  Big robot
+                </button>
+                <button class="miniChip" onclick="say('Small robot')">
+                  <img
+                    class="miniImg small"
+                    src="https://res.cloudinary.com/dqwm4pdbz/image/upload/c_crop,w_421,h_424,x_0,y_424/r_max/bo_5px_solid_white/v1786599929/260813_toys_01_txjh3y.png"
+                    alt="robot"
+                  />
+                  Small robot
+                </button>
+                <button class="miniChip" onclick="say('My bike')">
+                  <img
+                    class="miniImg"
+                    src="https://res.cloudinary.com/dqwm4pdbz/image/upload/c_crop,w_421,h_424,x_421,y_424/r_max/bo_5px_solid_white/v1786599929/260813_toys_01_txjh3y.png"
+                    alt="bike"
+                  />
+                  My bike
+                </button>
+                <button class="miniChip" onclick="say('Your bike')">
+                  <img
+                    class="miniImg"
+                    src="https://res.cloudinary.com/dqwm4pdbz/image/upload/c_crop,w_421,h_424,x_421,y_424/r_max/bo_5px_solid_white/v1786599929/260813_toys_01_txjh3y.png"
+                    alt="bike"
+                  />
+                  Your bike
+                </button>
               </div>
             </div>
           </div>
@@ -2842,9 +2874,6 @@
           el.alt = "media";
         }
         wrap.appendChild(el);
-        if (isVideo) {
-          playMediaVideo(el, true);
-        }
         if (isAudio) {
           requestArtwork();
         }
