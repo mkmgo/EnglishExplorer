@@ -23,7 +23,7 @@
         --good: #19a974;
         --bad: #e05252;
         --mediocre: #f39c12;
-        --panel: #ffffff;
+        --panel: #fcfcfc;
         --shadow: 0 18px 50px rgba(20, 33, 61, 0.14);
       }
       * {
@@ -142,13 +142,13 @@
         filter: drop-shadow(0 20px 25px rgba(160, 30, 30, 0.22));
       }
       .icardst {
+        position: relative;
         font-size: clamp(0.9rem, 1.5vw, 1.5rem);
-        color: var(--accent2);
-        background: var(--accent);
-        padding: 0.35em 1em;
-        border-radius: 6px;
-        border: 1pt solid var(--accent2);
-        box-shadow: 0 6px 18px rgba(138, 138, 138, 0.35);
+        color: #8a6d00;
+        background: #fff6d6;
+        padding: 0.45em 1.1em;
+        border-radius: 22px 22px 22px 8px;
+        box-shadow: 0 8px 20px rgba(138, 109, 0, 0.18);
         display: inline-flex;
         align-items: center;
         gap: 0.5em;
@@ -157,22 +157,44 @@
       .icardst:active {
         transform: scale(0.95);
       }
+      .icardst::before {
+        content: "";
+        position: absolute;
+        bottom: -8px;
+        left: 14px;
+        width: 18px;
+        height: 18px;
+        background: #fff6d6;
+        border-bottom-left-radius: 6px;
+        transform: rotate(45deg);
+      }
+      .icardst::after {
+        content: "";
+        position: absolute;
+        top: 0;
+        right: 0;
+        width: 0;
+        height: 0;
+        border-style: solid;
+        border-width: 0 26px 26px 0;
+        border-color: transparent #ffe9a8 transparent transparent;
+      }
       .icardtext {
         font-family: Arial, Helvetica, sans-serif;
         font-weight: bold;
         font-size: clamp(0.9rem, 1.5vw, 1.5rem);
         letter-spacing: 0.05em;
         text-transform: uppercase;
-        color: var(--accent2);
+        color: #8a6d00;
       }
       .icardstb {
+        position: relative;
         font-size: clamp(0.9rem, 1.5vw, 1.5rem);
-        color: var(--accent);
-        background: var(--accent2);
-        padding: 0.35em 1em;
-        border-radius: 6px;
-        border: 1pt solid var(--accent);
-        box-shadow: 0 6px 18px rgba(138, 138, 138, 0.35);
+        color: #a35a00;
+        background: #ffe9ce;
+        padding: 0.45em 1.1em;
+        border-radius: 22px 22px 8px 22px;
+        box-shadow: 0 8px 20px rgba(163, 90, 0, 0.18);
         display: inline-flex;
         align-items: center;
         gap: 0.5em;
@@ -181,47 +203,47 @@
       .icardstb:active {
         transform: scale(0.95);
       }
+      .icardstb::before {
+        content: "";
+        position: absolute;
+        bottom: -8px;
+        right: 14px;
+        width: 18px;
+        height: 18px;
+        background: #ffe9ce;
+        border-bottom-right-radius: 6px;
+        transform: rotate(45deg);
+      }
+      .icardstb::after {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 0;
+        height: 0;
+        border-style: solid;
+        border-width: 26px 0 0 26px;
+        border-color: transparent transparent transparent #ffd9a3;
+      }
       .icardtextb {
         font-family: Arial, Helvetica, sans-serif;
         font-weight: bold;
         font-size: clamp(0.9rem, 1.5vw, 1.5rem);
         letter-spacing: 0.05em;
         text-transform: uppercase;
-        color: var(--accent);
+        color: #a35a00;
       }
-      .dialogueHead {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        max-width: 900px;
-        margin: 0 auto clamp(0.6em, 1.5vh, 1.2em);
-        padding: 0 0.5em;
-      }
-      .dialogueSpeaker {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        gap: 0.3em;
-      }
-      .dialogueAvatar {
-        width: clamp(60px, 8vw, 104px);
+      .phraseAvatar {
+        width: clamp(30px, 4vw, 48px);
         height: auto;
         border-radius: 50%;
-        border: 3px solid var(--accent);
+        border: 2px solid #fff;
         background: #fff;
-        box-shadow: var(--shadow);
-      }
-      .dialogueSpeaker.onza .dialogueAvatar {
-        border-color: var(--accent2);
-      }
-      .dialogueName {
-        font-weight: 900;
-        font-size: clamp(0.9rem, 1.6vw, 1.2rem);
-        color: var(--ink);
+        flex: 0 0 auto;
       }
       .grid .phraseCard {
         flex-wrap: wrap;
-        justify-content: center;
+        justify-content: flex-start;
       }
       .phraseToyWrap {
         position: relative;
@@ -473,6 +495,12 @@
       .grid .icardbas {
         min-width: 0;
       }
+      [dialogue] .grid--2 > :nth-child(n+3) {
+        margin-top: -1.4em;
+      }
+      #toysPhrasesScreen .grid--2 > :nth-child(n+3) {
+        margin-top: -3em;
+      }
       button:focus-visible {
         outline: 3px solid var(--accent2);
         outline-offset: 3px;
@@ -538,12 +566,24 @@
         background: #f39c12;
       }
       .panel {
+        position: relative;
         background: var(--panel);
         border-radius: 32px;
         padding: clamp(1.2rem, 2.2vw, 2.6rem);
         box-shadow: var(--shadow);
         width: 100%;
         max-width: 900px;
+      }
+      .panel.origami::after {
+        content: "";
+        position: absolute;
+        top: 0;
+        right: 0;
+        width: 0;
+        height: 0;
+        border-style: solid;
+        border-width: 0 42px 42px 0;
+        border-color: transparent #e9e3d6 transparent transparent;
       }
       .panel .cast {
         margin: 0;
@@ -771,14 +811,15 @@
       }
       .ynAvatar {
         width: clamp(48px, 7vw, 96px);
-        height: auto;
+        height: clamp(48px, 7vw, 96px);
+        object-fit: cover;
         border-radius: 50%;
         border: 3px solid var(--accent);
         background: #fff;
         box-shadow: var(--shadow);
       }
       .ynCastMember.onza .ynAvatar {
-        border-color: var(--accent2);
+        border-color: #087443;
       }
       .ynCastMember.owner .ynAvatar {
         box-shadow: 0 0 0 4px var(--mediocre);
@@ -1479,13 +1520,18 @@
         <div class="content">
           <h1 class="pageTitle">Greeting and Introduction</h1>
           <div class="stage">
-            <div class="panel">
+            <div class="panel origami">
             <div class="grid grid--2">
               <button
                 class="icardst"
                 onclick="speakGreeting('Hello. My name is Sam.', 'greetSam')"
-              >
-                <svg
+                >
+                  <img
+                    class="phraseAvatar"
+                    src="https://res.cloudinary.com/dqwm4pdbz/image/upload/c_scale,w_450,h_437/q_auto/f_auto/v1786623813/sam_3davface_irvdlj.png"
+                    alt="Sam"
+                  />
+                  <svg
                   xmlns="http://www.w3.org/2000/svg"
                   width="1.2em"
                   height="1.2em"
@@ -1503,11 +1549,16 @@
                 <span class="icardtext">Hello. My Name is Sam.</span>
               </button>
               <div></div>
-              <button
-                class="icardst"
-                onclick="speakGreeting('What is your name?', 'greetQ')"
-              >
-                <svg
+                <button
+                  class="icardst"
+                  onclick="speakGreeting('What is your name?', 'greetQ')"
+                >
+                  <img
+                    class="phraseAvatar"
+                    src="https://res.cloudinary.com/dqwm4pdbz/image/upload/c_scale,w_450,h_437/q_auto/f_auto/v1786623813/sam_3davface_irvdlj.png"
+                    alt="Sam"
+                  />
+                  <svg
                   xmlns="http://www.w3.org/2000/svg"
                   width="1.2em"
                   height="1.2em"
@@ -1527,6 +1578,11 @@
               <div></div>
               <div></div>
               <button class="icardstb">
+                <img
+                  class="phraseAvatar"
+                  src="https://res.cloudinary.com/dqwm4pdbz/image/upload/c_scale,w_400/q_auto/f_auto/v1786623812/onza_3avface_gyyay8.png"
+                  alt="Onza"
+                />
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   width="1.2em"
@@ -1544,11 +1600,16 @@
                 </svg>
                 <span class="icardtextb">Hello Sam. My Name is Onza.</span>
               </button>
-              <button
-                class="icardst"
-                onclick="say('Hello Onza. How old are you?')"
-              >
-                <svg
+                <button
+                  class="icardst"
+                  onclick="say('Hello Onza. How old are you?')"
+                >
+                  <img
+                    class="phraseAvatar"
+                    src="https://res.cloudinary.com/dqwm4pdbz/image/upload/c_scale,w_450,h_437/q_auto/f_auto/v1786623813/sam_3davface_irvdlj.png"
+                    alt="Sam"
+                  />
+                  <svg
                   xmlns="http://www.w3.org/2000/svg"
                   width="1.2em"
                   height="1.2em"
@@ -1568,6 +1629,11 @@
               <div></div>
               <div></div>
               <button class="icardstb">
+                <img
+                  class="phraseAvatar"
+                  src="https://res.cloudinary.com/dqwm4pdbz/image/upload/c_scale,w_400/q_auto/f_auto/v1786623812/onza_3avface_gyyay8.png"
+                  alt="Onza"
+                />
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   width="1.2em"
@@ -1660,30 +1726,17 @@
         <div class="content">
           <h1 class="pageTitle">What Do You Have?</h1>
           <div class="stage">
-            <div class="panel">
-              <div class="dialogueHead">
-                <div class="dialogueSpeaker">
-                  <img
-                    class="dialogueAvatar"
-                    src="https://res.cloudinary.com/dqwm4pdbz/image/upload/c_scale,w_450,h_437/q_auto/f_auto/v1786623813/sam_3davface_irvdlj.png"
-                    alt="Sam"
-                  />
-                  <span class="dialogueName">Sam</span>
-                </div>
-                <div class="dialogueSpeaker onza">
-                  <img
-                    class="dialogueAvatar"
-                    src="https://res.cloudinary.com/dqwm4pdbz/image/upload/c_scale,w_400/q_auto/f_auto/v1786623812/onza_3avface_gyyay8.png"
-                    alt="Onza"
-                  />
-                  <span class="dialogueName">Onza</span>
-                </div>
-              </div>
+            <div class="panel origami">
               <div class="grid grid--2">
                 <button
                   class="icardst phraseCard"
                   onclick="speakPhrase('I have a car.', 't1')"
                 >
+                  <img
+                    class="phraseAvatar"
+                    src="https://res.cloudinary.com/dqwm4pdbz/image/upload/c_scale,w_450,h_437/q_auto/f_auto/v1786623813/sam_3davface_irvdlj.png"
+                    alt="Sam"
+                  />
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     width="1.2em"
@@ -1714,6 +1767,11 @@
                   class="icardstb phraseCard"
                   onclick="speakPhrase('I have a teddy bear.', 't2', 'onza')"
                 >
+                  <img
+                    class="phraseAvatar"
+                    src="https://res.cloudinary.com/dqwm4pdbz/image/upload/c_scale,w_400/q_auto/f_auto/v1786623812/onza_3avface_gyyay8.png"
+                    alt="Onza"
+                  />
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     width="1.2em"
@@ -1742,6 +1800,11 @@
                   class="icardst phraseCard"
                   onclick="speakPhrase('Do you have a robot?', 't3')"
                 >
+                  <img
+                    class="phraseAvatar"
+                    src="https://res.cloudinary.com/dqwm4pdbz/image/upload/c_scale,w_450,h_437/q_auto/f_auto/v1786623813/sam_3davface_irvdlj.png"
+                    alt="Sam"
+                  />
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     width="1.2em"
@@ -1772,6 +1835,11 @@
                   class="icardstb phraseCard"
                   onclick="speakPhrase('Yes! I have a robot.', 't4', 'onza')"
                 >
+                  <img
+                    class="phraseAvatar"
+                    src="https://res.cloudinary.com/dqwm4pdbz/image/upload/c_scale,w_400/q_auto/f_auto/v1786623812/onza_3avface_gyyay8.png"
+                    alt="Onza"
+                  />
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     width="1.2em"
@@ -1800,6 +1868,11 @@
                   class="icardst phraseCard"
                   onclick="speakPhrase('I don\'t have a bike.', 't5')"
                 >
+                  <img
+                    class="phraseAvatar"
+                    src="https://res.cloudinary.com/dqwm4pdbz/image/upload/c_scale,w_450,h_437/q_auto/f_auto/v1786623813/sam_3davface_irvdlj.png"
+                    alt="Sam"
+                  />
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     width="1.2em"
@@ -1830,6 +1903,11 @@
                   class="icardstb phraseCard"
                   onclick="speakPhrase('Where is the kite?', 't6', 'onza')"
                 >
+                  <img
+                    class="phraseAvatar"
+                    src="https://res.cloudinary.com/dqwm4pdbz/image/upload/c_scale,w_400/q_auto/f_auto/v1786623812/onza_3avface_gyyay8.png"
+                    alt="Onza"
+                  />
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     width="1.2em"
@@ -1858,6 +1936,11 @@
                   class="icardst phraseCard"
                   onclick="speakPhrase('Here!', 't7')"
                 >
+                  <img
+                    class="phraseAvatar"
+                    src="https://res.cloudinary.com/dqwm4pdbz/image/upload/c_scale,w_450,h_437/q_auto/f_auto/v1786623813/sam_3davface_irvdlj.png"
+                    alt="Sam"
+                  />
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     width="1.2em"
@@ -1892,7 +1975,7 @@
       <!-- Theme 3: MY KITE / YOUR KITE (educational) -->
       <section class="screen" id="toysChipsScreen">
         <div class="content">
-          <h1 class="pageTitle">My Kite / Your Kite</h1>
+          <h1 class="pageTitle">Big and Small</h1>
           <div class="stage">
             <div class="panel">
               <div class="toyEdu">
@@ -2064,6 +2147,41 @@
               <div class="gameArea">
                 <div class="toyGrid" id="whereGrid"></div>
               </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 7: Results / big reward page -->
+      <section class="screen" id="resultsScreen">
+        <div class="content">
+          <h1 class="pageTitle">Your Score</h1>
+          <div class="stage">
+            <div class="panel">
+              <p>Complete the tasks to earn all 7 stars and win the cup!</p>
+              <div class="rewardSlots" id="rewardSlots">
+                <span class="slot">⭐</span>
+                <span class="slot">⭐</span>
+                <span class="slot">⭐</span>
+                <span class="slot">⭐</span>
+                <span class="slot">⭐</span>
+                <span class="slot">⭐</span>
+                <span class="slot">⭐</span>
+                <span class="slot cup" id="rewardCupSlot">🏆</span>
+              </div>
+              <div id="rewardResult" class="rewardResult"></div>
+              <video
+                id="rewardCupVideo"
+                class="lessonVideo rewardVideo"
+                playsinline
+                webkit-playsinline
+                x5-playsinline
+                preload="auto"
+                data-autoplay="false"
+                data-autoplay-mode="manual"
+                src="https://res.cloudinary.com/dp455m4rk/video/upload/v1786033998/reward_cup_mv1dsm.mp4"
+                style="display: none"
+              ></video>
             </div>
           </div>
         </div>
@@ -2278,40 +2396,6 @@
       </section>
 
       <div id="wordSlides"></div>
-
-      <!-- 7: Results / big reward page -->
-      <section class="screen" id="resultsScreen">
-        <div class="content">
-          <h1 class="pageTitle">Your Score</h1>
-          <div class="stage">
-            <div class="panel">
-              <p>Complete the tasks to earn all 6 stars and win the cup!</p>
-              <div class="rewardSlots" id="rewardSlots">
-                <span class="slot">⭐</span>
-                <span class="slot">⭐</span>
-                <span class="slot">⭐</span>
-                <span class="slot">⭐</span>
-                <span class="slot">⭐</span>
-                <span class="slot">⭐</span>
-                <span class="slot cup" id="rewardCupSlot">🏆</span>
-              </div>
-              <div id="rewardResult" class="rewardResult"></div>
-              <video
-                id="rewardCupVideo"
-                class="lessonVideo rewardVideo"
-                playsinline
-                webkit-playsinline
-                x5-playsinline
-                preload="auto"
-                data-autoplay="false"
-                data-autoplay-mode="manual"
-                src="https://res.cloudinary.com/dp455m4rk/video/upload/v1786033998/reward_cup_mv1dsm.mp4"
-                style="display: none"
-              ></video>
-            </div>
-          </div>
-        </div>
-      </section>
 
       <!-- 8: Translator (repeat, not counted in progress) -->
       <section class="screen title-slide" data-nocount>
@@ -2776,7 +2860,7 @@
         captionsPlayed[key] = true;
         if (captionsPlayed.sam && captionsPlayed.onza && !captionsRewarded) {
           captionsRewarded = true;
-          reward("WELL DONE! +1 ⭐");
+          celebrate("WELL DONE!");
         }
       }
 
@@ -2792,14 +2876,11 @@
           !greetingsRewarded
         ) {
           greetingsRewarded = true;
-          reward("WELL DONE! +1 ⭐");
+          celebrate("WELL DONE!");
         }
       }
 
-      function reward(t) {
-        starsEarned++;
-        toast(t);
-        addPoints(1);
+      function confettiBurst() {
         var r = document.getElementById("reward");
         r.innerHTML = "";
         for (var i = 0; i < 24; i++) {
@@ -2816,13 +2897,52 @@
         }, 2500);
       }
 
+      function celebrate(t) {
+        toast(t);
+        confettiBurst();
+      }
+
+      function reward(t) {
+        starsEarned++;
+        addPoints(1);
+        celebrate(t);
+        if (starsEarned >= 7) goToRewards();
+      }
+
+      var goToRewardsTimer = null;
+      function goToRewards() {
+        if (goToRewardsTimer) return;
+        for (var i = 0; i < screens.length; i++) {
+          if (screens[i].id === "resultsScreen") {
+            goToRewardsTimer = window.setTimeout(function () {
+              goToRewardsTimer = null;
+              show(i);
+            }, 1800);
+            return;
+          }
+        }
+      }
+
+      function unlockRewardSound() {
+        var video = document.getElementById("rewardCupVideo");
+        if (!video) return;
+        if (video.muted && !video.paused) {
+          video.muted = false;
+          var p = video.play();
+          if (p && typeof p.catch === "function") p.catch(function () {});
+        }
+      }
+      document.addEventListener("click", unlockRewardSound);
+      document.addEventListener("touchstart", unlockRewardSound);
+      document.addEventListener("keydown", unlockRewardSound);
+
       var nameVideo = document.getElementById("nameVideo");
       var nameVideoRewarded = false;
       if (nameVideo) {
         nameVideo.addEventListener("ended", function () {
           if (nameVideoRewarded) return;
           nameVideoRewarded = true;
-          reward("WELL DONE! +1 ⭐");
+          celebrate("WELL DONE!");
         });
       }
 
@@ -2832,7 +2952,7 @@
         commandsVideo.addEventListener("ended", function () {
           if (commandsRewarded) return;
           commandsRewarded = true;
-          reward("WELL DONE! +1 ⭐");
+          celebrate("WELL DONE!");
         });
       }
 
@@ -2842,7 +2962,7 @@
         coloursVideo.addEventListener("ended", function () {
           if (coloursVideoRewarded) return;
           coloursVideoRewarded = true;
-          reward("WELL DONE! +1 ⭐");
+          celebrate("WELL DONE!");
         });
       }
 
@@ -2877,7 +2997,7 @@
         });
         if (allDone) {
           colourPressRewarded = true;
-          reward("ALL COLOURS! +1 ⭐");
+          celebrate("ALL COLOURS!");
         }
       }
 
@@ -3235,10 +3355,11 @@
         var video = document.getElementById("rewardCupVideo");
         if (typeof video.pause === "function") video.pause();
         video.style.display = "none";
+        document.getElementById("rewardSlots").style.display = "flex";
         var result = document.getElementById("rewardResult");
         result.className = "rewardResult";
         result.textContent = "";
-        var n = starsEarned >= 6 ? 6 : starsEarned;
+        var n = starsEarned >= 7 ? 7 : starsEarned;
         for (var k = 0; k < n; k++) {
           (function (slotIndex) {
             rewardTimer = window.setTimeout(function () {
@@ -3255,19 +3376,33 @@
         var result = document.getElementById("rewardResult");
         var cupSlot = document.getElementById("rewardCupSlot");
         var video = document.getElementById("rewardCupVideo");
-        if (n >= 6) {
+        var resultsEl = document.getElementById("resultsScreen");
+        if (n >= 7) {
           cupSlot.classList.add("filled");
           burst(cupSlot);
           result.className = "rewardResult good";
           result.textContent = "PERFECT! YOU WON THE CUP! 🏆";
-          video.style.display = "block";
-          playMediaVideo(video, true);
+          window.setTimeout(function () {
+            if (!resultsEl || !resultsEl.classList.contains("active")) return;
+            var slotsRow = document.getElementById("rewardSlots");
+            if (slotsRow) slotsRow.style.display = "none";
+            video.style.display = "block";
+            video.muted = false;
+            var p = video.play();
+            if (p && typeof p.catch === "function") {
+              p.catch(function () {
+                video.muted = true;
+                var p2 = video.play();
+                if (p2 && typeof p2.catch === "function") p2.catch(function () {});
+              });
+            }
+          }, 1500);
         } else {
           result.className = "rewardResult bad";
           result.textContent =
             "TRY AGAIN! You earned " +
             n +
-            "/6 stars. Complete the tasks to win the cup!";
+            "/7 stars. Complete the tasks to win the cup!";
         }
       }
 
@@ -3395,28 +3530,41 @@
         }
       }
 
-      var toysHeard = {};
+      var toysCount = {};
+      var toysHeardAll = false;
       var toysHeardRewarded = false;
       var toyListenBusy = false;
       function toyPress(name) {
         say(name);
-        toysHeard[name] = true;
+        toysCount[name] = (toysCount[name] || 0) + 1;
+        maybeToysReward();
+      }
+
+      function maybeToysReward() {
         if (toysHeardRewarded) return;
+        var allOnce = true;
+        var allTwice = true;
         for (var i = 0; i < TOYS.length; i++) {
-          if (!toysHeard[TOYS[i].name]) return;
+          var c = toysCount[TOYS[i].name] || 0;
+          if (c < 1) allOnce = false;
+          if (c < 2) allTwice = false;
         }
-        toysHeardRewarded = true;
-        reward("ALL TOYS! +1 ⭐");
+        if (allTwice || (allOnce && toysHeardAll)) {
+          toysHeardRewarded = true;
+          reward("ALL TOYS! +1 ⭐");
+        }
       }
 
       function listenToys() {
         if (toyListenBusy) return;
         toyListenBusy = true;
+        toysHeardAll = true;
+        maybeToysReward();
         var t = 0;
         for (var i = 0; i < TOYS.length; i++) {
           (function (n, delay) {
             window.setTimeout(function () {
-              toyPress(n);
+              say(n);
             }, delay);
           })(TOYS[i].name, t);
           t += 700 + TOYS[i].name.length * 80;
@@ -3427,14 +3575,14 @@
       }
 
       var toysPhrases = ["t1", "t2", "t3", "t4", "t5", "t6", "t7"];
-      var toysPhrasesHeard = {};
+      var toysPhrasesCount = {};
       var toysPhrasesRewarded = false;
       function speakPhrase(text, key, who) {
         say(text, who === "onza" ? altVoice2 : null);
-        toysPhrasesHeard[key] = true;
+        toysPhrasesCount[key] = (toysPhrasesCount[key] || 0) + 1;
         if (toysPhrasesRewarded) return;
         for (var i = 0; i < toysPhrases.length; i++) {
-          if (!toysPhrasesHeard[toysPhrases[i]]) return;
+          if ((toysPhrasesCount[toysPhrases[i]] || 0) < 2) return;
         }
         toysPhrasesRewarded = true;
         reward("ALL PHRASES! +1 ⭐");
@@ -3570,7 +3718,7 @@
             bsBusy = false;
             setBsEnabled(true);
             show("big");
-          }, 3000);
+          }, 2000);
         } else {
           show("small");
         }
