@@ -270,6 +270,17 @@
         border-radius: 10px;
         padding: 2px;
       }
+      .phraseToyIcon {
+        width: clamp(36px, 4.4vw, 54px);
+        height: auto;
+        object-fit: contain;
+        background: #fff;
+        border-radius: 10px;
+        padding: 2px;
+        fill: #ef8f9a;
+        color: #d9534f;
+        display: inline-block;
+      }
       .icardbas {
         min-width: 160px;
         min-height: 80px;
@@ -498,8 +509,18 @@
       [dialogue] .grid--2 > :nth-child(n + 3) {
         margin-top: -1.4em;
       }
-      #toysPhrasesScreen .grid--2 > :nth-child(n + 3) {
+      #toysPhrasesScreen .grid--2 > :nth-child(n + 3),
+      #likePhrasesScreen .grid--2 > :nth-child(n + 3) {
         margin-top: -3em;
+      }
+      #likePhrasesScreen .grid--2 > .phraseCard:not(:first-of-type) {
+        display: none;
+      }
+      #ynDialogueScreen .grid--2 > :nth-child(n + 3) {
+        margin-top: -3em;
+      }
+      #ynDialogueScreen .grid--2 > .phraseCard:not(:first-of-type) {
+        display: none;
       }
       button:focus-visible {
         outline: 3px solid var(--accent2);
@@ -846,6 +867,75 @@
       .gameVisual.ynVisual {
         width: min(260px, 52vw);
         height: min(210px, 40vh);
+      }
+      .likeHeart {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: clamp(40px, 5vw, 60px);
+        height: clamp(40px, 5vw, 60px);
+        background: #fff;
+        border: 3px solid #d9534f;
+        border-radius: 50%;
+        cursor: pointer;
+        box-shadow: var(--shadow);
+      }
+      .likeSet {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 0.4em;
+      }
+      .likeCenter {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 0.7em;
+        flex: 0 0 auto;
+      }
+      .likeHeartIcon {
+        width: 58%;
+        height: 58%;
+        fill: #ef8f9a;
+        color: #d9534f;
+      }
+      .likeToy {
+        width: clamp(36px, 4.2vw, 56px);
+        height: auto;
+        object-fit: contain;
+      }
+      .likeAnimalBtn {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+        height: 100%;
+        border: 0;
+        background: none;
+        padding: 0;
+        cursor: pointer;
+      }
+      .likeNextBtn {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5em;
+        padding: 0.65em 1.4em;
+        font-size: clamp(1rem, 1.8vw, 1.25rem);
+        font-weight: 800;
+        color: var(--ink);
+        background: var(--panel);
+        border: 3px solid var(--accent2);
+        border-radius: 999px;
+        box-shadow: var(--shadow);
+        cursor: pointer;
+      }
+      .likeNextBtn:hover {
+        background: #e8f1ff;
+      }
+      .likeNextIcon {
+        width: 1.2em;
+        height: 1.2em;
+        color: var(--accent2);
       }
       .toyEdu {
         display: flex;
@@ -1858,6 +1948,489 @@
         </div>
       </section>
 
+      <!-- DO YOU LIKE? — phrases (present) -->
+      <section class="screen" id="likePhrasesScreen">
+        <div class="content">
+          <h1 class="pageTitle">Do You Like?</h1>
+          <div class="stage">
+            <div class="panel origami">
+              <div class="grid grid--2">
+                <button
+                  class="icardst phraseCard"
+                  onclick="speakPhrase('I can see an animal.', 't1')"
+                >
+                  <img
+                    class="phraseAvatar"
+                    src="https://res.cloudinary.com/dqwm4pdbz/image/upload/c_scale,w_450,h_437/q_auto/f_auto/v1786623813/sam_3davface_irvdlj.png"
+                    alt="Sam"
+                  />
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="1.2em"
+                    height="1.2em"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    style="vertical-align: -0.2em"
+                  >
+                    <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" />
+                    <path d="M15.54 8.46a5 5 0 0 1 0 7.07" />
+                  </svg>
+                  <span class="icardtext">I can see an animal.</span>
+                  <span class="phraseToyWrap">
+                    <img
+                      class="phraseToy"
+                      src="https://res.cloudinary.com/dp455m4rk/image/upload/c_crop,w_469,h_384,x_0,y_384/r_max/v1786050302/A-F_yhrs9s.png"
+                      alt="dog"
+                    />
+                  </span>
+                </button>
+                <div></div>
+                <div></div>
+                <button
+                  class="icardstb phraseCard"
+                  onclick="speakPhrase('What is it?', 't2', 'onza')"
+                >
+                  <img
+                    class="phraseAvatar"
+                    src="https://res.cloudinary.com/dqwm4pdbz/image/upload/c_scale,w_400/q_auto/f_auto/v1786623812/onza_3avface_gyyay8.png"
+                    alt="Onza"
+                  />
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="1.2em"
+                    height="1.2em"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    style="vertical-align: -0.2em"
+                  >
+                    <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" />
+                    <path d="M15.54 8.46a5 5 0 0 1 0 7.07" />
+                  </svg>
+                  <span class="icardtextb">What is it?</span>
+                </button>
+                <button
+                  class="icardst phraseCard"
+                  onclick="speakPhrase('It\'s a dog.', 't3')"
+                >
+                  <img
+                    class="phraseAvatar"
+                    src="https://res.cloudinary.com/dqwm4pdbz/image/upload/c_scale,w_450,h_437/q_auto/f_auto/v1786623813/sam_3davface_irvdlj.png"
+                    alt="Sam"
+                  />
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="1.2em"
+                    height="1.2em"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    style="vertical-align: -0.2em"
+                  >
+                    <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" />
+                    <path d="M15.54 8.46a5 5 0 0 1 0 7.07" />
+                  </svg>
+                  <span class="icardtext">It's a dog.</span>
+                  <span class="phraseToyWrap">
+                    <img
+                      class="phraseToy"
+                      src="https://res.cloudinary.com/dp455m4rk/image/upload/c_crop,w_469,h_384,x_0,y_384/r_max/v1786050302/A-F_yhrs9s.png"
+                      alt="dog"
+                    />
+                  </span>
+                </button>
+                <div></div>
+                <div></div>
+                <button
+                  class="icardstb phraseCard"
+                  onclick="speakPhrase('Do you like dogs?', 't4', 'onza')"
+                >
+                  <img
+                    class="phraseAvatar"
+                    src="https://res.cloudinary.com/dqwm4pdbz/image/upload/c_scale,w_400/q_auto/f_auto/v1786623812/onza_3avface_gyyay8.png"
+                    alt="Onza"
+                  />
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="1.2em"
+                    height="1.2em"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    style="vertical-align: -0.2em"
+                  >
+                    <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" />
+                    <path d="M15.54 8.46a5 5 0 0 1 0 7.07" />
+                  </svg>
+                  <span class="icardtextb">Do you like dogs?</span>
+                  <span class="phraseToyWrap">
+                    <img
+                      class="phraseToy"
+                      src="https://res.cloudinary.com/dp455m4rk/image/upload/c_crop,w_469,h_384,x_0,y_384/r_max/v1786050302/A-F_yhrs9s.png"
+                      alt="dog"
+                    />
+                  </span>
+                </button>
+                <button
+                  class="icardst phraseCard"
+                  onclick="speakPhrase('Yes. I like dogs.', 't5')"
+                >
+                  <img
+                    class="phraseAvatar"
+                    src="https://res.cloudinary.com/dqwm4pdbz/image/upload/c_scale,w_450,h_437/q_auto/f_auto/v1786623813/sam_3davface_irvdlj.png"
+                    alt="Sam"
+                  />
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="1.2em"
+                    height="1.2em"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    style="vertical-align: -0.2em"
+                  >
+                    <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" />
+                    <path d="M15.54 8.46a5 5 0 0 1 0 7.07" />
+                  </svg>
+                  <span class="icardtext">Yes. I like dogs.</span>
+                  <span class="phraseToyWrap">
+                    <img
+                      class="phraseToy"
+                      src="https://res.cloudinary.com/dp455m4rk/image/upload/c_crop,w_469,h_384,x_0,y_384/r_max/v1786050302/A-F_yhrs9s.png"
+                      alt="dog"
+                    />
+                    <svg
+                      class="phraseToyIcon"
+                      xmlns="http://www.w3.org/2000/svg"
+                      viewBox="0 0 24 24"
+                      fill="currentColor"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    >
+                      <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z" />
+                    </svg>
+                  </span>
+                </button>
+                <div></div>
+                <div></div>
+                <button
+                  class="icardstb phraseCard"
+                  onclick="speakPhrase('Do you like cats?', 't6', 'onza')"
+                >
+                  <img
+                    class="phraseAvatar"
+                    src="https://res.cloudinary.com/dqwm4pdbz/image/upload/c_scale,w_400/q_auto/f_auto/v1786623812/onza_3avface_gyyay8.png"
+                    alt="Onza"
+                  />
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="1.2em"
+                    height="1.2em"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    style="vertical-align: -0.2em"
+                  >
+                    <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" />
+                    <path d="M15.54 8.46a5 5 0 0 1 0 7.07" />
+                  </svg>
+                  <span class="icardtextb">Do you like cats?</span>
+                  <span class="phraseToyWrap">
+                    <img
+                      class="phraseToy"
+                      src="https://res.cloudinary.com/dp455m4rk/image/upload/c_crop,w_469,h_384,x_938,y_0/r_max/v1786050302/A-F_yhrs9s.png"
+                      alt="cat"
+                    />
+                  </span>
+                </button>
+                <button
+                  class="icardst phraseCard"
+                  onclick="speakPhrase('No. I don\'t like cats.', 't7')"
+                >
+                  <img
+                    class="phraseAvatar"
+                    src="https://res.cloudinary.com/dqwm4pdbz/image/upload/c_scale,w_450,h_437/q_auto/f_auto/v1786623813/sam_3davface_irvdlj.png"
+                    alt="Sam"
+                  />
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="1.2em"
+                    height="1.2em"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    style="vertical-align: -0.2em"
+                  >
+                    <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" />
+                    <path d="M15.54 8.46a5 5 0 0 1 0 7.07" />
+                  </svg>
+                  <span class="icardtext">No. I don't like cats.</span>
+                  <span class="phraseToyWrap">
+                    <img
+                      class="phraseToy"
+                      src="https://res.cloudinary.com/dp455m4rk/image/upload/c_crop,w_469,h_384,x_938,y_0/r_max/v1786050302/A-F_yhrs9s.png"
+                      alt="cat"
+                    />
+                    <svg
+                      class="phraseToyIcon"
+                      xmlns="http://www.w3.org/2000/svg"
+                      viewBox="0 0 24 24"
+                      fill="currentColor"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    >
+                      <path d="M10.5 4.893a5.5 5.5 0 0 1 1.091.931.56.56 0 0 0 .818 0A5.49 5.49 0 0 1 22 9.5c0 1.872-1.002 3.356-2.187 4.655" />
+                      <path d="m16.967 16.967-3.459 3.346a2 2 0 0 1-3 .019L5 15c-1.5-1.5-3-3.2-3-5.5a5.5 5.5 0 0 1 2.747-4.761" />
+                      <path d="m2 2 20 20" />
+                    </svg>
+                  </span>
+                </button>
+                <div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Segment 4b: I LIKE / I DON'T LIKE — likes teaching slide -->
+      <section class="screen" id="likeDislikeScreen">
+        <div class="content">
+          <h1 class="pageTitle">I like / I don't like</h1>
+          <div class="stage">
+            <div class="panel">
+              <div class="gameArea">
+                <div class="ynCast">
+                  <div class="ynCastMember" id="likeSam">
+                    <img
+                      class="ynAvatar"
+                      src="https://res.cloudinary.com/dqwm4pdbz/image/upload/c_scale,w_450,h_437/q_auto/f_auto/v1786623813/sam_3davface_irvdlj.png"
+                      alt="Sam"
+                    />
+                    <span class="ynName">Sam</span>
+                    <div class="likeSet">
+                      <button class="likeHeart" onclick="likePress('sam', 'like')">
+                        <svg
+                          class="likeHeartIcon"
+                          xmlns="http://www.w3.org/2000/svg"
+                          viewBox="0 0 24 24"
+                          fill="currentColor"
+                          stroke="currentColor"
+                          stroke-width="2"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                        >
+                          <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z" />
+                        </svg>
+                      </button>
+                      <div class="ynToys">
+                        <img
+                          class="likeToy"
+                          src="https://res.cloudinary.com/dp455m4rk/image/upload/c_crop,w_469,h_384,x_0,y_384/r_max/v1786050302/A-F_yhrs9s.png"
+                          alt="dog"
+                        />
+                        <img
+                          class="likeToy"
+                          src="https://res.cloudinary.com/dp455m4rk/image/upload/c_crop,w_421,h_424,x_421,y_424/r_max/v1786346044/lesson6_ywgsxn.png"
+                          alt="monkey"
+                        />
+                      </div>
+                    </div>
+                    <div class="likeSet">
+                      <button class="likeHeart" onclick="likePress('sam', 'dislike')">
+                        <svg
+                          class="likeHeartIcon"
+                          xmlns="http://www.w3.org/2000/svg"
+                          viewBox="0 0 24 24"
+                          fill="currentColor"
+                          stroke="currentColor"
+                          stroke-width="2"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                        >
+                          <path d="M10.5 4.893a5.5 5.5 0 0 1 1.091.931.56.56 0 0 0 .818 0A5.49 5.49 0 0 1 22 9.5c0 1.872-1.002 3.356-2.187 4.655" />
+                          <path d="m16.967 16.967-3.459 3.346a2 2 0 0 1-3 .019L5 15c-1.5-1.5-3-3.2-3-5.5a5.5 5.5 0 0 1 2.747-4.761" />
+                          <path d="m2 2 20 20" />
+                        </svg>
+                      </button>
+                      <div class="ynToys">
+                        <img
+                          class="likeToy"
+                          src="https://res.cloudinary.com/dp455m4rk/image/upload/c_crop,w_421,h_424,x_421,y_424/r_max/v1786346044/lesson6_ywgsxn.png"
+                          alt="monkey"
+                        />
+                        <img
+                          class="likeToy"
+                          src="https://res.cloudinary.com/dp455m4rk/image/upload/c_crop,w_421,h_424,x_0,y_0/r_max/v1786346044/lesson6_ywgsxn.png"
+                          alt="bird"
+                        />
+                      </div>
+                    </div>
+                  </div>
+                  <div class="likeCenter">
+                    <div class="gameVisual ynVisual">
+                      <button class="likeAnimalBtn" onclick="likeAnimalSpeak()">
+                        <img id="likeImg" alt="animal" />
+                      </button>
+                    </div>
+                    <button class="likeNextBtn" onclick="likeNext()">
+                      <svg
+                        class="likeNextIcon"
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                      >
+                        <path d="M5 12h14" />
+                        <path d="m12 5 7 7-7 7" />
+                      </svg>
+                      <span>Next animal</span>
+                    </button>
+                  </div>
+                  <div class="ynCastMember onza" id="likeOnza">
+                    <img
+                      class="ynAvatar"
+                      src="https://res.cloudinary.com/dqwm4pdbz/image/upload/c_scale,w_400/q_auto/f_auto/v1786623812/onza_3avface_gyyay8.png"
+                      alt="Onza"
+                    />
+                    <span class="ynName">Onza</span>
+                    <div class="likeSet">
+                      <button class="likeHeart" onclick="likePress('onza', 'like')">
+                        <svg
+                          class="likeHeartIcon"
+                          xmlns="http://www.w3.org/2000/svg"
+                          viewBox="0 0 24 24"
+                          fill="currentColor"
+                          stroke="currentColor"
+                          stroke-width="2"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                        >
+                          <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z" />
+                        </svg>
+                      </button>
+                      <div class="ynToys">
+                        <img
+                          class="likeToy"
+                          src="https://res.cloudinary.com/dp455m4rk/image/upload/c_crop,w_469,h_384,x_938,y_0/r_max/v1786050302/A-F_yhrs9s.png"
+                          alt="cat"
+                        />
+                        <img
+                          class="likeToy"
+                          src="https://res.cloudinary.com/dp455m4rk/image/upload/c_crop,w_421,h_424,x_0,y_0/r_max/v1786346044/lesson6_ywgsxn.png"
+                          alt="bird"
+                        />
+                      </div>
+                    </div>
+                    <div class="likeSet">
+                      <button class="likeHeart" onclick="likePress('onza', 'dislike')">
+                        <svg
+                          class="likeHeartIcon"
+                          xmlns="http://www.w3.org/2000/svg"
+                          viewBox="0 0 24 24"
+                          fill="currentColor"
+                          stroke="currentColor"
+                          stroke-width="2"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                        >
+                          <path d="M10.5 4.893a5.5 5.5 0 0 1 1.091.931.56.56 0 0 0 .818 0A5.49 5.49 0 0 1 22 9.5c0 1.872-1.002 3.356-2.187 4.655" />
+                          <path d="m16.967 16.967-3.459 3.346a2 2 0 0 1-3 .019L5 15c-1.5-1.5-3-3.2-3-5.5a5.5 5.5 0 0 1 2.747-4.761" />
+                          <path d="m2 2 20 20" />
+                        </svg>
+                      </button>
+                      <div class="ynToys">
+                        <img
+                          class="likeToy"
+                          src="https://res.cloudinary.com/dp455m4rk/image/upload/c_crop,w_421,h_424,x_421,y_0/r_max/v1786346044/lesson6_ywgsxn.png"
+                          alt="fish"
+                        />
+                        <img
+                          class="likeToy"
+                          src="https://res.cloudinary.com/dp455m4rk/image/upload/c_crop,w_421,h_424,x_842,y_424/r_max/v1786346044/lesson6_ywgsxn.png"
+                          alt="rabbit"
+                        />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Segment 5c: DO YOU HAVE A...? — classroom game (copy of toysYesNoScreen) -->
+      <section class="screen" id="toysYesNo2Screen">
+        <div class="content">
+          <h1 class="pageTitle" id="yn2Title">Do You Have A…?</h1>
+          <div class="stage">
+            <div class="panel">
+              <div class="roundPips" id="yn2Pips"></div>
+              <div class="gameArea">
+                <div class="ynCast">
+                  <div class="ynCastMember" id="yn2Sam">
+                    <img
+                      class="ynAvatar"
+                      src="https://res.cloudinary.com/dqwm4pdbz/image/upload/c_scale,w_450,h_437/q_auto/f_auto/v1786623813/sam_3davface_irvdlj.png"
+                      alt="Sam"
+                    />
+                    <span class="ynName">Sam</span>
+                    <div class="ynToys" id="yn2SamToys"></div>
+                  </div>
+                  <div class="gameVisual ynVisual">
+                    <img id="yn2Img" alt="toy" />
+                  </div>
+                  <div class="ynCastMember onza" id="yn2Onza">
+                    <img
+                      class="ynAvatar"
+                      src="https://res.cloudinary.com/dqwm4pdbz/image/upload/c_scale,w_400/q_auto/f_auto/v1786623812/onza_3avface_gyyay8.png"
+                      alt="Onza"
+                    />
+                    <span class="ynName">Onza</span>
+                    <div class="ynToys" id="yn2OnzaToys"></div>
+                  </div>
+                </div>
+                <div class="gameRow">
+                  <button class="choice yes" onclick="ynAnswer2(true)">
+                    YES
+                  </button>
+                  <button class="choice" onclick="ynAnswer2(false)">NO</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
       <!-- Segment 1: MY TOYS — vocabulary (present) -->
       <section class="screen" id="toysIntroScreen">
         <div class="content">
@@ -2324,6 +2897,428 @@
                   </button>
                   <button class="choice" onclick="ynAnswer(false)">NO</button>
                 </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Segment 5b: DO YOU HAVE A...? — educational dialogue -->
+      <section class="screen" id="ynDialogueScreen">
+        <div class="content">
+          <h1 class="pageTitle">Do You Have A…?</h1>
+          <div class="stage">
+            <div class="panel origami">
+              <div class="grid grid--2">
+                <button
+                  class="icardst phraseCard"
+                  onclick="speakPhrase('Do you have a car?', 'yn1')"
+                >
+                  <img
+                    class="phraseAvatar"
+                    src="https://res.cloudinary.com/dqwm4pdbz/image/upload/c_scale,w_450,h_437/q_auto/f_auto/v1786623813/sam_3davface_irvdlj.png"
+                    alt="Sam"
+                  />
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="1.2em"
+                    height="1.2em"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    style="vertical-align: -0.2em"
+                  >
+                    <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" />
+                    <path d="M15.54 8.46a5 5 0 0 1 0 7.07" />
+                  </svg>
+                  <span class="icardtext">Do you have a car?</span>
+                  <span class="phraseToyWrap">
+                    <img
+                      class="phraseToy"
+                      src="https://res.cloudinary.com/dqwm4pdbz/image/upload/c_crop,w_421,h_424,x_0,y_0/r_max/bo_5px_solid_white/v1786599929/260813_toys_01_txjh3y.png"
+                      alt="car"
+                    />
+                  </span>
+                </button>
+                <div></div>
+                <div></div>
+                <button
+                  class="icardstb phraseCard"
+                  onclick="speakPhrase('Yes! I have a car.', 'yn2', 'onza')"
+                >
+                  <img
+                    class="phraseAvatar"
+                    src="https://res.cloudinary.com/dqwm4pdbz/image/upload/c_scale,w_400/q_auto/f_auto/v1786623812/onza_3avface_gyyay8.png"
+                    alt="Onza"
+                  />
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="1.2em"
+                    height="1.2em"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    style="vertical-align: -0.2em"
+                  >
+                    <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" />
+                    <path d="M15.54 8.46a5 5 0 0 1 0 7.07" />
+                  </svg>
+                  <span class="icardtextb">Yes! I have a car.</span>
+                  <span class="phraseToyWrap">
+                    <img
+                      class="phraseToy"
+                      src="https://res.cloudinary.com/dqwm4pdbz/image/upload/c_crop,w_421,h_424,x_0,y_0/r_max/bo_5px_solid_white/v1786599929/260813_toys_01_txjh3y.png"
+                      alt="car"
+                    />
+                  </span>
+                </button>
+                <button
+                  class="icardst phraseCard"
+                  onclick="speakPhrase('Do you have a robot?', 'yn3')"
+                >
+                  <img
+                    class="phraseAvatar"
+                    src="https://res.cloudinary.com/dqwm4pdbz/image/upload/c_scale,w_450,h_437/q_auto/f_auto/v1786623813/sam_3davface_irvdlj.png"
+                    alt="Sam"
+                  />
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="1.2em"
+                    height="1.2em"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    style="vertical-align: -0.2em"
+                  >
+                    <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" />
+                    <path d="M15.54 8.46a5 5 0 0 1 0 7.07" />
+                  </svg>
+                  <span class="icardtext">Do you have a robot?</span>
+                  <span class="phraseToyWrap">
+                    <img
+                      class="phraseToy"
+                      src="https://res.cloudinary.com/dqwm4pdbz/image/upload/c_crop,w_421,h_424,x_0,y_424/r_max/bo_5px_solid_white/v1786599929/260813_toys_01_txjh3y.png"
+                      alt="robot"
+                    />
+                  </span>
+                </button>
+                <div></div>
+                <div></div>
+                <button
+                  class="icardstb phraseCard"
+                  onclick="speakPhrase('No. I don\'t have a robot.', 'yn4', 'onza')"
+                >
+                  <img
+                    class="phraseAvatar"
+                    src="https://res.cloudinary.com/dqwm4pdbz/image/upload/c_scale,w_400/q_auto/f_auto/v1786623812/onza_3avface_gyyay8.png"
+                    alt="Onza"
+                  />
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="1.2em"
+                    height="1.2em"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    style="vertical-align: -0.2em"
+                  >
+                    <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" />
+                    <path d="M15.54 8.46a5 5 0 0 1 0 7.07" />
+                  </svg>
+                  <span class="icardtextb">No. I don't have a robot.</span>
+                  <span class="phraseToyWrap no">
+                    <img
+                      class="phraseToy"
+                      src="https://res.cloudinary.com/dqwm4pdbz/image/upload/c_crop,w_421,h_424,x_0,y_424/r_max/bo_5px_solid_white/v1786599929/260813_toys_01_txjh3y.png"
+                      alt="robot"
+                    />
+                  </span>
+                </button>
+                <button
+                  class="icardst phraseCard"
+                  onclick="speakPhrase('Do you have a kite?', 'yn5')"
+                >
+                  <img
+                    class="phraseAvatar"
+                    src="https://res.cloudinary.com/dqwm4pdbz/image/upload/c_scale,w_450,h_437/q_auto/f_auto/v1786623813/sam_3davface_irvdlj.png"
+                    alt="Sam"
+                  />
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="1.2em"
+                    height="1.2em"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    style="vertical-align: -0.2em"
+                  >
+                    <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" />
+                    <path d="M15.54 8.46a5 5 0 0 1 0 7.07" />
+                  </svg>
+                  <span class="icardtext">Do you have a kite?</span>
+                  <span class="phraseToyWrap">
+                    <img
+                      class="phraseToy"
+                      src="https://res.cloudinary.com/dqwm4pdbz/image/upload/c_crop,w_421,h_424,x_842,y_424/r_max/bo_5px_solid_white/v1786599929/260813_toys_01_txjh3y.png"
+                      alt="kite"
+                    />
+                  </span>
+                </button>
+                <div></div>
+                <div></div>
+                <button
+                  class="icardstb phraseCard"
+                  onclick="speakPhrase('Yes! I have a kite.', 'yn6', 'onza')"
+                >
+                  <img
+                    class="phraseAvatar"
+                    src="https://res.cloudinary.com/dqwm4pdbz/image/upload/c_scale,w_400/q_auto/f_auto/v1786623812/onza_3avface_gyyay8.png"
+                    alt="Onza"
+                  />
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="1.2em"
+                    height="1.2em"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    style="vertical-align: -0.2em"
+                  >
+                    <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" />
+                    <path d="M15.54 8.46a5 5 0 0 1 0 7.07" />
+                  </svg>
+                  <span class="icardtextb">Yes! I have a kite.</span>
+                  <span class="phraseToyWrap">
+                    <img
+                      class="phraseToy"
+                      src="https://res.cloudinary.com/dqwm4pdbz/image/upload/c_crop,w_421,h_424,x_842,y_424/r_max/bo_5px_solid_white/v1786599929/260813_toys_01_txjh3y.png"
+                      alt="kite"
+                    />
+                  </span>
+                </button>
+                <button
+                  class="icardst phraseCard"
+                  onclick="speakPhrase('Do you have a teddy bear?', 'yn7')"
+                >
+                  <img
+                    class="phraseAvatar"
+                    src="https://res.cloudinary.com/dqwm4pdbz/image/upload/c_scale,w_450,h_437/q_auto/f_auto/v1786623813/sam_3davface_irvdlj.png"
+                    alt="Sam"
+                  />
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="1.2em"
+                    height="1.2em"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    style="vertical-align: -0.2em"
+                  >
+                    <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" />
+                    <path d="M15.54 8.46a5 5 0 0 1 0 7.07" />
+                  </svg>
+                  <span class="icardtext">Do you have a teddy bear?</span>
+                  <span class="phraseToyWrap">
+                    <img
+                      class="phraseToy"
+                      src="https://res.cloudinary.com/dqwm4pdbz/image/upload/c_crop,w_421,h_424,x_842,y_0/r_max/bo_5px_solid_white/v1786599929/260813_toys_01_txjh3y.png"
+                      alt="teddy bear"
+                    />
+                  </span>
+                </button>
+                <div></div>
+                <div></div>
+                <button
+                  class="icardstb phraseCard"
+                  onclick="speakPhrase('No. I don\'t have a teddy bear.', 'yn8', 'onza')"
+                >
+                  <img
+                    class="phraseAvatar"
+                    src="https://res.cloudinary.com/dqwm4pdbz/image/upload/c_scale,w_400/q_auto/f_auto/v1786623812/onza_3avface_gyyay8.png"
+                    alt="Onza"
+                  />
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="1.2em"
+                    height="1.2em"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    style="vertical-align: -0.2em"
+                  >
+                    <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" />
+                    <path d="M15.54 8.46a5 5 0 0 1 0 7.07" />
+                  </svg>
+                  <span class="icardtextb">No. I don't have a teddy bear.</span>
+                  <span class="phraseToyWrap no">
+                    <img
+                      class="phraseToy"
+                      src="https://res.cloudinary.com/dqwm4pdbz/image/upload/c_crop,w_421,h_424,x_842,y_0/r_max/bo_5px_solid_white/v1786599929/260813_toys_01_txjh3y.png"
+                      alt="teddy bear"
+                    />
+                  </span>
+                </button>
+                <button
+                  class="icardst phraseCard"
+                  onclick="speakPhrase('Do you have a bike?', 'yn9')"
+                >
+                  <img
+                    class="phraseAvatar"
+                    src="https://res.cloudinary.com/dqwm4pdbz/image/upload/c_scale,w_450,h_437/q_auto/f_auto/v1786623813/sam_3davface_irvdlj.png"
+                    alt="Sam"
+                  />
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="1.2em"
+                    height="1.2em"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    style="vertical-align: -0.2em"
+                  >
+                    <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" />
+                    <path d="M15.54 8.46a5 5 0 0 1 0 7.07" />
+                  </svg>
+                  <span class="icardtext">Do you have a bike?</span>
+                  <span class="phraseToyWrap">
+                    <img
+                      class="phraseToy"
+                      src="https://res.cloudinary.com/dqwm4pdbz/image/upload/c_crop,w_421,h_424,x_421,y_424/r_max/bo_5px_solid_white/v1786599929/260813_toys_01_txjh3y.png"
+                      alt="bike"
+                    />
+                  </span>
+                </button>
+                <div></div>
+                <div></div>
+                <button
+                  class="icardstb phraseCard"
+                  onclick="speakPhrase('Yes! I have a bike.', 'yn10', 'onza')"
+                >
+                  <img
+                    class="phraseAvatar"
+                    src="https://res.cloudinary.com/dqwm4pdbz/image/upload/c_scale,w_400/q_auto/f_auto/v1786623812/onza_3avface_gyyay8.png"
+                    alt="Onza"
+                  />
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="1.2em"
+                    height="1.2em"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    style="vertical-align: -0.2em"
+                  >
+                    <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" />
+                    <path d="M15.54 8.46a5 5 0 0 1 0 7.07" />
+                  </svg>
+                  <span class="icardtextb">Yes! I have a bike.</span>
+                  <span class="phraseToyWrap">
+                    <img
+                      class="phraseToy"
+                      src="https://res.cloudinary.com/dqwm4pdbz/image/upload/c_crop,w_421,h_424,x_421,y_424/r_max/bo_5px_solid_white/v1786599929/260813_toys_01_txjh3y.png"
+                      alt="bike"
+                    />
+                  </span>
+                </button>
+                <button
+                  class="icardst phraseCard"
+                  onclick="speakPhrase('Do you have a rocket?', 'yn11')"
+                >
+                  <img
+                    class="phraseAvatar"
+                    src="https://res.cloudinary.com/dqwm4pdbz/image/upload/c_scale,w_450,h_437/q_auto/f_auto/v1786623813/sam_3davface_irvdlj.png"
+                    alt="Sam"
+                  />
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="1.2em"
+                    height="1.2em"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    style="vertical-align: -0.2em"
+                  >
+                    <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" />
+                    <path d="M15.54 8.46a5 5 0 0 1 0 7.07" />
+                  </svg>
+                  <span class="icardtext">Do you have a rocket?</span>
+                  <span class="phraseToyWrap">
+                    <img
+                      class="phraseToy"
+                      src="https://res.cloudinary.com/dqwm4pdbz/image/upload/c_crop,w_421,h_424,x_421,y_0/r_max/bo_5px_solid_white/v1786599929/260813_toys_01_txjh3y.png"
+                      alt="rocket"
+                    />
+                  </span>
+                </button>
+                <div></div>
+                <div></div>
+                <button
+                  class="icardstb phraseCard"
+                  onclick="speakPhrase('No. I don\'t have a rocket.', 'yn12', 'onza')"
+                >
+                  <img
+                    class="phraseAvatar"
+                    src="https://res.cloudinary.com/dqwm4pdbz/image/upload/c_scale,w_400/q_auto/f_auto/v1786623812/onza_3avface_gyyay8.png"
+                    alt="Onza"
+                  />
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="1.2em"
+                    height="1.2em"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    style="vertical-align: -0.2em"
+                  >
+                    <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" />
+                    <path d="M15.54 8.46a5 5 0 0 1 0 7.07" />
+                  </svg>
+                  <span class="icardtextb">No. I don't have a rocket.</span>
+                  <span class="phraseToyWrap no">
+                    <img
+                      class="phraseToy"
+                      src="https://res.cloudinary.com/dqwm4pdbz/image/upload/c_crop,w_421,h_424,x_421,y_0/r_max/bo_5px_solid_white/v1786599929/260813_toys_01_txjh3y.png"
+                      alt="rocket"
+                    />
+                  </span>
+                </button>
+                <div></div>
               </div>
             </div>
           </div>
@@ -2948,6 +3943,54 @@
         }
       });
 
+      var revealNextCard = null;
+      var currentUtterance = null;
+      function flushReveal() {
+        if (!revealNextCard) return;
+        var el = revealNextCard;
+        revealNextCard = null;
+        el.style.display = "inline-flex";
+      }
+      function revealIfDone() {
+        if (!revealNextCard) return;
+        var canSpeak =
+          !!(synth && typeof SpeechSynthesisUtterance !== "undefined") ||
+          !!(window.tizen && window.tizen.tts);
+        if (!soundOn || !canSpeak) {
+          flushReveal();
+          return;
+        }
+        setTimeout(function () {
+          if (revealNextCard) flushReveal();
+        }, 30000);
+      }
+      function setupUnfold(id) {
+        var grid = document.getElementById(id);
+        if (!grid) return;
+        grid.addEventListener("click", function (e) {
+          var t = e.target;
+          while (t && t !== this) {
+            if (t.classList && t.classList.contains("phraseCard")) {
+              var cards = this.querySelectorAll(".phraseCard");
+              var found = false;
+              for (var i = 0; i < cards.length; i++) {
+                if (found) {
+                  revealNextCard = cards[i];
+                  revealIfDone();
+                  return;
+                } else if (cards[i] === t) {
+                  found = true;
+                }
+              }
+              return;
+            }
+            t = t.parentNode;
+          }
+        });
+      }
+      setupUnfold("likePhrasesScreen");
+      setupUnfold("ynDialogueScreen");
+
       function show(i) {
         idx = Math.max(0, Math.min(screens.length - 1, i));
         for (var j = 0; j < screens.length; j++) {
@@ -2979,8 +4022,10 @@
         }
         if (screens[idx].id === "toysBigSmallScreen") bsReset();
         else if (screens[idx].id === "toysYesNoScreen") ynReset();
+        else if (screens[idx].id === "toysYesNo2Screen") ynReset2();
         else if (screens[idx].id === "toysHaveScreen") haveReset();
         else if (screens[idx].id === "toysWhereScreen") whereReset();
+        else if (screens[idx].id === "likeDislikeScreen") likeReset();
         if (screens[idx].id === "resultsScreen") {
           showRewards();
         }
@@ -3069,6 +4114,10 @@
               rate: 0.85,
               pitch: 1.0,
               type: "TTS_TYPE_SCREEN_READER",
+            }, {
+              onfinish: function () {
+                flushReveal();
+              }
             });
             return;
           } catch (e) {}
@@ -3081,6 +4130,10 @@
           u.pitch = 1.08;
           if (voice) u.voice = voice;
           else if (altVoice) u.voice = altVoice;
+          currentUtterance = u;
+          u.onend = function () {
+            if (u === currentUtterance) flushReveal();
+          };
           synth.speak(u);
         }
       }
@@ -4195,6 +5248,118 @@
         ynAdvance();
       }
 
+      var yn2Idx = 0;
+      var yn2Rewarded = false;
+      var yn2Results = [];
+      var yn2Tries = 0;
+      var yn2Owned = {
+        sam: ["robot", "teddy bear", "rocket"],
+        onza: ["car", "kite", "bike"],
+      };
+      function ynSetOwner2(name) {
+        var sam = document.getElementById("yn2Sam");
+        var onza = document.getElementById("yn2Onza");
+        var isSam = yn2Owned.sam.indexOf(name) !== -1;
+        if (sam) sam.classList.toggle("owner", isSam);
+        if (onza) onza.classList.toggle("owner", !isSam);
+      }
+      function ynReset2() {
+        buildPips("yn2Pips", ynRounds.length);
+        yn2Idx = 0;
+        yn2Results = [];
+        yn2Tries = 0;
+        yn2Start();
+      }
+      function ynStart2() {
+        if (yn2Idx >= ynRounds.length) return;
+        var r = ynRounds[yn2Idx];
+        var img = document.getElementById("yn2Img");
+        if (img) {
+          img.src = toyImg(r.name);
+          img.className = "";
+          img.alt = r.name;
+        }
+        setHeadline("yn2Title", "Do you have a " + r.name + "?");
+        ynSetOwner2(r.name);
+        yn2Tries = 0;
+        setPips("yn2Pips", yn2Results, yn2Idx);
+      }
+      function ynAdvance2() {
+        yn2Idx++;
+        setPips("yn2Pips", yn2Results, yn2Idx);
+        if (yn2Idx >= ynRounds.length) {
+          setHeadline("yn2Title", "Well done!");
+          if (!yn2Rewarded && qualifies(yn2Results)) {
+            yn2Rewarded = true;
+            reward("DO YOU HAVE A…? +1 ⭐");
+          }
+        } else {
+          ynStart2();
+        }
+      }
+      function ynAnswer2(yes) {
+        if (yn2Idx >= ynRounds.length) return;
+        var r = ynRounds[yn2Idx];
+        if (yes !== r.answer) {
+          yn2Tries++;
+          toast("Try again!");
+          say("Try again.");
+          if (yn2Tries >= 2) {
+            yn2Results.push("bad");
+            ynAdvance2();
+          }
+          return;
+        }
+        yn2Results.push(yn2Tries === 0 ? "good" : "mediocre");
+        toast("WELL DONE!");
+        say(r.answer ? "Yes!" : "No!");
+        ynAdvance2();
+      }
+
+      var likePlurals = { fish: "fish" };
+      var likeHistory = [];
+      function likePick() {
+        var pool = [];
+        for (var i = 0; i < ANIMALS.length; i++) {
+          if (likeHistory.indexOf(ANIMALS[i].name) === -1) pool.push(ANIMALS[i]);
+        }
+        var a = pool[Math.floor(Math.random() * pool.length)];
+        likeHistory.push(a.name);
+        if (likeHistory.length > 2) likeHistory.shift();
+        var img = document.getElementById("likeImg");
+        if (img) {
+          img.src = a.img;
+          img.alt = a.name;
+        }
+      }
+      function likeReset() {
+        likePick();
+      }
+      function likeNext() {
+        likePick();
+      }
+      function likeAnimalSpeak() {
+        var img = document.getElementById("likeImg");
+        var name = img && img.alt ? img.alt : "dog";
+        var plural = likePlurals[name] || name + "s";
+        say("I like " + plural + ".");
+      }
+      function likePress(who, state) {
+        if (who === "sam") {
+          if (state === "dislike") {
+            say("I don't like monkeys and birds.");
+          } else {
+            say("I like dogs and monkeys.");
+          }
+        } else {
+          if (state === "dislike") {
+            sayOther("I don't like fish and rabbits.");
+          } else {
+            sayOther("I like cats and birds.");
+          }
+        }
+      }
+
       var haveRounds = [
         { name: "car", options: ["car", "kite", "robot"] },
         { name: "teddy bear", options: ["car", "teddy bear", "bike"] },
@@ -4355,6 +5520,8 @@
       (function () {
         ynFillToys("ynSamToys", ynOwned.sam);
         ynFillToys("ynOnzaToys", ynOwned.onza);
+        ynFillToys("yn2SamToys", yn2Owned.sam);
+        ynFillToys("yn2OnzaToys", yn2Owned.onza);
       })();
     </script>
     <script src="https://unpkg.com/lucide@latest"></script>
