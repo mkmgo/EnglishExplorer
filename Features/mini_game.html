@@ -656,6 +656,16 @@
         { spotId: "spot-4", ids: ["red-car", "yellow-bee"] },
       ];
 
+      // Randomize the order of items in Somewhere (Fisher-Yates on DOM children).
+      function shuffleItems() {
+        var container = document.getElementById("inventory");
+        if (!container) return;
+        for (var i = container.children.length - 1; i > 0; i--) {
+          var j = Math.floor(Math.random() * (i + 1));
+          container.appendChild(container.children[j]);
+        }
+      }
+
       function checkGoal() {
         var allActive = true;
         goals.forEach(function (goal) {
@@ -673,11 +683,26 @@
         var mystery = document.getElementById("spot-4");
         if (mystery) {
           var mCard = mystery.closest(".spot-card");
-          if (mCard) mCard.classList.toggle("mystery-active", allActive);
+          var baseComplete = goals
+            .filter(function (g) {
+              return g.spotId !== "spot-4";
+            })
+            .every(function (g) {
+              var spot = document.getElementById(g.spotId);
+              return (
+                spot &&
+                g.ids.every(function (id) {
+                  var el = document.getElementById(id);
+                  return el && spot.contains(el);
+                })
+              );
+            });
+          if (mCard) mCard.classList.toggle("mystery-active", baseComplete);
         }
         var winOverlay = document.getElementById("winOverlay");
         if (winOverlay) winOverlay.classList.toggle("show", allActive);
       }
+      shuffleItems();
       checkGoal();
 
       var activeItem = null;
@@ -825,6 +850,7 @@
           inventory.appendChild(el);
         });
         stashed = [];
+        shuffleItems();
         checkGoal();
       }
 
