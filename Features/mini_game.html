@@ -1,0 +1,375 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Classroom Zoo Mystery - 1:1 English Game</title>
+    <style>
+          :root {
+            --bg-color: #f0f4f8;
+            --card-bg: #ffffff;
+            --primary: #3b82f6;
+            --accent: #f59e0b;
+            --text: #1f2937;
+          }
+
+          body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text);
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+          }
+
+          h1 {
+            margin-bottom: 5px;
+            color: #1e3a8a;
+          }
+
+          .instructions {
+            margin-bottom: 20px;
+            font-size: 1.1rem;
+            background: #e0f2fe;
+            padding: 10px 20px;
+            border-radius: 8px;
+            border-left: 5px solid var(--primary);
+          }
+
+          /* Grid Layout */
+          .grid-container {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+            width: 100%;
+            max-width: 800px;
+            margin-bottom: 20px;
+          }
+
+          .spot-card {
+            background: var(--card-bg);
+            border: 3px solid #cbd5e1;
+            border-radius: 12px;
+            height: 220px;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-between;
+            padding: 15px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            user-select: none;
+          }
+
+          .spot-title {
+            font-weight: bold;
+            font-size: 1.2rem;
+            color: #475569;
+          }
+
+          .drop-zone {
+            width: 100%;
+            height: 120px;
+            border: 2px dashed #94a3b8;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            background-color: #f8fafc;
+            transition: background-color 0.2s;
+          }
+
+          .drop-zone.drag-over {
+            background-color: #dbeafe;
+            border-color: var(--primary);
+          }
+
+          /* Moveable Items Palette */
+          .palette {
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 15px;
+            width: 100%;
+            max-width: 800px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+          }
+
+          .palette-title {
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #334155;
+          }
+
+          .item-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            min-height: 60px;
+          }
+
+          .draggable-item {
+            padding: 8px 14px;
+            border-radius: 5px;
+            font-weight: bold;
+            cursor: grab;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.95rem;
+          }
+
+          .draggable-item:active {
+            cursor: grabbing;
+          }
+
+          /* Specific Item Styling */
+          .animal {
+            background-color: #e5e7eb;
+            color: #000;
+            border: 1px solid #6b7280;
+            width: 96px;
+            height: 84px;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            gap: 3px;
+            text-align: center;
+            padding: 5px;
+          }
+
+          .animal img {
+            width: 48px;
+            height: 48px;
+            object-fit: cover;
+            border-radius: 50%;
+            background-color: #fff;
+            border: 1px solid #6b7280;
+            flex-shrink: 0;
+          }
+
+          .animal .animal-name {
+            color: #000;
+            font-weight: bold;
+            font-size: 0.85rem;
+            line-height: 1;
+          }
+          .brick {
+            width: 96px;
+            height: 84px;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            font-size: 0.85rem;
+            padding: 5px;
+            gap: 3px;
+          }
+
+          .brick::before {
+            content: "";
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background-color: var(--brick-main);
+            border: 1px solid var(--brick-dark);
+            flex-shrink: 0;
+            box-sizing: border-box;
+          }
+          .brick-red {
+            --brick-main: #ef4444;
+            --brick-dark: #b91c1c;
+            background-color: #ef4444;
+            color: white;
+            border: 1px solid var(--brick-dark);
+          }
+          .brick-yellow {
+            --brick-main: #eab308;
+            --brick-dark: #a16207;
+            background-color: #eab308;
+            color: black;
+            border: 1px solid var(--brick-dark);
+          }
+          .brick-green {
+            --brick-main: #22c55e;
+            --brick-dark: #15803d;
+            background-color: #22c55e;
+            color: white;
+            border: 1px solid var(--brick-dark);
+          }
+          .brick-blue {
+            --brick-main: #3b82f6;
+            --brick-dark: #1d4ed8;
+            background-color: #3b82f6;
+            color: white;
+            border: 1px solid var(--brick-dark);
+          }
+
+          /* Cheat Sheet Bar */
+          .phrase-bar {
+            width: 100%;
+            max-width: 800px;
+            background: #e5e7eb;
+            color: #1f2937;
+            border: 2px solid #1f2937;
+            padding: 15px;
+            border-radius: 12px;
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+            gap: 10px;
+          }
+
+          .phrase-pill {
+            background: #f9fafb;
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            border-left: 3px solid var(--accent);
+          }
+    </style>
+  </head>
+  <body>
+    <h1>Zoo Classroom Mystery</h1>
+    <div class="instructions">
+      Drag elements into the classroom spots, or ask the student to command you!
+    </div>
+
+    <!-- Classroom Spots Grid -->
+    <div class="grid-container">
+      <div class="spot-card">
+        <div class="spot-title">Spot 1: Teacher's Desk 🪑</div>
+        <div class="drop-zone" id="spot-1"></div>
+      </div>
+
+      <div class="spot-card">
+        <div class="spot-title">Spot 2: Bookshelf 📚</div>
+        <div class="drop-zone" id="spot-2"></div>
+      </div>
+
+      <div class="spot-card">
+        <div class="spot-title">Spot 3: Blue Rug 🧹</div>
+        <div class="drop-zone" id="spot-3"></div>
+      </div>
+
+      <div class="spot-card">
+        <div class="spot-title">Spot 4: Toy Box 📦</div>
+        <div class="drop-zone" id="spot-4"></div>
+      </div>
+    </div>
+
+    <!-- Draggable Items Palette -->
+    <div class="palette">
+      <div class="palette-title">
+        Items Inventory (Drag & Drop or reset to palette)
+      </div>
+      <div class="item-container" id="inventory">
+        <!-- Animals -->
+        <div class="draggable-item animal" draggable="true" id="bee">
+          <img
+            src="https://res.cloudinary.com/dp455m4rk/image/upload/c_crop,w_469,h_384,x_469,y_0/v1786050302/A-F_yhrs9s.png"
+            alt="Bee"
+          /><span class="animal-name">Bee</span>
+        </div>
+        <div class="draggable-item animal" draggable="true" id="bear">
+          <img
+            src="https://res.cloudinary.com/dqwm4pdbz/image/upload/c_crop,w_421,h_424,x_842,y_0/r_max/bo_5px_solid_white/v1786599929/260813_toys_01_txjh3y.png"
+            alt="Bear"
+          /><span class="animal-name">Bear</span>
+        </div>
+        <div class="draggable-item animal" draggable="true" id="dog">
+          <img
+            src="https://res.cloudinary.com/dp455m4rk/image/upload/c_crop,w_469,h_384,x_0,y_384/r_max/v1786050302/A-F_yhrs9s.png"
+            alt="Dog"
+          /><span class="animal-name">Dog</span>
+        </div>
+        <div class="draggable-item animal" draggable="true" id="elephant">
+          <img
+            src="https://res.cloudinary.com/dp455m4rk/image/upload/c_crop,w_469,h_384,x_469,y_384/r_max/v1786050302/A-F_yhrs9s.png"
+            alt="Elephant"
+          /><span class="animal-name">Elephant</span>
+        </div>
+
+        <!-- LEGO Duplo Bricks -->
+        <div
+          class="draggable-item brick brick-red"
+          draggable="true"
+          id="brick-red"
+        >
+          Red
+        </div>
+        <div
+          class="draggable-item brick brick-yellow"
+          draggable="true"
+          id="brick-yellow"
+        >
+          Yellow
+        </div>
+        <div
+          class="draggable-item brick brick-green"
+          draggable="true"
+          id="brick-green"
+        >
+          Green
+        </div>
+        <div
+          class="draggable-item brick brick-blue"
+          draggable="true"
+          id="brick-blue"
+        >
+          Blue
+        </div>
+      </div>
+    </div>
+
+    <!-- Target Phrases Cheat Sheet -->
+    <div class="phrase-bar">
+      <div class="phrase-pill">The <b>[Item]</b> is on / in / under...</div>
+      <div class="phrase-pill">Give me the <b>[Item]</b></div>
+      <div class="phrase-pill">Take the <b>[Item]</b></div>
+      <div class="phrase-pill">Put <b>[Item]</b> on / in / under...</div>
+    </div>
+
+    <script>
+      // Drag and Drop Logic
+      const draggables = document.querySelectorAll(".draggable-item");
+      const dropZones = document.querySelectorAll(
+        ".drop-zone, .item-container",
+      );
+
+      draggables.forEach((draggable) => {
+        draggable.addEventListener("dragstart", () => {
+          draggable.classList.add("dragging");
+        });
+
+        draggable.addEventListener("dragend", () => {
+          draggable.classList.remove("dragging");
+        });
+      });
+
+      dropZones.forEach((zone) => {
+        zone.addEventListener("dragover", (e) => {
+          e.preventDefault();
+          zone.classList.add("drag-over");
+        });
+
+        zone.addEventListener("dragleave", () => {
+          zone.classList.remove("drag-over");
+        });
+
+        zone.addEventListener("drop", (e) => {
+          e.preventDefault();
+          zone.classList.remove("drag-over");
+          const draggable = document.querySelector(".dragging");
+          if (draggable) {
+            zone.appendChild(draggable);
+          }
+        });
+      });
+    </script>
+  </body>
+</html>
