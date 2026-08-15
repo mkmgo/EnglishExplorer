@@ -3,14 +3,50 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Classroom Zoo Mystery - 1:1 English Game</title>
+    <title>Classroom Mystery - 1:1 English Game</title>
     <style>
           :root {
+            color-scheme: light;
             --bg-color: #f0f4f8;
             --card-bg: #ffffff;
             --primary: #3b82f6;
             --accent: #f59e0b;
             --text: #1f2937;
+            --heading: #1e3a8a;
+            --muted: #475569;
+            --border: #cbd5e1;
+            --border-strong: #94a3b8;
+            --instructions-bg: #e0f2fe;
+            --dropzone-bg: #f8fafc;
+            --dropzone-hover: #dbeafe;
+            --item-bg: #e5e7eb;
+            --item-border: #6b7280;
+            --img-bg: #ffffff;
+            --phrase-bar-bg: #e5e7eb;
+            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+          }
+
+          @media (prefers-color-scheme: dark) {
+            :root {
+              color-scheme: dark;
+              --bg-color: #0f172a;
+              --card-bg: #1e293b;
+              --primary: #60a5fa;
+              --accent: #fbbf24;
+              --text: #e2e8f0;
+              --heading: #93c5fd;
+              --muted: #94a3b8;
+              --border: #334155;
+              --border-strong: #475569;
+              --instructions-bg: #172a44;
+              --dropzone-bg: #16233a;
+              --dropzone-hover: #1d3a5f;
+              --item-bg: #1e293b;
+              --item-border: #64748b;
+              --img-bg: #f8fafc;
+              --phrase-bar-bg: #1e293b;
+              --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.45);
+            }
           }
 
           body {
@@ -19,6 +55,8 @@
             color: var(--text);
             margin: 0;
             padding: 20px;
+            min-height: 100vh;
+            overflow-x: hidden;
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -26,16 +64,21 @@
 
           h1 {
             margin-bottom: 5px;
-            color: #1e3a8a;
+            color: var(--heading);
+            font-size: clamp(1.5rem, 4vw, 2.2rem);
+            text-align: center;
           }
 
           .instructions {
             margin-bottom: 20px;
-            font-size: 1.1rem;
-            background: #e0f2fe;
+            max-width: 800px;
+            font-size: clamp(0.95rem, 0.5vw + 0.8rem, 1.1rem);
+            background: var(--instructions-bg);
+            color: var(--text);
             padding: 10px 20px;
             border-radius: 8px;
             border-left: 5px solid var(--primary);
+            text-align: center;
           }
 
           /* Grid Layout */
@@ -50,7 +93,7 @@
 
           .spot-card {
             background: var(--card-bg);
-            border: 3px solid #cbd5e1;
+            border: 3px solid var(--border);
             border-radius: 12px;
             height: 220px;
             position: relative;
@@ -59,31 +102,32 @@
             align-items: center;
             justify-content: space-between;
             padding: 15px;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            box-shadow: var(--shadow);
             user-select: none;
           }
 
           .spot-title {
             font-weight: bold;
-            font-size: 1.2rem;
-            color: #475569;
+            font-size: clamp(1rem, 1vw + 0.5rem, 1.2rem);
+            color: var(--muted);
+            text-align: center;
           }
 
           .drop-zone {
             width: 100%;
             height: 120px;
-            border: 2px dashed #94a3b8;
+            border: 2px dashed var(--border-strong);
             border-radius: 8px;
             display: flex;
             align-items: center;
             justify-content: center;
             gap: 10px;
-            background-color: #f8fafc;
+            background-color: var(--dropzone-bg);
             transition: background-color 0.2s;
           }
 
           .drop-zone.drag-over {
-            background-color: #dbeafe;
+            background-color: var(--dropzone-hover);
             border-color: var(--primary);
           }
 
@@ -94,14 +138,14 @@
             padding: 15px;
             width: 100%;
             max-width: 800px;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            box-shadow: var(--shadow);
             margin-bottom: 20px;
           }
 
           .palette-title {
             font-weight: bold;
             margin-bottom: 10px;
-            color: #334155;
+            color: var(--muted);
           }
 
           .item-container {
@@ -116,11 +160,12 @@
             border-radius: 5px;
             font-weight: bold;
             cursor: grab;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
             display: flex;
             align-items: center;
             gap: 6px;
             font-size: 0.95rem;
+            -webkit-tap-highlight-color: transparent;
           }
 
           .draggable-item:active {
@@ -129,9 +174,9 @@
 
           /* Specific Item Styling */
           .animal {
-            background-color: #e5e7eb;
-            color: #000;
-            border: 1px solid #6b7280;
+            background-color: var(--item-bg);
+            color: var(--text);
+            border: 1px solid var(--item-border);
             width: 96px;
             height: 84px;
             flex-direction: column;
@@ -147,13 +192,13 @@
             height: 48px;
             object-fit: cover;
             border-radius: 50%;
-            background-color: #fff;
-            border: 1px solid #6b7280;
+            background-color: var(--img-bg);
+            border: 1px solid var(--item-border);
             flex-shrink: 0;
           }
 
           .animal .animal-name {
-            color: #000;
+            color: var(--text);
             font-weight: bold;
             font-size: 0.85rem;
             line-height: 1;
@@ -213,9 +258,9 @@
           .phrase-bar {
             width: 100%;
             max-width: 800px;
-            background: #e5e7eb;
-            color: #1f2937;
-            border: 2px solid #1f2937;
+            background: var(--phrase-bar-bg);
+            color: var(--text);
+            border: 2px solid var(--border-strong);
             padding: 15px;
             border-radius: 12px;
             display: flex;
@@ -225,16 +270,52 @@
           }
 
           .phrase-pill {
-            background: #f9fafb;
+            background: var(--card-bg);
+            color: var(--text);
             padding: 6px 12px;
             border-radius: 6px;
-            font-size: 0.9rem;
+            font-size: clamp(0.8rem, 0.5vw + 0.6rem, 0.9rem);
             border-left: 3px solid var(--accent);
+          }
+
+          /* Responsive: small screens */
+          @media (max-width: 640px) {
+            body {
+              padding: 12px;
+            }
+            .instructions {
+              padding: 10px 14px;
+            }
+            .grid-container {
+              grid-template-columns: 1fr;
+              gap: 14px;
+            }
+            .spot-card {
+              height: auto;
+              min-height: 170px;
+            }
+            .animal,
+            .brick {
+              width: 84px;
+              height: 76px;
+            }
+            .animal img {
+              width: 40px;
+              height: 40px;
+            }
+            .brick::before {
+              width: 40px;
+              height: 40px;
+            }
+            .palette,
+            .phrase-bar {
+              padding: 12px;
+            }
           }
     </style>
   </head>
   <body>
-    <h1>Zoo Classroom Mystery</h1>
+    <h1>Classroom Mystery</h1>
     <div class="instructions">
       Drag elements into the classroom spots, or ask the student to command you!
     </div>
@@ -242,22 +323,22 @@
     <!-- Classroom Spots Grid -->
     <div class="grid-container">
       <div class="spot-card">
-        <div class="spot-title">Spot 1: Teacher's Desk 🪑</div>
+        <div class="spot-title">Colours</div>
         <div class="drop-zone" id="spot-1"></div>
       </div>
 
       <div class="spot-card">
-        <div class="spot-title">Spot 2: Bookshelf 📚</div>
+        <div class="spot-title">Animals</div>
         <div class="drop-zone" id="spot-2"></div>
       </div>
 
       <div class="spot-card">
-        <div class="spot-title">Spot 3: Blue Rug 🧹</div>
+        <div class="spot-title">Toys</div>
         <div class="drop-zone" id="spot-3"></div>
       </div>
 
       <div class="spot-card">
-        <div class="spot-title">Spot 4: Toy Box 📦</div>
+        <div class="spot-title">Mystery</div>
         <div class="drop-zone" id="spot-4"></div>
       </div>
     </div>
@@ -265,7 +346,7 @@
     <!-- Draggable Items Palette -->
     <div class="palette">
       <div class="palette-title">
-        Items Inventory (Drag & Drop or reset to palette)
+        Toy Box
       </div>
       <div class="item-container" id="inventory">
         <!-- Animals -->
@@ -292,6 +373,32 @@
             src="https://res.cloudinary.com/dp455m4rk/image/upload/c_crop,w_469,h_384,x_469,y_384/r_max/v1786050302/A-F_yhrs9s.png"
             alt="Elephant"
           /><span class="animal-name">Elephant</span>
+        </div>
+
+        <!-- Toys -->
+        <div class="draggable-item animal" draggable="true" id="car">
+          <img
+            src="https://res.cloudinary.com/dqwm4pdbz/image/upload/c_crop,w_421,h_424,x_842,y_0/r_max/bo_5px_solid_white/v1786599929/260813_toys_01_txjh3y.png"
+            alt="Car"
+          /><span class="animal-name">Car</span>
+        </div>
+        <div class="draggable-item animal" draggable="true" id="bike">
+          <img
+            src="https://res.cloudinary.com/dqwm4pdbz/image/upload/c_crop,w_421,h_424,x_421,y_424/r_max/bo_5px_solid_white/v1786599929/260813_toys_01_txjh3y.png"
+            alt="Bike"
+          /><span class="animal-name">Bike</span>
+        </div>
+        <div class="draggable-item animal" draggable="true" id="robot">
+          <img
+            src="https://res.cloudinary.com/dqwm4pdbz/image/upload/c_crop,w_421,h_424,x_0,y_424/r_max/bo_5px_solid_white/v1786599929/260813_toys_01_txjh3y.png"
+            alt="Robot"
+          /><span class="animal-name">Robot</span>
+        </div>
+        <div class="draggable-item animal" draggable="true" id="kite">
+          <img
+            src="https://res.cloudinary.com/dqwm4pdbz/image/upload/c_crop,w_421,h_424,x_842,y_424/r_max/bo_5px_solid_white/v1786599929/260813_toys_01_txjh3y.png"
+            alt="Kite"
+          /><span class="animal-name">Kite</span>
         </div>
 
         <!-- LEGO Duplo Bricks -->
@@ -328,7 +435,7 @@
 
     <!-- Target Phrases Cheat Sheet -->
     <div class="phrase-bar">
-      <div class="phrase-pill">The <b>[Item]</b> is on / in / under...</div>
+      <div class="phrase-pill">Move <b>Colours Bricks</b> to Colours</div>
       <div class="phrase-pill">Give me the <b>[Item]</b></div>
       <div class="phrase-pill">Take the <b>[Item]</b></div>
       <div class="phrase-pill">Put <b>[Item]</b> on / in / under...</div>
