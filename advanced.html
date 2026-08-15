@@ -3609,7 +3609,7 @@
           <div class="stage">
             <button
               id="translateBtn"
-              class="clipcard"
+              class="miniChip"
               onclick="translateClipboard()"
             >
               <svg
@@ -3631,7 +3631,7 @@
                 <path d="m22 22-5-10-5 10" />
                 <path d="M14 18h6" />
               </svg>
-              Translate
+              TRANSLATE
             </button>
             <div class="panel">
               <div class="cast">
@@ -3639,7 +3639,7 @@
                   <div class="translateBox left" id="srcLangBox">
                     <span class="translatePlaceholder">🔤</span>
                   </div>
-                  <button class="icardst" onclick="speakTranslate('en')">
+                  <button class="miniChip" onclick="speakTranslate('en')">
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
                       width="1.2em"
@@ -3655,14 +3655,14 @@
                       <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" />
                       <path d="M15.54 8.46a5 5 0 0 1 0 7.07" />
                     </svg>
-                    <span class="icardtext">ENGLISH</span>
+                    <span>ENGLISH</span>
                   </button>
                 </figure>
                 <figure class="castMember">
                   <div class="translateBox left" id="zhLangBox">
                     <span class="translatePlaceholder">中文</span>
                   </div>
-                  <button class="icardst" onclick="speakTranslate('zh')">
+                  <button class="miniChip" onclick="speakTranslate('zh')">
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
                       width="1.2em"
@@ -3678,11 +3678,36 @@
                       <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" />
                       <path d="M15.54 8.46a5 5 0 0 1 0 7.07" />
                     </svg>
-                    <span class="icardtext">中文</span>
+                    <span>中文</span>
                   </button>
                 </figure>
               </div>
               <div class="clipList" id="clipList"></div>
+              <div class="miniRow">
+                <button
+                  id="downloadBtn"
+                  class="miniChip"
+                  onclick="downloadClipList()"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="1.2em"
+                    height="1.2em"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    style="flex: none"
+                  >
+                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                    <polyline points="7 10 12 15 17 10" />
+                    <line x1="12" x2="12" y1="15" y2="3" />
+                  </svg>
+                  DOWNLOAD
+                </button>
+              </div>
             </div>
           </div>
         </div>
@@ -4462,10 +4487,46 @@
         txt.textContent = preview;
         b.appendChild(tm);
         b.appendChild(txt);
+        b._en = en;
+        b._zh = zh;
+        b._time = time;
         b.onclick = function () {
           restoreClip(en, zh);
         };
         clipList.insertBefore(b, clipList.firstChild);
+      }
+
+      function downloadClipList() {
+        if (!clipList || !clipList.children.length) {
+          toast("No clips to download yet.");
+          return;
+        }
+        var lines = [];
+        var items = clipList.children;
+        for (var i = 0; i < items.length; i++) {
+          var b = items[i];
+          var time = b._time || "";
+          var en = b._en || "";
+          var zh = b._zh || "";
+          if (i > 0) lines.push("");
+          lines.push("[" + time + "] " + en);
+          lines.push("  " + zh);
+        }
+        var content = lines.join("\r\n");
+        var blob = new Blob([content], {
+          type: "text/plain;charset=utf-8",
+        });
+        var url = URL.createObjectURL(blob);
+        var a = document.createElement("a");
+        a.href = url;
+        a.download = "cliplist.txt";
+        document.body.appendChild(a);
+        a.click();
+        setTimeout(function () {
+          document.body.removeChild(a);
+          URL.revokeObjectURL(url);
+        }, 1000);
+        toast("Clip list downloaded.");
       }
 
       function restoreClip(en, zh) {

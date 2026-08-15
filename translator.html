@@ -1,0 +1,811 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no"
+    />
+    <title>English Explorer — Translator</title>
+    <meta name="description" content="English Explorer Translator tool" />
+    <link
+      rel="icon"
+      type="image/png"
+      href="https://res.cloudinary.com/dp455m4rk/image/upload/v1785849408/sam_favipreview_v2i7l2.png"
+    />
+    <style>
+      :root {
+        --bg: #faf7f2;
+        --ink: #14213d;
+        --muted: #60708d;
+        --accent: #4A6B5D;
+        --accent2: #F4F0EA;
+        --good: #19a974;
+        --bad: #e05252;
+        --mediocre: #f39c12;
+        --panel: #fcfcfc;
+        --shadow: 0 18px 50px rgba(20, 33, 61, 0.14);
+      }
+      * {
+        box-sizing: border-box;
+      }
+      html,
+      body {
+        margin: 0;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+        background: var(--bg);
+        font-family: Arial, Helvetica, sans-serif;
+        color: var(--ink);
+        touch-action: manipulation;
+      }
+      button {
+        font: inherit;
+        border: 0;
+        cursor: pointer;
+      }
+      #app {
+        width: 100%;
+        height: 100vh;
+        height: 100dvh;
+        position: relative;
+        overflow: hidden;
+      }
+      .screen {
+        position: absolute;
+        inset: 0;
+        background: var(--bg);
+        display: flex;
+        align-items: flex-start;
+        justify-content: center;
+        padding: clamp(60px, 8.5vh, 80px) clamp(10px, 2vw, 24px)
+          clamp(10px, 2vh, 24px);
+      }
+      .content {
+        width: min(1400px, 100%);
+        max-height: 100%;
+        position: relative;
+        text-align: center;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: flex-start;
+        gap: 1.4em;
+        padding-bottom: clamp(60px, 8vh, 80px);
+        overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
+        overscroll-behavior: contain;
+        scrollbar-width: none;
+      }
+      .content::-webkit-scrollbar {
+        display: none;
+      }
+      .pageTitle {
+        font-size: clamp(1.8rem, 3.5vw, 2.8rem);
+        font-weight: 900;
+        letter-spacing: -0.02em;
+        margin: 0.15em 0;
+      }
+      .stage {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 1.4em;
+        width: 100%;
+      }
+      .panel {
+        position: relative;
+        background: var(--panel);
+        border-radius: 32px;
+        padding: clamp(1.2rem, 2.2vw, 2.6rem);
+        box-shadow: var(--shadow);
+        width: 100%;
+        max-width: 900px;
+      }
+      .cast {
+        display: flex;
+        justify-content: center;
+        align-items: flex-end;
+        gap: clamp(8px, 1.5vw, 20px);
+        margin: 0;
+        flex-wrap: wrap;
+      }
+      .castMember {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 0.5em;
+        margin: 0;
+      }
+      .translateBox {
+        width: min(34vw, 400px);
+        min-height: 38vh;
+        max-height: 60vh;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        background: var(--panel);
+        border-radius: 24px;
+        border: 2pt solid var(--accent2);
+        box-shadow: var(--shadow);
+        padding: 1.2em;
+        font-size: clamp(1.3rem, 2.2vw, 2.2rem);
+        font-weight: 600;
+        color: var(--ink);
+        overflow-y: auto;
+        word-break: break-word;
+        white-space: pre-wrap;
+      }
+      .translateBox .translatePlaceholder {
+        font-size: clamp(2.2rem, 4.5vw, 3.6rem);
+        opacity: 0.3;
+      }
+      .translateBox.filled {
+        border-color: var(--accent);
+      }
+      .translateBox.left {
+        align-items: flex-start;
+        text-align: left;
+      }
+      .miniRow {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: clamp(8px, 1.2vw, 16px);
+        margin-top: 1em;
+      }
+      .miniChip {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5em;
+        background: #eef1f7;
+        color: var(--ink);
+        border: 2px solid rgba(96, 112, 141, 0.35);
+        border-radius: 999px;
+        padding: 0.5em 1.1em;
+        font-size: clamp(1rem, 1.7vw, 1.5rem);
+        font-weight: 800;
+        transition: 0.15s transform;
+      }
+      .miniChip:active {
+        transform: scale(0.95);
+      }
+      button:focus-visible {
+        outline: 3px solid var(--accent2);
+        outline-offset: 3px;
+      }
+      @media (hover: hover) {
+        button:hover {
+          transform: translateY(-2px);
+        }
+      }
+      .clipList {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5em;
+        width: 100%;
+        max-height: 24vh;
+        overflow-y: auto;
+        padding-top: 1em;
+        margin-top: 1em;
+        border-top: 2px solid rgba(96, 112, 141, 0.25);
+        scrollbar-width: none;
+      }
+      .clipList::-webkit-scrollbar {
+        display: none;
+      }
+      .clip {
+        width: 100%;
+        display: flex;
+        align-items: center;
+        gap: 0.6em;
+        background: #eef1f7;
+        color: var(--ink);
+        border: 1px solid rgba(96, 112, 141, 0.3);
+        border-radius: 12px;
+        padding: 0.5em 0.9em;
+        font-size: clamp(0.85rem, 1.3vw, 1.15rem);
+        text-align: left;
+        transition: 0.15s transform;
+      }
+      .clip:active {
+        transform: scale(0.97);
+      }
+      .clip time {
+        color: var(--muted);
+        white-space: nowrap;
+        font-variant-numeric: tabular-nums;
+      }
+      .clip .clipText {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        min-width: 0;
+      }
+      #toast {
+        position: absolute;
+        left: 50%;
+        top: 12%;
+        transform: translateX(-50%);
+        z-index: 100;
+        background: var(--ink);
+        color: white;
+        padding: 0.8em 1.5em;
+        border-radius: 999px;
+        font-size: 1.4rem;
+        opacity: 0;
+        pointer-events: none;
+        transition: 0.25s;
+      }
+      #toast.show {
+        opacity: 1;
+      }
+      #inputModal {
+        position: absolute;
+        inset: 0;
+        z-index: 90;
+        display: none;
+        align-items: center;
+        justify-content: center;
+        background: rgba(20, 33, 61, 0.55);
+      }
+      #inputModal.show {
+        display: flex;
+      }
+      .inputBox {
+        width: min(86vw, 560px);
+        background: var(--panel);
+        border-radius: 24px;
+        border: 2pt solid var(--accent2);
+        box-shadow: var(--shadow);
+        padding: 1.4em;
+        display: flex;
+        flex-direction: column;
+        gap: 1em;
+      }
+      .inputBox h2 {
+        margin: 0;
+        font-size: clamp(1.2rem, 2.4vw, 1.8rem);
+        text-align: center;
+      }
+      .inputBox textarea {
+        width: 100%;
+        min-height: 120px;
+        font: inherit;
+        font-size: clamp(1.1rem, 2vw, 1.6rem);
+        color: var(--ink);
+        background: #eef1f7;
+        border: 2px solid #c3cbd9;
+        border-radius: 14px;
+        padding: 0.7em;
+        resize: vertical;
+      }
+      .inputBox textarea:focus-visible {
+        outline: 3px solid var(--accent2);
+        outline-offset: 2px;
+      }
+      .inputBtns {
+        display: flex;
+        justify-content: center;
+        gap: 1rem;
+      }
+      .inputBtns button {
+        min-width: 120px;
+        min-height: 56px;
+        border-radius: 999px;
+        font-size: clamp(1.1rem, 2vw, 1.6rem);
+        font-weight: 900;
+      }
+      .inputBtns .okBtn {
+        background: var(--accent);
+        color: var(--accent2);
+      }
+      .inputBtns .cancelBtn {
+        background: #eef1f7;
+        color: var(--ink);
+      }
+      @media (max-aspect-ratio: 1/1) {
+        .translateBox {
+          width: min(84vw, 420px);
+          min-height: 24vh;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div id="app">
+      <div id="toast"></div>
+
+      <div id="inputModal">
+        <div class="inputBox">
+          <h2 id="inputTitle">Type or paste your input</h2>
+          <textarea
+            id="inputField"
+            placeholder="Type here or paste from clipboard…"
+          ></textarea>
+          <div class="inputBtns">
+            <button class="cancelBtn" onclick="closeInputModal()">
+              Cancel
+            </button>
+            <button class="okBtn" onclick="submitInputModal()">OK</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="screen">
+        <div class="content">
+          <h1 class="pageTitle">Translator</h1>
+          <div class="stage">
+            <button
+              id="translateBtn"
+              class="miniChip"
+              onclick="translateClipboard()"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="1.2em"
+                height="1.2em"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                style="vertical-align: -0.2em"
+              >
+                <path d="m5 8 6 6" />
+                <path d="m4 14 6-6 2-3" />
+                <path d="M2 5h12" />
+                <path d="M7 2h1" />
+                <path d="m22 22-5-10-5 10" />
+                <path d="M14 18h6" />
+              </svg>
+              TRANSLATE
+            </button>
+            <div class="panel">
+              <div class="cast">
+                <figure class="castMember">
+                  <div class="translateBox left" id="srcLangBox">
+                    <span class="translatePlaceholder">🔤</span>
+                  </div>
+                  <button class="miniChip" onclick="speakTranslate('en')">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="1.2em"
+                      height="1.2em"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      style="vertical-align: -0.2em"
+                    >
+                      <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" />
+                      <path d="M15.54 8.46a5 5 0 0 1 0 7.07" />
+                    </svg>
+                    <span>ENGLISH</span>
+                  </button>
+                </figure>
+                <figure class="castMember">
+                  <div class="translateBox left" id="zhLangBox">
+                    <span class="translatePlaceholder">中文</span>
+                  </div>
+                  <button class="miniChip" onclick="speakTranslate('zh')">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="1.2em"
+                      height="1.2em"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      style="vertical-align: -0.2em"
+                    >
+                      <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" />
+                      <path d="M15.54 8.46a5 5 0 0 1 0 7.07" />
+                    </svg>
+                    <span>中文</span>
+                  </button>
+                </figure>
+              </div>
+              <div class="clipList" id="clipList"></div>
+              <div class="miniRow">
+                <button
+                  id="downloadBtn"
+                  class="miniChip"
+                  onclick="downloadClipList()"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="1.2em"
+                    height="1.2em"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    style="flex: none"
+                  >
+                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                    <polyline points="7 10 12 15 17 10" />
+                    <line x1="12" x2="12" y1="15" y2="3" />
+                  </svg>
+                  DOWNLOAD
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      var soundOn = true;
+      var synth =
+        window.speechSynthesis ||
+        window.webkitSpeechSynthesis ||
+        window.mozSpeechSynthesis ||
+        null;
+      var altVoice = null;
+      var altVoice2 = null;
+
+      function setVoice() {
+        if (!synth) return;
+        var voices = synth.getVoices();
+        if (!voices || voices.length === 0) return;
+        var preferred = null;
+        var fallback = null;
+        for (var i = 0; i < voices.length; i++) {
+          var v = voices[i];
+          if (!v || !v.lang) continue;
+          if (v.lang.toLowerCase().indexOf("en") !== 0) continue;
+          if (!fallback) fallback = v;
+          if (v.lang.toLowerCase().indexOf("en-gb") === 0) {
+            preferred = v;
+            break;
+          }
+          if (v.name && v.name.indexOf("Zira") >= 0) preferred = v;
+        }
+        altVoice = preferred || fallback;
+        altVoice2 = null;
+        for (var j = 0; j < voices.length; j++) {
+          var w = voices[j];
+          if (!w || !w.lang) continue;
+          if (w.lang.toLowerCase().indexOf("en") !== 0) continue;
+          if (w === altVoice) continue;
+          altVoice2 = w;
+          break;
+        }
+        if (!altVoice2) altVoice2 = altVoice;
+      }
+      if (synth) {
+        setVoice();
+        if (typeof synth.addEventListener === "function") {
+          synth.addEventListener("voiceschanged", setVoice);
+        }
+        var voiceTimer = window.setInterval(function () {
+          if (altVoice) {
+            window.clearInterval(voiceTimer);
+          }
+          setVoice();
+        }, 500);
+        window.setTimeout(function () {
+          window.clearInterval(voiceTimer);
+        }, 4000);
+      }
+
+      var ICON_CLIPBOARD_TYPE =
+        '<svg xmlns="http://www.w3.org/2000/svg" width="1.1em" height="1.1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex:none"><rect width="8" height="4" x="8" y="2" rx="1" ry="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><path d="M9 12v-1h6v1"/><path d="M11 17h2"/><path d="M12 11v6"/></svg>';
+
+      var revealNextCard = null;
+      var currentUtterance = null;
+      function flushReveal() {
+        revealNextCard = null;
+      }
+
+      function cancelSpeech() {
+        if (synth && typeof synth.cancel === "function") {
+          try {
+            synth.cancel();
+          } catch (e) {}
+        }
+      }
+
+      function say(text, voice) {
+        if (!soundOn) return;
+        if (window.tizen && window.tizen.tts) {
+          try {
+            tizen.tts.speak(String(text), {
+              locale: "en-US",
+              rate: 0.85,
+              pitch: 1.0,
+              type: "TTS_TYPE_SCREEN_READER",
+            }, {
+              onfinish: function () {
+                flushReveal();
+              }
+            });
+            return;
+          } catch (e) {}
+        }
+        if (synth && typeof SpeechSynthesisUtterance !== "undefined") {
+          cancelSpeech();
+          var u = new SpeechSynthesisUtterance(text);
+          u.lang = "en-US";
+          u.rate = 0.82;
+          u.pitch = 1.08;
+          if (voice) u.voice = voice;
+          else if (altVoice) u.voice = altVoice;
+          currentUtterance = u;
+          u.onend = function () {
+            if (u === currentUtterance) flushReveal();
+          };
+          synth.speak(u);
+        }
+      }
+
+      function toast(t) {
+        var el = document.getElementById("toast");
+        el.textContent = t;
+        el.classList.add("show");
+        setTimeout(function () {
+          el.classList.remove("show");
+        }, 1100);
+      }
+
+      var inputCallback = null;
+
+      function openInputModal(title, cb) {
+        inputCallback = cb || null;
+        var t = document.getElementById("inputTitle");
+        if (t) t.textContent = title;
+        var f = document.getElementById("inputField");
+        if (f) {
+          f.value = "";
+          f.focus();
+        }
+        document.getElementById("inputModal").classList.add("show");
+      }
+
+      function closeInputModal() {
+        document.getElementById("inputModal").classList.remove("show");
+        inputCallback = null;
+      }
+
+      function submitInputModal() {
+        var f = document.getElementById("inputField");
+        var val = f ? f.value.trim() : "";
+        document.getElementById("inputModal").classList.remove("show");
+        if (inputCallback) {
+          var cb = inputCallback;
+          inputCallback = null;
+          cb(val);
+        }
+      }
+
+      function translateClipboard() {
+        var run = function (txt) {
+          if (txt) doTranslate(txt);
+        };
+        if (
+          navigator.clipboard &&
+          typeof navigator.clipboard.readText === "function"
+        ) {
+          navigator.clipboard
+            .readText()
+            .then(function (txt) {
+              txt = String(txt || "").trim();
+              if (!txt) {
+                openInputModal(
+                  "Clipboard is empty. Type or paste the text to translate:",
+                  run,
+                );
+                return;
+              }
+              run(txt);
+            })
+            .catch(function () {
+              openInputModal(
+                "Clipboard is empty. Type or paste the text to translate:",
+                run,
+              );
+            });
+        } else {
+          openInputModal(
+            "Clipboard is empty. Type or paste the text to translate:",
+            run,
+          );
+        }
+      }
+
+      var lastSrcText = "";
+      var lastZhText = "";
+
+      function equalizeBoxes() {
+        var a = document.getElementById("srcLangBox");
+        var b = document.getElementById("zhLangBox");
+        if (!a || !b) return;
+        a.style.height = "";
+        b.style.height = "";
+        var h = Math.max(a.scrollHeight, b.scrollHeight);
+        a.style.height = h + "px";
+        b.style.height = h + "px";
+      }
+
+      function doTranslate(text) {
+        lastSrcText = text;
+        var srcBox = document.getElementById("srcLangBox");
+        var zhBox = document.getElementById("zhLangBox");
+        if (srcBox) {
+          srcBox.textContent = text;
+          srcBox.classList.add("filled");
+        }
+        if (zhBox) {
+          zhBox.textContent = "…";
+          zhBox.classList.add("filled");
+        }
+        equalizeBoxes();
+        var url =
+          "https://translate.googleapis.com/translate_a/single" +
+          "?client=gtx&sl=auto&tl=zh-CN&dt=t&q=" +
+          encodeURIComponent(text);
+        if (typeof fetch !== "function") {
+          if (zhBox) zhBox.textContent = "Translation failed";
+          equalizeBoxes();
+          return;
+        }
+        fetch(url)
+          .then(function (r) {
+            return r.json();
+          })
+          .then(function (data) {
+            var translated = "";
+            try {
+              var segs = data[0];
+              for (var i = 0; i < segs.length; i++) {
+                translated += segs[i][0] || "";
+              }
+            } catch (e) {}
+            if (!translated) translated = text;
+            lastZhText = translated;
+            if (zhBox) zhBox.textContent = translated;
+            equalizeBoxes();
+            addClip(text, translated);
+          })
+          .catch(function () {
+            if (zhBox) zhBox.textContent = "Translation failed";
+            equalizeBoxes();
+          });
+      }
+
+      function speakTranslate(lang) {
+        if (lang === "zh") speakChinese(lastZhText);
+        else say(lastSrcText);
+      }
+
+      var clipList = document.getElementById("clipList");
+      var lastClipKey = "";
+
+      function addClip(en, zh) {
+        if (!clipList) return;
+        var key = en + "|" + zh;
+        if (key === lastClipKey) return;
+        lastClipKey = key;
+        var now = new Date();
+        var time = now.toLocaleTimeString([], {
+          hour: "2-digit",
+          minute: "2-digit",
+          second: "2-digit",
+        });
+        var words = String(en).trim().split(/\s+/);
+        var preview = words.slice(0, 6).join(" ");
+        if (preview.length > 60) preview = preview.slice(0, 60) + "…";
+        var b = document.createElement("button");
+        b.className = "clip";
+        b.type = "button";
+        b.innerHTML = ICON_CLIPBOARD_TYPE;
+        var tm = document.createElement("time");
+        tm.textContent = time;
+        var txt = document.createElement("span");
+        txt.className = "clipText";
+        txt.textContent = preview;
+        b.appendChild(tm);
+        b.appendChild(txt);
+        b._en = en;
+        b._zh = zh;
+        b._time = time;
+        b.onclick = function () {
+          restoreClip(en, zh);
+        };
+        clipList.insertBefore(b, clipList.firstChild);
+      }
+
+      function restoreClip(en, zh) {
+        lastSrcText = en;
+        lastZhText = zh;
+        var srcBox = document.getElementById("srcLangBox");
+        var zhBox = document.getElementById("zhLangBox");
+        if (srcBox) {
+          srcBox.textContent = en;
+          srcBox.classList.add("filled");
+        }
+        if (zhBox) {
+          zhBox.textContent = zh;
+          zhBox.classList.add("filled");
+        }
+        equalizeBoxes();
+      }
+
+      function downloadClipList() {
+        if (!clipList || !clipList.children.length) {
+          toast("No clips to download yet.");
+          return;
+        }
+        var lines = [];
+        var items = clipList.children;
+        for (var i = 0; i < items.length; i++) {
+          var b = items[i];
+          var time = b._time || "";
+          var en = b._en || "";
+          var zh = b._zh || "";
+          if (i > 0) lines.push("");
+          lines.push("[" + time + "] " + en);
+          lines.push("  " + zh);
+        }
+        var content = lines.join("\r\n");
+        var blob = new Blob([content], {
+          type: "text/plain;charset=utf-8",
+        });
+        var url = URL.createObjectURL(blob);
+        var a = document.createElement("a");
+        a.href = url;
+        a.download = "cliplist.txt";
+        document.body.appendChild(a);
+        a.click();
+        setTimeout(function () {
+          document.body.removeChild(a);
+          URL.revokeObjectURL(url);
+        }, 1000);
+        toast("Clip list downloaded.");
+      }
+
+      function speakChinese(text) {
+        if (!soundOn) return;
+        if (window.tizen && window.tizen.tts) {
+          try {
+            tizen.tts.speak(String(text), {
+              locale: "zh-CN",
+              rate: 0.85,
+              pitch: 1.0,
+              type: "TTS_TYPE_SCREEN_READER",
+            });
+            return;
+          } catch (e) {}
+        }
+        if (synth && typeof SpeechSynthesisUtterance !== "undefined") {
+          cancelSpeech();
+          var u = new SpeechSynthesisUtterance(text);
+          u.lang = "zh-CN";
+          u.rate = 0.9;
+          u.pitch = 1.0;
+          var voices = synth.getVoices();
+          for (var i = 0; i < voices.length; i++) {
+            var v = voices[i];
+            if (v && v.lang && v.lang.toLowerCase().indexOf("zh") === 0) {
+              u.voice = v;
+              break;
+            }
+          }
+          synth.speak(u);
+        }
+      }
+    </script>
+  </body>
+</html>
