@@ -201,11 +201,13 @@
             font-weight: bold;
             margin-bottom: 10px;
             color: var(--muted);
+            text-align: center;
           }
 
           .item-container {
             display: flex;
             flex-wrap: wrap;
+            justify-content: center;
             gap: 12px;
             min-height: 60px;
           }
@@ -222,17 +224,31 @@
             font-size: 0.95rem;
             -webkit-tap-highlight-color: transparent;
             -webkit-touch-callout: none;
-            touch-action: manipulation;
+            -webkit-user-select: none;
+            user-select: none;
+            touch-action: none;
           }
 
-          .draggable-item.selected {
-            outline: 3px solid var(--primary);
-            outline-offset: 2px;
-            transform: scale(1.04);
+          .draggable-item.dragging-original {
+            opacity: 0.35;
+          }
+
+          .draggable-item.ghost {
+            position: fixed;
+            z-index: 1000;
+            pointer-events: none;
+            margin: 0;
+            transform: scale(1.05);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.25);
           }
 
           .draggable-item:active {
             cursor: grabbing;
+          }
+
+          img {
+            -webkit-user-drag: none;
+            pointer-events: none;
           }
 
           /* Specific Item Styling */
@@ -343,7 +359,14 @@
 
           /* Responsive: small screens */
           @media (max-width: 640px) {
-            body {
+          html,
+          body {
+            -webkit-touch-callout: none;
+            -webkit-user-select: none;
+            user-select: none;
+          }
+
+          body {
               padding: 12px;
             }
             .instructions {
@@ -410,29 +433,29 @@
     <!-- Draggable Items Palette -->
     <div class="palette">
       <div class="palette-title">
-        Toy Box
+        Somewhere
       </div>
       <div class="item-container" id="inventory">
         <!-- Animals -->
-        <div class="draggable-item animal" draggable="true" id="bee">
+        <div class="draggable-item animal" id="bee">
           <img
             src="https://res.cloudinary.com/dp455m4rk/image/upload/c_crop,w_469,h_384,x_469,y_0/v1786050302/A-F_yhrs9s.png"
             alt="Bee"
           /><span class="animal-name">Bee</span>
         </div>
-        <div class="draggable-item animal" draggable="true" id="bear">
+        <div class="draggable-item animal" id="bear">
           <img
             src="https://res.cloudinary.com/dqwm4pdbz/image/upload/c_crop,w_421,h_424,x_842,y_0/r_max/bo_5px_solid_white/v1786599929/260813_toys_01_txjh3y.png"
             alt="Bear"
           /><span class="animal-name">Bear</span>
         </div>
-        <div class="draggable-item animal" draggable="true" id="dog">
+        <div class="draggable-item animal" id="dog">
           <img
             src="https://res.cloudinary.com/dp455m4rk/image/upload/c_crop,w_469,h_384,x_0,y_384/r_max/v1786050302/A-F_yhrs9s.png"
             alt="Dog"
           /><span class="animal-name">Dog</span>
         </div>
-        <div class="draggable-item animal" draggable="true" id="elephant">
+        <div class="draggable-item animal" id="elephant">
           <img
             src="https://res.cloudinary.com/dp455m4rk/image/upload/c_crop,w_469,h_384,x_469,y_384/r_max/v1786050302/A-F_yhrs9s.png"
             alt="Elephant"
@@ -440,25 +463,25 @@
         </div>
 
         <!-- Toys -->
-        <div class="draggable-item animal" draggable="true" id="car">
+        <div class="draggable-item animal" id="car">
           <img
             src="https://res.cloudinary.com/dqwm4pdbz/image/upload/c_crop,w_421,h_424,x_0,y_0/r_max/bo_5px_solid_white/v1786599929/260813_toys_01_txjh3y.png"
             alt="Car"
           /><span class="animal-name">Car</span>
         </div>
-        <div class="draggable-item animal" draggable="true" id="bike">
+        <div class="draggable-item animal" id="bike">
           <img
             src="https://res.cloudinary.com/dqwm4pdbz/image/upload/c_crop,w_421,h_424,x_421,y_424/r_max/bo_5px_solid_white/v1786599929/260813_toys_01_txjh3y.png"
             alt="Bike"
           /><span class="animal-name">Bike</span>
         </div>
-        <div class="draggable-item animal" draggable="true" id="robot">
+        <div class="draggable-item animal" id="robot">
           <img
             src="https://res.cloudinary.com/dqwm4pdbz/image/upload/c_crop,w_421,h_424,x_0,y_424/r_max/bo_5px_solid_white/v1786599929/260813_toys_01_txjh3y.png"
             alt="Robot"
           /><span class="animal-name">Robot</span>
         </div>
-        <div class="draggable-item animal" draggable="true" id="kite">
+        <div class="draggable-item animal" id="kite">
           <img
             src="https://res.cloudinary.com/dqwm4pdbz/image/upload/c_crop,w_421,h_424,x_842,y_424/r_max/bo_5px_solid_white/v1786599929/260813_toys_01_txjh3y.png"
             alt="Kite"
@@ -468,28 +491,28 @@
         <!-- LEGO Duplo Bricks -->
         <div
           class="draggable-item brick brick-red"
-          draggable="true"
+         
           id="brick-red"
         >
           Red
         </div>
         <div
           class="draggable-item brick brick-yellow"
-          draggable="true"
+         
           id="brick-yellow"
         >
           Yellow
         </div>
         <div
           class="draggable-item brick brick-green"
-          draggable="true"
+         
           id="brick-green"
         >
           Green
         </div>
         <div
           class="draggable-item brick brick-blue"
-          draggable="true"
+         
           id="brick-blue"
         >
           Blue
@@ -537,42 +560,12 @@
         });
       })();
 
-      // Drag and Drop Logic (desktop)
+      // Pointer-based Drag & Drop (works with mouse AND touch; suppresses
+      // native iOS menus / image previews).
       const draggables = document.querySelectorAll(".draggable-item");
       const dropZones = document.querySelectorAll(
         ".drop-zone, .item-container",
       );
-
-      draggables.forEach((draggable) => {
-        draggable.addEventListener("dragstart", () => {
-          draggable.classList.add("dragging");
-        });
-
-        draggable.addEventListener("dragend", () => {
-          draggable.classList.remove("dragging");
-        });
-      });
-
-      dropZones.forEach((zone) => {
-        zone.addEventListener("dragover", (e) => {
-          e.preventDefault();
-          zone.classList.add("drag-over");
-        });
-
-        zone.addEventListener("dragleave", () => {
-          zone.classList.remove("drag-over");
-        });
-
-        zone.addEventListener("drop", (e) => {
-          e.preventDefault();
-          zone.classList.remove("drag-over");
-          const draggable = document.querySelector(".dragging");
-          if (draggable) {
-            zone.appendChild(draggable);
-            checkGoal();
-          }
-        });
-      });
 
       // Goal: all colour bricks placed in the Colours spot (spot-1).
       var colourBrickIds = [
@@ -594,46 +587,80 @@
       }
       checkGoal();
 
-      // Tap fallback for touch devices (iOS Safari has no HTML5 drag-drop):
-      // tap an item to pick it up, then tap a spot (or the Toy Box) to place it.
-      const isTouch =
-        "ontouchstart" in window || navigator.maxTouchPoints > 0;
+      var activeItem = null;
+      var activeGhost = null;
+      var grabOffsetX = 0;
+      var grabOffsetY = 0;
+      var overZone = null;
 
-      if (isTouch) {
-        let selected = null;
-
-        function clearSelected() {
-          if (selected) {
-            selected.classList.remove("selected");
-            selected = null;
-          }
+      function clearOverZone() {
+        if (overZone) {
+          overZone.classList.remove("drag-over");
+          overZone = null;
         }
-
-        draggables.forEach((item) => {
-          item.addEventListener("click", (e) => {
-            e.stopPropagation();
-            if (selected && selected !== item) clearSelected();
-            if (selected === item) {
-              clearSelected();
-            } else {
-              clearSelected();
-              selected = item;
-              item.classList.add("selected");
-            }
-          });
-        });
-
-        dropZones.forEach((zone) => {
-          zone.addEventListener("click", (e) => {
-            if (e.target.closest(".draggable-item")) return;
-            if (selected) {
-              zone.appendChild(selected);
-              clearSelected();
-              checkGoal();
-            }
-          });
-        });
       }
+
+      document.addEventListener("pointerdown", function (e) {
+        if (activeItem) return;
+        if (e.pointerType === "mouse" && e.button !== 0) return;
+        var item = e.target.closest(".draggable-item");
+        if (!item) return;
+        e.preventDefault();
+        activeItem = item;
+        var rect = item.getBoundingClientRect();
+        grabOffsetX = e.clientX - rect.left;
+        grabOffsetY = e.clientY - rect.top;
+        activeGhost = item.cloneNode(true);
+        activeGhost.classList.remove("dragging-original");
+        activeGhost.classList.add("ghost");
+        activeGhost.style.width = rect.width + "px";
+        activeGhost.style.left = e.clientX - grabOffsetX + "px";
+        activeGhost.style.top = e.clientY - grabOffsetY + "px";
+        document.body.appendChild(activeGhost);
+        item.classList.add("dragging-original");
+        if (item.setPointerCapture) {
+          try {
+            item.setPointerCapture(e.pointerId);
+          } catch (err) {}
+        }
+      });
+
+      document.addEventListener("pointermove", function (e) {
+        if (!activeItem) return;
+        e.preventDefault();
+        if (activeGhost) {
+          activeGhost.style.left = e.clientX - grabOffsetX + "px";
+          activeGhost.style.top = e.clientY - grabOffsetY + "px";
+        }
+        var under = document.elementFromPoint(e.clientX, e.clientY);
+        var zone = under
+          ? under.closest(".drop-zone, .item-container")
+          : null;
+        if (zone !== overZone) {
+          clearOverZone();
+          overZone = zone;
+          if (overZone) overZone.classList.add("drag-over");
+        }
+      });
+
+      function endDrag(e) {
+        if (!activeItem) return;
+        e.preventDefault();
+        if (activeGhost) {
+          activeGhost.remove();
+          activeGhost = null;
+        }
+        activeItem.classList.remove("dragging-original");
+        if (overZone) {
+          overZone.appendChild(activeItem);
+          checkGoal();
+        }
+        clearOverZone();
+        activeItem = null;
+      }
+
+      document.addEventListener("pointerup", endDrag);
+      document.addEventListener("pointercancel", endDrag);
     </script>
   </body>
 </html>
