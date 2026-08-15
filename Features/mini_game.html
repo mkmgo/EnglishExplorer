@@ -5,7 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Classroom Mystery - 1:1 English Game</title>
     <style>
-          :root {
+          :root,
+          html.light {
             color-scheme: light;
             --bg-color: #f0f4f8;
             --card-bg: #ffffff;
@@ -47,6 +48,48 @@
               --phrase-bar-bg: #1e293b;
               --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.45);
             }
+          }
+
+          html.dark {
+            color-scheme: dark;
+            --bg-color: #0f172a;
+            --card-bg: #1e293b;
+            --primary: #60a5fa;
+            --accent: #fbbf24;
+            --text: #e2e8f0;
+            --heading: #93c5fd;
+            --muted: #94a3b8;
+            --border: #334155;
+            --border-strong: #475569;
+            --instructions-bg: #172a44;
+            --dropzone-bg: #16233a;
+            --dropzone-hover: #1d3a5f;
+            --item-bg: #1e293b;
+            --item-border: #64748b;
+            --img-bg: #f8fafc;
+            --phrase-bar-bg: #1e293b;
+            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.45);
+          }
+
+          #themeToggle {
+            position: fixed;
+            top: 12px;
+            right: 12px;
+            z-index: 10;
+            width: 46px;
+            height: 46px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.3rem;
+            line-height: 1;
+            background: var(--card-bg);
+            color: var(--text);
+            border: 2px solid var(--border);
+            border-radius: 999px;
+            box-shadow: var(--shadow);
+            cursor: pointer;
+            -webkit-tap-highlight-color: transparent;
           }
 
           body {
@@ -166,6 +209,14 @@
             gap: 6px;
             font-size: 0.95rem;
             -webkit-tap-highlight-color: transparent;
+            -webkit-touch-callout: none;
+            touch-action: manipulation;
+          }
+
+          .draggable-item.selected {
+            outline: 3px solid var(--primary);
+            outline-offset: 2px;
+            transform: scale(1.04);
           }
 
           .draggable-item:active {
@@ -315,6 +366,7 @@
     </style>
   </head>
   <body>
+    <button id="themeToggle" aria-label="Toggle dark mode" title="Toggle dark mode">🌙</button>
     <h1>Classroom Mystery</h1>
     <div class="instructions">
       Drag elements into the classroom spots, or ask the student to command you!
@@ -378,7 +430,7 @@
         <!-- Toys -->
         <div class="draggable-item animal" draggable="true" id="car">
           <img
-            src="https://res.cloudinary.com/dqwm4pdbz/image/upload/c_crop,w_421,h_424,x_842,y_0/r_max/bo_5px_solid_white/v1786599929/260813_toys_01_txjh3y.png"
+            src="https://res.cloudinary.com/dqwm4pdbz/image/upload/c_crop,w_421,h_424,x_0,y_0/r_max/bo_5px_solid_white/v1786599929/260813_toys_01_txjh3y.png"
             alt="Car"
           /><span class="animal-name">Car</span>
         </div>
@@ -442,7 +494,38 @@
     </div>
 
     <script>
-      // Drag and Drop Logic
+      // Theme toggle (dark mode). Defaults to system preference.
+      (function () {
+        var root = document.documentElement;
+        var btn = document.getElementById("themeToggle");
+        var theme = "system";
+        try {
+          var saved = localStorage.getItem("miniGameTheme");
+          if (saved === "dark" || saved === "light") theme = saved;
+        } catch (e) {}
+        var darkMq = window.matchMedia("(prefers-color-scheme: dark)");
+
+        function apply() {
+          var dark =
+            theme === "dark" || (theme === "system" && darkMq.matches);
+          root.classList.toggle("dark", dark);
+          root.classList.toggle("light", !dark);
+          btn.textContent = dark ? "☀️" : "🌙";
+        }
+
+        apply();
+        if (darkMq.addEventListener) darkMq.addEventListener("change", apply);
+        else if (darkMq.addListener) darkMq.addListener(apply);
+        btn.addEventListener("click", function () {
+          theme = theme === "dark" ? "light" : "dark";
+          try {
+            localStorage.setItem("miniGameTheme", theme);
+          } catch (e) {}
+          apply();
+        });
+      })();
+
+      // Drag and Drop Logic (desktop)
       const draggables = document.querySelectorAll(".draggable-item");
       const dropZones = document.querySelectorAll(
         ".drop-zone, .item-container",
@@ -477,6 +560,46 @@
           }
         });
       });
+
+      // Tap fallback for touch devices (iOS Safari has no HTML5 drag-drop):
+      // tap an item to pick it up, then tap a spot (or the Toy Box) to place it.
+      const isTouch =
+        "ontouchstart" in window || navigator.maxTouchPoints > 0;
+
+      if (isTouch) {
+        let selected = null;
+
+        function clearSelected() {
+          if (selected) {
+            selected.classList.remove("selected");
+            selected = null;
+          }
+        }
+
+        draggables.forEach((item) => {
+          item.addEventListener("click", (e) => {
+            e.stopPropagation();
+            if (selected && selected !== item) clearSelected();
+            if (selected === item) {
+              clearSelected();
+            } else {
+              clearSelected();
+              selected = item;
+              item.classList.add("selected");
+            }
+          });
+        });
+
+        dropZones.forEach((zone) => {
+          zone.addEventListener("click", (e) => {
+            if (e.target.closest(".draggable-item")) return;
+            if (selected) {
+              zone.appendChild(selected);
+              clearSelected();
+            }
+          });
+        });
+      }
     </script>
   </body>
 </html>
