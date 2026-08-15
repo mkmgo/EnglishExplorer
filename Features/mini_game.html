@@ -159,14 +159,14 @@
             transition: background-color 0.3s, border-color 0.3s;
           }
 
-          .spot-card.goal-reached {
-            background-color: var(--goal-bg);
-            border-color: var(--good);
-          }
-
           .spot-card.mystery-active {
             background-color: var(--mystery-bg);
             border-color: var(--accent);
+          }
+
+          .spot-card.goal-reached {
+            background-color: var(--goal-bg);
+            border-color: var(--good);
           }
 
           .spot-title {
@@ -344,6 +344,24 @@
             border: 1px solid var(--brick-dark);
           }
 
+          /* Combined mystery items (e.g. Red Car = car + red brick) */
+          .combined::before {
+            content: none;
+          }
+          .combined img {
+            width: 48px;
+            height: 48px;
+            object-fit: cover;
+            border-radius: 50%;
+            background-color: var(--img-bg);
+            border: 1px solid var(--brick-dark);
+            flex-shrink: 0;
+          }
+          .combined span {
+            line-height: 1;
+            font-weight: bold;
+          }
+
           /* Cheat Sheet Bar */
           .phrase-bar {
             width: 100%;
@@ -413,6 +431,46 @@
             .phrase-bar {
               padding: 12px;
             }
+          }
+
+          /* Win overlay */
+          .win-overlay {
+            position: fixed;
+            inset: 0;
+            z-index: 2000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            background: rgba(0, 0, 0, 0.6);
+            padding: 20px;
+          }
+          .win-overlay.show {
+            display: flex;
+          }
+          .win-box {
+            background: var(--card-bg);
+            color: var(--text);
+            padding: 30px 40px;
+            border-radius: 16px;
+            text-align: center;
+            box-shadow: var(--shadow);
+            border: 3px solid var(--good);
+            max-width: 400px;
+          }
+          .win-box h2 {
+            margin: 0 0 15px;
+            color: var(--heading);
+          }
+          .win-box button {
+            background: var(--good);
+            color: #052e16;
+            border: none;
+            padding: 10px 24px;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            -webkit-tap-highlight-color: transparent;
           }
     </style>
   </head>
@@ -544,6 +602,13 @@
       <div class="phrase-pill">Put <b>[Item]</b> on / in / under...</div>
     </div>
 
+    <div id="winOverlay" class="win-overlay">
+      <div class="win-box">
+        <h2>You made it!</h2>
+        <button id="restartBtn" type="button">Play Again</button>
+      </div>
+    </div>
+
     <script>
       // Theme toggle (dark mode). Defaults to system preference.
       (function () {
@@ -588,6 +653,7 @@
         { spotId: "spot-1", ids: ["brick-red", "brick-yellow", "brick-green", "brick-blue"] },
         { spotId: "spot-2", ids: ["bee", "bear", "dog", "elephant"] },
         { spotId: "spot-3", ids: ["car", "bike", "robot", "kite"] },
+        { spotId: "spot-4", ids: ["red-car", "yellow-bee"] },
       ];
 
       function checkGoal() {
@@ -609,6 +675,8 @@
           var mCard = mystery.closest(".spot-card");
           if (mCard) mCard.classList.toggle("mystery-active", allActive);
         }
+        var winOverlay = document.getElementById("winOverlay");
+        if (winOverlay) winOverlay.classList.toggle("show", allActive);
       }
       checkGoal();
 
@@ -680,6 +748,7 @@
           var isSpot = overZone.classList.contains("drop-zone");
           if (!isSpot || overZone.children.length < 4) {
             overZone.appendChild(activeItem);
+            checkMystery();
             checkGoal();
           }
         }
@@ -689,6 +758,78 @@
 
       document.addEventListener("pointerup", endDrag);
       document.addEventListener("pointercancel", endDrag);
+
+      // Mystery combining: car + red brick -> Red Car brick,
+      // bee + yellow brick -> Yellow Bee brick.
+      var stashed = [];
+
+      function makeCombined(id, imgSrc) {
+        var el = document.createElement("div");
+        el.className = "draggable-item brick combined";
+        el.id = id;
+        el.classList.add(id === "red-car" ? "brick-red" : "brick-yellow");
+        var img = document.createElement("img");
+        img.src = imgSrc;
+        img.alt = id === "red-car" ? "Red Car" : "Yellow Bee";
+        el.appendChild(img);
+        var span = document.createElement("span");
+        span.textContent = id === "red-car" ? "Red Car" : "Yellow Bee";
+        el.appendChild(span);
+        return el;
+      }
+
+      function checkMystery() {
+        var spot = document.getElementById("spot-4");
+        if (!spot) return;
+        var byId = {};
+        for (var i = 0; i < spot.children.length; i++) {
+          byId[spot.children[i].id] = spot.children[i];
+        }
+        var car = byId["car"];
+        var red = byId["brick-red"];
+        if (car && red && !byId["red-car"]) {
+          stashed.push(car, red);
+          spot.removeChild(car);
+          spot.removeChild(red);
+          spot.appendChild(makeCombined("red-car", car.querySelector("img").src));
+        }
+        var bee = byId["bee"];
+        var yellow = byId["brick-yellow"];
+        if (bee && yellow && !byId["yellow-bee"]) {
+          stashed.push(bee, yellow);
+          spot.removeChild(bee);
+          spot.removeChild(yellow);
+          spot.appendChild(makeCombined("yellow-bee", bee.querySelector("img").src));
+        }
+      }
+
+      function resetGame() {
+        var inventory = document.getElementById("inventory");
+        document
+          .querySelectorAll(".drop-zone .draggable-item")
+          .forEach(function (el) {
+            if (el.id === "red-car" || el.id === "yellow-bee") {
+              el.remove();
+            } else {
+              inventory.appendChild(el);
+            }
+          });
+        document
+          .querySelectorAll(".item-container .draggable-item")
+          .forEach(function (el) {
+            if (el.id === "red-car" || el.id === "yellow-bee") {
+              el.remove();
+            }
+          });
+        stashed.forEach(function (el) {
+          inventory.appendChild(el);
+        });
+        stashed = [];
+        checkGoal();
+      }
+
+      var restartBtn = document.getElementById("restartBtn");
+      if (restartBtn) restartBtn.addEventListener("click", resetGame);
     </script>
   </body>
 </html>
