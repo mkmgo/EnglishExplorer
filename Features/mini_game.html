@@ -24,6 +24,8 @@
             --item-border: #6b7280;
             --img-bg: #ffffff;
             --phrase-bar-bg: #e5e7eb;
+            --good: #10b981;
+            --goal-bg: #d1fae5;
             --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
           }
 
@@ -46,6 +48,8 @@
               --item-border: #64748b;
               --img-bg: #f8fafc;
               --phrase-bar-bg: #1e293b;
+              --good: #34d399;
+              --goal-bg: #064e3b;
               --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.45);
             }
           }
@@ -68,6 +72,8 @@
             --item-border: #64748b;
             --img-bg: #f8fafc;
             --phrase-bar-bg: #1e293b;
+            --good: #34d399;
+            --goal-bg: #064e3b;
             --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.45);
           }
 
@@ -147,6 +153,12 @@
             padding: 15px;
             box-shadow: var(--shadow);
             user-select: none;
+            transition: background-color 0.3s, border-color 0.3s;
+          }
+
+          .spot-card.goal-reached {
+            background-color: var(--goal-bg);
+            border-color: var(--good);
           }
 
           .spot-title {
@@ -557,9 +569,30 @@
           const draggable = document.querySelector(".dragging");
           if (draggable) {
             zone.appendChild(draggable);
+            checkGoal();
           }
         });
       });
+
+      // Goal: all colour bricks placed in the Colours spot (spot-1).
+      var colourBrickIds = [
+        "brick-red",
+        "brick-yellow",
+        "brick-green",
+        "brick-blue",
+      ];
+
+      function checkGoal() {
+        var spot = document.getElementById("spot-1");
+        if (!spot) return;
+        var card = spot.closest(".spot-card");
+        var allPlaced = colourBrickIds.every(function (id) {
+          var el = document.getElementById(id);
+          return el && spot.contains(el);
+        });
+        if (card) card.classList.toggle("goal-reached", allPlaced);
+      }
+      checkGoal();
 
       // Tap fallback for touch devices (iOS Safari has no HTML5 drag-drop):
       // tap an item to pick it up, then tap a spot (or the Toy Box) to place it.
@@ -596,6 +629,7 @@
             if (selected) {
               zone.appendChild(selected);
               clearSelected();
+              checkGoal();
             }
           });
         });
