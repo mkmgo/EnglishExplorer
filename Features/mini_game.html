@@ -26,6 +26,7 @@
             --phrase-bar-bg: #e5e7eb;
             --good: #10b981;
             --goal-bg: #d1fae5;
+            --mystery-bg: #fef3c7;
             --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
           }
 
@@ -50,6 +51,7 @@
               --phrase-bar-bg: #1e293b;
               --good: #34d399;
               --goal-bg: #064e3b;
+              --mystery-bg: #78350f;
               --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.45);
             }
           }
@@ -74,6 +76,7 @@
             --phrase-bar-bg: #1e293b;
             --good: #34d399;
             --goal-bg: #064e3b;
+            --mystery-bg: #78350f;
             --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.45);
           }
 
@@ -159,6 +162,11 @@
           .spot-card.goal-reached {
             background-color: var(--goal-bg);
             border-color: var(--good);
+          }
+
+          .spot-card.mystery-active {
+            background-color: var(--mystery-bg);
+            border-color: var(--accent);
           }
 
           .spot-title {
@@ -575,23 +583,32 @@
         ".drop-zone, .item-container",
       );
 
-      // Goal: all colour bricks placed in the Colours spot (spot-1).
-      var colourBrickIds = [
-        "brick-red",
-        "brick-yellow",
-        "brick-green",
-        "brick-blue",
+      // Goals: all items of a group placed in its matching spot.
+      var goals = [
+        { spotId: "spot-1", ids: ["brick-red", "brick-yellow", "brick-green", "brick-blue"] },
+        { spotId: "spot-2", ids: ["bee", "bear", "dog", "elephant"] },
+        { spotId: "spot-3", ids: ["car", "bike", "robot", "kite"] },
       ];
 
       function checkGoal() {
-        var spot = document.getElementById("spot-1");
-        if (!spot) return;
-        var card = spot.closest(".spot-card");
-        var allPlaced = colourBrickIds.every(function (id) {
-          var el = document.getElementById(id);
-          return el && spot.contains(el);
+        var allActive = true;
+        goals.forEach(function (goal) {
+          var spot = document.getElementById(goal.spotId);
+          var card = spot && spot.closest(".spot-card");
+          var allPlaced = spot
+            ? goal.ids.every(function (id) {
+                var el = document.getElementById(id);
+                return el && spot.contains(el);
+              })
+            : false;
+          if (card) card.classList.toggle("goal-reached", allPlaced);
+          if (!allPlaced) allActive = false;
         });
-        if (card) card.classList.toggle("goal-reached", allPlaced);
+        var mystery = document.getElementById("spot-4");
+        if (mystery) {
+          var mCard = mystery.closest(".spot-card");
+          if (mCard) mCard.classList.toggle("mystery-active", allActive);
+        }
       }
       checkGoal();
 
