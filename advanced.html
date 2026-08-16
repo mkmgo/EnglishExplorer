@@ -513,6 +513,7 @@
       #likePhrasesScreen .grid--2 > :nth-child(n + 3) {
         margin-top: -3em;
       }
+      #toysPhrasesScreen .grid--2 > .phraseCard:not(:first-of-type),
       #likePhrasesScreen .grid--2 > .phraseCard:not(:first-of-type) {
         display: none;
       }
@@ -782,6 +783,72 @@
         justify-content: center;
         width: 100%;
       }
+      #toysIntroScreen .panel {
+        padding: clamp(0.9rem, 1.6vw, 1.8rem);
+      }
+      .slotPanel {
+        width: 100%;
+        max-width: 380px;
+        margin: 0 auto;
+        padding: 0.9em;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 0.6em;
+        background: var(--panel);
+        border-radius: 24px;
+        box-shadow: var(--shadow);
+        border: 3px solid var(--accent2);
+      }
+      .slotWindow {
+        width: min(210px, 46vw);
+        height: min(210px, 32vh);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: #fff;
+        border-radius: 18px;
+        overflow: hidden;
+      }
+      .slotImg {
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+      }
+      .slotVoice {
+        background: var(--accent);
+        color: #fff;
+        border-color: transparent;
+        font-size: clamp(1.05rem, 1.9vw, 1.6rem);
+        padding: 0.45em 1.3em;
+      }
+      .slotAnswers {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: clamp(8px, 1.2vw, 14px);
+        width: 100%;
+        max-width: 440px;
+        margin: 0.5em auto 0;
+      }
+      .slotAnswers .choice {
+        min-width: 0;
+        min-height: 52px;
+        padding: 0.35em 0.6em;
+        font-size: clamp(0.95rem, 1.8vw, 1.5rem);
+        border-radius: 18px;
+      }
+      .slotYes {
+        background: var(--good);
+        color: #fff;
+      }
+      .slotNo {
+        background: var(--bad);
+        color: #fff;
+      }
+      .slotSpin {
+        background: var(--accent);
+        color: #fff;
+      }
       .gameArea {
         display: flex;
         flex-direction: column;
@@ -842,7 +909,8 @@
       .ynCastMember.onza .ynAvatar {
         border-color: #087443;
       }
-      .ynCastMember.owner .ynAvatar {
+      .ynCastMember.owner .ynAvatar,
+      .likeHeader.owner .ynAvatar {
         box-shadow: 0 0 0 4px var(--mediocre);
       }
       .ynName {
@@ -880,18 +948,37 @@
         cursor: pointer;
         box-shadow: var(--shadow);
       }
-      .likeSet {
+      .likeStage {
         display: flex;
         flex-direction: column;
         align-items: center;
-        gap: 0.4em;
+        gap: clamp(10px, 1.6vh, 16px);
+        width: 100%;
       }
-      .likeCenter {
+      .likeHeader {
         display: flex;
         flex-direction: column;
         align-items: center;
-        gap: 0.7em;
-        flex: 0 0 auto;
+        gap: 0.35em;
+      }
+      .likeHeader .ynAvatar {
+        border-color: var(--accent);
+      }
+      .likeHeader.onza .ynAvatar {
+        border-color: #087443;
+      }
+      .likeSides {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        align-items: flex-start;
+        gap: clamp(14px, 4vw, 44px);
+        width: 100%;
+      }
+      .likeSide {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5em;
       }
       .likeHeartIcon {
         width: 58%;
@@ -915,71 +1002,70 @@
         padding: 0;
         cursor: pointer;
       }
-      .likeNextBtn {
-        display: inline-flex;
-        align-items: center;
-        gap: 0.5em;
-        padding: 0.65em 1.4em;
-        font-size: clamp(1rem, 1.8vw, 1.25rem);
-        font-weight: 800;
-        color: var(--ink);
-        background: var(--panel);
-        border: 3px solid var(--accent2);
-        border-radius: 999px;
-        box-shadow: var(--shadow);
-        cursor: pointer;
-      }
-      .likeNextBtn:hover {
-        background: #e8f1ff;
-      }
-      .likeNextIcon {
-        width: 1.2em;
-        height: 1.2em;
-        color: var(--ink);
-      }
       .toyEdu {
         display: flex;
         flex-wrap: wrap;
         justify-content: center;
         align-items: flex-end;
-        gap: clamp(16px, 2.2vw, 30px);
+        gap: clamp(10px, 1.4vw, 18px);
         width: 100%;
       }
       .toyPair {
         display: flex;
         align-items: flex-end;
-        gap: clamp(8px, 1.2vw, 16px);
+        gap: clamp(6px, 0.9vw, 12px);
       }
       .toySizeBtn {
         display: flex;
         flex-direction: column;
         align-items: center;
-        gap: 0.5em;
+        gap: 0.4em;
         background: #fff;
         border: 3px solid rgba(96, 112, 141, 0.35);
-        border-radius: 18px;
-        padding: 0.6em 0.9em;
+        border-radius: 16px;
+        padding: 0.45em 0.7em;
         cursor: pointer;
         transition: 0.15s transform;
         box-shadow: var(--shadow);
         font-family: inherit;
         font-weight: 800;
-        font-size: clamp(0.95rem, 1.6vw, 1.3rem);
+        font-size: clamp(0.85rem, 1.4vw, 1.15rem);
         color: var(--ink);
       }
       .toySizeBtn:active {
         transform: scale(0.95);
       }
       .toySizeBtn img {
-        width: clamp(52px, 6.5vw, 80px);
+        width: clamp(44px, 5vw, 62px);
         height: auto;
         object-fit: contain;
       }
       .toySizeBtn img.small {
-        width: clamp(34px, 4.5vw, 54px);
+        width: clamp(26px, 3.2vw, 40px);
       }
       .toySizeBtn img.big {
-        width: clamp(64px, 8vw, 100px);
+        width: clamp(50px, 6vw, 78px);
+      }
+      @keyframes chipsWobble {
+        0%,
+        100% {
+          transform: rotate(0deg);
+        }
+        20% {
+          transform: rotate(-7deg);
+        }
+        40% {
+          transform: rotate(6deg);
+        }
+        60% {
+          transform: rotate(-5deg);
+        }
+        80% {
+          transform: rotate(3deg);
+        }
+      }
+      .toySizeBtn.wobble img {
+        animation: chipsWobble 0.6s ease-in-out;
       }
       .gameRow {
         display: flex;
@@ -991,6 +1077,12 @@
       }
       .gameRow .choice {
         min-width: 170px;
+      }
+      #toysHaveScreen .choice {
+        min-width: 130px;
+        min-height: 64px;
+        font-size: clamp(1rem, 1.9vw, 1.7rem);
+        border-radius: 22px;
       }
       .gameHint {
         font-size: clamp(1rem, 1.8vw, 1.6rem);
@@ -2082,6 +2174,18 @@
                       src="https://res.cloudinary.com/dp455m4rk/image/upload/c_crop,w_469,h_384,x_0,y_384/r_max/v1786050302/A-F_yhrs9s.png"
                       alt="dog"
                     />
+                    <svg
+                      class="phraseToyIcon"
+                      xmlns="http://www.w3.org/2000/svg"
+                      viewBox="0 0 24 24"
+                      fill="currentColor"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    >
+                      <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z" />
+                    </svg>
                   </span>
                 </button>
                 <button
@@ -2162,6 +2266,18 @@
                       src="https://res.cloudinary.com/dp455m4rk/image/upload/c_crop,w_469,h_384,x_938,y_0/r_max/v1786050302/A-F_yhrs9s.png"
                       alt="cat"
                     />
+                    <svg
+                      class="phraseToyIcon"
+                      xmlns="http://www.w3.org/2000/svg"
+                      viewBox="0 0 24 24"
+                      fill="currentColor"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    >
+                      <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z" />
+                    </svg>
                   </span>
                 </button>
                 <button
@@ -2218,22 +2334,33 @@
         </div>
       </section>
 
-      <!-- Segment 4b: I LIKE / I DON'T LIKE — likes teaching slide -->
+      <!-- Segment 4b: I LIKE / I DON'T LIKE -->
       <section class="screen" id="likeDislikeScreen">
         <div class="content">
-          <h1 class="pageTitle">Do you like?</h1>
+          <h1 class="pageTitle" id="likeTitle">Do You Like?</h1>
           <div class="stage">
             <div class="panel">
+              <div class="roundPips" id="likePips"></div>
               <div class="gameArea">
-                <div class="ynCast">
-                  <div class="ynCastMember" id="likeSam">
+                <div class="likeStage">
+                  <div class="likeHeader" id="likeSamHeader" style="display: none">
                     <img
                       class="ynAvatar"
                       src="https://res.cloudinary.com/dqwm4pdbz/image/upload/c_scale,w_450,h_437/q_auto/f_auto/v1786623813/sam_3davface_irvdlj.png"
                       alt="Sam"
                     />
                     <span class="ynName">Sam</span>
-                    <div class="likeSet">
+                  </div>
+                  <div class="likeHeader onza" id="likeOnzaHeader">
+                    <img
+                      class="ynAvatar"
+                      src="https://res.cloudinary.com/dqwm4pdbz/image/upload/c_scale,w_400/q_auto/f_auto/v1786623812/onza_3avface_gyyay8.png"
+                      alt="Onza"
+                    />
+                    <span class="ynName">Onza</span>
+                  </div>
+                  <div class="likeSides">
+                    <div class="likeSide" id="likeSamLike" style="display: none">
                       <button class="likeHeart" onclick="likePress('sam', 'like')">
                         <svg
                           class="likeHeartIcon"
@@ -2261,73 +2388,7 @@
                         />
                       </div>
                     </div>
-                    <div class="likeSet">
-                      <button class="likeHeart" onclick="likePress('sam', 'dislike')">
-                        <svg
-                          class="likeHeartIcon"
-                          xmlns="http://www.w3.org/2000/svg"
-                          viewBox="0 0 24 24"
-                          fill="currentColor"
-                          stroke="currentColor"
-                          stroke-width="2"
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
-                        >
-                          <path d="M10.5 4.893a5.5 5.5 0 0 1 1.091.931.56.56 0 0 0 .818 0A5.49 5.49 0 0 1 22 9.5c0 1.872-1.002 3.356-2.187 4.655" />
-                          <path d="m16.967 16.967-3.459 3.346a2 2 0 0 1-3 .019L5 15c-1.5-1.5-3-3.2-3-5.5a5.5 5.5 0 0 1 2.747-4.761" />
-                          <path d="m2 2 20 20" />
-                        </svg>
-                      </button>
-                      <div class="ynToys">
-                        <img
-                          class="likeToy"
-                          src="https://res.cloudinary.com/dp455m4rk/image/upload/c_crop,w_421,h_424,x_421,y_424/r_max/v1786346044/lesson6_ywgsxn.png"
-                          alt="monkey"
-                        />
-                        <img
-                          class="likeToy"
-                          src="https://res.cloudinary.com/dp455m4rk/image/upload/c_crop,w_421,h_424,x_0,y_0/r_max/v1786346044/lesson6_ywgsxn.png"
-                          alt="bird"
-                        />
-                      </div>
-                    </div>
-                  </div>
-                  <div class="likeCenter">
-                    <div class="gameVisual ynVisual">
-                      <button class="likeAnimalBtn" onclick="likeAnimalSpeak()">
-                        <img id="likeImg" alt="animal" />
-                      </button>
-                    </div>
-                    <button class="likeNextBtn" onclick="likeNext()">
-                      <svg
-                        class="likeNextIcon"
-                        xmlns="http://www.w3.org/2000/svg"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        stroke-width="2"
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                      >
-                        <rect width="12" height="12" x="2" y="10" rx="2" ry="2" />
-                        <path d="m17.92 14 3.5-3.5a2.24 2.24 0 0 0 0-3l-5-4.92a2.24 2.24 0 0 0-3 0L10 6" />
-                        <path d="M6 12h.01" />
-                        <path d="M10 16h.01" />
-                        <path d="M10 21h.01" />
-                        <path d="M16 16h.01" />
-                        <path d="M16 21h.01" />
-                      </svg>
-                      <span>NEXT ANIMAL</span>
-                    </button>
-                  </div>
-                  <div class="ynCastMember onza" id="likeOnza">
-                    <img
-                      class="ynAvatar"
-                      src="https://res.cloudinary.com/dqwm4pdbz/image/upload/c_scale,w_400/q_auto/f_auto/v1786623812/onza_3avface_gyyay8.png"
-                      alt="Onza"
-                    />
-                    <span class="ynName">Onza</span>
-                    <div class="likeSet">
+                    <div class="likeSide" id="likeOnzaLike">
                       <button class="likeHeart" onclick="likePress('onza', 'like')">
                         <svg
                           class="likeHeartIcon"
@@ -2355,7 +2416,12 @@
                         />
                       </div>
                     </div>
-                    <div class="likeSet">
+                    <div class="gameVisual ynVisual">
+                      <button class="likeAnimalBtn" onclick="likeAnimalSpeak()">
+                        <img id="likeImg" alt="animal" />
+                      </button>
+                    </div>
+                    <div class="likeSide" id="likeOnzaDislike">
                       <button class="likeHeart" onclick="likePress('onza', 'dislike')">
                         <svg
                           class="likeHeartIcon"
@@ -2385,7 +2451,43 @@
                         />
                       </div>
                     </div>
+                    <div class="likeSide" id="likeSamDislike" style="display: none">
+                      <button class="likeHeart" onclick="likePress('sam', 'dislike')">
+                        <svg
+                          class="likeHeartIcon"
+                          xmlns="http://www.w3.org/2000/svg"
+                          viewBox="0 0 24 24"
+                          fill="currentColor"
+                          stroke="currentColor"
+                          stroke-width="2"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                        >
+                          <path d="M10.5 4.893a5.5 5.5 0 0 1 1.091.931.56.56 0 0 0 .818 0A5.49 5.49 0 0 1 22 9.5c0 1.872-1.002 3.356-2.187 4.655" />
+                          <path d="m16.967 16.967-3.459 3.346a2 2 0 0 1-3 .019L5 15c-1.5-1.5-3-3.2-3-5.5a5.5 5.5 0 0 1 2.747-4.761" />
+                          <path d="m2 2 20 20" />
+                        </svg>
+                      </button>
+                      <div class="ynToys">
+                        <img
+                          class="likeToy"
+                          src="https://res.cloudinary.com/dp455m4rk/image/upload/c_crop,w_421,h_424,x_842,y_0/r_max/v1786346044/lesson6_ywgsxn.png"
+                          alt="lion"
+                        />
+                        <img
+                          class="likeToy"
+                          src="https://res.cloudinary.com/dp455m4rk/image/upload/c_crop,w_469,h_384,x_469,y_384/r_max/v1786050302/A-F_yhrs9s.png"
+                          alt="elephant"
+                        />
+                      </div>
+                    </div>
                   </div>
+                </div>
+                <div class="gameRow">
+                  <button class="choice yes" onclick="likeAnswer(true)">
+                    YES
+                  </button>
+                  <button class="choice" onclick="likeAnswer(false)">NO</button>
                 </div>
               </div>
             </div>
@@ -2393,7 +2495,7 @@
         </div>
       </section>
 
-      <!-- Segment 5c: DO YOU HAVE A...? — classroom game (copy of toysYesNoScreen) -->
+      <!-- Segment 5c: DO YOU HAVE A...? — classroom game (animals) -->
       <section class="screen" id="toysYesNo2Screen">
         <div class="content">
           <h1 class="pageTitle" id="yn2Title">Do You Have A…?</h1>
@@ -2442,60 +2544,38 @@
           <h1 class="pageTitle">My Toys and Things</h1>
           <div class="stage">
             <div class="panel">
-              <div class="toyGrid">
-                <button class="toyBtn" onclick="toyPress('car')">
-                  <img
-                    class="toyImg"
-                    src="https://res.cloudinary.com/dqwm4pdbz/image/upload/c_crop,w_421,h_424,x_0,y_0/r_max/bo_5px_solid_white/v1786599929/260813_toys_01_txjh3y.png"
-                    alt="car"
-                  />
-                  <span class="toyName">Car</span>
-                </button>
-                <button class="toyBtn" onclick="toyPress('rocket')">
-                  <img
-                    class="toyImg"
-                    src="https://res.cloudinary.com/dqwm4pdbz/image/upload/c_crop,w_421,h_424,x_421,y_0/r_max/bo_5px_solid_white/v1786599929/260813_toys_01_txjh3y.png"
-                    alt="rocket"
-                  />
-                  <span class="toyName">Rocket</span>
-                </button>
-                <button class="toyBtn" onclick="toyPress('teddy bear')">
-                  <img
-                    class="toyImg"
-                    src="https://res.cloudinary.com/dqwm4pdbz/image/upload/c_crop,w_421,h_424,x_842,y_0/r_max/bo_5px_solid_white/v1786599929/260813_toys_01_txjh3y.png"
-                    alt="teddy bear"
-                  />
-                  <span class="toyName">Teddy Bear</span>
-                </button>
-                <button class="toyBtn" onclick="toyPress('robot')">
-                  <img
-                    class="toyImg"
-                    src="https://res.cloudinary.com/dqwm4pdbz/image/upload/c_crop,w_421,h_424,x_0,y_424/r_max/bo_5px_solid_white/v1786599929/260813_toys_01_txjh3y.png"
-                    alt="robot"
-                  />
-                  <span class="toyName">Robot</span>
-                </button>
-                <button class="toyBtn" onclick="toyPress('bike')">
-                  <img
-                    class="toyImg"
-                    src="https://res.cloudinary.com/dqwm4pdbz/image/upload/c_crop,w_421,h_424,x_421,y_424/r_max/bo_5px_solid_white/v1786599929/260813_toys_01_txjh3y.png"
-                    alt="bike"
-                  />
-                  <span class="toyName">Bike</span>
-                </button>
-                <button class="toyBtn" onclick="toyPress('kite')">
-                  <img
-                    class="toyImg"
-                    src="https://res.cloudinary.com/dqwm4pdbz/image/upload/c_crop,w_421,h_424,x_842,y_424/r_max/bo_5px_solid_white/v1786599929/260813_toys_01_txjh3y.png"
-                    alt="kite"
-                  />
-                  <span class="toyName">Kite</span>
-                </button>
+              <div class="slotPanel">
+                <div class="slotWindow">
+                  <img class="slotImg" id="toysSlotImg" alt="" />
+                </div>
               </div>
               <div class="miniRow">
-                <button class="miniChip" onclick="listenToys()">
+                <button class="miniChip slotVoice" onclick="toysSlotVoice()">
                   <i data-lucide="volume1" width="1.2em" height="1.2em"></i>
-                  HEAR ALL
+                  VOICE
+                </button>
+              </div>
+              <div class="slotAnswers">
+                <button
+                  class="choice slotAnswer slotYes"
+                  onclick="toysSlotAnswer('yes')"
+                >
+                  YES
+                </button>
+                <button
+                  class="choice slotAnswer slotNo"
+                  onclick="toysSlotAnswer('no')"
+                >
+                  NO
+                </button>
+                <button
+                  class="choice slotAnswer slotNot"
+                  onclick="toysSlotAnswer('not-a-toy')"
+                >
+                  NOT A TOY
+                </button>
+                <button class="choice slotAnswer slotSpin" onclick="toysSlotSpin()">
+                  SPIN
                 </button>
               </div>
             </div>
@@ -2757,85 +2837,12 @@
       <!-- Segment 3: MY KITE / YOUR KITE (educational) -->
       <section class="screen" id="toysChipsScreen">
         <div class="content">
-          <h1 class="pageTitle">Big and Small</h1>
+          <h1 class="pageTitle" id="chipsTitle">Big and Small</h1>
           <div class="stage">
             <div class="panel">
-              <div class="toyEdu">
-                <div class="toyPair">
-                  <button class="toySizeBtn" onclick="edToyPress('Small car')">
-                    <img
-                      class="small"
-                      src="https://res.cloudinary.com/dqwm4pdbz/image/upload/c_crop,w_421,h_424,x_0,y_0/r_max/bo_5px_solid_white/v1786599929/260813_toys_01_txjh3y.png"
-                      alt="car"
-                    />
-                    <span>Small car</span>
-                  </button>
-                  <button class="toySizeBtn" onclick="edToyPress('Big car')">
-                    <img
-                      class="big"
-                      src="https://res.cloudinary.com/dqwm4pdbz/image/upload/c_crop,w_421,h_424,x_0,y_0/r_max/bo_5px_solid_white/v1786599929/260813_toys_01_txjh3y.png"
-                      alt="car"
-                    />
-                    <span>Big car</span>
-                  </button>
-                </div>
-                <div class="toyPair">
-                  <button class="toySizeBtn" onclick="edToyPress('Small kite')">
-                    <img
-                      class="small"
-                      src="https://res.cloudinary.com/dqwm4pdbz/image/upload/c_crop,w_421,h_424,x_842,y_424/r_max/bo_5px_solid_white/v1786599929/260813_toys_01_txjh3y.png"
-                      alt="kite"
-                    />
-                    <span>Small kite</span>
-                  </button>
-                  <button class="toySizeBtn" onclick="edToyPress('Big kite')">
-                    <img
-                      class="big"
-                      src="https://res.cloudinary.com/dqwm4pdbz/image/upload/c_crop,w_421,h_424,x_842,y_424/r_max/bo_5px_solid_white/v1786599929/260813_toys_01_txjh3y.png"
-                      alt="kite"
-                    />
-                    <span>Big kite</span>
-                  </button>
-                </div>
-                <div class="toyPair">
-                  <button
-                    class="toySizeBtn"
-                    onclick="edToyPress('Small robot')"
-                  >
-                    <img
-                      class="small"
-                      src="https://res.cloudinary.com/dqwm4pdbz/image/upload/c_crop,w_421,h_424,x_0,y_424/r_max/bo_5px_solid_white/v1786599929/260813_toys_01_txjh3y.png"
-                      alt="robot"
-                    />
-                    <span>Small robot</span>
-                  </button>
-                  <button class="toySizeBtn" onclick="edToyPress('Big robot')">
-                    <img
-                      class="big"
-                      src="https://res.cloudinary.com/dqwm4pdbz/image/upload/c_crop,w_421,h_424,x_0,y_424/r_max/bo_5px_solid_white/v1786599929/260813_toys_01_txjh3y.png"
-                      alt="robot"
-                    />
-                    <span>Big robot</span>
-                  </button>
-                </div>
-                <div class="toyPair">
-                  <button class="toySizeBtn" onclick="edToyPress('Small bike')">
-                    <img
-                      class="small"
-                      src="https://res.cloudinary.com/dqwm4pdbz/image/upload/c_crop,w_421,h_424,x_421,y_424/r_max/bo_5px_solid_white/v1786599929/260813_toys_01_txjh3y.png"
-                      alt="bike"
-                    />
-                    <span>Small bike</span>
-                  </button>
-                  <button class="toySizeBtn" onclick="edToyPress('Big bike')">
-                    <img
-                      class="big"
-                      src="https://res.cloudinary.com/dqwm4pdbz/image/upload/c_crop,w_421,h_424,x_421,y_424/r_max/bo_5px_solid_white/v1786599929/260813_toys_01_txjh3y.png"
-                      alt="bike"
-                    />
-                    <span>Big bike</span>
-                  </button>
-                </div>
+              <div class="roundPips" id="chipsPips"></div>
+              <div class="gameArea">
+                <div class="toyEdu" id="chipsPair"></div>
               </div>
             </div>
           </div>
@@ -2843,29 +2850,7 @@
       </section>
 
       <!--Segment  4: BIG OR SMALL? (excercise) -->
-      <section class="screen" id="toysBigSmallScreen">
-        <div class="content">
-          <h1 class="pageTitle" id="bsTitle">Big or Small?</h1>
-          <div class="stage">
-            <div class="panel">
-              <div class="roundPips" id="bsPips"></div>
-              <div class="gameArea">
-                <div class="gameVisual">
-                  <img id="bsImg" alt="toy" />
-                </div>
-                <div class="gameRow">
-                  <button class="choice" onclick="bsAnswer('big')">BIG</button>
-                  <button class="choice" onclick="bsAnswer('small')">
-                    SMALL
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <!-- Segment 5: DO YOU HAVE A...? (exercise) -->
+      <!-- Segment 5: DO YOU HAVE A...? (exercise, toys — analogous to toysYesNo2Screen) -->
       <section class="screen" id="toysYesNoScreen">
         <div class="content">
           <h1 class="pageTitle" id="ynTitle">Do You Have A…?</h1>
@@ -4020,6 +4005,7 @@
       }
       setupUnfold("likePhrasesScreen");
       setupUnfold("ynDialogueScreen");
+      setupUnfold("toysPhrasesScreen");
 
       function show(i) {
         idx = Math.max(0, Math.min(screens.length - 1, i));
@@ -4050,7 +4036,12 @@
             preloadVideo(activeVideo);
           }
         }
-        if (screens[idx].id === "toysBigSmallScreen") bsReset();
+        if (toysSlotTimer) {
+          clearTimeout(toysSlotTimer);
+          toysSlotTimer = null;
+        }
+        if (screens[idx].id === "toysChipsScreen") chipsReset();
+        else if (screens[idx].id === "toysIntroScreen") toysSlotSpin();
         else if (screens[idx].id === "toysYesNoScreen") ynReset();
         else if (screens[idx].id === "toysYesNo2Screen") ynReset2();
         else if (screens[idx].id === "toysHaveScreen") haveReset();
@@ -4238,7 +4229,9 @@
       function reward(t) {
         starsEarned++;
         addPoints(1);
-        celebrate(t);
+        setTimeout(function () {
+          celebrate(t);
+        }, 600);
         if (starsEarned >= 7) goToRewards();
       }
 
@@ -4928,9 +4921,7 @@
       }
 
       var toysCount = {};
-      var toysHeardAll = false;
       var toysHeardRewarded = false;
-      var toyListenBusy = false;
       function toyPress(name) {
         say(name);
         toysCount[name] = (toysCount[name] || 0) + 1;
@@ -4939,36 +4930,119 @@
 
       function maybeToysReward() {
         if (toysHeardRewarded) return;
-        var allOnce = true;
         var allTwice = true;
         for (var i = 0; i < TOYS.length; i++) {
           var c = toysCount[TOYS[i].name] || 0;
-          if (c < 1) allOnce = false;
           if (c < 2) allTwice = false;
         }
-        if (allTwice || (allOnce && toysHeardAll)) {
+        if (allTwice) {
           toysHeardRewarded = true;
           reward("ALL TOYS! +1 ⭐");
         }
       }
 
-      function listenToys() {
-        if (toyListenBusy) return;
-        toyListenBusy = true;
-        toysHeardAll = true;
-        maybeToysReward();
-        var t = 0;
-        for (var i = 0; i < TOYS.length; i++) {
-          (function (n, delay) {
-            window.setTimeout(function () {
-              say(n);
-            }, delay);
-          })(TOYS[i].name, t);
-          t += 700 + TOYS[i].name.length * 80;
+      var toysSlotPool = [];
+      var toysSlotTimer = null;
+      var toysSlotCurrent = null;
+      var toysSlotMatch = false;
+      var toysSlotWord = "";
+      function toysSlotBuildPool() {
+        var pool = TOYS.slice();
+        var animal = ANIMALS[Math.floor(Math.random() * ANIMALS.length)];
+        pool.push({ name: animal.name, img: animal.img, isAnimal: true });
+        return pool;
+      }
+      function toysSlotAllNames() {
+        var names = [];
+        for (var i = 0; i < TOYS.length; i++) names.push(TOYS[i].name);
+        for (var j = 0; j < ANIMALS.length; j++) names.push(ANIMALS[j].name);
+        return names;
+      }
+      function toysSlotPickWrong(name) {
+        var names = toysSlotAllNames();
+        var filtered = [];
+        for (var i = 0; i < names.length; i++) {
+          if (names[i] !== name) filtered.push(names[i]);
         }
-        window.setTimeout(function () {
-          toyListenBusy = false;
-        }, t + 200);
+        return filtered[Math.floor(Math.random() * filtered.length)];
+      }
+      function toysSlotSpeak(name) {
+        var isAnimal = false;
+        for (var i = 0; i < ANIMALS.length; i++) {
+          if (ANIMALS[i].name === name) {
+            isAnimal = true;
+            break;
+          }
+        }
+        if (isAnimal) {
+          sayOther(name);
+          animalsCount[name] = (animalsCount[name] || 0) + 1;
+          maybeAnimalsReward();
+        } else {
+          say(name);
+          toysCount[name] = (toysCount[name] || 0) + 1;
+          maybeToysReward();
+        }
+      }
+      function toysSlotSpin() {
+        if (toysSlotTimer) return;
+        toysSlotPool = toysSlotBuildPool();
+        toysSlotCurrent = null;
+        toysSlotMatch = false;
+        var img = document.getElementById("toysSlotImg");
+        if (!img) return;
+        var target =
+          toysSlotPool[Math.floor(Math.random() * toysSlotPool.length)];
+        var idx = Math.floor(Math.random() * toysSlotPool.length);
+        var start = Date.now();
+        var duration = 1800 + Math.random() * 600;
+        function tick() {
+          var elapsed = Date.now() - start;
+          if (elapsed >= duration) {
+            toysSlotTimer = null;
+            img.src = target.img;
+            img.alt = target.name;
+            toysSlotCurrent = target;
+            toysSlotMatch = Math.random() < 0.6;
+            toysSlotWord = toysSlotMatch
+              ? target.name
+              : toysSlotPickWrong(target.name);
+            return;
+          }
+          img.src = toysSlotPool[idx].img;
+          img.alt = toysSlotPool[idx].name;
+          var remain = duration - elapsed;
+          var delay = 40 + (1 - remain / duration) * 260;
+          idx = (idx + 1) % toysSlotPool.length;
+          toysSlotTimer = window.setTimeout(tick, Math.max(30, delay));
+        }
+        toysSlotTimer = window.setTimeout(tick, 60);
+      }
+      function toysSlotVoice() {
+        if (toysSlotTimer || !toysSlotCurrent) {
+          toast("Wait for the spin!");
+          return;
+        }
+        toysSlotSpeak(toysSlotWord);
+      }
+      function toysSlotAnswer(ans) {
+        if (toysSlotTimer || !toysSlotCurrent) return;
+        var truth = toysSlotCurrent.isAnimal
+          ? "not-a-toy"
+          : toysSlotMatch
+            ? "yes"
+            : "no";
+        if (ans === truth) {
+          toast("WELL DONE!");
+          if (toysSlotCurrent.isAnimal) {
+            sayOther(toysSlotCurrent.name);
+          } else {
+            say(toysSlotCurrent.name);
+          }
+        } else {
+          toast("Try again!");
+          say("Try again.");
+        }
       }
 
       var ANIMALS = [
@@ -5117,137 +5191,181 @@
         return bad === 0 && greens >= results.length - 1;
       }
 
-      var edToyPhrases = [
-        "Small car",
-        "Big car",
-        "Small kite",
-        "Big kite",
-        "Small robot",
-        "Big robot",
-        "Small bike",
-        "Big bike",
-      ];
-      var edToyHeard = {};
-      var edToyRewarded = false;
-      function edToyPress(phrase) {
-        say(phrase);
-        edToyHeard[phrase] = true;
-        if (edToyRewarded) return;
-        for (var i = 0; i < edToyPhrases.length; i++) {
-          if (!edToyHeard[edToyPhrases[i]]) return;
+      var CHIPS_ROUNDS = 10;
+      var chipsRounds = [];
+      var chipsIdx = 0;
+      var chipsResults = [];
+      var chipsTries = 0;
+      var chipsBusy = false;
+      var chipsGen = 0;
+      var chipsRewarded = false;
+      function buildSizeRounds(n) {
+        var rounds = [];
+        var last = -1;
+        var last2 = -1;
+        for (var i = 0; i < n; i++) {
+          var pick = last;
+          var guard = 0;
+          while (guard < 100 && (pick === last || pick === last2)) {
+            pick = Math.floor(Math.random() * TOYS.length);
+            guard++;
+          }
+          last2 = last;
+          last = pick;
+          rounds.push({
+            name: TOYS[pick].name,
+            size: Math.random() < 0.5 ? "big" : "small",
+          });
         }
-        edToyRewarded = true;
-        reward("WELL DONE! +1 ⭐");
+        return rounds;
       }
-
-      var bsRounds = [
-        { name: "car", size: "big" },
-        { name: "kite", size: "small" },
-        { name: "robot", size: "big" },
-        { name: "teddy bear", size: "small" },
-        { name: "bike", size: "big" },
-        { name: "rocket", size: "small" },
-      ];
-      var bsIdx = 0;
-      var bsRewarded = false;
-      var bsBusy = false;
-      var bsGen = 0;
-      var bsResults = [];
-      var bsTries = 0;
-      function bsReset() {
-        buildPips("bsPips", bsRounds.length);
-        bsIdx = 0;
-        bsBusy = false;
-        bsResults = [];
-        bsTries = 0;
-        bsGen++;
-        setBsEnabled(true);
-        bsStart();
+      function chipsReset() {
+        chipsRounds = buildSizeRounds(CHIPS_ROUNDS);
+        buildPips("chipsPips", chipsRounds.length);
+        chipsIdx = 0;
+        chipsResults = [];
+        chipsTries = 0;
+        chipsBusy = false;
+        chipsGen++;
+        chipsRewarded = false;
+        chipsBuildBoard();
+        chipsStart();
       }
-      function setBsEnabled(on) {
-        var btns = document.querySelectorAll("#toysBigSmallScreen .choice");
+      function chipsBuildBoard() {
+        var board = document.getElementById("chipsPair");
+        if (!board) return;
+        var html = "";
+        for (var i = 0; i < TOYS.length; i++) {
+          var n = TOYS[i].name;
+          var cap = toyCap(n);
+          html +=
+            '<button class="toySizeBtn" data-name="' +
+            n +
+            '" data-size="small" onclick="chipsAnswer(\'small\',\'' +
+            n +
+            '\')">' +
+            '<img class="small" src="' +
+            toyImg(n) +
+            '" alt="' +
+            n +
+            '" />' +
+            "<span>Small " +
+            cap +
+            "</span></button>" +
+            '<button class="toySizeBtn" data-name="' +
+            n +
+            '" data-size="big" onclick="chipsAnswer(\'big\',\'' +
+            n +
+            '\')">' +
+            '<img class="big" src="' +
+            toyImg(n) +
+            '" alt="' +
+            n +
+            '" />' +
+            "<span>Big " +
+            cap +
+            "</span></button>";
+        }
+        board.innerHTML = html;
+      }
+      function setChipsEnabled(on) {
+        var btns = document.querySelectorAll("#toysChipsScreen .toySizeBtn");
         for (var i = 0; i < btns.length; i++) {
           btns[i].disabled = !on;
         }
       }
-      function bsStart() {
-        if (bsIdx >= bsRounds.length) return;
-        var r = bsRounds[bsIdx];
-        var img = document.getElementById("bsImg");
-        var show = function (size) {
-          if (img) {
-            img.src = toyImg(r.name);
-            img.className = size;
-            img.alt = r.name;
-          }
-        };
-        setHeadline("bsTitle", "Big or small?");
-        bsTries = 0;
-        setPips("bsPips", bsResults, bsIdx);
-        if (r.size === "big") {
-          var gen = ++bsGen;
-          bsBusy = true;
-          setBsEnabled(false);
-          show("small");
-          window.setTimeout(function () {
-            if (gen !== bsGen || bsIdx >= bsRounds.length) return;
-            bsBusy = false;
-            setBsEnabled(true);
-            show("big");
-          }, 2000);
-        } else {
-          show("small");
+      function chipsStart() {
+        if (chipsIdx >= chipsRounds.length) return;
+        var r = chipsRounds[chipsIdx];
+        var board = document.getElementById("chipsPair");
+        if (!board) return;
+        var btns = board.querySelectorAll(".toySizeBtn");
+        for (var i = 0; i < btns.length; i++) {
+          btns[i].classList.remove("wobble");
         }
+        void board.offsetWidth;
+        for (var i = 0; i < btns.length; i++) {
+          if (btns[i].getAttribute("data-name") === r.name) {
+            btns[i].classList.add("wobble");
+          }
+        }
+        setHeadline(
+          "chipsTitle",
+          "Find the " + toyCap(r.size) + " " + toyCap(r.name) + "!",
+        );
+        chipsTries = 0;
+        setPips("chipsPips", chipsResults, chipsIdx);
+        setChipsEnabled(true);
+        chipsBusy = false;
+        say("Find the " + r.size + " " + r.name + "!");
       }
-      function bsAdvance() {
-        bsIdx++;
-        setPips("bsPips", bsResults, bsIdx);
-        if (bsIdx >= bsRounds.length) {
-          setHeadline("bsTitle", "Well done!");
-          if (!bsRewarded && qualifies(bsResults)) {
-            bsRewarded = true;
-            reward("BIG OR SMALL! +1 ⭐");
+      function chipsAdvance() {
+        chipsIdx++;
+        setPips("chipsPips", chipsResults, chipsIdx);
+        if (chipsIdx >= chipsRounds.length) {
+          setChipsEnabled(false);
+          setHeadline("chipsTitle", "Well Done!");
+          if (!chipsRewarded && qualifies(chipsResults)) {
+            chipsRewarded = true;
+            reward("BIG AND SMALL! +1 ⭐");
           }
         } else {
-          bsStart();
+          chipsStart();
         }
       }
-      function bsAnswer(size) {
-        if (bsIdx >= bsRounds.length) return;
-        if (bsBusy) return;
-        var r = bsRounds[bsIdx];
-        if (size !== r.size) {
-          bsTries++;
+      function chipsAnswer(size, name) {
+        if (chipsIdx >= chipsRounds.length) return;
+        if (chipsBusy) return;
+        var r = chipsRounds[chipsIdx];
+        if (size !== r.size || name !== r.name) {
+          chipsTries++;
           toast("Try again!");
           say("Try again.");
-          if (bsTries >= 2) {
-            bsResults.push("bad");
-            bsAdvance();
+          if (chipsTries >= 2) {
+            chipsResults.push("bad");
+            chipsAdvance();
           }
           return;
         }
-        bsResults.push(bsTries === 0 ? "good" : "mediocre");
+        chipsResults.push(chipsTries === 0 ? "good" : "mediocre");
         toast("WELL DONE!");
         say("Yes! It's " + r.size + "!");
-        bsAdvance();
+        chipsAdvance();
       }
 
-      var ynRounds = [
-        { name: "car", answer: true },
-        { name: "robot", answer: false },
-        { name: "kite", answer: true },
-        { name: "teddy bear", answer: false },
-        { name: "bike", answer: true },
-        { name: "rocket", answer: false },
-      ];
       var ynIdx = 0;
       var ynRewarded = false;
       var ynResults = [];
       var ynTries = 0;
+      var YN_ROUNDS = 10;
+      var YN_ONZA_ROUNDS = 5;
       var ynOwned = {
-        sam: ["robot", "teddy bear", "rocket"],
+        sam: ["car", "teddy bear", "rocket"],
         onza: ["car", "kite", "bike"],
       };
+      var ynRounds = [];
+      function ynBuildRounds() {
+        var rounds = [];
+        var last = -1;
+        var last2 = -1;
+        for (var i = 0; i < YN_ROUNDS; i++) {
+          var pick = last;
+          var guard = 0;
+          while (guard < 100 && (pick === last || pick === last2)) {
+            pick = Math.floor(Math.random() * TOYS.length);
+            guard++;
+          }
+          last2 = last;
+          last = pick;
+          var who = i < YN_ONZA_ROUNDS ? "onza" : "sam";
+          rounds.push({
+            name: TOYS[pick].name,
+            who: who,
+            answer: ynOwned[who].indexOf(TOYS[pick].name) !== -1,
+          });
+        }
+        ynRounds = rounds;
+      }
       function ynFillToys(sel, names) {
         var box = document.getElementById(sel);
         if (!box) return;
@@ -5274,14 +5392,26 @@
           })(names[i]);
         }
       }
-      function ynSetOwner(name) {
+      function ynSetOwner(r) {
         var sam = document.getElementById("ynSam");
         var onza = document.getElementById("ynOnza");
-        var isSam = ynOwned.sam.indexOf(name) !== -1;
-        if (sam) sam.classList.toggle("owner", isSam);
-        if (onza) onza.classList.toggle("owner", !isSam);
+        if (sam) {
+          sam.style.display = r.who === "sam" ? "" : "none";
+          sam.classList.toggle(
+            "owner",
+            r.who === "sam" && ynOwned.sam.indexOf(r.name) !== -1,
+          );
+        }
+        if (onza) {
+          onza.style.display = r.who === "onza" ? "" : "none";
+          onza.classList.toggle(
+            "owner",
+            r.who === "onza" && ynOwned.onza.indexOf(r.name) !== -1,
+          );
+        }
       }
       function ynReset() {
+        ynBuildRounds();
         buildPips("ynPips", ynRounds.length);
         ynIdx = 0;
         ynResults = [];
@@ -5297,8 +5427,11 @@
           img.className = "";
           img.alt = r.name;
         }
-        setHeadline("ynTitle", "Do you have a " + r.name + "?");
-        ynSetOwner(r.name);
+        setHeadline(
+          "ynTitle",
+          "Do You Have " + toyCap(ynArticle(r.name)) + " " + toyCap(r.name) + "?",
+        );
+        ynSetOwner(r);
         ynTries = 0;
         setPips("ynPips", ynResults, ynIdx);
       }
@@ -5306,10 +5439,10 @@
         ynIdx++;
         setPips("ynPips", ynResults, ynIdx);
         if (ynIdx >= ynRounds.length) {
-          setHeadline("ynTitle", "Well done!");
+          setHeadline("ynTitle", "Well Done!");
           if (!ynRewarded && qualifies(ynResults)) {
             ynRewarded = true;
-            reward("DO YOU HAVE A…? +1 ⭐");
+            reward("WELL DONE! +1 ⭐");
           }
         } else {
           ynStart();
@@ -5390,7 +5523,7 @@
         yn2Idx = 0;
         yn2Results = [];
         yn2Tries = 0;
-        yn2Start();
+        ynStart2();
       }
       function ynStart2() {
         if (yn2Idx >= yn2Rounds.length) return;
@@ -5403,7 +5536,7 @@
         }
         setHeadline(
           "yn2Title",
-          "Do you have " + ynArticle(r.name) + " " + r.name + "?",
+          "Do You Have " + toyCap(ynArticle(r.name)) + " " + toyCap(r.name) + "?",
         );
         ynSetOwner2(r);
         yn2Tries = 0;
@@ -5413,10 +5546,10 @@
         yn2Idx++;
         setPips("yn2Pips", yn2Results, yn2Idx);
         if (yn2Idx >= yn2Rounds.length) {
-          setHeadline("yn2Title", "Well done!");
+          setHeadline("yn2Title", "Well Done!");
           if (!yn2Rewarded && qualifies(yn2Results)) {
             yn2Rewarded = true;
-            reward("DO YOU HAVE A…? +1 ⭐");
+            reward("WELL DONE! +1 ⭐");
           }
         } else {
           ynStart2();
@@ -5426,12 +5559,6 @@
         if (yn2Idx >= yn2Rounds.length) return;
         var r = yn2Rounds[yn2Idx];
         if (yes !== r.answer) {
-          if (yn2Idx === 0) {
-            // Round 1 is a free check: no penalty, keep trying.
-            toast("Try again!");
-            say("Try again.");
-            return;
-          }
           yn2Tries++;
           toast("Try again!");
           say("Try again.");
@@ -5447,62 +5574,197 @@
         ynAdvance2();
       }
 
-      var likePlurals = { fish: "fish" };
-      var likeHistory = [];
-      function likePick() {
-        var pool = [];
-        for (var i = 0; i < ANIMALS.length; i++) {
-          if (likeHistory.indexOf(ANIMALS[i].name) === -1) pool.push(ANIMALS[i]);
+      var LIKE_ONZA_ROUNDS = 5;
+      var LIKE_ROUNDS = 10;
+      var likeSets = {
+        sam: { like: ["dog", "rabbit"], dislike: ["lion", "elephant"] },
+        onza: { like: ["cat", "bird"], dislike: ["fish", "monkey"] },
+      };
+      var likeRounds = [];
+      var likeIdx = 0;
+      var likeRewarded = false;
+      var likeResults = [];
+      var likeTries = 0;
+      function likePlural(name) {
+        if (name === "fish") return "fish";
+        return name + "s";
+      }
+      function likeBuildRounds() {
+        likeRounds = [];
+        var whos = ["onza", "sam"];
+        var countFor = {
+          onza: LIKE_ONZA_ROUNDS,
+          sam: LIKE_ROUNDS - LIKE_ONZA_ROUNDS,
+        };
+        for (var w = 0; w < whos.length; w++) {
+          var who = whos[w];
+          var pool = likeSets[who].like.concat(likeSets[who].dislike);
+          for (var i = pool.length - 1; i > 0; i--) {
+            var j = Math.floor(Math.random() * (i + 1));
+            var tmp = pool[i];
+            pool[i] = pool[j];
+            pool[j] = tmp;
+          }
+          for (var k = 0; k < countFor[who]; k++) {
+            var name = pool[k % pool.length];
+            likeRounds.push({
+              who: who,
+              name: name,
+              answer: likeSets[who].like.indexOf(name) !== -1,
+            });
+          }
         }
-        var a = pool[Math.floor(Math.random() * pool.length)];
-        likeHistory.push(a.name);
-        if (likeHistory.length > 2) likeHistory.shift();
-        var img = document.getElementById("likeImg");
-        if (img) {
-          img.src = a.img;
-          img.alt = a.name;
+      }
+      function likeSetOwner(r) {
+        var samHeader = document.getElementById("likeSamHeader");
+        var onzaHeader = document.getElementById("likeOnzaHeader");
+        if (samHeader) {
+          samHeader.style.display = r.who === "sam" ? "" : "none";
+          samHeader.classList.toggle(
+            "owner",
+            r.who === "sam" && likeSets.sam.like.indexOf(r.name) !== -1,
+          );
+        }
+        if (onzaHeader) {
+          onzaHeader.style.display = r.who === "onza" ? "" : "none";
+          onzaHeader.classList.toggle(
+            "owner",
+            r.who === "onza" && likeSets.onza.like.indexOf(r.name) !== -1,
+          );
+        }
+        var showSam = r.who === "sam";
+        var showOnza = r.who === "onza";
+        var sides = {
+          "likeSamLike": showSam,
+          "likeSamDislike": showSam,
+          "likeOnzaLike": showOnza,
+          "likeOnzaDislike": showOnza,
+        };
+        for (var id in sides) {
+          var el = document.getElementById(id);
+          if (el) el.style.display = sides[id] ? "" : "none";
         }
       }
       function likeReset() {
-        likePick();
+        likeBuildRounds();
+        buildPips("likePips", LIKE_ROUNDS);
+        likeIdx = 0;
+        likeResults = [];
+        likeTries = 0;
+        likeStart();
       }
-      function likeNext() {
-        likePick();
+      function likeStart() {
+        if (likeIdx >= likeRounds.length) return;
+        var r = likeRounds[likeIdx];
+        var img = document.getElementById("likeImg");
+        if (img) {
+          img.src = animalImg(r.name);
+          img.className = "";
+          img.alt = r.name;
+        }
+        setHeadline(
+          "likeTitle",
+          (r.who === "onza" ? "Onza" : "Sam") +
+            ", Do You Like " +
+            toyCap(likePlural(r.name)) +
+            "?",
+        );
+        likeSetOwner(r);
+        likeTries = 0;
+        setPips("likePips", likeResults, likeIdx);
+      }
+      function likeAdvance() {
+        likeIdx++;
+        setPips("likePips", likeResults, likeIdx);
+        if (likeIdx >= likeRounds.length) {
+          setHeadline("likeTitle", "Well Done!");
+          if (!likeRewarded && qualifies(likeResults)) {
+            likeRewarded = true;
+            reward("DO YOU LIKE? +1 ⭐");
+          }
+        } else {
+          likeStart();
+        }
+      }
+      function likeAnswer(yes) {
+        if (likeIdx >= likeRounds.length) return;
+        var r = likeRounds[likeIdx];
+        if (yes !== r.answer) {
+          likeTries++;
+          toast("Try again!");
+          say("Try again.");
+          if (likeTries >= 2) {
+            likeResults.push("bad");
+            likeAdvance();
+          }
+          return;
+        }
+        likeResults.push(likeTries === 0 ? "good" : "mediocre");
+        toast("WELL DONE!");
+        var phrase = r.answer
+          ? "Yes, I like " + likePlural(r.name) + "!"
+          : "No, I don't like " + likePlural(r.name) + ".";
+        if (r.who === "onza") sayOther(phrase);
+        else say(phrase);
+        likeAdvance();
       }
       function likeAnimalSpeak() {
         var img = document.getElementById("likeImg");
         var name = img && img.alt ? img.alt : "dog";
-        say(name);
+        var r = likeRounds[likeIdx];
+        if (r && r.who === "onza") sayOther(likePlural(name));
+        else say(likePlural(name));
       }
       function likePress(who, state) {
-        if (who === "sam") {
-          if (state === "dislike") {
-            say("I don't like monkeys and birds.");
-          } else {
-            say("I like dogs and rabbits.");
-          }
-        } else {
-          if (state === "dislike") {
-            sayOther("I don't like fish and monkeys.");
-          } else {
-            sayOther("I like cats and birds.");
-          }
-        }
+        var set = likeSets[who];
+        var list = state === "like" ? set.like : set.dislike;
+        var text = list.map(likePlural).join(" and ");
+        var phrase =
+          state === "like"
+            ? "I like " + text + "."
+            : "I don't like " + text + ".";
+        if (who === "onza") sayOther(phrase);
+        else say(phrase);
       }
 
-      var haveRounds = [
-        { name: "car", options: ["car", "kite", "robot"] },
-        { name: "teddy bear", options: ["car", "teddy bear", "bike"] },
-        { name: "robot", options: ["rocket", "robot", "teddy bear"] },
-        { name: "kite", options: ["kite", "car", "bike"] },
-        { name: "bike", options: ["bike", "robot", "rocket"] },
-        { name: "rocket", options: ["car", "rocket", "teddy bear"] },
-      ];
+      var HAVE_ROUNDS = 8;
+      var haveRounds = [];
       var haveIdx = 0;
       var haveRewarded = false;
       var haveResults = [];
       var haveTries = 0;
+      function haveBuildRounds() {
+        var rounds = [];
+        var last = -1;
+        var last2 = -1;
+        for (var i = 0; i < HAVE_ROUNDS; i++) {
+          var pick = last;
+          var guard = 0;
+          while (guard < 100 && (pick === last || pick === last2)) {
+            pick = Math.floor(Math.random() * TOYS.length);
+            guard++;
+          }
+          last2 = last;
+          last = pick;
+          rounds.push({ name: TOYS[pick].name });
+        }
+        haveRounds = rounds;
+      }
+      function haveBuildOptions(name) {
+        var others = [];
+        for (var i = 0; i < TOYS.length; i++) {
+          if (TOYS[i].name !== name) others.push(TOYS[i].name);
+        }
+        for (var j = others.length - 1; j > 0; j--) {
+          var k = Math.floor(Math.random() * (j + 1));
+          var tmp = others[j];
+          others[j] = others[k];
+          others[k] = tmp;
+        }
+        return [name, others[0], others[1]];
+      }
       function haveReset() {
+        haveBuildRounds();
         buildPips("havePips", haveRounds.length);
         haveIdx = 0;
         haveResults = [];
@@ -5518,13 +5780,13 @@
           img.className = "";
           img.alt = r.name;
         }
-        setHeadline("haveTitle", "What do you have?");
+        setHeadline("haveTitle", "What Do You Have?");
         haveTries = 0;
         setPips("havePips", haveResults, haveIdx);
         var box = document.getElementById("haveOptions");
         if (!box) return;
         box.innerHTML = "";
-        var shuffle = r.options.slice();
+        var shuffle = haveBuildOptions(r.name);
         for (var i = shuffle.length - 1; i > 0; i--) {
           var j = Math.floor(Math.random() * (i + 1));
           var tmp = shuffle[i];
@@ -5547,7 +5809,7 @@
         haveIdx++;
         setPips("havePips", haveResults, haveIdx);
         if (haveIdx >= haveRounds.length) {
-          setHeadline("haveTitle", "Well done!");
+          setHeadline("haveTitle", "Well Done!");
           if (!haveRewarded && qualifies(haveResults)) {
             haveRewarded = true;
             reward("I HAVE A…! +1 ⭐");
@@ -5575,12 +5837,52 @@
         haveAdvance();
       }
 
-      var whereOrder = ["bike", "kite", "teddy bear", "robot", "car", "rocket"];
+      var whereOrder = [];
       var whereIdx = 0;
       var whereRewarded = false;
       var whereResults = [];
       var whereTries = 0;
+      function whereBuildOrder() {
+        var list = TOYS.slice();
+        for (var i = list.length - 1; i > 0; i--) {
+          var j = Math.floor(Math.random() * (i + 1));
+          var tmp = list[i];
+          list[i] = list[j];
+          list[j] = tmp;
+        }
+        return list.map(function (t) {
+          return t.name;
+        });
+      }
+      function whereBuildGrid() {
+        var grid = document.getElementById("whereGrid");
+        if (!grid) return;
+        grid.innerHTML = "";
+        var order = TOYS.slice();
+        for (var i = order.length - 1; i > 0; i--) {
+          var j = Math.floor(Math.random() * (i + 1));
+          var tmp = order[i];
+          order[i] = order[j];
+          order[j] = tmp;
+        }
+        for (var k = 0; k < order.length; k++) {
+          (function (toy) {
+            var b = document.createElement("button");
+            b.className = "toyBtn";
+            b.onclick = function () {
+              whereAnswer(toy.name);
+            };
+            var img = document.createElement("img");
+            img.className = "toyImg";
+            img.src = toy.img;
+            img.alt = toy.name;
+            b.appendChild(img);
+            grid.appendChild(b);
+          })(order[k]);
+        }
+      }
       function whereReset() {
+        whereOrder = whereBuildOrder();
         buildPips("wherePips", whereOrder.length);
         whereIdx = 0;
         whereResults = [];
@@ -5589,15 +5891,16 @@
       }
       function whereStart() {
         if (whereIdx >= whereOrder.length) return;
-        setHeadline("whereTitle", "Where is the " + whereOrder[whereIdx] + "?");
+        setHeadline("whereTitle", "Where Is The " + toyCap(whereOrder[whereIdx]) + "?");
         whereTries = 0;
         setPips("wherePips", whereResults, whereIdx);
+        whereBuildGrid();
       }
       function whereAdvance() {
         whereIdx++;
         setPips("wherePips", whereResults, whereIdx);
         if (whereIdx >= whereOrder.length) {
-          setHeadline("whereTitle", "Well done!");
+          setHeadline("whereTitle", "Well Done!");
           if (!whereRewarded && qualifies(whereResults)) {
             whereRewarded = true;
             reward("WHERE IS IT? +1 ⭐");
@@ -5625,39 +5928,10 @@
       }
 
       (function () {
-        var grid = document.getElementById("whereGrid");
-        if (!grid) return;
-        for (var i = 0; i < TOYS.length; i++) {
-          (function (toy) {
-            var b = document.createElement("button");
-            b.className = "toyBtn";
-            b.onclick = function () {
-              whereAnswer(toy.name);
-            };
-            var img = document.createElement("img");
-            img.className = "toyImg";
-            img.src = toy.img;
-            img.alt = toy.name;
-            var span = document.createElement("span");
-            span.className = "toyName";
-            span.textContent = toyCap(toy.name);
-            b.appendChild(img);
-            b.appendChild(span);
-            grid.appendChild(b);
-          })(TOYS[i]);
-        }
-      })();
-      (function () {
         ynFillToys("ynSamToys", ynOwned.sam);
         ynFillToys("ynOnzaToys", ynOwned.onza);
         ynFillAnimals("yn2SamToys", yn2Owned.sam);
         ynFillAnimals("yn2OnzaToys", yn2Owned.onza);
-        var img2 = document.getElementById("yn2Img");
-        if (img2 && ANIMALS.length) {
-          var a = ANIMALS[Math.floor(Math.random() * ANIMALS.length)];
-          img2.src = a.img;
-          img2.alt = a.name;
-        }
       })();
     </script>
     <script src="https://unpkg.com/lucide@latest"></script>
