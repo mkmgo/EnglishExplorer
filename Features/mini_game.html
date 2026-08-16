@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Classroom Mystery - 1:1 English Game</title>
+    <title>Unlock Mystery - 1:1 English Game</title>
     <style>
       :root,
       html.light {
@@ -23,7 +23,6 @@
         --item-bg: #e5e7eb;
         --item-border: #6b7280;
         --img-bg: #ffffff;
-        --phrase-bar-bg: #e5e7eb;
         --good: #10b981;
         --goal-bg: #d1fae5;
         --mystery-bg: #fef3c7;
@@ -48,7 +47,6 @@
           --item-bg: #1e293b;
           --item-border: #64748b;
           --img-bg: #f8fafc;
-          --phrase-bar-bg: #1e293b;
           --good: #34d399;
           --goal-bg: #064e3b;
           --mystery-bg: #78350f;
@@ -73,7 +71,6 @@
         --item-bg: #1e293b;
         --item-border: #64748b;
         --img-bg: #f8fafc;
-        --phrase-bar-bg: #1e293b;
         --good: #34d399;
         --goal-bg: #064e3b;
         --mystery-bg: #78350f;
@@ -215,6 +212,42 @@
         border-color: var(--primary);
       }
 
+      .lock-icon {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--border-strong);
+        transition:
+          opacity 0.4s ease,
+          transform 0.4s ease;
+      }
+
+      .lock-icon svg {
+        width: 26px;
+        height: 26px;
+      }
+
+      .lock-icon.unlocked-pop {
+        animation: unlockPop 0.45s ease;
+      }
+
+      .lock-icon.disappear {
+        opacity: 0;
+        transform: scale(1.25);
+      }
+
+      @keyframes unlockPop {
+        0% {
+          transform: scale(0.4);
+        }
+        60% {
+          transform: scale(1.2);
+        }
+        100% {
+          transform: scale(1);
+        }
+      }
+
       /* Moveable Items Palette */
       .palette {
         background: var(--card-bg);
@@ -228,9 +261,11 @@
 
       .palette-title {
         font-weight: bold;
-        margin-bottom: 10px;
+        margin-bottom: 12px;
         color: var(--muted);
         text-align: center;
+        width: 100%;
+        max-width: 800px;
       }
 
       .item-container {
@@ -382,30 +417,6 @@
         font-weight: bold;
       }
 
-      /* Cheat Sheet Bar */
-      .phrase-bar {
-        width: 100%;
-        max-width: 800px;
-        background: var(--phrase-bar-bg);
-        color: var(--text);
-        border: 2px solid var(--border-strong);
-        padding: 15px;
-        border-radius: 12px;
-        display: flex;
-        justify-content: space-around;
-        flex-wrap: wrap;
-        gap: 10px;
-      }
-
-      .phrase-pill {
-        background: var(--card-bg);
-        color: var(--text);
-        padding: 6px 12px;
-        border-radius: 6px;
-        font-size: clamp(0.8rem, 0.5vw + 0.6rem, 0.9rem);
-        border-left: 3px solid var(--accent);
-      }
-
       /* Responsive: small screens */
       @media (max-width: 640px) {
         html,
@@ -448,8 +459,7 @@
           width: 40px;
           height: 40px;
         }
-        .palette,
-        .phrase-bar {
+        .palette {
           padding: 12px;
         }
       }
@@ -503,12 +513,12 @@
     >
       🌙
     </button>
-    <h1>Classroom Mystery</h1>
-    <div class="instructions">
-      Drag elements into the classroom spots, or ask the student to command you!
+    <h1>Unlock Mystery</h1>
+    <div class="instructions" id="goalText">
+      Move <b>Colour Bricks</b> to <b>Colours</b>
     </div>
 
-    <!-- Classroom Spots Grid -->
+    <!-- Classroom Spots Grid: Row 1 (Colours + Animals) -->
     <div class="grid-container">
       <div class="spot-card">
         <div class="spot-title">Colours</div>
@@ -523,30 +533,10 @@
       <div class="spot-card">
         <div class="spot-title">Animals</div>
         <div class="drop-zone" id="spot-2">
-          <div class="slot"></div>
-          <div class="slot"></div>
-          <div class="slot"></div>
-          <div class="slot"></div>
-        </div>
-      </div>
-
-      <div class="spot-card">
-        <div class="spot-title">Toys</div>
-        <div class="drop-zone" id="spot-3">
-          <div class="slot"></div>
-          <div class="slot"></div>
-          <div class="slot"></div>
-          <div class="slot"></div>
-        </div>
-      </div>
-
-      <div class="spot-card">
-        <div class="spot-title">Mystery</div>
-        <div class="drop-zone" id="spot-4">
-          <div class="slot"></div>
-          <div class="slot"></div>
-          <div class="slot"></div>
-          <div class="slot"></div>
+          <div class="slot"><span class="lock-icon"><i data-lucide="lock"></i></span></div>
+          <div class="slot"><span class="lock-icon"><i data-lucide="lock"></i></span></div>
+          <div class="slot"><span class="lock-icon"><i data-lucide="lock"></i></span></div>
+          <div class="slot"><span class="lock-icon"><i data-lucide="lock"></i></span></div>
         </div>
       </div>
     </div>
@@ -619,12 +609,27 @@
       </div>
     </div>
 
-    <!-- Target Phrases Cheat Sheet -->
-    <div class="phrase-bar">
-      <div class="phrase-pill">Move <b>Colours Bricks</b> to Colours</div>
-      <div class="phrase-pill">Give me the <b>[Item]</b></div>
-      <div class="phrase-pill">Take the <b>[Item]</b></div>
-      <div class="phrase-pill">Put <b>[Item]</b> on / in / under...</div>
+    <!-- Classroom Spots Grid: Row 2 (Toys + Mystery) -->
+    <div class="grid-container">
+      <div class="spot-card">
+        <div class="spot-title">Toys</div>
+        <div class="drop-zone" id="spot-3">
+          <div class="slot"><span class="lock-icon"><i data-lucide="lock"></i></span></div>
+          <div class="slot"><span class="lock-icon"><i data-lucide="lock"></i></span></div>
+          <div class="slot"><span class="lock-icon"><i data-lucide="lock"></i></span></div>
+          <div class="slot"><span class="lock-icon"><i data-lucide="lock"></i></span></div>
+        </div>
+      </div>
+
+      <div class="spot-card">
+        <div class="spot-title">Mystery</div>
+        <div class="drop-zone" id="spot-4">
+          <div class="slot"><span class="lock-icon"><i data-lucide="lock"></i></span></div>
+          <div class="slot"><span class="lock-icon"><i data-lucide="lock"></i></span></div>
+          <div class="slot"><span class="lock-icon"><i data-lucide="lock"></i></span></div>
+          <div class="slot"><span class="lock-icon"><i data-lucide="lock"></i></span></div>
+        </div>
+      </div>
     </div>
 
     <div id="winOverlay" class="win-overlay">
@@ -702,6 +707,66 @@
         "spot-4": false,
       };
 
+      // Progressive unlock state. spot-1 (Colours) is open from the start;
+      // Animals, Toys and Mystery start locked.
+      var unlocked = {
+        "spot-1": true,
+        "spot-2": false,
+        "spot-3": false,
+        "spot-4": false,
+      };
+
+      var goalTexts = [
+        'Move <b>Colour Bricks</b> to <b>Colours</b>',
+        'Move <b>Animal Bricks</b> to <b>Animals</b>',
+        'Solve the <b>Mystery</b>',
+        '<b>Yellow Bee</b> &ndash; <b>Blue Rabbit</b> &ndash; <b>Red Car</b> &ndash; <b>Green Bike</b>',
+      ];
+
+      function renderIcons() {
+        if (typeof lucide === "undefined") return;
+        lucide.createIcons({ lock: lucide.lock, lockOpen: lucide.lockOpen });
+      }
+
+      // Invalidates pending unlock animations after a restart.
+      var gameVersion = 0;
+
+      function unlockSpot(spotId) {
+        unlocked[spotId] = true;
+        var version = gameVersion;
+        var zone = document.getElementById(spotId);
+        if (!zone) return;
+        zone.querySelectorAll(".slot").forEach(function (slot) {
+          slot.innerHTML =
+            '<span class="lock-icon unlocked-pop"><i data-lucide="lockOpen"></i></span>';
+        });
+        renderIcons();
+        setTimeout(function () {
+          if (version !== gameVersion) return;
+          zone.querySelectorAll(".lock-icon").forEach(function (ic) {
+            ic.classList.add("disappear");
+          });
+        }, 700);
+        setTimeout(function () {
+          if (version !== gameVersion) return;
+          zone.querySelectorAll(".slot").forEach(function (slot) {
+            if (slot.querySelector(".lock-icon")) slot.innerHTML = "";
+          });
+        }, 1150);
+      }
+
+      function updateGoals() {
+        var goalEl = document.getElementById("goalText");
+        var phase = 0;
+        if (reached["spot-1"]) phase = 1;
+        if (reached["spot-2"]) phase = 2;
+        if (reached["spot-3"]) phase = 3;
+        if (goalEl) goalEl.innerHTML = goalTexts[phase];
+        if (reached["spot-1"] && !unlocked["spot-2"]) unlockSpot("spot-2");
+        if (reached["spot-2"] && !unlocked["spot-3"]) unlockSpot("spot-3");
+        if (reached["spot-3"] && !unlocked["spot-4"]) unlockSpot("spot-4");
+      }
+
       function checkGoal() {
         var allActive = true;
         goals.forEach(function (goal) {
@@ -740,6 +805,7 @@
         }
         var winOverlay = document.getElementById("winOverlay");
         if (winOverlay) winOverlay.classList.toggle("show", allActive);
+        updateGoals();
       }
       shuffleItems();
       checkGoal();
@@ -791,6 +857,10 @@
         }
         var under = document.elementFromPoint(e.clientX, e.clientY);
         var zone = under ? under.closest(".slot, .item-container") : null;
+        if (zone && zone.classList.contains("slot")) {
+          var zoneDrop = zone.closest(".drop-zone");
+          if (zoneDrop && !unlocked[zoneDrop.id]) zone = null;
+        }
         if (zone !== overZone) {
           clearOverZone();
           overZone = zone;
@@ -808,20 +878,22 @@
         activeItem.classList.remove("dragging-original");
         if (overZone) {
           if (overZone.classList.contains("slot")) {
-            var occupant = overZone.querySelector(".draggable-item");
-            var mysterySpot =
-              overZone.closest(".drop-zone") &&
-              overZone.closest(".drop-zone").id === "spot-4";
-            var canCombine =
-              mysterySpot && occupant && combos[activeItem.id] === occupant.id;
-            if (!occupant) {
-              overZone.appendChild(activeItem);
-              checkMystery();
-              checkGoal();
-            } else if (canCombine) {
-              overZone.appendChild(activeItem);
-              checkMystery();
-              checkGoal();
+            var dropZone = overZone.closest(".drop-zone");
+            var zoneLocked = dropZone && !unlocked[dropZone.id];
+            if (!zoneLocked) {
+              var occupant = overZone.querySelector(".draggable-item");
+              var mysterySpot = dropZone && dropZone.id === "spot-4";
+              var canCombine =
+                mysterySpot && occupant && combos[activeItem.id] === occupant.id;
+              if (!occupant) {
+                overZone.appendChild(activeItem);
+                checkMystery();
+                checkGoal();
+              } else if (canCombine) {
+                overZone.appendChild(activeItem);
+                checkMystery();
+                checkGoal();
+              }
             }
           } else if (overZone.classList.contains("item-container")) {
             overZone.appendChild(activeItem);
@@ -984,12 +1056,33 @@
         reached["spot-2"] = false;
         reached["spot-3"] = false;
         reached["spot-4"] = false;
+        unlocked["spot-1"] = true;
+        unlocked["spot-2"] = false;
+        unlocked["spot-3"] = false;
+        unlocked["spot-4"] = false;
+        gameVersion++;
+        ["spot-2", "spot-3", "spot-4"].forEach(function (id) {
+          var zone = document.getElementById(id);
+          if (!zone) return;
+          zone.querySelectorAll(".slot").forEach(function (slot) {
+            slot.innerHTML =
+              '<span class="lock-icon"><i data-lucide="lock"></i></span>';
+          });
+        });
+        renderIcons();
+        var goalEl = document.getElementById("goalText");
+        if (goalEl) goalEl.innerHTML = goalTexts[0];
         shuffleItems();
         checkGoal();
       }
 
       var restartBtn = document.getElementById("restartBtn");
       if (restartBtn) restartBtn.addEventListener("click", resetGame);
+    </script>
+
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script>
+      renderIcons();
     </script>
   </body>
 </html>
