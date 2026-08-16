@@ -1,5 +1,55 @@
 # English Explorer — Dev Conventions
 
+## Project structure
+
+Follow this layout (all paths relative to repo root):
+
+```
+EnglishExplorer/
+├── index.html                  <-- Stable, production-ready release
+├── advanced.html               <-- Active sandbox / current development version
+├── README.md                   <-- Project overview for humans & visitors
+├── AGENTS.md                   <-- This file
+├── .gitignore                  <-- Ignores system metadata files (e.g. Desktop.ini)
+├── junior/                     <-- Ages 6-9 ecosystem
+│   ├── thematic/               <-- Thematic lesson decks
+│   │   ├── animals.html
+│   │   └── toys-things.html
+│   └── minigames/              <-- Highly gamified mini-games (formerly /Features)
+│       └── unlock-mystery.html
+├── breakthrough/               <-- Older pupils (EEBT - Advanced / Breakthrough)
+│   └── tools/                  <-- Standalone utility collection (formerly EEBTools/)
+│       ├── eebt-tools.html
+│       └── eebt-translator.html
+└── archive/                    <-- Older versions and backups for mobile/Tizen testing
+    └── develop.html
+```
+
+The `assets/`, `presentations/` (both ecosystems) and `breakthrough/modules/` folders from the
+target template do **not** exist yet — only create them when there is real shared content to
+put in them (see "Self-contained files" below).
+
+### File placement rules
+
+- New themed lesson deck → `junior/thematic/`.
+- New gamified activity → `junior/minigames/`.
+- New Breakthrough tool/utility → `breakthrough/tools/`.
+- Superseded/old versions → `archive/` (keep them; do not delete without asking).
+- Keep `index.html` as the stable release; do new development in `advanced.html` and promote when stable.
+
+### Self-contained files — no cross-file dependencies
+
+- Every HTML file is fully self-contained: inline `<style>` and inline `<script>`, no external JS/CSS libraries, no local assets folder.
+- Images and videos are hosted on Cloudinary and referenced by absolute `https://res.cloudinary.com/...` URLs.
+- No HTML file links to another HTML file (no local `href`/`src`/`window.open` to sibling files). **Do not introduce relative file references** — if two files must share code, treat that as a deliberate refactor and discuss it first.
+- When moving/renaming a file, move it without editing (git detects byte-identical copies as renames), then apply any edits on the new path.
+
+### File naming rules
+
+- Use **kebab-case**, all **lowercase**: `my-new-module.html`, never `MyNewModule.html`, `my_new_module.html`, or `my module.html`.
+- No spaces, underscores, or uppercase letters in file names.
+- Existing product display names are unaffected — only file names are constrained (e.g. the tools stay "EEBTools" on screen while the files are `eebt-tools.html` / `eebt-translator.html`).
+
 ## Platforms
 
 - Must work on **Tizen** smart TVs and **mobile devices** (iOS/Android phones and tablets).
