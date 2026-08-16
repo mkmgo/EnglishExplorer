@@ -693,9 +693,19 @@
         }
       }
 
+      // Locked-in progress: once a spot is completed it stays coloured,
+      // even if an item is dragged away afterwards.
+      var reached = {
+        "spot-1": false,
+        "spot-2": false,
+        "spot-3": false,
+        "spot-4": false,
+      };
+
       function checkGoal() {
         var allActive = true;
         goals.forEach(function (goal) {
+          if (goal.spotId === "spot-4") return;
           var spot = document.getElementById(goal.spotId);
           var card = spot && spot.closest(".spot-card");
           var allPlaced = spot
@@ -704,27 +714,28 @@
                 return el && spot.contains(el);
               })
             : false;
-          if (card) card.classList.toggle("goal-reached", allPlaced);
-          if (!allPlaced) allActive = false;
+          if (allPlaced) reached[goal.spotId] = true;
+          if (card) card.classList.toggle("goal-reached", reached[goal.spotId]);
+          if (!reached[goal.spotId]) allActive = false;
         });
         var mystery = document.getElementById("spot-4");
         if (mystery) {
           var mCard = mystery.closest(".spot-card");
-          var baseComplete = goals
-            .filter(function (g) {
-              return g.spotId !== "spot-4";
-            })
-            .every(function (g) {
-              var spot = document.getElementById(g.spotId);
-              return (
-                spot &&
-                g.ids.every(function (id) {
-                  var el = document.getElementById(id);
-                  return el && spot.contains(el);
-                })
-              );
-            });
-          if (mCard) mCard.classList.toggle("mystery-active", baseComplete);
+          var baseComplete =
+            reached["spot-1"] && reached["spot-2"] && reached["spot-3"];
+          var redCar = document.getElementById("red-car");
+          var yellowBee = document.getElementById("yellow-bee");
+          var mysteryDone =
+            !!redCar && mystery.contains(redCar) && !!yellowBee && mystery.contains(yellowBee);
+          if (mysteryDone) reached["spot-4"] = true;
+          if (mCard) {
+            mCard.classList.toggle(
+              "mystery-active",
+              baseComplete && !reached["spot-4"],
+            );
+            mCard.classList.toggle("goal-reached", reached["spot-4"]);
+          }
+          if (!reached["spot-4"]) allActive = false;
         }
         var winOverlay = document.getElementById("winOverlay");
         if (winOverlay) winOverlay.classList.toggle("show", allActive);
@@ -902,6 +913,10 @@
           inventory.appendChild(el);
         });
         stashed = [];
+        reached["spot-1"] = false;
+        reached["spot-2"] = false;
+        reached["spot-3"] = false;
+        reached["spot-4"] = false;
         shuffleItems();
         checkGoal();
       }
