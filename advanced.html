@@ -2402,7 +2402,7 @@
               <div class="roundPips" id="yn2Pips"></div>
               <div class="gameArea">
                 <div class="ynCast">
-                  <div class="ynCastMember" id="yn2Sam">
+                  <div class="ynCastMember" id="yn2Sam" style="display: none">
                     <img
                       class="ynAvatar"
                       src="https://res.cloudinary.com/dqwm4pdbz/image/upload/c_scale,w_450,h_437/q_auto/f_auto/v1786623813/sam_3davface_irvdlj.png"
@@ -5338,6 +5338,9 @@
       var yn2Rewarded = false;
       var yn2Results = [];
       var yn2Tries = 0;
+      // First 5 animals are asked about Onza (only Onza is shown);
+      // the remaining animals are asked about Sam (only Sam is shown).
+      var YN2_ONZA_ROUNDS = 5;
       var yn2Owned = {
         sam: ["rabbit", "cat", "dog"],
         onza: ["rabbit", "bird", "monkey"],
@@ -5354,20 +5357,32 @@
           list[i] = list[j];
           list[j] = tmp;
         }
-        yn2Rounds = list.map(function (a) {
+        yn2Rounds = list.map(function (a, i) {
+          var who = i < YN2_ONZA_ROUNDS ? "onza" : "sam";
           return {
             name: a.name,
-            answer: yn2Owned.onza.indexOf(a.name) !== -1,
+            who: who,
+            answer: yn2Owned[who].indexOf(a.name) !== -1,
           };
         });
       }
-      function ynSetOwner2(name) {
+      function ynSetOwner2(r) {
         var sam = document.getElementById("yn2Sam");
         var onza = document.getElementById("yn2Onza");
-        if (sam)
-          sam.classList.toggle("owner", yn2Owned.sam.indexOf(name) !== -1);
-        if (onza)
-          onza.classList.toggle("owner", yn2Owned.onza.indexOf(name) !== -1);
+        if (sam) {
+          sam.style.display = r.who === "sam" ? "" : "none";
+          sam.classList.toggle(
+            "owner",
+            r.who === "sam" && yn2Owned.sam.indexOf(r.name) !== -1,
+          );
+        }
+        if (onza) {
+          onza.style.display = r.who === "onza" ? "" : "none";
+          onza.classList.toggle(
+            "owner",
+            r.who === "onza" && yn2Owned.onza.indexOf(r.name) !== -1,
+          );
+        }
       }
       function ynReset2() {
         yn2BuildRounds();
@@ -5390,7 +5405,7 @@
           "yn2Title",
           "Do you have " + ynArticle(r.name) + " " + r.name + "?",
         );
-        ynSetOwner2(r.name);
+        ynSetOwner2(r);
         yn2Tries = 0;
         setPips("yn2Pips", yn2Results, yn2Idx);
       }
@@ -5411,6 +5426,12 @@
         if (yn2Idx >= yn2Rounds.length) return;
         var r = yn2Rounds[yn2Idx];
         if (yes !== r.answer) {
+          if (yn2Idx === 0) {
+            // Round 1 is a free check: no penalty, keep trying.
+            toast("Try again!");
+            say("Try again.");
+            return;
+          }
           yn2Tries++;
           toast("Try again!");
           say("Try again.");
