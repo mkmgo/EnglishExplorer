@@ -178,36 +178,37 @@
         text-align: center;
       }
 
-      .drop-zone {
-        width: 252px;
-        height: 252px;
-        box-sizing: border-box;
-        display: grid;
-        grid-template-columns: repeat(2, 1fr);
-        grid-template-rows: repeat(2, 1fr);
-        gap: 12px;
-        padding: 12px;
-        border: 2px dashed var(--border-strong);
-        border-radius: 8px;
-        background-color: var(--dropzone-bg);
-        transition: background-color 0.2s;
-      }
+          .drop-zone {
+            width: 236px;
+            height: 212px;
+            box-sizing: border-box;
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            grid-template-rows: repeat(2, 1fr);
+            gap: 12px;
+            padding: 12px;
+            border: 2px dashed var(--border-strong);
+            border-radius: 8px;
+            background-color: var(--dropzone-bg);
+            transition: background-color 0.2s;
+          }
 
       .drop-zone.drag-over {
         background-color: var(--dropzone-hover);
         border-color: var(--primary);
       }
 
-      .slot {
-        border: 2px dashed var(--border-strong);
-        border-radius: 8px;
-        background-color: var(--item-bg);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        min-width: 0;
-        min-height: 0;
-      }
+          .slot {
+            box-sizing: border-box;
+            border: 2px dashed var(--border-strong);
+            border-radius: 8px;
+            background-color: var(--item-bg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 0;
+            min-height: 0;
+          }
 
       .slot.drag-over {
         background-color: var(--dropzone-hover);
@@ -241,16 +242,17 @@
         height: 300px;
       }
 
-      .draggable-item {
-        padding: 8px 14px;
-        border-radius: 5px;
-        font-weight: bold;
-        cursor: grab;
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-        display: flex;
-        align-items: center;
-        gap: 6px;
-        font-size: 0.95rem;
+          .draggable-item {
+            padding: 8px 14px;
+            border-radius: 5px;
+            font-weight: bold;
+            cursor: grab;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.95rem;
+            box-sizing: border-box;
         -webkit-tap-highlight-color: transparent;
         -webkit-touch-callout: none;
         -webkit-user-select: none;
@@ -426,10 +428,10 @@
         .spot-card {
           min-height: 250px;
         }
-        .drop-zone {
-          width: 228px;
-          height: 228px;
-        }
+            .drop-zone {
+              width: 212px;
+              height: 196px;
+            }
         .item-container {
           height: 340px;
         }
