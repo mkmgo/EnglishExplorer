@@ -5,477 +5,502 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Classroom Mystery - 1:1 English Game</title>
     <style>
-          :root,
-          html.light {
-            color-scheme: light;
-            --bg-color: #f0f4f8;
-            --card-bg: #ffffff;
-            --primary: #3b82f6;
-            --accent: #f59e0b;
-            --text: #1f2937;
-            --heading: #1e3a8a;
-            --muted: #475569;
-            --border: #cbd5e1;
-            --border-strong: #94a3b8;
-            --instructions-bg: #e0f2fe;
-            --dropzone-bg: #f8fafc;
-            --dropzone-hover: #dbeafe;
-            --item-bg: #e5e7eb;
-            --item-border: #6b7280;
-            --img-bg: #ffffff;
-            --phrase-bar-bg: #e5e7eb;
-            --good: #10b981;
-            --goal-bg: #d1fae5;
-            --mystery-bg: #fef3c7;
-            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-          }
+      :root,
+      html.light {
+        color-scheme: light;
+        --bg-color: #f0f4f8;
+        --card-bg: #ffffff;
+        --primary: #3b82f6;
+        --accent: #f59e0b;
+        --text: #1f2937;
+        --heading: #1e3a8a;
+        --muted: #475569;
+        --border: #cbd5e1;
+        --border-strong: #94a3b8;
+        --instructions-bg: #e0f2fe;
+        --dropzone-bg: #f8fafc;
+        --dropzone-hover: #dbeafe;
+        --item-bg: #e5e7eb;
+        --item-border: #6b7280;
+        --img-bg: #ffffff;
+        --phrase-bar-bg: #e5e7eb;
+        --good: #10b981;
+        --goal-bg: #d1fae5;
+        --mystery-bg: #fef3c7;
+        --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+      }
 
-          @media (prefers-color-scheme: dark) {
-            :root {
-              color-scheme: dark;
-              --bg-color: #0f172a;
-              --card-bg: #1e293b;
-              --primary: #60a5fa;
-              --accent: #fbbf24;
-              --text: #e2e8f0;
-              --heading: #93c5fd;
-              --muted: #94a3b8;
-              --border: #334155;
-              --border-strong: #475569;
-              --instructions-bg: #172a44;
-              --dropzone-bg: #16233a;
-              --dropzone-hover: #1d3a5f;
-              --item-bg: #1e293b;
-              --item-border: #64748b;
-              --img-bg: #f8fafc;
-              --phrase-bar-bg: #1e293b;
-              --good: #34d399;
-              --goal-bg: #064e3b;
-              --mystery-bg: #78350f;
-              --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.45);
-            }
-          }
+      @media (prefers-color-scheme: dark) {
+        :root {
+          color-scheme: dark;
+          --bg-color: #0f172a;
+          --card-bg: #1e293b;
+          --primary: #60a5fa;
+          --accent: #fbbf24;
+          --text: #e2e8f0;
+          --heading: #93c5fd;
+          --muted: #94a3b8;
+          --border: #334155;
+          --border-strong: #475569;
+          --instructions-bg: #172a44;
+          --dropzone-bg: #16233a;
+          --dropzone-hover: #1d3a5f;
+          --item-bg: #1e293b;
+          --item-border: #64748b;
+          --img-bg: #f8fafc;
+          --phrase-bar-bg: #1e293b;
+          --good: #34d399;
+          --goal-bg: #064e3b;
+          --mystery-bg: #78350f;
+          --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.45);
+        }
+      }
 
-          html.dark {
-            color-scheme: dark;
-            --bg-color: #0f172a;
-            --card-bg: #1e293b;
-            --primary: #60a5fa;
-            --accent: #fbbf24;
-            --text: #e2e8f0;
-            --heading: #93c5fd;
-            --muted: #94a3b8;
-            --border: #334155;
-            --border-strong: #475569;
-            --instructions-bg: #172a44;
-            --dropzone-bg: #16233a;
-            --dropzone-hover: #1d3a5f;
-            --item-bg: #1e293b;
-            --item-border: #64748b;
-            --img-bg: #f8fafc;
-            --phrase-bar-bg: #1e293b;
-            --good: #34d399;
-            --goal-bg: #064e3b;
-            --mystery-bg: #78350f;
-            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.45);
-          }
+      html.dark {
+        color-scheme: dark;
+        --bg-color: #0f172a;
+        --card-bg: #1e293b;
+        --primary: #60a5fa;
+        --accent: #fbbf24;
+        --text: #e2e8f0;
+        --heading: #93c5fd;
+        --muted: #94a3b8;
+        --border: #334155;
+        --border-strong: #475569;
+        --instructions-bg: #172a44;
+        --dropzone-bg: #16233a;
+        --dropzone-hover: #1d3a5f;
+        --item-bg: #1e293b;
+        --item-border: #64748b;
+        --img-bg: #f8fafc;
+        --phrase-bar-bg: #1e293b;
+        --good: #34d399;
+        --goal-bg: #064e3b;
+        --mystery-bg: #78350f;
+        --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.45);
+      }
 
-          #themeToggle {
-            position: fixed;
-            top: 12px;
-            right: 12px;
-            z-index: 10;
-            width: 46px;
-            height: 46px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.3rem;
-            line-height: 1;
-            background: var(--card-bg);
-            color: var(--text);
-            border: 2px solid var(--border);
-            border-radius: 999px;
-            box-shadow: var(--shadow);
-            cursor: pointer;
-            -webkit-tap-highlight-color: transparent;
-          }
+      #themeToggle {
+        position: fixed;
+        top: 12px;
+        right: 12px;
+        z-index: 10;
+        width: 46px;
+        height: 46px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.3rem;
+        line-height: 1;
+        background: var(--card-bg);
+        color: var(--text);
+        border: 2px solid var(--border);
+        border-radius: 999px;
+        box-shadow: var(--shadow);
+        cursor: pointer;
+        -webkit-tap-highlight-color: transparent;
+      }
 
-          body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: var(--bg-color);
-            color: var(--text);
-            margin: 0;
-            padding: 20px;
-            min-height: 100vh;
-            overflow-x: hidden;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-          }
+      body {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        background-color: var(--bg-color);
+        color: var(--text);
+        margin: 0;
+        padding: 20px;
+        min-height: 100vh;
+        overflow-x: hidden;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
 
-          h1 {
-            margin-bottom: 5px;
-            color: var(--heading);
-            font-size: clamp(1.5rem, 4vw, 2.2rem);
-            text-align: center;
-          }
+      h1 {
+        margin-bottom: 5px;
+        color: var(--heading);
+        font-size: clamp(1.5rem, 4vw, 2.2rem);
+        text-align: center;
+      }
 
-          .instructions {
-            margin-bottom: 20px;
-            max-width: 800px;
-            font-size: clamp(0.95rem, 0.5vw + 0.8rem, 1.1rem);
-            background: var(--instructions-bg);
-            color: var(--text);
-            padding: 10px 20px;
-            border-radius: 8px;
-            border-left: 5px solid var(--primary);
-            text-align: center;
-          }
+      .instructions {
+        margin-bottom: 20px;
+        max-width: 800px;
+        font-size: clamp(0.95rem, 0.5vw + 0.8rem, 1.1rem);
+        background: var(--instructions-bg);
+        color: var(--text);
+        padding: 10px 20px;
+        border-radius: 8px;
+        border-left: 5px solid var(--primary);
+        text-align: center;
+      }
 
-          /* Grid Layout */
-          .grid-container {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 20px;
-            width: 100%;
-            max-width: 800px;
-            margin-bottom: 20px;
-          }
+      /* Grid Layout */
+      .grid-container {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 20px;
+        width: 100%;
+        max-width: 800px;
+        margin-bottom: 20px;
+      }
 
-          .spot-card {
-            background: var(--card-bg);
-            border: 3px solid var(--border);
-            border-radius: 12px;
-            height: 260px;
-            position: relative;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: space-between;
-            padding: 15px;
-            box-shadow: var(--shadow);
-            user-select: none;
-            transition: background-color 0.3s, border-color 0.3s;
-          }
+      .spot-card {
+        background: var(--card-bg);
+        border: 3px solid var(--border);
+        border-radius: 12px;
+        min-height: 260px;
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: space-between;
+        padding: 15px;
+        box-shadow: var(--shadow);
+        user-select: none;
+        transition:
+          background-color 0.3s,
+          border-color 0.3s;
+      }
 
-          .spot-card.mystery-active {
-            background-color: var(--mystery-bg);
-            border-color: var(--accent);
-          }
+      .spot-card.mystery-active {
+        background-color: var(--mystery-bg);
+        border-color: var(--accent);
+      }
 
-          .spot-card.goal-reached {
-            background-color: var(--goal-bg);
-            border-color: var(--good);
-          }
+      .spot-card.goal-reached {
+        background-color: var(--goal-bg);
+        border-color: var(--good);
+      }
 
-          .spot-title {
-            font-weight: bold;
-            font-size: clamp(1rem, 1vw + 0.5rem, 1.2rem);
-            color: var(--muted);
-            text-align: center;
-          }
+      .spot-title {
+        font-weight: bold;
+        font-size: clamp(1rem, 1vw + 0.5rem, 1.2rem);
+        color: var(--muted);
+        text-align: center;
+      }
 
-          .drop-zone {
-            width: 100%;
-            height: 178px;
-            border: 2px dashed var(--border-strong);
-            border-radius: 8px;
-            display: flex;
-            flex-wrap: wrap;
-            align-content: center;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-            background-color: var(--dropzone-bg);
-            transition: background-color 0.2s;
-          }
+      .drop-zone {
+        width: 252px;
+        height: 252px;
+        box-sizing: border-box;
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        grid-template-rows: repeat(2, 1fr);
+        gap: 12px;
+        padding: 12px;
+        border: 2px dashed var(--border-strong);
+        border-radius: 8px;
+        background-color: var(--dropzone-bg);
+        transition: background-color 0.2s;
+      }
 
-          .drop-zone.drag-over {
-            background-color: var(--dropzone-hover);
-            border-color: var(--primary);
-          }
+      .drop-zone.drag-over {
+        background-color: var(--dropzone-hover);
+        border-color: var(--primary);
+      }
 
-          /* Moveable Items Palette */
-          .palette {
-            background: var(--card-bg);
-            border-radius: 12px;
-            padding: 15px;
-            width: 100%;
-            max-width: 800px;
-            box-shadow: var(--shadow);
-            margin-bottom: 20px;
-          }
+      .slot {
+        border: 2px dashed var(--border-strong);
+        border-radius: 8px;
+        background-color: var(--item-bg);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        min-width: 0;
+        min-height: 0;
+      }
 
-          .palette-title {
-            font-weight: bold;
-            margin-bottom: 10px;
-            color: var(--muted);
-            text-align: center;
-          }
+      .slot.drag-over {
+        background-color: var(--dropzone-hover);
+        border-color: var(--primary);
+      }
 
-          .item-container {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            align-content: center;
-            gap: 12px;
-            height: 300px;
-          }
+      /* Moveable Items Palette */
+      .palette {
+        background: var(--card-bg);
+        border-radius: 12px;
+        padding: 15px;
+        width: 100%;
+        max-width: 800px;
+        box-shadow: var(--shadow);
+        margin-bottom: 20px;
+      }
 
-          .draggable-item {
-            padding: 8px 14px;
-            border-radius: 5px;
-            font-weight: bold;
-            cursor: grab;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            font-size: 0.95rem;
-            -webkit-tap-highlight-color: transparent;
-            -webkit-touch-callout: none;
-            -webkit-user-select: none;
-            user-select: none;
-            touch-action: none;
-          }
+      .palette-title {
+        font-weight: bold;
+        margin-bottom: 10px;
+        color: var(--muted);
+        text-align: center;
+      }
 
-          .draggable-item.dragging-original {
-            opacity: 0.35;
-          }
+      .item-container {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        align-content: center;
+        gap: 12px;
+        height: 300px;
+      }
 
-          .draggable-item.ghost {
-            position: fixed;
-            z-index: 1000;
-            pointer-events: none;
-            margin: 0;
-            transform: scale(1.05);
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.25);
-          }
+      .draggable-item {
+        padding: 8px 14px;
+        border-radius: 5px;
+        font-weight: bold;
+        cursor: grab;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        font-size: 0.95rem;
+        -webkit-tap-highlight-color: transparent;
+        -webkit-touch-callout: none;
+        -webkit-user-select: none;
+        user-select: none;
+        touch-action: none;
+      }
 
-          .draggable-item:active {
-            cursor: grabbing;
-          }
+      .draggable-item.dragging-original {
+        opacity: 0.35;
+      }
 
-          img {
-            -webkit-user-drag: none;
-            pointer-events: none;
-          }
+      .draggable-item.ghost {
+        position: fixed;
+        z-index: 1000;
+        pointer-events: none;
+        margin: 0;
+        transform: scale(1.05);
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.25);
+      }
 
-          /* Specific Item Styling */
-          .animal {
-            background-color: var(--item-bg);
-            color: var(--text);
-            border: 1px solid var(--item-border);
-            width: 96px;
-            height: 84px;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            gap: 3px;
-            text-align: center;
-            padding: 5px;
-          }
+      .draggable-item:active {
+        cursor: grabbing;
+      }
 
-          .animal img {
-            width: 48px;
-            height: 48px;
-            object-fit: cover;
-            border-radius: 50%;
-            background-color: var(--img-bg);
-            border: 1px solid var(--item-border);
-            flex-shrink: 0;
-          }
+      img {
+        -webkit-user-drag: none;
+        pointer-events: none;
+      }
 
-          .animal .animal-name {
-            color: var(--text);
-            font-weight: bold;
-            font-size: 0.85rem;
-            line-height: 1;
-          }
-          .brick {
-            width: 96px;
-            height: 84px;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            text-align: center;
-            font-size: 0.85rem;
-            padding: 5px;
-            gap: 3px;
-          }
+      /* Specific Item Styling */
+      .animal {
+        background-color: var(--item-bg);
+        color: var(--text);
+        border: 1px solid var(--item-border);
+        width: 96px;
+        height: 84px;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        gap: 3px;
+        text-align: center;
+        padding: 5px;
+      }
 
-          .brick::before {
-            content: "";
-            width: 48px;
-            height: 48px;
-            border-radius: 50%;
-            background-color: var(--brick-main);
-            border: 1px solid var(--brick-dark);
-            flex-shrink: 0;
-            box-sizing: border-box;
-          }
-          .brick-red {
-            --brick-main: #ef4444;
-            --brick-dark: #b91c1c;
-            background-color: #ef4444;
-            color: white;
-            border: 1px solid var(--brick-dark);
-          }
-          .brick-yellow {
-            --brick-main: #eab308;
-            --brick-dark: #a16207;
-            background-color: #eab308;
-            color: black;
-            border: 1px solid var(--brick-dark);
-          }
-          .brick-green {
-            --brick-main: #22c55e;
-            --brick-dark: #15803d;
-            background-color: #22c55e;
-            color: white;
-            border: 1px solid var(--brick-dark);
-          }
-          .brick-blue {
-            --brick-main: #3b82f6;
-            --brick-dark: #1d4ed8;
-            background-color: #3b82f6;
-            color: white;
-            border: 1px solid var(--brick-dark);
-          }
+      .animal img {
+        width: 48px;
+        height: 48px;
+        object-fit: cover;
+        border-radius: 50%;
+        background-color: var(--img-bg);
+        border: 1px solid var(--item-border);
+        flex-shrink: 0;
+      }
 
-          /* Combined mystery items (e.g. Red Car = car + red brick) */
-          .combined::before {
-            content: none;
-          }
-          .combined img {
-            width: 48px;
-            height: 48px;
-            object-fit: cover;
-            border-radius: 50%;
-            background-color: var(--img-bg);
-            border: 1px solid var(--brick-dark);
-            flex-shrink: 0;
-          }
-          .combined span {
-            line-height: 1;
-            font-weight: bold;
-          }
+      .animal .animal-name {
+        color: var(--text);
+        font-weight: bold;
+        font-size: 0.85rem;
+        line-height: 1;
+      }
+      .brick {
+        width: 96px;
+        height: 84px;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+        font-size: 0.85rem;
+        padding: 5px;
+        gap: 3px;
+      }
 
-          /* Cheat Sheet Bar */
-          .phrase-bar {
-            width: 100%;
-            max-width: 800px;
-            background: var(--phrase-bar-bg);
-            color: var(--text);
-            border: 2px solid var(--border-strong);
-            padding: 15px;
-            border-radius: 12px;
-            display: flex;
-            justify-content: space-around;
-            flex-wrap: wrap;
-            gap: 10px;
-          }
+      .brick::before {
+        content: "";
+        width: 48px;
+        height: 48px;
+        border-radius: 50%;
+        background-color: var(--brick-main);
+        border: 1px solid var(--brick-dark);
+        flex-shrink: 0;
+        box-sizing: border-box;
+      }
+      .brick-red {
+        --brick-main: #ef4444;
+        --brick-dark: #b91c1c;
+        background-color: #ef4444;
+        color: white;
+        border: 1px solid var(--brick-dark);
+      }
+      .brick-yellow {
+        --brick-main: #eab308;
+        --brick-dark: #a16207;
+        background-color: #eab308;
+        color: black;
+        border: 1px solid var(--brick-dark);
+      }
+      .brick-green {
+        --brick-main: #22c55e;
+        --brick-dark: #15803d;
+        background-color: #22c55e;
+        color: white;
+        border: 1px solid var(--brick-dark);
+      }
+      .brick-blue {
+        --brick-main: #3b82f6;
+        --brick-dark: #1d4ed8;
+        background-color: #3b82f6;
+        color: white;
+        border: 1px solid var(--brick-dark);
+      }
 
-          .phrase-pill {
-            background: var(--card-bg);
-            color: var(--text);
-            padding: 6px 12px;
-            border-radius: 6px;
-            font-size: clamp(0.8rem, 0.5vw + 0.6rem, 0.9rem);
-            border-left: 3px solid var(--accent);
-          }
+      /* Combined mystery items (e.g. Red Car = car + red brick) */
+      .combined::before {
+        content: none;
+      }
+      .combined img {
+        width: 48px;
+        height: 48px;
+        object-fit: cover;
+        border-radius: 50%;
+        background-color: var(--img-bg);
+        border: 1px solid var(--brick-dark);
+        flex-shrink: 0;
+      }
+      .combined span {
+        line-height: 1;
+        font-weight: bold;
+      }
 
-          /* Responsive: small screens */
-          @media (max-width: 640px) {
-          html,
-          body {
-            -webkit-touch-callout: none;
-            -webkit-user-select: none;
-            user-select: none;
-          }
+      /* Cheat Sheet Bar */
+      .phrase-bar {
+        width: 100%;
+        max-width: 800px;
+        background: var(--phrase-bar-bg);
+        color: var(--text);
+        border: 2px solid var(--border-strong);
+        padding: 15px;
+        border-radius: 12px;
+        display: flex;
+        justify-content: space-around;
+        flex-wrap: wrap;
+        gap: 10px;
+      }
 
-          body {
-              padding: 12px;
-            }
-            .instructions {
-              padding: 10px 14px;
-            }
-            .grid-container {
-              grid-template-columns: 1fr;
-              gap: 14px;
-            }
-            .spot-card {
-              height: 250px;
-            }
-            .drop-zone {
-              height: 168px;
-            }
-            .item-container {
-              height: 340px;
-            }
-            .animal,
-            .brick {
-              width: 84px;
-              height: 76px;
-            }
-            .animal img {
-              width: 40px;
-              height: 40px;
-            }
-            .brick::before {
-              width: 40px;
-              height: 40px;
-            }
-            .palette,
-            .phrase-bar {
-              padding: 12px;
-            }
-          }
+      .phrase-pill {
+        background: var(--card-bg);
+        color: var(--text);
+        padding: 6px 12px;
+        border-radius: 6px;
+        font-size: clamp(0.8rem, 0.5vw + 0.6rem, 0.9rem);
+        border-left: 3px solid var(--accent);
+      }
 
-          /* Win overlay */
-          .win-overlay {
-            position: fixed;
-            inset: 0;
-            z-index: 2000;
-            display: none;
-            align-items: center;
-            justify-content: center;
-            background: rgba(0, 0, 0, 0.6);
-            padding: 20px;
-          }
-          .win-overlay.show {
-            display: flex;
-          }
-          .win-box {
-            background: var(--card-bg);
-            color: var(--text);
-            padding: 30px 40px;
-            border-radius: 16px;
-            text-align: center;
-            box-shadow: var(--shadow);
-            border: 3px solid var(--good);
-            max-width: 400px;
-          }
-          .win-box h2 {
-            margin: 0 0 15px;
-            color: var(--heading);
-          }
-          .win-box button {
-            background: var(--good);
-            color: #052e16;
-            border: none;
-            padding: 10px 24px;
-            border-radius: 8px;
-            font-size: 1rem;
-            font-weight: bold;
-            cursor: pointer;
-            -webkit-tap-highlight-color: transparent;
-          }
+      /* Responsive: small screens */
+      @media (max-width: 640px) {
+        html,
+        body {
+          -webkit-touch-callout: none;
+          -webkit-user-select: none;
+          user-select: none;
+        }
+
+        body {
+          padding: 12px;
+        }
+        .instructions {
+          padding: 10px 14px;
+        }
+        .grid-container {
+          grid-template-columns: 1fr;
+          gap: 14px;
+        }
+        .spot-card {
+          min-height: 250px;
+        }
+        .drop-zone {
+          width: 228px;
+          height: 228px;
+        }
+        .item-container {
+          height: 340px;
+        }
+        .animal,
+        .brick {
+          width: 84px;
+          height: 76px;
+        }
+        .animal img {
+          width: 40px;
+          height: 40px;
+        }
+        .brick::before {
+          width: 40px;
+          height: 40px;
+        }
+        .palette,
+        .phrase-bar {
+          padding: 12px;
+        }
+      }
+
+      /* Win overlay */
+      .win-overlay {
+        position: fixed;
+        inset: 0;
+        z-index: 2000;
+        display: none;
+        align-items: center;
+        justify-content: center;
+        background: rgba(0, 0, 0, 0.6);
+        padding: 20px;
+      }
+      .win-overlay.show {
+        display: flex;
+      }
+      .win-box {
+        background: var(--card-bg);
+        color: var(--text);
+        padding: 30px 40px;
+        border-radius: 16px;
+        text-align: center;
+        box-shadow: var(--shadow);
+        border: 3px solid var(--good);
+        max-width: 400px;
+      }
+      .win-box h2 {
+        margin: 0 0 15px;
+        color: var(--heading);
+      }
+      .win-box button {
+        background: var(--good);
+        color: #052e16;
+        border: none;
+        padding: 10px 24px;
+        border-radius: 8px;
+        font-size: 1rem;
+        font-weight: bold;
+        cursor: pointer;
+        -webkit-tap-highlight-color: transparent;
+      }
     </style>
   </head>
   <body>
-    <button id="themeToggle" aria-label="Toggle dark mode" title="Toggle dark mode">🌙</button>
+    <button
+      id="themeToggle"
+      aria-label="Toggle dark mode"
+      title="Toggle dark mode"
+    >
+      🌙
+    </button>
     <h1>Classroom Mystery</h1>
     <div class="instructions">
       Drag elements into the classroom spots, or ask the student to command you!
@@ -485,30 +510,48 @@
     <div class="grid-container">
       <div class="spot-card">
         <div class="spot-title">Colours</div>
-        <div class="drop-zone" id="spot-1"></div>
+        <div class="drop-zone" id="spot-1">
+          <div class="slot"></div>
+          <div class="slot"></div>
+          <div class="slot"></div>
+          <div class="slot"></div>
+        </div>
       </div>
 
       <div class="spot-card">
         <div class="spot-title">Animals</div>
-        <div class="drop-zone" id="spot-2"></div>
+        <div class="drop-zone" id="spot-2">
+          <div class="slot"></div>
+          <div class="slot"></div>
+          <div class="slot"></div>
+          <div class="slot"></div>
+        </div>
       </div>
 
       <div class="spot-card">
         <div class="spot-title">Toys</div>
-        <div class="drop-zone" id="spot-3"></div>
+        <div class="drop-zone" id="spot-3">
+          <div class="slot"></div>
+          <div class="slot"></div>
+          <div class="slot"></div>
+          <div class="slot"></div>
+        </div>
       </div>
 
       <div class="spot-card">
         <div class="spot-title">Mystery</div>
-        <div class="drop-zone" id="spot-4"></div>
+        <div class="drop-zone" id="spot-4">
+          <div class="slot"></div>
+          <div class="slot"></div>
+          <div class="slot"></div>
+          <div class="slot"></div>
+        </div>
       </div>
     </div>
 
     <!-- Draggable Items Palette -->
     <div class="palette">
-      <div class="palette-title">
-        Somewhere
-      </div>
+      <div class="palette-title">Somewhere</div>
       <div class="item-container" id="inventory">
         <!-- Animals -->
         <div class="draggable-item animal" id="bee">
@@ -517,11 +560,11 @@
             alt="Bee"
           /><span class="animal-name">Bee</span>
         </div>
-        <div class="draggable-item animal" id="bear">
+        <div class="draggable-item animal" id="rabbit">
           <img
-            src="https://res.cloudinary.com/dqwm4pdbz/image/upload/c_crop,w_421,h_424,x_842,y_0/r_max/bo_5px_solid_white/v1786599929/260813_toys_01_txjh3y.png"
-            alt="Bear"
-          /><span class="animal-name">Bear</span>
+            src="https://res.cloudinary.com/dp455m4rk/image/upload/c_crop,w_421,h_424,x_842,y_424/r_max/v1786346044/lesson6_ywgsxn.png"
+            alt="Rabbit"
+          /><span class="animal-name">Rabbit</span>
         </div>
         <div class="draggable-item animal" id="dog">
           <img
@@ -563,34 +606,14 @@
         </div>
 
         <!-- LEGO Duplo Bricks -->
-        <div
-          class="draggable-item brick brick-red"
-         
-          id="brick-red"
-        >
-          Red
-        </div>
-        <div
-          class="draggable-item brick brick-yellow"
-         
-          id="brick-yellow"
-        >
+        <div class="draggable-item brick brick-red" id="brick-red">Red</div>
+        <div class="draggable-item brick brick-yellow" id="brick-yellow">
           Yellow
         </div>
-        <div
-          class="draggable-item brick brick-green"
-         
-          id="brick-green"
-        >
+        <div class="draggable-item brick brick-green" id="brick-green">
           Green
         </div>
-        <div
-          class="draggable-item brick brick-blue"
-         
-          id="brick-blue"
-        >
-          Blue
-        </div>
+        <div class="draggable-item brick brick-blue" id="brick-blue">Blue</div>
       </div>
     </div>
 
@@ -622,8 +645,7 @@
         var darkMq = window.matchMedia("(prefers-color-scheme: dark)");
 
         function apply() {
-          var dark =
-            theme === "dark" || (theme === "system" && darkMq.matches);
+          var dark = theme === "dark" || (theme === "system" && darkMq.matches);
           root.classList.toggle("dark", dark);
           root.classList.toggle("light", !dark);
           btn.textContent = dark ? "☀️" : "🌙";
@@ -650,8 +672,11 @@
 
       // Goals: all items of a group placed in its matching spot.
       var goals = [
-        { spotId: "spot-1", ids: ["brick-red", "brick-yellow", "brick-green", "brick-blue"] },
-        { spotId: "spot-2", ids: ["bee", "bear", "dog", "elephant"] },
+        {
+          spotId: "spot-1",
+          ids: ["brick-red", "brick-yellow", "brick-green", "brick-blue"],
+        },
+        { spotId: "spot-2", ids: ["bee", "rabbit", "dog", "elephant"] },
         { spotId: "spot-3", ids: ["car", "bike", "robot", "kite"] },
         { spotId: "spot-4", ids: ["red-car", "yellow-bee"] },
       ];
@@ -751,9 +776,7 @@
           activeGhost.style.top = e.clientY - grabOffsetY + "px";
         }
         var under = document.elementFromPoint(e.clientX, e.clientY);
-        var zone = under
-          ? under.closest(".drop-zone, .item-container")
-          : null;
+        var zone = under ? under.closest(".slot, .item-container") : null;
         if (zone !== overZone) {
           clearOverZone();
           overZone = zone;
@@ -770,10 +793,14 @@
         }
         activeItem.classList.remove("dragging-original");
         if (overZone) {
-          var isSpot = overZone.classList.contains("drop-zone");
-          if (!isSpot || overZone.children.length < 4) {
+          if (overZone.classList.contains("slot")) {
+            if (!overZone.querySelector(".draggable-item")) {
+              overZone.appendChild(activeItem);
+              checkMystery();
+              checkGoal();
+            }
+          } else if (overZone.classList.contains("item-container")) {
             overZone.appendChild(activeItem);
-            checkMystery();
             checkGoal();
           }
         }
@@ -803,28 +830,51 @@
         return el;
       }
 
+      function firstEmptySlot(spot) {
+        for (var i = 0; i < spot.children.length; i++) {
+          var slot = spot.children[i];
+          if (
+            slot.classList.contains("slot") &&
+            !slot.querySelector(".draggable-item")
+          ) {
+            return slot;
+          }
+        }
+        return null;
+      }
+
       function checkMystery() {
         var spot = document.getElementById("spot-4");
         if (!spot) return;
         var byId = {};
-        for (var i = 0; i < spot.children.length; i++) {
-          byId[spot.children[i].id] = spot.children[i];
-        }
+        spot.querySelectorAll(".draggable-item").forEach(function (el) {
+          byId[el.id] = el;
+        });
         var car = byId["car"];
         var red = byId["brick-red"];
         if (car && red && !byId["red-car"]) {
           stashed.push(car, red);
-          spot.removeChild(car);
-          spot.removeChild(red);
-          spot.appendChild(makeCombined("red-car", car.querySelector("img").src));
+          car.remove();
+          red.remove();
+          var slot = firstEmptySlot(spot);
+          if (slot) {
+            slot.appendChild(
+              makeCombined("red-car", car.querySelector("img").src),
+            );
+          }
         }
         var bee = byId["bee"];
         var yellow = byId["brick-yellow"];
         if (bee && yellow && !byId["yellow-bee"]) {
           stashed.push(bee, yellow);
-          spot.removeChild(bee);
-          spot.removeChild(yellow);
-          spot.appendChild(makeCombined("yellow-bee", bee.querySelector("img").src));
+          bee.remove();
+          yellow.remove();
+          var slot2 = firstEmptySlot(spot);
+          if (slot2) {
+            slot2.appendChild(
+              makeCombined("yellow-bee", bee.querySelector("img").src),
+            );
+          }
         }
       }
 
