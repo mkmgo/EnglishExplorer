@@ -1000,8 +1000,15 @@
         line-height: 1;
         border: 1px solid rgba(96, 112, 141, 0.5);
         transition:
-          transform 0.25s ease,
-          box-shadow 0.25s ease;
+          transform 0.45s cubic-bezier(0.22, 0.61, 0.36, 1),
+          box-shadow 0.45s cubic-bezier(0.22, 0.61, 0.36, 1),
+          background-color 0.45s ease,
+          color 0.45s ease;
+      }
+      @media (hover: hover) {
+        .ctrl:hover {
+          transform: translateY(-1px);
+        }
       }
       .navCtrl {
         width: 1.9rem;
@@ -1015,12 +1022,13 @@
         color: var(--accent2);
       }
       #soundBtn {
-        width: 1.7rem;
-        height: 1.7rem;
-        border-color: var(--accent2);
+        width: 1.5rem;
+        height: 1.5rem;
+        border: 0;
       }
-      #soundBtn svg {
-        transform: translateX(2px);
+      #soundBtn.muted {
+        background: var(--accent2);
+        color: var(--accent);
       }
       #toast {
         position: absolute;
@@ -1888,9 +1896,9 @@
 
       document.getElementById("soundBtn").onclick = function () {
         soundOn = !soundOn;
-        document.getElementById("soundBtn").innerHTML = soundOn
-          ? ICON_VOLUME_ON
-          : ICON_VOLUME_OFF;
+        var sb = document.getElementById("soundBtn");
+        sb.innerHTML = soundOn ? ICON_VOLUME_ON : ICON_VOLUME_OFF;
+        sb.classList.toggle("muted", !soundOn);
         if (soundOn) {
           if (synth) synth.cancel();
         }
