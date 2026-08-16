@@ -295,20 +295,22 @@
       .clipcard {
         font-size: clamp(1.1rem, 2vw, 1.8rem);
         font-weight: 700;
+        font-family: Verdana, "Trebuchet MS", sans-serif;
         color: var(--ink);
         background: var(--muted);
         padding: 0.35em 1.2em;
-        border-radius: 8px;
+        border-radius: 20px;
         border: 2pt solid var(--ink);
         box-shadow: 0 6px 18px rgba(138, 138, 138, 0.35);
         display: inline-flex;
         align-items: center;
         gap: 0.5em;
-        text-transform: uppercase;
-        transition: 0.15s transform;
+        line-height: 1;
+        transition: transform 0.45s cubic-bezier(0.22, 0.61, 0.36, 1);
       }
       .clipcard:active {
         transform: scale(0.95);
+        transition-duration: 0.12s;
       }
       .translateBox {
         width: min(34vw, 400px);
@@ -320,7 +322,7 @@
         justify-content: center;
         background: var(--panel);
         border-radius: 24px;
-        border: 2pt solid var(--accent2);
+        border: 1.5pt solid var(--accent2);
         box-shadow: var(--shadow);
         padding: 1.2em;
         font-size: clamp(1.3rem, 2.2vw, 2.2rem);
@@ -333,9 +335,6 @@
       .translateBox .translatePlaceholder {
         font-size: clamp(2.2rem, 4.5vw, 3.6rem);
         opacity: 0.3;
-      }
-      .translateBox.filled {
-        border-color: var(--accent);
       }
       .translateBox.left {
         align-items: flex-start;
@@ -599,11 +598,17 @@
         overflow-y: auto;
         padding-top: 1em;
         margin-top: 1em;
-        border-top: 2px solid rgba(96, 112, 141, 0.25);
+        border-top: 2px solid var(--accent2);
         scrollbar-width: none;
       }
       .clipList::-webkit-scrollbar {
         display: none;
+      }
+      .downloadCsvBtn {
+        display: flex;
+        margin: 0.7em auto 0;
+        font-size: clamp(0.92rem, 1.56vw, 1.38rem);
+        padding: 0.45em 1em;
       }
       .clip {
         width: 100%;
@@ -611,8 +616,8 @@
         align-items: center;
         gap: 0.6em;
         background: #eef1f7;
-        color: var(--ink);
-        border: 1px solid rgba(96, 112, 141, 0.3);
+        color: var(--accent);
+        border: 1px solid var(--accent);
         border-radius: 12px;
         padding: 0.5em 0.9em;
         font-size: clamp(0.85rem, 1.3vw, 1.15rem);
@@ -623,7 +628,8 @@
         transform: scale(0.97);
       }
       .clip time {
-        color: var(--muted);
+        color: var(--accent);
+        opacity: 0.6;
         white-space: nowrap;
         font-variant-numeric: tabular-nums;
       }
@@ -728,13 +734,22 @@
         padding: 0.5em 1.1em;
         font-size: clamp(1rem, 1.7vw, 1.5rem);
         font-weight: 800;
-        transition: 0.15s transform;
+        transition: transform 0.45s cubic-bezier(0.22, 0.61, 0.36, 1);
       }
       #toysIntroScreen .miniChip {
         font-size: clamp(0.88rem, 1.5vw, 1.3rem);
       }
       .miniChip:active {
         transform: scale(0.95);
+        transition-duration: 0.12s;
+      }
+      .voiceChip {
+        background: var(--accent);
+        color: var(--accent2);
+        border-color: var(--accent);
+        font-family: Verdana, "Trebuchet MS", sans-serif;
+        font-weight: 700;
+        letter-spacing: 0.04em;
       }
       .miniChip .miniImg {
         width: 1.5em;
@@ -1007,6 +1022,10 @@
         .ctrl:hover {
           transform: translateY(-1px);
         }
+        .clipcard:hover,
+        .miniChip:hover {
+          transform: translateY(-1px);
+        }
       }
       .navCtrl {
         width: 1.9rem;
@@ -1243,7 +1262,10 @@
         .clipcard {
           font-size: clamp(1.2rem, 3.2vw, 1.8rem);
         }
-        .translateBox {
+      /* NOTE: Translate-box borders intentionally stay accent2 whether empty or filled
+         (removed at user request). To restore the "filled" red border later, re-add:
+         .translateBox.filled { border-color: var(--accent); } */
+      .translateBox {
           width: min(84vw, 420px);
           min-height: 24vh;
         }
@@ -1280,7 +1302,12 @@
         background: #232a36;
       }
       :root[data-theme="dark"] .clip {
-        border-color: rgba(147, 161, 184, 0.35);
+        color: var(--accent2);
+        border-color: var(--accent2);
+      }
+      :root[data-theme="dark"] .clip time {
+        color: var(--accent2);
+        opacity: 0.6;
       }
       :root[data-theme="dark"] .phraseAvatar,
       :root[data-theme="dark"] .phraseToy,
@@ -1299,6 +1326,19 @@
       :root[data-theme="dark"] .clipcard {
         background: #232a36;
         color: var(--ink);
+      }
+      :root[data-theme="dark"] .topbar {
+        background: #232a36;
+        border-bottom: 2px solid var(--accent);
+      }
+      :root[data-theme="dark"] .ctrl.navCtrl.primary {
+        background: #2a3240;
+        color: var(--accent2);
+        border-color: var(--accent);
+      }
+      :root[data-theme="dark"] #soundBtn,
+      :root[data-theme="dark"] #themeBtn {
+        border: 2px solid var(--accent);
       }
     </style>
   </head>
@@ -1334,8 +1374,9 @@
               stroke-linejoin="round"
               style="vertical-align: -0.2em"
             >
-              <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" />
-              <path d="M15.54 8.46a5 5 0 0 1 0 7.07" />
+              <path d="M11 4.702a.705.705 0 0 0-1.203-.498L6.413 7.587A1.4 1.4 0 0 1 5.416 8H3a1 1 0 0 0-1 1v6a1 1 0 0 0 1 1h2.416a1.4 1.4 0 0 1 .997.413l3.383 3.384A.705.705 0 0 0 11 19.298z" />
+              <path d="M16 9a5 5 0 0 1 0 6" />
+              <path d="M19.364 18.364a9 9 0 0 0 0-12.728" />
             </svg>
           </button>
         </div>
@@ -1440,9 +1481,9 @@
               <div class="cast">
               <figure class="castMember">
                 <div class="translateBox left" id="srcLangBox">
-                  <span class="translatePlaceholder">🔤</span>
+                  <span class="translatePlaceholder">ABC</span>
                 </div>
-                <button class="icardst" onclick="speakTranslate('en')">
+                <button class="miniChip voiceChip" onclick="speakTranslate('en')">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     width="1.2em"
@@ -1458,14 +1499,14 @@
                     <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" />
                     <path d="M15.54 8.46a5 5 0 0 1 0 7.07" />
                   </svg>
-                  <span class="icardtext">ENGLISH</span>
+                  <span>English</span>
                 </button>
               </figure>
               <figure class="castMember">
                 <div class="translateBox left" id="zhLangBox">
                   <span class="translatePlaceholder">中文</span>
                 </div>
-                <button class="icardst" onclick="speakTranslate('zh')">
+                <button class="miniChip voiceChip" onclick="speakTranslate('zh')">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     width="1.2em"
@@ -1481,11 +1522,34 @@
                     <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" />
                     <path d="M15.54 8.46a5 5 0 0 1 0 7.07" />
                   </svg>
-                  <span class="icardtext">中文</span>
+                  <span>中文</span>
                 </button>
               </figure>
               </div>
               <div class="clipList" id="clipList"></div>
+              <button
+                type="button"
+                class="miniChip voiceChip downloadCsvBtn"
+                onclick="downloadCsv()"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="1.2em"
+                  height="1.2em"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  style="vertical-align: -0.2em"
+                >
+                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                  <polyline points="7 10 12 15 17 10" />
+                  <line x1="12" x2="12" y1="15" y2="3" />
+                </svg>
+                <span>Download CSV</span>
+              </button>
             </div>
           </div>
         </div>
@@ -1559,7 +1623,7 @@
       var ICON_ARROW_RIGHT =
         '<svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M8 12h8"/><path d="m12 16 4-4-4-4"/></svg>';
       var ICON_VOLUME_ON =
-        '<svg xmlns="http://www.w3.org/2000/svg" width="1.2em" height="1.2em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: -0.2em"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/></svg>';
+        '<svg xmlns="http://www.w3.org/2000/svg" width="1.2em" height="1.2em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: -0.2em"><path d="M11 4.702a.705.705 0 0 0-1.203-.498L6.413 7.587A1.4 1.4 0 0 1 5.416 8H3a1 1 0 0 0-1 1v6a1 1 0 0 0 1 1h2.416a1.4 1.4 0 0 1 .997.413l3.383 3.384A.705.705 0 0 0 11 19.298z"/><path d="M16 9a5 5 0 0 1 0 6"/><path d="M19.364 18.364a9 9 0 0 0 0-12.728"/></svg>';
       var ICON_VOLUME_OFF =
         '<svg xmlns="http://www.w3.org/2000/svg" width="1.2em" height="1.2em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: -0.2em"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><line x1="22" x2="16" y1="9" y2="15"/><line x1="16" x2="22" y1="9" y2="15"/></svg>';
       var ICON_CLIPBOARD_TYPE =
@@ -1728,7 +1792,27 @@
         b.style.height = h + "px";
       }
 
+      function cleanEn(text) {
+        var s = String(text || "");
+        s = s.replace(/```[\s\S]*?```/g, " ");
+        s = s.replace(/!\[([^\]]*)\]\([^)]*\)/g, "$1");
+        s = s.replace(/\[([^\]]*)\]\([^)]*\)/g, "$1");
+        s = s.replace(/`([^`]*)`/g, "$1");
+        s = s.replace(/^\s*#{1,6}\s+/gm, "");
+        s = s.replace(/^\s*>\s?/gm, "");
+        s = s.replace(/^\s*([-*+])\s+/gm, "");
+        s = s.replace(/~~([^~]+)~~/g, "$1");
+        s = s.replace(/(\*\*|__)(.*?)\1/g, "$2");
+        s = s.replace(/(\*|_)(.*?)\1/g, "$2");
+        s = s.replace(/[*_#>`~]{1,}/g, "");
+        s = s.replace(/\s+/g, " ");
+        s = s.trim();
+        if (s) s = s.charAt(0).toUpperCase() + s.slice(1);
+        return s;
+      }
+
       function doTranslate(text) {
+        text = cleanEn(text);
         lastSrcText = text;
         var srcBox = document.getElementById("srcLangBox");
         var zhBox = document.getElementById("zhLangBox");
@@ -1781,6 +1865,7 @@
 
       var clipList = document.getElementById("clipList");
       var lastClipKey = "";
+      var clipHistory = [];
 
       function addClip(en, zh) {
         if (!clipList) return;
@@ -1793,6 +1878,7 @@
           minute: "2-digit",
           second: "2-digit",
         });
+        clipHistory.push({ time: time, en: en, zh: zh });
         var words = String(en).trim().split(/\s+/);
         var preview = words.slice(0, 6).join(" ");
         if (preview.length > 60) preview = preview.slice(0, 60) + "…";
@@ -1813,7 +1899,39 @@
         clipList.insertBefore(b, clipList.firstChild);
       }
 
+      function csvCell(v) {
+        v = String(v == null ? "" : v);
+        return '"' + v.replace(/"/g, '""') + '"';
+      }
+
+      function downloadCsv() {
+        if (!clipHistory.length) return;
+        var rows = [];
+        rows.push(
+          [csvCell("time"), csvCell("english"), csvCell(""), csvCell("chinese")].join(","),
+        );
+        for (var i = 0; i < clipHistory.length; i++) {
+          var c = clipHistory[i];
+          rows.push(
+            [csvCell(c.time), csvCell(c.en), csvCell(""), csvCell(c.zh)].join(","),
+          );
+        }
+        var csv = "\uFEFF" + rows.join("\r\n");
+        var blob = new Blob([csv], { type: "text/csv;charset=utf-8" });
+        var url = URL.createObjectURL(blob);
+        var a = document.createElement("a");
+        a.href = url;
+        a.download = "vocasofdate.csv";
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        setTimeout(function () {
+          URL.revokeObjectURL(url);
+        }, 1000);
+      }
+
       function restoreClip(en, zh) {
+        en = cleanEn(en);
         lastSrcText = en;
         lastZhText = zh;
         var srcBox = document.getElementById("srcLangBox");
