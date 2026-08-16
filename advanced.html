@@ -4905,6 +4905,13 @@
         return "";
       }
 
+      function animalImg(name) {
+        for (var i = 0; i < ANIMALS.length; i++) {
+          if (ANIMALS[i].name === name) return ANIMALS[i].img;
+        }
+        return "";
+      }
+
       function toyCap(name) {
         return name.replace(/\w\S*/g, function (w) {
           return w.charAt(0).toUpperCase() + w.slice(1);
@@ -5254,6 +5261,19 @@
           })(names[i]);
         }
       }
+      function ynFillAnimals(sel, names) {
+        var box = document.getElementById(sel);
+        if (!box) return;
+        for (var i = 0; i < names.length; i++) {
+          (function (name) {
+            var img = document.createElement("img");
+            img.src = animalImg(name);
+            img.alt = name;
+            img.title = toyCap(name);
+            box.appendChild(img);
+          })(names[i]);
+        }
+      }
       function ynSetOwner(name) {
         var sam = document.getElementById("ynSam");
         var onza = document.getElementById("ynOnza");
@@ -5319,33 +5339,57 @@
       var yn2Results = [];
       var yn2Tries = 0;
       var yn2Owned = {
-        sam: ["robot", "teddy bear", "rocket"],
-        onza: ["car", "kite", "bike"],
+        sam: ["rabbit", "cat", "dog"],
+        onza: ["rabbit", "bird", "monkey"],
       };
+      var yn2Rounds = [];
+      function ynArticle(name) {
+        return /^[aeiou]/i.test(name) ? "an" : "a";
+      }
+      function yn2BuildRounds() {
+        var list = ANIMALS.slice();
+        for (var i = list.length - 1; i > 0; i--) {
+          var j = Math.floor(Math.random() * (i + 1));
+          var tmp = list[i];
+          list[i] = list[j];
+          list[j] = tmp;
+        }
+        yn2Rounds = list.map(function (a) {
+          return {
+            name: a.name,
+            answer: yn2Owned.onza.indexOf(a.name) !== -1,
+          };
+        });
+      }
       function ynSetOwner2(name) {
         var sam = document.getElementById("yn2Sam");
         var onza = document.getElementById("yn2Onza");
-        var isSam = yn2Owned.sam.indexOf(name) !== -1;
-        if (sam) sam.classList.toggle("owner", isSam);
-        if (onza) onza.classList.toggle("owner", !isSam);
+        if (sam)
+          sam.classList.toggle("owner", yn2Owned.sam.indexOf(name) !== -1);
+        if (onza)
+          onza.classList.toggle("owner", yn2Owned.onza.indexOf(name) !== -1);
       }
       function ynReset2() {
-        buildPips("yn2Pips", ynRounds.length);
+        yn2BuildRounds();
+        buildPips("yn2Pips", yn2Rounds.length);
         yn2Idx = 0;
         yn2Results = [];
         yn2Tries = 0;
         yn2Start();
       }
       function ynStart2() {
-        if (yn2Idx >= ynRounds.length) return;
-        var r = ynRounds[yn2Idx];
+        if (yn2Idx >= yn2Rounds.length) return;
+        var r = yn2Rounds[yn2Idx];
         var img = document.getElementById("yn2Img");
         if (img) {
-          img.src = toyImg(r.name);
+          img.src = animalImg(r.name);
           img.className = "";
           img.alt = r.name;
         }
-        setHeadline("yn2Title", "Do you have a " + r.name + "?");
+        setHeadline(
+          "yn2Title",
+          "Do you have " + ynArticle(r.name) + " " + r.name + "?",
+        );
         ynSetOwner2(r.name);
         yn2Tries = 0;
         setPips("yn2Pips", yn2Results, yn2Idx);
@@ -5353,7 +5397,7 @@
       function ynAdvance2() {
         yn2Idx++;
         setPips("yn2Pips", yn2Results, yn2Idx);
-        if (yn2Idx >= ynRounds.length) {
+        if (yn2Idx >= yn2Rounds.length) {
           setHeadline("yn2Title", "Well done!");
           if (!yn2Rewarded && qualifies(yn2Results)) {
             yn2Rewarded = true;
@@ -5364,8 +5408,8 @@
         }
       }
       function ynAnswer2(yes) {
-        if (yn2Idx >= ynRounds.length) return;
-        var r = ynRounds[yn2Idx];
+        if (yn2Idx >= yn2Rounds.length) return;
+        var r = yn2Rounds[yn2Idx];
         if (yes !== r.answer) {
           yn2Tries++;
           toast("Try again!");
@@ -5585,8 +5629,14 @@
       (function () {
         ynFillToys("ynSamToys", ynOwned.sam);
         ynFillToys("ynOnzaToys", ynOwned.onza);
-        ynFillToys("yn2SamToys", yn2Owned.sam);
-        ynFillToys("yn2OnzaToys", yn2Owned.onza);
+        ynFillAnimals("yn2SamToys", yn2Owned.sam);
+        ynFillAnimals("yn2OnzaToys", yn2Owned.onza);
+        var img2 = document.getElementById("yn2Img");
+        if (img2 && ANIMALS.length) {
+          var a = ANIMALS[Math.floor(Math.random() * ANIMALS.length)];
+          img2.src = a.img;
+          img2.alt = a.name;
+        }
       })();
     </script>
     <script src="https://unpkg.com/lucide@latest"></script>
