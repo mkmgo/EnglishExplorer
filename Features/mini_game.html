@@ -680,7 +680,7 @@
         },
         { spotId: "spot-2", ids: ["bee", "rabbit", "dog", "elephant"] },
         { spotId: "spot-3", ids: ["car", "bike", "robot", "kite"] },
-        { spotId: "spot-4", ids: ["red-car", "yellow-bee"] },
+        { spotId: "spot-4", ids: ["red-car", "yellow-bee", "blue-rabbit", "green-bike"] },
       ];
 
       // Randomize the order of items in Somewhere (Fisher-Yates on DOM children).
@@ -723,10 +723,11 @@
           var mCard = mystery.closest(".spot-card");
           var baseComplete =
             reached["spot-1"] && reached["spot-2"] && reached["spot-3"];
-          var redCar = document.getElementById("red-car");
-          var yellowBee = document.getElementById("yellow-bee");
-          var mysteryDone =
-            !!redCar && mystery.contains(redCar) && !!yellowBee && mystery.contains(yellowBee);
+          var mysteryDone = ["red-car", "yellow-bee", "blue-rabbit", "green-bike"]
+            .every(function (id) {
+              var el = document.getElementById(id);
+              return el && mystery.contains(el);
+            });
           if (mysteryDone) reached["spot-4"] = true;
           if (mCard) {
             mCard.classList.toggle(
@@ -824,22 +825,32 @@
       document.addEventListener("pointerup", endDrag);
       document.addEventListener("pointercancel", endDrag);
 
-      // Mystery combining: car + red brick -> Red Car brick,
-      // bee + yellow brick -> Yellow Bee brick.
+      // Mystery combining: car + red brick, bee + yellow brick,
+      // rabbit + blue brick, bike + green brick. The combined bricks show
+      // only the image (no text label - it doesn't fit on small screens).
+      var combinedNames = {
+        "red-car": "Red Car",
+        "yellow-bee": "Yellow Bee",
+        "blue-rabbit": "Blue Rabbit",
+        "green-bike": "Green Bike",
+      };
+      var combinedColors = {
+        "red-car": "brick-red",
+        "yellow-bee": "brick-yellow",
+        "blue-rabbit": "brick-blue",
+        "green-bike": "brick-green",
+      };
       var stashed = [];
 
       function makeCombined(id, imgSrc) {
         var el = document.createElement("div");
-        el.className = "draggable-item brick combined";
+        el.className =
+          "draggable-item brick combined " + combinedColors[id];
         el.id = id;
-        el.classList.add(id === "red-car" ? "brick-red" : "brick-yellow");
         var img = document.createElement("img");
         img.src = imgSrc;
-        img.alt = id === "red-car" ? "Red Car" : "Yellow Bee";
+        img.alt = combinedNames[id];
         el.appendChild(img);
-        var span = document.createElement("span");
-        span.textContent = id === "red-car" ? "Red Car" : "Yellow Bee";
-        el.appendChild(span);
         return el;
       }
 
@@ -889,6 +900,32 @@
             );
           }
         }
+        var rabbit = byId["rabbit"];
+        var blue = byId["brick-blue"];
+        if (rabbit && blue && !byId["blue-rabbit"]) {
+          stashed.push(rabbit, blue);
+          rabbit.remove();
+          blue.remove();
+          var slot3 = firstEmptySlot(spot);
+          if (slot3) {
+            slot3.appendChild(
+              makeCombined("blue-rabbit", rabbit.querySelector("img").src),
+            );
+          }
+        }
+        var bike = byId["bike"];
+        var green = byId["brick-green"];
+        if (bike && green && !byId["green-bike"]) {
+          stashed.push(bike, green);
+          bike.remove();
+          green.remove();
+          var slot4 = firstEmptySlot(spot);
+          if (slot4) {
+            slot4.appendChild(
+              makeCombined("green-bike", bike.querySelector("img").src),
+            );
+          }
+        }
       }
 
       function resetGame() {
@@ -896,7 +933,7 @@
         document
           .querySelectorAll(".drop-zone .draggable-item")
           .forEach(function (el) {
-            if (el.id === "red-car" || el.id === "yellow-bee") {
+            if (el.classList.contains("combined")) {
               el.remove();
             } else {
               inventory.appendChild(el);
@@ -905,7 +942,7 @@
         document
           .querySelectorAll(".item-container .draggable-item")
           .forEach(function (el) {
-            if (el.id === "red-car" || el.id === "yellow-bee") {
+            if (el.classList.contains("combined")) {
               el.remove();
             }
           });
