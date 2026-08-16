@@ -808,7 +808,17 @@
         activeItem.classList.remove("dragging-original");
         if (overZone) {
           if (overZone.classList.contains("slot")) {
-            if (!overZone.querySelector(".draggable-item")) {
+            var occupant = overZone.querySelector(".draggable-item");
+            var mysterySpot =
+              overZone.closest(".drop-zone") &&
+              overZone.closest(".drop-zone").id === "spot-4";
+            var canCombine =
+              mysterySpot && occupant && combos[activeItem.id] === occupant.id;
+            if (!occupant) {
+              overZone.appendChild(activeItem);
+              checkMystery();
+              checkGoal();
+            } else if (canCombine) {
               overZone.appendChild(activeItem);
               checkMystery();
               checkGoal();
@@ -826,19 +836,36 @@
       document.addEventListener("pointercancel", endDrag);
 
       // Mystery combining: car + red brick, bee + yellow brick,
-      // rabbit + blue brick, bike + green brick. The combined bricks show
-      // only the image (no text label - it doesn't fit on small screens).
+      // rabbit + blue brick, bike + green brick. Combined bricks keep the
+      // short item label (fits on small screens, unlike "Red Car" etc.).
       var combinedNames = {
         "red-car": "Red Car",
         "yellow-bee": "Yellow Bee",
         "blue-rabbit": "Blue Rabbit",
         "green-bike": "Green Bike",
       };
+      var combinedLabels = {
+        "red-car": "Car",
+        "yellow-bee": "Bee",
+        "blue-rabbit": "Rabbit",
+        "green-bike": "Bike",
+      };
       var combinedColors = {
         "red-car": "brick-red",
         "yellow-bee": "brick-yellow",
         "blue-rabbit": "brick-blue",
         "green-bike": "brick-green",
+      };
+      // Which two items combine (in either order).
+      var combos = {
+        "brick-red": "car",
+        car: "brick-red",
+        "brick-yellow": "bee",
+        bee: "brick-yellow",
+        "brick-blue": "rabbit",
+        rabbit: "brick-blue",
+        "brick-green": "bike",
+        bike: "brick-green",
       };
       var stashed = [];
 
@@ -851,6 +878,9 @@
         img.src = imgSrc;
         img.alt = combinedNames[id];
         el.appendChild(img);
+        var span = document.createElement("span");
+        span.textContent = combinedLabels[id];
+        el.appendChild(span);
         return el;
       }
 
