@@ -259,6 +259,22 @@
         margin-bottom: 20px;
       }
 
+      .palette.dissolving {
+        animation: paletteDissolve 0.6s ease forwards;
+        pointer-events: none;
+      }
+
+      @keyframes paletteDissolve {
+        0% {
+          opacity: 1;
+          transform: scale(1);
+        }
+        100% {
+          opacity: 0;
+          transform: scale(0.7);
+        }
+      }
+
       .palette-title {
         font-weight: bold;
         margin-bottom: 12px;
@@ -755,6 +771,17 @@
         }, 1150);
       }
 
+      function dissolvePalette() {
+        var palette = document.querySelector(".palette");
+        if (!palette || palette.classList.contains("dissolving")) return;
+        var version = gameVersion;
+        palette.classList.add("dissolving");
+        setTimeout(function () {
+          if (version !== gameVersion) return;
+          palette.style.display = "none";
+        }, 650);
+      }
+
       function updateGoals() {
         var goalEl = document.getElementById("goalText");
         var phase = 0;
@@ -765,6 +792,7 @@
         if (reached["spot-1"] && !unlocked["spot-2"]) unlockSpot("spot-2");
         if (reached["spot-2"] && !unlocked["spot-3"]) unlockSpot("spot-3");
         if (reached["spot-3"] && !unlocked["spot-4"]) unlockSpot("spot-4");
+        if (reached["spot-3"]) dissolvePalette();
       }
 
       function checkGoal() {
@@ -1072,6 +1100,11 @@
         renderIcons();
         var goalEl = document.getElementById("goalText");
         if (goalEl) goalEl.innerHTML = goalTexts[0];
+        var paletteEl = document.querySelector(".palette");
+        if (paletteEl) {
+          paletteEl.classList.remove("dissolving");
+          paletteEl.style.display = "";
+        }
         shuffleItems();
         checkGoal();
       }
