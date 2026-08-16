@@ -935,7 +935,7 @@
       .likeNextIcon {
         width: 1.2em;
         height: 1.2em;
-        color: var(--accent2);
+        color: var(--ink);
       }
       .toyEdu {
         display: flex;
@@ -2221,7 +2221,7 @@
       <!-- Segment 4b: I LIKE / I DON'T LIKE — likes teaching slide -->
       <section class="screen" id="likeDislikeScreen">
         <div class="content">
-          <h1 class="pageTitle">I like / I don't like</h1>
+          <h1 class="pageTitle">Do you like?</h1>
           <div class="stage">
             <div class="panel">
               <div class="gameArea">
@@ -2256,8 +2256,8 @@
                         />
                         <img
                           class="likeToy"
-                          src="https://res.cloudinary.com/dp455m4rk/image/upload/c_crop,w_421,h_424,x_421,y_424/r_max/v1786346044/lesson6_ywgsxn.png"
-                          alt="monkey"
+                          src="https://res.cloudinary.com/dp455m4rk/image/upload/c_crop,w_421,h_424,x_842,y_424/r_max/v1786346044/lesson6_ywgsxn.png"
+                          alt="rabbit"
                         />
                       </div>
                     </div>
@@ -2309,10 +2309,15 @@
                         stroke-linecap="round"
                         stroke-linejoin="round"
                       >
-                        <path d="M5 12h14" />
-                        <path d="m12 5 7 7-7 7" />
+                        <rect width="12" height="12" x="2" y="10" rx="2" ry="2" />
+                        <path d="m17.92 14 3.5-3.5a2.24 2.24 0 0 0 0-3l-5-4.92a2.24 2.24 0 0 0-3 0L10 6" />
+                        <path d="M6 12h.01" />
+                        <path d="M10 16h.01" />
+                        <path d="M10 21h.01" />
+                        <path d="M16 16h.01" />
+                        <path d="M16 21h.01" />
                       </svg>
-                      <span>Next animal</span>
+                      <span>NEXT ANIMAL</span>
                     </button>
                   </div>
                   <div class="ynCastMember onza" id="likeOnza">
@@ -2375,8 +2380,8 @@
                         />
                         <img
                           class="likeToy"
-                          src="https://res.cloudinary.com/dp455m4rk/image/upload/c_crop,w_421,h_424,x_842,y_424/r_max/v1786346044/lesson6_ywgsxn.png"
-                          alt="rabbit"
+                          src="https://res.cloudinary.com/dp455m4rk/image/upload/c_crop,w_421,h_424,x_421,y_424/r_max/v1786346044/lesson6_ywgsxn.png"
+                          alt="monkey"
                         />
                       </div>
                     </div>
@@ -5402,19 +5407,18 @@
       function likeAnimalSpeak() {
         var img = document.getElementById("likeImg");
         var name = img && img.alt ? img.alt : "dog";
-        var plural = likePlurals[name] || name + "s";
-        say("I like " + plural + ".");
+        say(name);
       }
       function likePress(who, state) {
         if (who === "sam") {
           if (state === "dislike") {
             say("I don't like monkeys and birds.");
           } else {
-            say("I like dogs and monkeys.");
+            say("I like dogs and rabbits.");
           }
         } else {
           if (state === "dislike") {
-            sayOther("I don't like fish and rabbits.");
+            sayOther("I don't like fish and monkeys.");
           } else {
             sayOther("I like cats and birds.");
           }
