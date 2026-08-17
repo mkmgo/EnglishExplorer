@@ -1,0 +1,1011 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ABC World - Letter Learning</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&family=Nunito:wght@700;800&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root,
+      html.light {
+        color-scheme: light;
+        --bg-color: #f0f4f8;
+        --card-bg: #ffffff;
+        --primary: #3b82f6;
+        --accent: #f59e0b;
+        --text: #1f2937;
+        --heading: #1e3a8a;
+        --muted: #475569;
+        --border: #cbd5e1;
+        --border-strong: #94a3b8;
+        --instructions-bg: #e0f2fe;
+        --dropzone-bg: #f8fafc;
+        --dropzone-hover: #dbeafe;
+        --item-bg: #e5e7eb;
+        --item-border: #6b7280;
+        --good: #10b981;
+        --goal-bg: #d1fae5;
+        --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+      }
+
+      @media (prefers-color-scheme: dark) {
+        :root {
+          color-scheme: dark;
+          --bg-color: #0f172a;
+          --card-bg: #1e293b;
+          --primary: #60a5fa;
+          --accent: #fbbf24;
+          --text: #e2e8f0;
+          --heading: #93c5fd;
+          --muted: #94a3b8;
+          --border: #334155;
+          --border-strong: #475569;
+          --instructions-bg: #172a44;
+          --dropzone-bg: #16233a;
+          --dropzone-hover: #1d3a5f;
+          --item-bg: #1e293b;
+          --item-border: #64748b;
+          --good: #34d399;
+          --goal-bg: #064e3b;
+          --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.45);
+        }
+      }
+
+      html.dark {
+        color-scheme: dark;
+        --bg-color: #0f172a;
+        --card-bg: #1e293b;
+        --primary: #60a5fa;
+        --accent: #fbbf24;
+        --text: #e2e8f0;
+        --heading: #93c5fd;
+        --muted: #94a3b8;
+        --border: #334155;
+        --border-strong: #475569;
+        --instructions-bg: #172a44;
+        --dropzone-bg: #16233a;
+        --dropzone-hover: #1d3a5f;
+        --item-bg: #1e293b;
+        --item-border: #64748b;
+        --good: #34d399;
+        --goal-bg: #064e3b;
+        --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.45);
+      }
+
+      #themeToggle {
+        position: fixed;
+        top: 12px;
+        right: 12px;
+        z-index: 10;
+        width: 46px;
+        height: 46px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.3rem;
+        line-height: 1;
+        background: var(--card-bg);
+        color: var(--text);
+        border: 2px solid var(--border);
+        border-radius: 999px;
+        box-shadow: var(--shadow);
+        cursor: pointer;
+        -webkit-tap-highlight-color: transparent;
+      }
+
+      body {
+        font-family: "Fredoka", "Nunito", "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        background-color: var(--bg-color);
+        color: var(--text);
+        margin: 0;
+        padding: 20px;
+        min-height: 100vh;
+        overflow-x: hidden;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+
+      h1 {
+        margin-bottom: 5px;
+        color: var(--heading);
+        font-size: clamp(1.5rem, 4vw, 2.2rem);
+        text-align: center;
+      }
+
+      .instructions {
+        margin-bottom: 20px;
+        max-width: 800px;
+        font-size: clamp(0.95rem, 0.5vw + 0.8rem, 1.1rem);
+        background: var(--instructions-bg);
+        color: var(--text);
+        padding: 10px 20px;
+        border-radius: 8px;
+        border-left: 5px solid var(--primary);
+        text-align: center;
+      }
+
+      /* Grid Layout */
+      .grid-container {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 20px;
+        width: 100%;
+        max-width: 800px;
+        margin-bottom: 20px;
+      }
+
+      .spot-card {
+        background: var(--card-bg);
+        border: 3px solid var(--border);
+        border-radius: 12px;
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 15px;
+        box-shadow: var(--shadow);
+        user-select: none;
+        transition:
+          background-color 0.3s,
+          border-color 0.3s;
+      }
+
+      .spot-card.goal-reached {
+        background-color: var(--goal-bg);
+        border-color: var(--good);
+      }
+
+      .spot-title {
+        font-weight: 700;
+        font-size: clamp(1rem, 1vw + 0.5rem, 1.2rem);
+        color: var(--muted);
+        text-align: center;
+        margin-bottom: 10px;
+      }
+
+      .drop-zone {
+        width: 100%;
+        max-width: 360px;
+        box-sizing: border-box;
+        display: grid;
+        grid-template-columns: repeat(6, auto);
+        grid-template-rows: repeat(5, auto);
+        gap: 6px;
+        padding: 10px;
+        border: 2px dashed var(--border-strong);
+        border-radius: 8px;
+        background-color: var(--dropzone-bg);
+        transition: background-color 0.2s;
+        justify-content: center;
+      }
+
+      .drop-zone.drag-over {
+        background-color: var(--dropzone-hover);
+        border-color: var(--primary);
+      }
+
+      .slot {
+        box-sizing: border-box;
+        border: 2px dashed var(--border-strong);
+        border-radius: 4px;
+        background-color: var(--item-bg);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        min-width: 53px;
+        min-height: 45px;
+      }
+
+      .slot.drag-over {
+        background-color: var(--dropzone-hover);
+        border-color: var(--primary);
+      }
+
+      .slot:has(.draggable-item) {
+        border-color: transparent;
+        background-color: transparent;
+        padding: 0;
+      }
+
+      .slot:has(.draggable-item) .slot-label {
+        display: none;
+      }
+
+      .slot-label {
+        font-weight: 700;
+        font-size: 0.7rem;
+        color: var(--border-strong);
+        pointer-events: none;
+        font-family: "Fredoka", "Nunito", "Comic Sans MS", "Segoe UI", sans-serif;
+        line-height: 1;
+      }
+
+      /* Word cards (phase 3) */
+      .words-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 16px;
+        width: 100%;
+        max-width: 860px;
+        margin-bottom: 20px;
+      }
+
+      .word-card {
+        background: var(--card-bg);
+        border: 3px solid var(--border);
+        border-radius: 12px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 12px;
+        box-shadow: var(--shadow);
+        user-select: none;
+        transition:
+          background-color 0.3s,
+          border-color 0.3s;
+      }
+
+      .word-card.goal-reached {
+        background-color: var(--goal-bg);
+        border-color: var(--good);
+      }
+
+      .word-card .word-image {
+        width: 76px;
+        height: 76px;
+        object-fit: cover;
+        border-radius: 50%;
+        border: 3px solid #ffffff;
+        background-color: var(--item-bg);
+        margin-bottom: 8px;
+        pointer-events: none;
+        -webkit-user-drag: none;
+      }
+
+      .word-card .word-image.zoom {
+        width: 90px;
+        height: 90px;
+        margin: -7px 0 1px;
+      }
+
+      .word-card .word-name {
+        font-weight: 700;
+        font-size: 0.85rem;
+        color: var(--muted);
+        margin-bottom: 6px;
+        text-align: center;
+      }
+
+      .word-card .word-slots {
+        display: flex;
+        gap: 4px;
+        justify-content: center;
+        flex-wrap: wrap;
+      }
+
+      .word-card .word-slots .slot {
+        min-width: 40px;
+        min-height: 38px;
+        border-radius: 4px;
+      }
+
+      /* Moveable Items Palette */
+      .palette {
+        background: var(--card-bg);
+        border-radius: 12px;
+        padding: 15px;
+        width: 100%;
+        max-width: 860px;
+        box-shadow: var(--shadow);
+        margin-bottom: 20px;
+      }
+
+      .palette-title {
+        font-weight: 700;
+        margin-bottom: 12px;
+        color: var(--muted);
+        text-align: center;
+        width: 100%;
+      }
+
+      .item-container {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        align-content: flex-start;
+        gap: 8px;
+        max-height: 360px;
+        overflow-y: auto;
+        padding: 4px;
+      }
+
+      .draggable-item {
+        border-radius: 4px;
+        font-weight: 700;
+        cursor: grab;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-sizing: border-box;
+        -webkit-tap-highlight-color: transparent;
+        -webkit-touch-callout: none;
+        -webkit-user-select: none;
+        user-select: none;
+        touch-action: none;
+        width: 48px;
+        height: 40px;
+        font-size: 1.15rem;
+        font-family: "Fredoka", "Nunito", "Comic Sans MS", "Segoe UI", sans-serif;
+        letter-spacing: 0.02em;
+      }
+
+      .draggable-item.dragging-original {
+        opacity: 0.35;
+      }
+
+      .draggable-item.ghost {
+        position: fixed;
+        z-index: 1000;
+        pointer-events: none;
+        margin: 0;
+        transform: scale(1.05);
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.25);
+        border-width: 1.5px;
+      }
+
+      .draggable-item:active {
+        cursor: grabbing;
+      }
+
+      /* Teacher nav */
+      .teacher-nav {
+        display: flex;
+        gap: 8px;
+        margin-top: 4px;
+        margin-bottom: 20px;
+        opacity: 0.18;
+        transition: opacity 0.3s;
+      }
+
+      .teacher-nav:hover {
+        opacity: 0.85;
+      }
+
+      .teacher-nav button {
+        background: var(--border);
+        color: var(--muted);
+        border: 1px solid var(--border-strong);
+        border-radius: 6px;
+        padding: 4px 12px;
+        font-size: 0.7rem;
+        font-family: "Fredoka", "Nunito", "Segoe UI", sans-serif;
+        font-weight: 600;
+        cursor: pointer;
+        -webkit-tap-highlight-color: transparent;
+      }
+
+      .teacher-nav button:disabled {
+        opacity: 0.3;
+        cursor: default;
+      }
+
+      /* Responsive: small screens */
+      @media (max-width: 640px) {
+        html,
+        body {
+          -webkit-touch-callout: none;
+          -webkit-user-select: none;
+          user-select: none;
+        }
+
+        body {
+          padding: 12px;
+        }
+        .instructions {
+          padding: 10px 14px;
+        }
+        .grid-container {
+          grid-template-columns: 1fr;
+          gap: 14px;
+        }
+        .drop-zone {
+          max-width: 280px;
+          grid-template-columns: repeat(4, auto);
+          gap: 5px;
+          padding: 8px;
+        }
+        .slot {
+          min-width: 49px;
+          min-height: 41px;
+        }
+        .draggable-item {
+          width: 44px;
+          height: 36px;
+          font-size: 0.9rem;
+        }
+        .words-grid {
+          grid-template-columns: repeat(2, 1fr);
+          gap: 10px;
+        }
+        .word-card .word-image {
+          width: 58px;
+          height: 58px;
+          object-fit: cover;
+          border-radius: 50%;
+        }
+        .word-card .word-slots .slot {
+          min-width: 34px;
+          min-height: 34px;
+        }
+        .word-card .draggable-item {
+          width: 38px;
+          height: 32px;
+          font-size: 0.85rem;
+        }
+        .palette {
+          padding: 12px;
+        }
+        .item-container {
+          gap: 6px;
+          max-height: 320px;
+        }
+      }
+
+      /* Win overlay */
+      .win-overlay {
+        position: fixed;
+        inset: 0;
+        z-index: 2000;
+        display: none;
+        align-items: center;
+        justify-content: center;
+        background: rgba(0, 0, 0, 0.6);
+        padding: 20px;
+      }
+      .win-overlay.show {
+        display: flex;
+      }
+      .win-box {
+        background: var(--card-bg);
+        color: var(--text);
+        padding: 30px 40px;
+        border-radius: 16px;
+        text-align: center;
+        box-shadow: var(--shadow);
+        border: 3px solid var(--good);
+        max-width: 400px;
+      }
+      .win-box h2 {
+        margin: 0 0 15px;
+        color: var(--heading);
+      }
+      .win-box button {
+        background: var(--good);
+        color: #052e16;
+        border: none;
+        padding: 10px 24px;
+        border-radius: 8px;
+        font-size: 1rem;
+        font-weight: bold;
+        cursor: pointer;
+        -webkit-tap-highlight-color: transparent;
+      }
+    </style>
+  </head>
+  <body>
+    <button
+      id="themeToggle"
+      aria-label="Toggle dark mode"
+      title="Toggle dark mode"
+    >
+      🌙
+    </button>
+    <h1>ABC World</h1>
+    <div class="instructions" id="goalText"></div>
+    <div id="playArea"></div>
+    <div class="palette" id="paletteEl">
+      <div class="palette-title">Somewhere</div>
+      <div class="item-container" id="inventory"></div>
+    </div>
+    <div class="teacher-nav" id="teacherNav">
+      <button id="prevPhase" type="button">Prev</button>
+      <button id="nextPhase" type="button">Next</button>
+    </div>
+    <div id="winOverlay" class="win-overlay">
+      <div class="win-box">
+        <h2 id="winTitle">You did it!</h2>
+        <button id="restartBtn" type="button">Play Again</button>
+      </div>
+    </div>
+
+    <script>
+      // Theme toggle
+      (function () {
+        var root = document.documentElement;
+        var btn = document.getElementById("themeToggle");
+        var theme = "system";
+        try {
+          var saved = localStorage.getItem("miniGameTheme");
+          if (saved === "dark" || saved === "light") theme = saved;
+        } catch (e) {}
+        var darkMq = window.matchMedia("(prefers-color-scheme: dark)");
+        function apply() {
+          var dark = theme === "dark" || (theme === "system" && darkMq.matches);
+          root.classList.toggle("dark", dark);
+          root.classList.toggle("light", !dark);
+          btn.textContent = dark ? "☀️" : "🌙";
+        }
+        apply();
+        if (darkMq.addEventListener) darkMq.addEventListener("change", apply);
+        else if (darkMq.addListener) darkMq.addListener(apply);
+        btn.addEventListener("click", function () {
+          theme = theme === "dark" ? "light" : "dark";
+          try { localStorage.setItem("miniGameTheme", theme); } catch (e) {}
+          apply();
+        });
+      })();
+
+      // --- Constants ---
+      var LETTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
+      var VOWELS = "AEIOU".split("");
+      var COLORS = [
+        { bg: "#ef4444", dark: "#b91c1c", text: "#fff" },
+        { bg: "#f97316", dark: "#c2410c", text: "#fff" },
+        { bg: "#eab308", dark: "#a16207", text: "#000" },
+        { bg: "#22c55e", dark: "#15803d", text: "#fff" },
+        { bg: "#06b6d4", dark: "#0e7490", text: "#fff" },
+        { bg: "#3b82f6", dark: "#1d4ed8", text: "#fff" },
+        { bg: "#8b5cf6", dark: "#6d28d9", text: "#fff" },
+        { bg: "#ec4899", dark: "#be185d", text: "#fff" },
+        { bg: "#f43f5e", dark: "#be123c", text: "#fff" },
+        { bg: "#14b8a6", dark: "#0f766e", text: "#fff" },
+        { bg: "#a855f7", dark: "#7e22ce", text: "#fff" },
+        { bg: "#6366f1", dark: "#4338ca", text: "#fff" },
+        { bg: "#84cc16", dark: "#4d7c0f", text: "#fff" },
+      ];
+
+      var WORDS = [
+        { word: "Bee",    img: "https://res.cloudinary.com/dp455m4rk/image/upload/c_crop,w_469,h_384,x_469,y_0/v1786050302/A-F_yhrs9s.png" },
+        { word: "Car",    img: "https://res.cloudinary.com/dqwm4pdbz/image/upload/c_crop,w_421,h_424,x_0,y_0/r_max/bo_5px_solid_white/v1786599929/260813_toys_01_txjh3y.png" },
+        { word: "Rabbit", img: "https://res.cloudinary.com/dp455m4rk/image/upload/c_crop,w_421,h_424,x_842,y_424/r_max/v1786346044/lesson6_ywgsxn.png" },
+        { word: "Dog",    img: "https://res.cloudinary.com/dp455m4rk/image/upload/c_crop,w_469,h_384,x_0,y_384/r_max/v1786050302/A-F_yhrs9s.png" },
+        { word: "Bike",   img: "https://res.cloudinary.com/dqwm4pdbz/image/upload/c_crop,w_421,h_424,x_421,y_424/r_max/bo_5px_solid_white/v1786599929/260813_toys_01_txjh3y.png" },
+        { word: "Kite",   img: "https://res.cloudinary.com/dqwm4pdbz/image/upload/c_crop,w_421,h_424,x_842,y_424/r_max/bo_5px_solid_white/v1786599929/260813_toys_01_txjh3y.png" },
+      ];
+
+      // --- Phase definitions ---
+      var PHASES = [
+        {
+          id: "abc",
+          title: "ABC World",
+          goal: 'Move <b>uppercase letters</b> to <b>Uppercase</b> and <b>lowercase letters</b> to <b>Lowercase</b>',
+          winTitle: "You know your ABCs!",
+          mode: "two-zone",
+          buildBricks: function () {
+            var b = [];
+            LETTERS.forEach(function (ch, i) {
+              var c = COLORS[i % COLORS.length];
+              b.push({ id: "u-" + ch, letter: ch, zone: "spot-upper", bg: c.bg, dark: c.dark, text: c.text });
+            });
+            LETTERS.forEach(function (ch, i) {
+              var c = COLORS[i % COLORS.length];
+              b.push({ id: "l-" + ch, letter: ch.toLowerCase(), zone: "spot-lower", bg: c.bg, dark: c.dark, text: c.text });
+            });
+            return b;
+          },
+          buildZones: function () {
+            var upper = document.createElement("div");
+            upper.className = "drop-zone";
+            upper.id = "spot-upper";
+            LETTERS.forEach(function (ch) {
+              var s = document.createElement("div");
+              s.className = "slot";
+              s.dataset.letter = ch;
+              s.dataset.zone = "spot-upper";
+              s.innerHTML = '<span class="slot-label">' + ch + "</span>";
+              upper.appendChild(s);
+            });
+            var lower = document.createElement("div");
+            lower.className = "drop-zone";
+            lower.id = "spot-lower";
+            LETTERS.forEach(function (ch) {
+              var s = document.createElement("div");
+              s.className = "slot";
+              s.dataset.letter = ch.toLowerCase();
+              s.dataset.zone = "spot-lower";
+              s.innerHTML = '<span class="slot-label">' + ch.toLowerCase() + "</span>";
+              lower.appendChild(s);
+            });
+            return [
+              { id: "card-upper", title: "Uppercase", zone: upper },
+              { id: "card-lower", title: "Lowercase", zone: lower },
+            ];
+          },
+        },
+        {
+          id: "vowels",
+          title: "Vowels",
+          goal: 'Move <b>uppercase vowels</b> to <b>Uppercase</b> and <b>lowercase vowels</b> to <b>Lowercase</b>',
+          winTitle: "You know your vowels!",
+          mode: "two-zone",
+          buildBricks: function () {
+            var b = [];
+            VOWELS.forEach(function (ch, i) {
+              var c = COLORS[i % COLORS.length];
+              b.push({ id: "vu-" + ch, letter: ch, zone: "spot-upper", bg: c.bg, dark: c.dark, text: c.text });
+            });
+            VOWELS.forEach(function (ch, i) {
+              var c = COLORS[i % COLORS.length];
+              b.push({ id: "vl-" + ch, letter: ch.toLowerCase(), zone: "spot-lower", bg: c.bg, dark: c.dark, text: c.text });
+            });
+            return b;
+          },
+          buildZones: function () {
+            var upper = document.createElement("div");
+            upper.className = "drop-zone";
+            upper.id = "spot-upper";
+            VOWELS.forEach(function (ch) {
+              var s = document.createElement("div");
+              s.className = "slot";
+              s.dataset.letter = ch;
+              s.dataset.zone = "spot-upper";
+              s.innerHTML = '<span class="slot-label">' + ch + "</span>";
+              upper.appendChild(s);
+            });
+            var lower = document.createElement("div");
+            lower.className = "drop-zone";
+            lower.id = "spot-lower";
+            VOWELS.forEach(function (ch) {
+              var s = document.createElement("div");
+              s.className = "slot";
+              s.dataset.letter = ch.toLowerCase();
+              s.dataset.zone = "spot-lower";
+              s.innerHTML = '<span class="slot-label">' + ch.toLowerCase() + "</span>";
+              lower.appendChild(s);
+            });
+            return [
+              { id: "card-upper", title: "Uppercase", zone: upper },
+              { id: "card-lower", title: "Lowercase", zone: lower },
+            ];
+          },
+        },
+        {
+          id: "words",
+          title: "Spell the Words",
+          goal: "Spell each word by dragging the letters",
+          winTitle: "You spelled them all!",
+          mode: "words",
+          buildBricks: function () {
+            var counts = {};
+            WORDS.forEach(function (w) {
+              w.word.split("").forEach(function (ch) {
+                var key = ch.toLowerCase();
+                counts[key] = (counts[key] || 0) + 1;
+              });
+            });
+            var b = [];
+            var idx = 0;
+            var keys = Object.keys(counts).sort();
+            keys.forEach(function (key) {
+              for (var n = 0; n < counts[key]; n++) {
+                var ci = idx % COLORS.length;
+                var c = COLORS[ci];
+                b.push({
+                  id: "w-" + key + "-" + n,
+                  letter: key,
+                  zone: "words",
+                  bg: c.bg,
+                  dark: c.dark,
+                  text: c.text,
+                });
+                idx++;
+              }
+            });
+            return b;
+          },
+          buildZones: function () {
+            var grid = document.createElement("div");
+            grid.className = "words-grid";
+            grid.id = "wordsGrid";
+            WORDS.forEach(function (w, wi) {
+              var card = document.createElement("div");
+              card.className = "word-card";
+              card.id = "wcard-" + wi;
+              var img = document.createElement("img");
+              img.className = "word-image" + ((wi === 1 || wi === 4 || wi === 5) ? " zoom" : "");
+              img.src = w.img;
+              img.alt = w.word;
+              card.appendChild(img);
+              var name = document.createElement("div");
+              name.className = "word-name";
+              name.textContent = w.word;
+              card.appendChild(name);
+              var slots = document.createElement("div");
+              slots.className = "word-slots";
+              w.word.split("").forEach(function (ch, si) {
+                var s = document.createElement("div");
+                s.className = "slot";
+                s.dataset.letter = ch.toLowerCase();
+                s.dataset.zone = "wcard-" + wi;
+                s.innerHTML = '<span class="slot-label">' + ch + "</span>";
+                slots.appendChild(s);
+              });
+              card.appendChild(slots);
+              grid.appendChild(card);
+            });
+            return grid;
+          },
+        },
+      ];
+
+      // --- State ---
+      var currentPhase = 0;
+      var gameVersion = 0;
+      var reached = {};
+      var unlocked = {};
+      var activeItem = null;
+      var activeGhost = null;
+      var grabOffsetX = 0;
+      var grabOffsetY = 0;
+      var overSlot = null;
+
+      // --- DOM refs ---
+      var playArea = document.getElementById("playArea");
+      var inventory = document.getElementById("inventory");
+      var paletteEl = document.getElementById("paletteEl");
+      var goalText = document.getElementById("goalText");
+      var winOverlay = document.getElementById("winOverlay");
+      var winTitle = document.getElementById("winTitle");
+      var prevBtn = document.getElementById("prevPhase");
+      var nextBtn = document.getElementById("nextPhase");
+
+      // --- Helpers ---
+      function clearOverSlot() {
+        if (overSlot) {
+          overSlot.classList.remove("drag-over");
+          overSlot = null;
+        }
+      }
+
+      function makeBrick(b) {
+        var el = document.createElement("div");
+        el.className = "draggable-item";
+        el.id = b.id;
+        el.dataset.letter = b.letter;
+        el.dataset.zone = b.zone;
+        el.textContent = b.letter;
+        el.style.backgroundColor = b.bg;
+        el.style.color = b.text;
+        el.style.border = "1.5px solid " + b.dark;
+        return el;
+      }
+
+      function populateInventory(bricks) {
+        inventory.innerHTML = "";
+        bricks.forEach(function (b) {
+          inventory.appendChild(makeBrick(b));
+        });
+      }
+
+      function shuffleItems() {
+        var kids = inventory.children;
+        for (var i = kids.length - 1; i > 0; i--) {
+          var j = Math.floor(Math.random() * (i + 1));
+          inventory.appendChild(kids[j]);
+        }
+      }
+
+      // --- Phase rendering ---
+      function renderPhase(phaseIdx) {
+        gameVersion++;
+        currentPhase = phaseIdx;
+        var phase = PHASES[phaseIdx];
+        reached = {};
+        unlocked = {};
+
+        // Title & instructions
+        document.querySelector("h1").textContent = phase.title;
+        goalText.innerHTML = phase.goal;
+
+        // Clear play area
+        playArea.innerHTML = "";
+
+        // Build bricks
+        var bricks = phase.buildBricks();
+
+        if (phase.mode === "two-zone") {
+          var container = document.createElement("div");
+          container.className = "grid-container";
+          var cards = phase.buildZones();
+          cards.forEach(function (c) {
+            var card = document.createElement("div");
+            card.className = "spot-card";
+            card.id = c.id;
+            var title = document.createElement("div");
+            title.className = "spot-title";
+            title.textContent = c.title;
+            card.appendChild(title);
+            card.appendChild(c.zone);
+            container.appendChild(card);
+            reached[c.id] = false;
+          });
+          playArea.appendChild(container);
+        } else if (phase.mode === "words") {
+          var grid = phase.buildZones();
+          playArea.appendChild(grid);
+          WORDS.forEach(function (w, i) {
+            reached["wcard-" + i] = false;
+          });
+        }
+
+        // Populate bricks
+        populateInventory(bricks);
+        shuffleItems();
+
+        // Palette visible
+        paletteEl.style.display = "";
+
+        // Win overlay off
+        winOverlay.classList.remove("show");
+
+        // Teacher nav state
+        prevBtn.disabled = phaseIdx === 0;
+        nextBtn.disabled = phaseIdx === PHASES.length - 1;
+
+        checkGoal();
+      }
+
+      // --- Goal checking ---
+      function checkGoal() {
+        var phase = PHASES[currentPhase];
+        var allDone = true;
+
+        if (phase.mode === "two-zone") {
+          ["card-upper", "card-lower"].forEach(function (cardId) {
+            var card = document.getElementById(cardId);
+            if (!card) return;
+            var zone = card.querySelector(".drop-zone");
+            var slots = zone.querySelectorAll(".slot");
+            var complete = true;
+            slots.forEach(function (slot) {
+              var letter = slot.dataset.letter;
+              var item = zone.querySelector('.draggable-item[data-letter="' + letter + '"]');
+              if (!item) complete = false;
+            });
+            if (complete) reached[cardId] = true;
+            if (card) card.classList.toggle("goal-reached", reached[cardId]);
+            if (!reached[cardId]) allDone = false;
+          });
+        } else if (phase.mode === "words") {
+          WORDS.forEach(function (w, i) {
+            var cardId = "wcard-" + i;
+            var card = document.getElementById(cardId);
+            if (!card) return;
+            var slotsContainer = card.querySelector(".word-slots");
+            var slots = slotsContainer.querySelectorAll(".slot");
+            var complete = true;
+            slots.forEach(function (slot) {
+              var letter = slot.dataset.letter;
+              var item = slotsContainer.querySelector('.draggable-item[data-letter="' + letter + '"]');
+              if (!item) complete = false;
+            });
+            if (complete) reached[cardId] = true;
+            card.classList.toggle("goal-reached", reached[cardId]);
+            if (!reached[cardId]) allDone = false;
+          });
+        }
+
+        // Win
+        if (allDone) {
+          winTitle.textContent = phase.winTitle;
+          winOverlay.classList.add("show");
+        }
+
+        // Goal text updates for two-zone mode
+        if (phase.mode === "two-zone") {
+          if (reached["card-upper"] && !reached["card-lower"]) {
+            goalText.innerHTML =
+              "Uppercase done! Now move <b>lowercase</b> to <b>Lowercase</b>";
+          } else if (!reached["card-upper"] && reached["card-lower"]) {
+            goalText.innerHTML =
+              "Lowercase done! Now move <b>uppercase</b> to <b>Uppercase</b>";
+          } else if (!allDone) {
+            goalText.innerHTML = phase.goal;
+          }
+        }
+      }
+
+      // --- Teacher nav ---
+      prevBtn.addEventListener("click", function () {
+        if (currentPhase > 0) renderPhase(currentPhase - 1);
+      });
+      nextBtn.addEventListener("click", function () {
+        if (currentPhase < PHASES.length - 1) renderPhase(currentPhase + 1);
+      });
+
+      // Restart: replay current phase
+      document.getElementById("restartBtn").addEventListener("click", function () {
+        renderPhase(currentPhase);
+      });
+
+      // --- Drag & Drop ---
+      document.addEventListener("pointerdown", function (e) {
+        if (activeItem) return;
+        if (e.pointerType === "mouse" && e.button !== 0) return;
+        var item = e.target.closest(".draggable-item");
+        if (!item) return;
+        e.preventDefault();
+        activeItem = item;
+        var rect = item.getBoundingClientRect();
+        grabOffsetX = e.clientX - rect.left;
+        grabOffsetY = e.clientY - rect.top;
+        activeGhost = item.cloneNode(true);
+        activeGhost.classList.remove("dragging-original");
+        activeGhost.classList.add("ghost");
+        activeGhost.style.width = rect.width + "px";
+        activeGhost.style.left = e.clientX - grabOffsetX + "px";
+        activeGhost.style.top = e.clientY - grabOffsetY + "px";
+        document.body.appendChild(activeGhost);
+        item.classList.add("dragging-original");
+        if (item.setPointerCapture) {
+          try { item.setPointerCapture(e.pointerId); } catch (err) {}
+        }
+      });
+
+      document.addEventListener("pointermove", function (e) {
+        if (!activeItem) return;
+        e.preventDefault();
+        if (activeGhost) {
+          activeGhost.style.left = e.clientX - grabOffsetX + "px";
+          activeGhost.style.top = e.clientY - grabOffsetY + "px";
+        }
+        var under = document.elementFromPoint(e.clientX, e.clientY);
+        var slot = under ? under.closest(".slot, .item-container") : null;
+        if (slot !== overSlot) {
+          clearOverSlot();
+          overSlot = slot;
+          if (overSlot) overSlot.classList.add("drag-over");
+        }
+      });
+
+      function endDrag(e) {
+        if (!activeItem) return;
+        e.preventDefault();
+        if (activeGhost) {
+          activeGhost.remove();
+          activeGhost = null;
+        }
+        activeItem.classList.remove("dragging-original");
+
+        if (overSlot) {
+          if (overSlot.classList.contains("slot")) {
+            var letter = activeItem.dataset.letter;
+            var slotLetter = overSlot.dataset.letter;
+            var occupant = overSlot.querySelector(".draggable-item");
+            if (!occupant && letter === slotLetter) {
+              overSlot.appendChild(activeItem);
+            }
+          } else if (overSlot.classList.contains("item-container")) {
+            overSlot.appendChild(activeItem);
+          }
+        }
+        clearOverSlot();
+        activeItem = null;
+        checkGoal();
+      }
+
+      document.addEventListener("pointerup", endDrag);
+      document.addEventListener("pointercancel", endDrag);
+
+      // --- Init ---
+      renderPhase(0);
+    </script>
+  </body>
+</html>
