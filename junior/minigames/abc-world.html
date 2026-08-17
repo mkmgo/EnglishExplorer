@@ -268,16 +268,10 @@
         -webkit-user-drag: none;
       }
 
-      .word-card .word-image.zoom {
-        width: 90px;
-        height: 90px;
-        margin: -7px 0 1px;
-      }
-
       .word-card .word-name {
         font-weight: 700;
-        font-size: 0.85rem;
-        color: var(--muted);
+        font-size: 1.1rem;
+        color: var(--text);
         margin-bottom: 6px;
         text-align: center;
       }
@@ -580,6 +574,15 @@
         { word: "Kite",   img: "https://res.cloudinary.com/dqwm4pdbz/image/upload/c_crop,w_421,h_424,x_842,y_424/r_max/bo_5px_solid_white/v1786599929/260813_toys_01_txjh3y.png" },
       ];
 
+      var WORDS2 = [
+        { word: "Robot",   img: "https://res.cloudinary.com/dqwm4pdbz/image/upload/c_crop,w_421,h_424,x_0,y_424/r_max/bo_5px_solid_white/v1786599929/260813_toys_01_txjh3y.png" },
+        { word: "Elephant", img: "https://res.cloudinary.com/dp455m4rk/image/upload/c_crop,w_469,h_384,x_469,y_384/r_max/v1786050302/A-F_yhrs9s.png" },
+        { word: "Dog",     img: "https://res.cloudinary.com/dp455m4rk/image/upload/c_crop,w_469,h_384,x_0,y_384/r_max/v1786050302/A-F_yhrs9s.png" },
+        { word: "Bee",     img: "https://res.cloudinary.com/dp455m4rk/image/upload/c_crop,w_469,h_384,x_469,y_0/v1786050302/A-F_yhrs9s.png" },
+        { word: "Car",     img: "https://res.cloudinary.com/dqwm4pdbz/image/upload/c_crop,w_421,h_424,x_0,y_0/r_max/bo_5px_solid_white/v1786599929/260813_toys_01_txjh3y.png" },
+        { word: "Bike",    img: "https://res.cloudinary.com/dqwm4pdbz/image/upload/c_crop,w_421,h_424,x_421,y_424/r_max/bo_5px_solid_white/v1786599929/260813_toys_01_txjh3y.png" },
+      ];
+
       // --- Phase definitions ---
       var PHASES = [
         {
@@ -682,9 +685,11 @@
           goal: "Spell each word by dragging the letters",
           winTitle: "You spelled them all!",
           mode: "words",
+          wordList: WORDS,
           buildBricks: function () {
+            var wl = this.wordList;
             var counts = {};
-            WORDS.forEach(function (w) {
+            wl.forEach(function (w) {
               w.word.split("").forEach(function (ch) {
                 var key = ch.toLowerCase();
                 counts[key] = (counts[key] || 0) + 1;
@@ -711,15 +716,86 @@
             return b;
           },
           buildZones: function () {
+            var wl = this.wordList;
             var grid = document.createElement("div");
             grid.className = "words-grid";
             grid.id = "wordsGrid";
-            WORDS.forEach(function (w, wi) {
+            wl.forEach(function (w, wi) {
               var card = document.createElement("div");
               card.className = "word-card";
               card.id = "wcard-" + wi;
               var img = document.createElement("img");
-              img.className = "word-image" + ((wi === 1 || wi === 4 || wi === 5) ? " zoom" : "");
+              img.className = "word-image";
+              img.src = w.img;
+              img.alt = w.word;
+              card.appendChild(img);
+              var name = document.createElement("div");
+              name.className = "word-name";
+              name.textContent = w.word;
+              card.appendChild(name);
+              var slots = document.createElement("div");
+              slots.className = "word-slots";
+              w.word.split("").forEach(function (ch, si) {
+                var s = document.createElement("div");
+                s.className = "slot";
+                s.dataset.letter = ch.toLowerCase();
+                s.dataset.zone = "wcard-" + wi;
+                s.innerHTML = '<span class="slot-label">' + ch + "</span>";
+                slots.appendChild(s);
+              });
+              card.appendChild(slots);
+              grid.appendChild(card);
+            });
+            return grid;
+          },
+        },
+        {
+          id: "words2",
+          title: "More Words",
+          goal: "Spell each word by dragging the letters",
+          winTitle: "Amazing spelling!",
+          mode: "words",
+          wordList: WORDS2,
+          buildBricks: function () {
+            var wl = this.wordList;
+            var counts = {};
+            wl.forEach(function (w) {
+              w.word.split("").forEach(function (ch) {
+                var key = ch.toLowerCase();
+                counts[key] = (counts[key] || 0) + 1;
+              });
+            });
+            var b = [];
+            var idx = 0;
+            var keys = Object.keys(counts).sort();
+            keys.forEach(function (key) {
+              for (var n = 0; n < counts[key]; n++) {
+                var ci = idx % COLORS.length;
+                var c = COLORS[ci];
+                b.push({
+                  id: "w2-" + key + "-" + n,
+                  letter: key,
+                  zone: "words",
+                  bg: c.bg,
+                  dark: c.dark,
+                  text: c.text,
+                });
+                idx++;
+              }
+            });
+            return b;
+          },
+          buildZones: function () {
+            var wl = this.wordList;
+            var grid = document.createElement("div");
+            grid.className = "words-grid";
+            grid.id = "wordsGrid";
+            wl.forEach(function (w, wi) {
+              var card = document.createElement("div");
+              card.className = "word-card";
+              card.id = "wcard-" + wi;
+              var img = document.createElement("img");
+              img.className = "word-image";
               img.src = w.img;
               img.alt = w.word;
               card.appendChild(img);
@@ -840,7 +916,7 @@
         } else if (phase.mode === "words") {
           var grid = phase.buildZones();
           playArea.appendChild(grid);
-          WORDS.forEach(function (w, i) {
+          phase.wordList.forEach(function (w, i) {
             reached["wcard-" + i] = false;
           });
         }
@@ -884,7 +960,7 @@
             if (!reached[cardId]) allDone = false;
           });
         } else if (phase.mode === "words") {
-          WORDS.forEach(function (w, i) {
+          phase.wordList.forEach(function (w, i) {
             var cardId = "wcard-" + i;
             var card = document.getElementById(cardId);
             if (!card) return;
