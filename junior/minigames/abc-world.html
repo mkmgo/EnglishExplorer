@@ -691,8 +691,7 @@
             var counts = {};
             wl.forEach(function (w) {
               w.word.split("").forEach(function (ch) {
-                var key = ch.toLowerCase();
-                counts[key] = (counts[key] || 0) + 1;
+                counts[ch] = (counts[ch] || 0) + 1;
               });
             });
             var b = [];
@@ -738,7 +737,7 @@
               w.word.split("").forEach(function (ch, si) {
                 var s = document.createElement("div");
                 s.className = "slot";
-                s.dataset.letter = ch.toLowerCase();
+                s.dataset.letter = ch;
                 s.dataset.zone = "wcard-" + wi;
                 s.innerHTML = '<span class="slot-label">' + ch + "</span>";
                 slots.appendChild(s);
@@ -761,8 +760,7 @@
             var counts = {};
             wl.forEach(function (w) {
               w.word.split("").forEach(function (ch) {
-                var key = ch.toLowerCase();
-                counts[key] = (counts[key] || 0) + 1;
+                counts[ch] = (counts[ch] || 0) + 1;
               });
             });
             var b = [];
@@ -808,7 +806,7 @@
               w.word.split("").forEach(function (ch, si) {
                 var s = document.createElement("div");
                 s.className = "slot";
-                s.dataset.letter = ch.toLowerCase();
+                s.dataset.letter = ch;
                 s.dataset.zone = "wcard-" + wi;
                 s.innerHTML = '<span class="slot-label">' + ch + "</span>";
                 slots.appendChild(s);
