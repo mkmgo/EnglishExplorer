@@ -2019,6 +2019,21 @@
         </div>
       </section>
 
+      <!-- Segment 3b: WHERE IS THE...? (animals exercise) -->
+      <section class="screen" id="animalsWhereScreen">
+        <div class="content">
+          <h1 class="pageTitle" id="animalWhereTitle">Where is the…?</h1>
+          <div class="stage">
+            <div class="panel">
+              <div class="roundPips" id="animalWherePips"></div>
+              <div class="gameArea">
+                <div class="toyGrid" id="animalWhereGrid"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
       <!-- DO YOU LIKE? — phrases (present) -->
       <section class="screen" id="likePhrasesScreen">
         <div class="content">
@@ -3295,7 +3310,7 @@
       <!-- Segment 7: WHERE IS THE...? (exercise) -->
       <section class="screen" id="toysWhereScreen">
         <div class="content">
-          <h1 class="pageTitle" id="whereTitle">Where Is The…?</h1>
+          <h1 class="pageTitle" id="whereTitle">Where is the…?</h1>
           <div class="stage">
             <div class="panel">
               <div class="roundPips" id="wherePips"></div>
@@ -4004,6 +4019,7 @@
           animalSlotTimer = null;
         }
         if (screens[idx].id === "animalsIntroScreen") animalSlotReset();
+        else if (screens[idx].id === "animalsWhereScreen") animalWhereReset();
         else if (screens[idx].id === "toysChipsScreen") chipsReset();
         else if (screens[idx].id === "toysIntroScreen") toysSlotReset();
         else if (screens[idx].id === "toysYesNoScreen") ynReset();
@@ -6000,7 +6016,7 @@
       }
       function whereStart() {
         if (whereIdx >= whereOrder.length) return;
-        setHeadline("whereTitle", "Where Is The " + toyCap(whereOrder[whereIdx]) + "?");
+        setHeadline("whereTitle", "Where is the " + toyCap(whereOrder[whereIdx]) + "?");
         whereTries = 0;
         setPips("wherePips", whereResults, whereIdx);
         whereBuildGrid();
@@ -6034,6 +6050,96 @@
         toast("HERE!");
         say("Here!");
         whereAdvance();
+      }
+
+      var animalWhereOrder = [];
+      var animalWhereIdx = 0;
+      var animalWhereRewarded = false;
+      var animalWhereResults = [];
+      var animalWhereTries = 0;
+      function animalWhereBuildOrder() {
+        var list = ANIMALS.slice();
+        for (var i = list.length - 1; i > 0; i--) {
+          var j = Math.floor(Math.random() * (i + 1));
+          var tmp = list[i];
+          list[i] = list[j];
+          list[j] = tmp;
+        }
+        return list.map(function (a) {
+          return a.name;
+        });
+      }
+      function animalWhereBuildGrid() {
+        var grid = document.getElementById("animalWhereGrid");
+        if (!grid) return;
+        grid.innerHTML = "";
+        var order = ANIMALS.slice();
+        for (var i = order.length - 1; i > 0; i--) {
+          var j = Math.floor(Math.random() * (i + 1));
+          var tmp = order[i];
+          order[i] = order[j];
+          order[j] = tmp;
+        }
+        for (var k = 0; k < order.length; k++) {
+          (function (animal) {
+            var b = document.createElement("button");
+            b.className = "toyBtn";
+            b.onclick = function () {
+              animalWhereAnswer(animal.name);
+            };
+            var img = document.createElement("img");
+            img.className = "toyImg";
+            img.src = animal.img;
+            img.alt = animal.name;
+            b.appendChild(img);
+            grid.appendChild(b);
+          })(order[k]);
+        }
+      }
+      function animalWhereReset() {
+        animalWhereOrder = animalWhereBuildOrder();
+        buildPips("animalWherePips", animalWhereOrder.length);
+        animalWhereIdx = 0;
+        animalWhereResults = [];
+        animalWhereTries = 0;
+        animalWhereStart();
+      }
+      function animalWhereStart() {
+        if (animalWhereIdx >= animalWhereOrder.length) return;
+        setHeadline("animalWhereTitle", "Where is the " + toyCap(animalWhereOrder[animalWhereIdx]) + "?");
+        animalWhereTries = 0;
+        setPips("animalWherePips", animalWhereResults, animalWhereIdx);
+        animalWhereBuildGrid();
+      }
+      function animalWhereAdvance() {
+        animalWhereIdx++;
+        setPips("animalWherePips", animalWhereResults, animalWhereIdx);
+        if (animalWhereIdx >= animalWhereOrder.length) {
+          setHeadline("animalWhereTitle", "Well Done!");
+          if (!animalWhereRewarded && qualifies(animalWhereResults)) {
+            animalWhereRewarded = true;
+            reward("WHERE IS IT? +1 \u2B50");
+          }
+        } else {
+          animalWhereStart();
+        }
+      }
+      function animalWhereAnswer(name) {
+        if (animalWhereIdx >= animalWhereOrder.length) return;
+        if (name !== animalWhereOrder[animalWhereIdx]) {
+          animalWhereTries++;
+          toast("Try again!");
+          say("Try again.");
+          if (animalWhereTries >= 2) {
+            animalWhereResults.push("bad");
+            animalWhereAdvance();
+          }
+          return;
+        }
+        animalWhereResults.push(animalWhereTries === 0 ? "good" : "mediocre");
+        toast("HERE!");
+        say("Here!");
+        animalWhereAdvance();
       }
 
       (function () {
