@@ -77,3 +77,6 @@ put in them (see "Self-contained files" below).
 - Every phrase card must stay in the HTML — unfold only hides/unhides them, it never removes content. Cards keep their normal `speakPhrase(...)` / `say(...)` onclick so clicking still speaks.
 - To apply unfold to a new slide, replicate the CSS rule and the delegated listener, swapping in the new slide's id.
 
+## Daily Protocols
+
+When creating a new protocol, first read `breakthrough/protocols/README.md` for the required template and section order. Save the file as `breakthrough/protocols/YYYY-MM-DD.html`.
