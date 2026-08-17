@@ -142,12 +142,11 @@
         filter: drop-shadow(0 20px 25px rgba(160, 30, 30, 0.22));
       }
       .icardst {
-        position: relative;
         font-size: clamp(0.9rem, 1.5vw, 1.5rem);
         color: #8a6d00;
         background: #fff6d6;
         padding: 0.45em 1.1em;
-        border-radius: 22px 22px 22px 8px;
+        border-radius: 22px;
         box-shadow: 0 8px 20px rgba(138, 109, 0, 0.18);
         display: inline-flex;
         align-items: center;
@@ -156,28 +155,6 @@
       }
       .icardst:active {
         transform: scale(0.95);
-      }
-      .icardst::before {
-        content: "";
-        position: absolute;
-        bottom: -8px;
-        left: 14px;
-        width: 18px;
-        height: 18px;
-        background: #fff6d6;
-        border-bottom-left-radius: 6px;
-        transform: rotate(45deg);
-      }
-      .icardst::after {
-        content: "";
-        position: absolute;
-        top: 0;
-        right: 0;
-        width: 0;
-        height: 0;
-        border-style: solid;
-        border-width: 0 26px 26px 0;
-        border-color: transparent #ffe9a8 transparent transparent;
       }
       .icardtext {
         font-family: Arial, Helvetica, sans-serif;
@@ -188,12 +165,11 @@
         color: #8a6d00;
       }
       .icardstb {
-        position: relative;
         font-size: clamp(0.9rem, 1.5vw, 1.5rem);
         color: #a35a00;
         background: #ffe9ce;
         padding: 0.45em 1.1em;
-        border-radius: 22px 22px 8px 22px;
+        border-radius: 22px;
         box-shadow: 0 8px 20px rgba(163, 90, 0, 0.18);
         display: inline-flex;
         align-items: center;
@@ -202,28 +178,6 @@
       }
       .icardstb:active {
         transform: scale(0.95);
-      }
-      .icardstb::before {
-        content: "";
-        position: absolute;
-        bottom: -8px;
-        right: 14px;
-        width: 18px;
-        height: 18px;
-        background: #ffe9ce;
-        border-bottom-right-radius: 6px;
-        transform: rotate(45deg);
-      }
-      .icardstb::after {
-        content: "";
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 0;
-        height: 0;
-        border-style: solid;
-        border-width: 26px 0 0 26px;
-        border-color: transparent transparent transparent #ffd9a3;
       }
       .icardtextb {
         font-family: Arial, Helvetica, sans-serif;
@@ -865,18 +819,36 @@
       }
       .slotAnswers {
         display: grid;
-        grid-template-columns: repeat(2, minmax(0, 1fr));
+        grid-template-columns: repeat(3, minmax(0, 1fr));
         gap: clamp(8px, 1.2vw, 14px);
         width: 100%;
-        max-width: 440px;
+        max-width: 480px;
         margin: 0.5em auto 0;
       }
       .slotAnswers .choice {
         min-width: 0;
         min-height: 52px;
         padding: 0.35em 0.6em;
-        font-size: clamp(0.95rem, 1.8vw, 1.5rem);
+        font-size: clamp(0.85rem, 1.6vw, 1.35rem);
         border-radius: 18px;
+      }
+      .slotWindow {
+        position: relative;
+      }
+      .slotVoiceIcon {
+        position: absolute;
+        top: 8px;
+        right: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 32px;
+        height: 32px;
+        background: rgba(255, 255, 255, 0.7);
+        border-radius: 50%;
+        color: var(--muted);
+        pointer-events: none;
+        opacity: 0.5;
       }
       .slotYes {
         background: var(--good);
@@ -886,8 +858,8 @@
         background: var(--bad);
         color: #fff;
       }
-      .slotSpin {
-        background: var(--accent);
+      .slotNot {
+        background: var(--mediocre);
         color: #fff;
       }
       .gameArea {
@@ -1885,7 +1857,7 @@
         <div class="content">
           <h1 class="pageTitle">Greeting and Introduction</h1>
           <div class="stage">
-            <div class="panel origami">
+            <div class="panel">
               <div class="grid grid--2">
                 <button
                   class="icardst"
@@ -2028,77 +2000,19 @@
           <h1 class="pageTitle">Animals</h1>
           <div class="stage">
             <div class="panel">
-              <div class="toyGrid">
-                <button class="toyBtn" onclick="animalPress('dog')">
-                  <img
-                    class="toyImg"
-                    src="https://res.cloudinary.com/dp455m4rk/image/upload/c_crop,w_469,h_384,x_0,y_384/r_max/v1786050302/A-F_yhrs9s.png"
-                    alt="dog"
-                  />
-                  <span class="toyName">Dog</span>
-                </button>
-                <button class="toyBtn" onclick="animalPress('cat')">
-                  <img
-                    class="toyImg"
-                    src="https://res.cloudinary.com/dp455m4rk/image/upload/c_crop,w_469,h_384,x_938,y_0/r_max/v1786050302/A-F_yhrs9s.png"
-                    alt="cat"
-                  />
-                  <span class="toyName">Cat</span>
-                </button>
-                <button class="toyBtn" onclick="animalPress('bird')">
-                  <img
-                    class="toyImg"
-                    src="https://res.cloudinary.com/dp455m4rk/image/upload/c_crop,w_421,h_424,x_0,y_0/r_max/v1786346044/lesson6_ywgsxn.png"
-                    alt="bird"
-                  />
-                  <span class="toyName">Bird</span>
-                </button>
-                <button class="toyBtn" onclick="animalPress('fish')">
-                  <img
-                    class="toyImg"
-                    src="https://res.cloudinary.com/dp455m4rk/image/upload/c_crop,w_421,h_424,x_421,y_0/r_max/v1786346044/lesson6_ywgsxn.png"
-                    alt="fish"
-                  />
-                  <span class="toyName">Fish</span>
-                </button>
-                <button class="toyBtn" onclick="animalPress('lion')">
-                  <img
-                    class="toyImg"
-                    src="https://res.cloudinary.com/dp455m4rk/image/upload/c_crop,w_421,h_424,x_842,y_0/r_max/v1786346044/lesson6_ywgsxn.png"
-                    alt="lion"
-                  />
-                  <span class="toyName">Lion</span>
-                </button>
-                <button class="toyBtn" onclick="animalPress('elephant')">
-                  <img
-                    class="toyImg"
-                    src="https://res.cloudinary.com/dp455m4rk/image/upload/c_crop,w_469,h_384,x_469,y_384/r_max/v1786050302/A-F_yhrs9s.png"
-                    alt="elephant"
-                  />
-                  <span class="toyName">Elephant</span>
-                </button>
-                <button class="toyBtn" onclick="animalPress('monkey')">
-                  <img
-                    class="toyImg"
-                    src="https://res.cloudinary.com/dp455m4rk/image/upload/c_crop,w_421,h_424,x_421,y_424/r_max/v1786346044/lesson6_ywgsxn.png"
-                    alt="monkey"
-                  />
-                  <span class="toyName">Monkey</span>
-                </button>
-                <button class="toyBtn" onclick="animalPress('rabbit')">
-                  <img
-                    class="toyImg"
-                    src="https://res.cloudinary.com/dp455m4rk/image/upload/c_crop,w_421,h_424,x_842,y_424/r_max/v1786346044/lesson6_ywgsxn.png"
-                    alt="rabbit"
-                  />
-                  <span class="toyName">Rabbit</span>
-                </button>
+              <div class="roundPips" id="animalSlotPips"></div>
+              <div class="slotPanel">
+                <div class="slotWindow" onclick="animalSlotSpeakAgain()" style="cursor:pointer">
+                  <img class="slotImg" id="animalSlotImg" alt="" />
+                  <span class="slotVoiceIcon">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="1.4em" height="1.4em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/></svg>
+                  </span>
+                </div>
               </div>
-              <div class="miniRow">
-                <button class="miniChip" onclick="listenAnimals()">
-                  <i data-lucide="volume1" width="1.2em" height="1.2em"></i>
-                  HEAR ALL
-                </button>
+              <div class="slotAnswers">
+                <button class="choice slotAnswer slotYes" onclick="animalSlotAnswer('yes')">YES</button>
+                <button class="choice slotAnswer slotNot" onclick="animalSlotAnswer('not-an-animal')">NOT AN ANIMAL</button>
+                <button class="choice slotAnswer slotNo" onclick="animalSlotAnswer('no')">NO</button>
               </div>
             </div>
           </div>
@@ -2110,7 +2024,7 @@
         <div class="content">
           <h1 class="pageTitle">Do You Like?</h1>
           <div class="stage">
-            <div class="panel origami">
+            <div class="panel">
               <div class="grid grid--2">
                 <button
                   class="icardst phraseCard"
@@ -2606,42 +2520,22 @@
       <!-- Segment 1: MY TOYS — vocabulary (present) -->
       <section class="screen" id="toysIntroScreen">
         <div class="content">
-          <h1 class="pageTitle">My Toys and Things</h1>
+          <h1 class="pageTitle">Toys and Things</h1>
           <div class="stage">
             <div class="panel">
+              <div class="roundPips" id="slotPips"></div>
               <div class="slotPanel">
-                <div class="slotWindow">
+                <div class="slotWindow" onclick="toysSlotSpeakAgain()" style="cursor:pointer">
                   <img class="slotImg" id="toysSlotImg" alt="" />
+                  <span class="slotVoiceIcon">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="1.4em" height="1.4em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/></svg>
+                  </span>
                 </div>
               </div>
-              <div class="miniRow">
-                <button class="miniChip slotVoice" onclick="toysSlotVoice()">
-                  <i data-lucide="volume1" width="1.2em" height="1.2em"></i>
-                  VOICE
-                </button>
-              </div>
               <div class="slotAnswers">
-                <button
-                  class="choice slotAnswer slotYes"
-                  onclick="toysSlotAnswer('yes')"
-                >
-                  YES
-                </button>
-                <button
-                  class="choice slotAnswer slotNo"
-                  onclick="toysSlotAnswer('no')"
-                >
-                  NO
-                </button>
-                <button
-                  class="choice slotAnswer slotNot"
-                  onclick="toysSlotAnswer('not-a-toy')"
-                >
-                  NOT A TOY
-                </button>
-                <button class="choice slotAnswer slotSpin" onclick="toysSlotSpin()">
-                  SPIN
-                </button>
+                <button class="choice slotAnswer slotYes" onclick="toysSlotAnswer('yes')">YES</button>
+                <button class="choice slotAnswer slotNot" onclick="toysSlotAnswer('not-a-toy')">NOT A TOY</button>
+                <button class="choice slotAnswer slotNo" onclick="toysSlotAnswer('no')">NO</button>
               </div>
             </div>
           </div>
@@ -2653,7 +2547,7 @@
         <div class="content">
           <h1 class="pageTitle">What Do You Have?</h1>
           <div class="stage">
-            <div class="panel origami">
+            <div class="panel">
               <div class="grid grid--2">
                 <button
                   class="icardst phraseCard"
@@ -2963,7 +2857,7 @@
         <div class="content">
           <h1 class="pageTitle">Do You Have A…?</h1>
           <div class="stage">
-            <div class="panel origami">
+            <div class="panel">
               <div class="grid grid--2">
                 <button
                   class="icardst phraseCard"
@@ -4105,8 +3999,13 @@
           clearTimeout(toysSlotTimer);
           toysSlotTimer = null;
         }
-        if (screens[idx].id === "toysChipsScreen") chipsReset();
-        else if (screens[idx].id === "toysIntroScreen") toysSlotSpin();
+        if (animalSlotTimer) {
+          clearTimeout(animalSlotTimer);
+          animalSlotTimer = null;
+        }
+        if (screens[idx].id === "animalsIntroScreen") animalSlotReset();
+        else if (screens[idx].id === "toysChipsScreen") chipsReset();
+        else if (screens[idx].id === "toysIntroScreen") toysSlotReset();
         else if (screens[idx].id === "toysYesNoScreen") ynReset();
         else if (screens[idx].id === "toysYesNo2Screen") ynReset2();
         else if (screens[idx].id === "toysHaveScreen") haveReset();
@@ -5011,6 +4910,10 @@
       var toysSlotCurrent = null;
       var toysSlotMatch = false;
       var toysSlotWord = "";
+      var slotResults = [];
+      var slotIdx = 0;
+      var slotTotal = 10;
+      var slotRewarded = false;
       function toysSlotBuildPool() {
         var pool = TOYS.slice();
         var animal = ANIMALS[Math.floor(Math.random() * ANIMALS.length)];
@@ -5051,6 +4954,7 @@
       }
       function toysSlotSpin() {
         if (toysSlotTimer) return;
+        if (slotIdx >= slotTotal) return;
         toysSlotPool = toysSlotBuildPool();
         toysSlotCurrent = null;
         toysSlotMatch = false;
@@ -5072,6 +4976,9 @@
             toysSlotWord = toysSlotMatch
               ? target.name
               : toysSlotPickWrong(target.name);
+            setTimeout(function () {
+              toysSlotSpeak(toysSlotWord);
+            }, 300);
             return;
           }
           img.src = toysSlotPool[idx].img;
@@ -5083,31 +4990,168 @@
         }
         toysSlotTimer = window.setTimeout(tick, 60);
       }
-      function toysSlotVoice() {
-        if (toysSlotTimer || !toysSlotCurrent) {
-          toast("Wait for the spin!");
-          return;
-        }
+      function toysSlotSpeakAgain() {
+        if (toysSlotTimer || !toysSlotCurrent) return;
         toysSlotSpeak(toysSlotWord);
+      }
+      function toysSlotReset() {
+        slotResults = [];
+        slotIdx = 0;
+        buildPips("slotPips", slotTotal);
+        setPips("slotPips", slotResults, slotIdx);
+        toysSlotSpin();
       }
       function toysSlotAnswer(ans) {
         if (toysSlotTimer || !toysSlotCurrent) return;
+        if (slotIdx >= slotTotal) return;
         var truth = toysSlotCurrent.isAnimal
           ? "not-a-toy"
           : toysSlotMatch
             ? "yes"
             : "no";
-        if (ans === truth) {
+        var won = ans === truth;
+        slotResults.push(won ? "good" : "bad");
+        setPips("slotPips", slotResults, slotIdx);
+        if (won) {
           toast("WELL DONE!");
-          if (toysSlotCurrent.isAnimal) {
-            sayOther(toysSlotCurrent.name);
-          } else {
-            say(toysSlotCurrent.name);
-          }
         } else {
           toast("Try again!");
-          say("Try again.");
         }
+        slotIdx++;
+        if (slotIdx >= slotTotal) {
+          var greens = 0;
+          for (var i = 0; i < slotResults.length; i++) {
+            if (slotResults[i] === "good") greens++;
+          }
+          if (greens >= 8 && !slotRewarded) {
+            slotRewarded = true;
+            reward("TOYS AND THINGS! +1 \u2B50");
+          }
+          return;
+        }
+        setTimeout(function () {
+          toysSlotSpin();
+        }, 1200);
+      }
+
+      var animalSlotPool = [];
+      var animalSlotTimer = null;
+      var animalSlotCurrent = null;
+      var animalSlotIsToy = false;
+      var animalSlotWord = "";
+      var animalSlotResults = [];
+      var animalSlotIdx = 0;
+      var animalSlotTotal = 10;
+      var animalSlotRewarded = false;
+      function animalSlotBuildPool() {
+        var pool = ANIMALS.slice();
+        var toyPool = [];
+        for (var i = 0; i < TOYS.length; i++) {
+          if (TOYS[i].name !== "teddy bear") toyPool.push(TOYS[i]);
+        }
+        var toy = toyPool[Math.floor(Math.random() * toyPool.length)];
+        pool.push({ name: toy.name, img: toy.img, isToy: true });
+        return pool;
+      }
+      function animalSlotAllNames() {
+        var names = [];
+        for (var i = 0; i < ANIMALS.length; i++) names.push(ANIMALS[i].name);
+        for (var j = 0; j < TOYS.length; j++) names.push(TOYS[j].name);
+        return names;
+      }
+      function animalSlotPickWrong(name) {
+        var names = animalSlotAllNames();
+        var filtered = [];
+        for (var i = 0; i < names.length; i++) {
+          if (names[i] !== name) filtered.push(names[i]);
+        }
+        return filtered[Math.floor(Math.random() * filtered.length)];
+      }
+      function animalSlotSpeak(name) {
+        say(name);
+      }
+      function animalSlotSpin() {
+        if (animalSlotTimer) return;
+        if (animalSlotIdx >= animalSlotTotal) return;
+        animalSlotPool = animalSlotBuildPool();
+        animalSlotCurrent = null;
+        animalSlotIsToy = false;
+        var img = document.getElementById("animalSlotImg");
+        if (!img) return;
+        var target =
+          animalSlotPool[Math.floor(Math.random() * animalSlotPool.length)];
+        var idx = Math.floor(Math.random() * animalSlotPool.length);
+        var start = Date.now();
+        var duration = 1800 + Math.random() * 600;
+        function tick() {
+          var elapsed = Date.now() - start;
+          if (elapsed >= duration) {
+            animalSlotTimer = null;
+            img.src = target.img;
+            img.alt = target.name;
+            animalSlotCurrent = target;
+            animalSlotIsToy = !!target.isToy;
+            animalSlotWord = animalSlotIsToy
+              ? animalSlotPickWrong(target.name)
+              : Math.random() < 0.6
+                ? target.name
+                : animalSlotPickWrong(target.name);
+            setTimeout(function () {
+              animalSlotSpeak(animalSlotWord);
+            }, 300);
+            return;
+          }
+          img.src = animalSlotPool[idx].img;
+          img.alt = animalSlotPool[idx].name;
+          var remain = duration - elapsed;
+          var delay = 40 + (1 - remain / duration) * 260;
+          idx = (idx + 1) % animalSlotPool.length;
+          animalSlotTimer = window.setTimeout(tick, Math.max(30, delay));
+        }
+        animalSlotTimer = window.setTimeout(tick, 60);
+      }
+      function animalSlotSpeakAgain() {
+        if (animalSlotTimer || !animalSlotCurrent) return;
+        animalSlotSpeak(animalSlotWord);
+      }
+      function animalSlotReset() {
+        animalSlotResults = [];
+        animalSlotIdx = 0;
+        buildPips("animalSlotPips", animalSlotTotal);
+        setPips("animalSlotPips", animalSlotResults, animalSlotIdx);
+        animalSlotSpin();
+      }
+      function animalSlotAnswer(ans) {
+        if (animalSlotTimer || !animalSlotCurrent) return;
+        if (animalSlotIdx >= animalSlotTotal) return;
+        var truth = animalSlotIsToy
+          ? "not-an-animal"
+          : animalSlotWord === animalSlotCurrent.name
+            ? "yes"
+            : "no";
+        var won = ans === truth;
+        animalSlotResults.push(won ? "good" : "bad");
+        setPips("animalSlotPips", animalSlotResults, animalSlotIdx);
+        if (won) {
+          toast("WELL DONE!");
+        } else {
+          toast("Try again!");
+        }
+        animalSlotIdx++;
+        if (animalSlotIdx >= animalSlotTotal) {
+          var greens = 0;
+          for (var i = 0; i < animalSlotResults.length; i++) {
+            if (animalSlotResults[i] === "good") greens++;
+          }
+          if (greens >= 8 && !animalSlotRewarded) {
+            animalSlotRewarded = true;
+            reward("ANIMALS! +1 \u2B50");
+          }
+          return;
+        }
+        setTimeout(function () {
+          animalSlotSpin();
+        }, 1200);
       }
 
       var ANIMALS = [
