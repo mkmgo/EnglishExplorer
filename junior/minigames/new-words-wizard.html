@@ -4,6 +4,16 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>New Words Wizard - Spell the Words</title>
+    <meta name="description" content="New Words Wizard - Spell each word by dragging the letters" />
+    <meta property="og:title" content="New Words Wizard" />
+    <meta property="og:description" content="Spell each word by dragging the letters" />
+    <meta property="og:image" content="https://res.cloudinary.com/dqwm4pdbz/image/upload/c_crop,w_189,h_188,x_378,y_20/v1786861646/260811_lesson7ee_01_jzlmlp.png" />
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content="New Words Wizard" />
+    <meta name="twitter:description" content="Spell each word by dragging the letters" />
+    <meta name="twitter:image" content="https://res.cloudinary.com/dqwm4pdbz/image/upload/c_crop,w_189,h_188,x_378,y_20/v1786861646/260811_lesson7ee_01_jzlmlp.png" />
+    <link rel="icon" type="image/png" href="https://res.cloudinary.com/dqwm4pdbz/image/upload/c_crop,w_189,h_188,x_378,y_20/v1786861646/260811_lesson7ee_01_jzlmlp.png" />
+    <link rel="apple-touch-icon" href="https://res.cloudinary.com/dqwm4pdbz/image/upload/c_crop,w_189,h_188,x_378,y_20/v1786861646/260811_lesson7ee_01_jzlmlp.png" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -430,6 +440,114 @@
         cursor: pointer;
         -webkit-tap-highlight-color: transparent;
       }
+
+      .gift-area {
+        display: none;
+        flex-direction: column;
+        align-items: center;
+        width: 100%;
+        max-width: 600px;
+        margin-bottom: 20px;
+      }
+
+      .gift-area.show {
+        display: flex;
+      }
+
+      .gift-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 14px;
+        width: 100%;
+        margin-bottom: 16px;
+      }
+
+      .gift-tile {
+        background: var(--card-bg);
+        border: 3px solid var(--accent);
+        border-radius: 12px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 10px;
+        box-shadow: var(--shadow);
+        opacity: 0;
+        transform: scale(0.3) rotate(-15deg);
+        filter: blur(8px);
+      }
+
+      .gift-tile.revealed {
+        animation: giftPop 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards,
+                   giftGlow 1s ease 0.5s;
+      }
+
+      @keyframes giftPop {
+        0% {
+          opacity: 0;
+          transform: scale(0.3) rotate(-15deg);
+          filter: blur(8px);
+        }
+        50% {
+          opacity: 1;
+          transform: scale(1.15) rotate(3deg);
+          filter: blur(0);
+        }
+        70% {
+          transform: scale(0.95) rotate(-1deg);
+        }
+        100% {
+          opacity: 1;
+          transform: scale(1) rotate(0deg);
+          filter: blur(0);
+        }
+      }
+
+      @keyframes giftGlow {
+        0% { box-shadow: var(--shadow), 0 0 0 0 rgba(245, 158, 11, 0.5); }
+        50% { box-shadow: var(--shadow), 0 0 20px 6px rgba(245, 158, 11, 0.4); }
+        100% { box-shadow: var(--shadow), 0 0 0 0 rgba(245, 158, 11, 0); }
+      }
+
+      .gift-tile .gift-image {
+        width: 80px;
+        height: 80px;
+        object-fit: cover;
+        border-radius: 50%;
+        border: 3px solid var(--accent);
+        background-color: var(--item-bg);
+        margin-bottom: 6px;
+        pointer-events: none;
+        -webkit-user-drag: none;
+      }
+
+      .gift-tile .gift-name {
+        font-weight: 700;
+        font-size: 1.1rem;
+        color: var(--text);
+        text-align: center;
+      }
+
+
+
+
+
+      html.dark .gift-tile .gift-image {
+        border-color: transparent;
+      }
+
+      @media (max-width: 640px) {
+        .gift-grid {
+          grid-template-columns: repeat(2, 1fr);
+          gap: 10px;
+        }
+        .gift-tile .gift-image {
+          width: 60px;
+          height: 60px;
+        }
+        .gift-tile .gift-name {
+          font-size: 0.95rem;
+        }
+      }
     </style>
   </head>
   <body>
@@ -446,6 +564,9 @@
     <div class="palette" id="paletteEl">
       <div class="palette-title">Letters</div>
       <div class="item-container" id="inventory"></div>
+    </div>
+    <div class="gift-area" id="giftArea">
+      <div class="gift-grid" id="giftGrid"></div>
     </div>
     <div id="winOverlay" class="win-overlay">
       <div class="win-box">
@@ -512,7 +633,7 @@
         { id: "w2", title: "New Words Wizard", goal: "Spell the word", winTitle: "Great job!", wordList: [WORDS[2]], mode: "single" },
         { id: "w3", title: "New Words Wizard", goal: "Spell the word", winTitle: "Great job!", wordList: [WORDS[3]], mode: "single" },
         { id: "w4", title: "New Words Wizard", goal: "Spell the word", winTitle: "Great job!", wordList: [WORDS[4]], mode: "single" },
-        { id: "w5", title: "New Words Wizard", goal: "Spell the word", winTitle: "Great job!", wordList: [WORDS[5]], mode: "single" },
+        { id: "w5", title: "New Words Wizard", goal: "Spell the word", winTitle: "Now all 6...", wordList: [WORDS[5]], mode: "single" },
         { id: "all", title: "New Words Wizard", goal: "Spell each word by dragging the letters", winTitle: "You spelled them all!", wordList: WORDS, mode: "grid" },
       ];
 
@@ -523,6 +644,8 @@
       var grabOffsetX = 0;
       var grabOffsetY = 0;
       var overSlot = null;
+      var giftIndex = 0;
+      var giftActive = false;
 
       var playArea = document.getElementById("playArea");
       var inventory = document.getElementById("inventory");
@@ -530,6 +653,8 @@
       var goalText = document.getElementById("goalText");
       var winOverlay = document.getElementById("winOverlay");
       var winTitle = document.getElementById("winTitle");
+      var giftArea = document.getElementById("giftArea");
+      var giftGrid = document.getElementById("giftGrid");
 
       function clearOverSlot() {
         if (overSlot) {
@@ -652,6 +777,59 @@
         }
       }
 
+      var revealTimer = null;
+      var brickSnd = "https://res.cloudinary.com/dqwm4pdbz/video/upload/v1787075952/audio_b35b670620_fckfiy.mp3";
+      var triumphSnd = "https://res.cloudinary.com/dqwm4pdbz/video/upload/v1787076589/810330__mokasza__triumphant-success_bgd68y.mp3";
+
+      function playSound(url) {
+        var snd = new Audio(url);
+        snd.play().catch(function () {});
+      }
+
+      function startGifts() {
+        giftActive = true;
+        giftIndex = 0;
+        paletteEl.style.display = "none";
+        playArea.innerHTML = "";
+        goalText.innerHTML = "Your gifts!";
+        giftGrid.innerHTML = "";
+        WORDS.forEach(function (w) {
+          var tile = document.createElement("div");
+          tile.className = "gift-tile";
+          var img = document.createElement("img");
+          img.className = "gift-image";
+          img.src = w.img;
+          img.alt = w.word;
+          tile.appendChild(img);
+          var name = document.createElement("div");
+          name.className = "gift-name";
+          name.textContent = w.word;
+          tile.appendChild(name);
+          giftGrid.appendChild(tile);
+        });
+        giftArea.classList.add("show");
+        giftGrid.children[0].classList.add("revealed");
+        playSound(brickSnd);
+        giftIndex = 0;
+        revealTimer = setInterval(function () {
+          giftIndex++;
+          if (giftIndex < WORDS.length) {
+            giftGrid.children[giftIndex].classList.add("revealed");
+            playSound(brickSnd);
+          } else {
+            clearInterval(revealTimer);
+            revealTimer = null;
+            setTimeout(function () {
+              giftArea.classList.remove("show");
+              giftActive = false;
+              playSound(triumphSnd);
+              winTitle.textContent = "You got 6 new Bricks!";
+              winOverlay.classList.add("show");
+            }, 800);
+          }
+        }, 800);
+      }
+
       function renderPhase(phaseIdx) {
         currentPhase = phaseIdx;
         var phase = PHASES[phaseIdx];
@@ -675,6 +853,9 @@
 
         paletteEl.style.display = "";
         winOverlay.classList.remove("show");
+        giftArea.classList.remove("show");
+        giftActive = false;
+        if (revealTimer) { clearInterval(revealTimer); revealTimer = null; }
 
         checkGoal();
       }
@@ -699,14 +880,21 @@
         });
 
         if (allDone) {
-          winTitle.textContent = phase.winTitle;
-          var restartBtn = document.getElementById("restartBtn");
-          restartBtn.textContent = currentPhase < PHASES.length - 1 ? "Next" : "Play Again";
-          winOverlay.classList.add("show");
+          if (phase.mode === "grid") {
+            startGifts();
+          } else {
+            winTitle.textContent = phase.winTitle;
+            var restartBtn = document.getElementById("restartBtn");
+            restartBtn.textContent = currentPhase < PHASES.length - 1 ? "Next" : "Play Again";
+            winOverlay.classList.add("show");
+          }
         }
       }
 
       document.getElementById("restartBtn").addEventListener("click", function () {
+        if (revealTimer) { clearInterval(revealTimer); revealTimer = null; }
+        giftArea.classList.remove("show");
+        giftActive = false;
         if (currentPhase < PHASES.length - 1) {
           renderPhase(currentPhase + 1);
         } else {
