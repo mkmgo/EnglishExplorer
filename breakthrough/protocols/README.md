@@ -30,11 +30,19 @@ Use the date in `YYYY-MM-DD.html` format. Every file is a standalone HTML page â
         --panel: #fcfcfc;
         --shadow: 0 18px 50px rgba(20, 33, 61, 0.14);
       }
+      /* Weekday accent colours â€” applied via data-weekday on .container */
+      .container[data-weekday="mon"] { --accent: #2563eb; }
+      .container[data-weekday="tue"] { --accent: #e43703; }
+      .container[data-weekday="wed"] { --accent: #0d9488; }
+      .container[data-weekday="thu"] { --accent: #7c3aed; }
+      .container[data-weekday="fri"] { --accent: #dc2626; }
+      .container[data-weekday="sat"] { --accent: #d97706; }
+      .container[data-weekday="sun"] { --accent: #475569; }
       /* ... rest of styles ... */
     </style>
   </head>
   <body>
-    <div class="container">
+    <div class="container" data-weekday="xxx">
       <h1>Protocol DD/MM/YYYY</h1>
       <p class="date-sub">English Explorer | Breakthrough</p>
 
@@ -80,3 +88,19 @@ Use the date in `YYYY-MM-DD.html` format. Every file is a standalone HTML page â
 - Inline `<style>` only â€” no external files.
 - Use the same `:root` colour variables and `clamp()` font sizing as existing files.
 - No JavaScript unless the protocol specifically requires interactivity.
+
+## Weekday colours
+
+Each protocol file gets a unique accent colour for `h1` and `h3` based on the day of the week. Set `data-weekday` on `.container` to one of:
+
+| Day | `data-weekday` | Colour | Hex |
+|---|---|---|---|
+| Monday | `mon` | Blue | `#2563eb` |
+| Tuesday | `tue` | Orange | `#e43703` |
+| Wednesday | `wed` | Teal | `#0d9488` |
+| Thursday | `thu` | Purple | `#7c3aed` |
+| Friday | `fri` | Crimson | `#dc2626` |
+| Saturday | `sat` | Amber | `#d97706` |
+| Sunday | `sun` | Slate | `#475569` |
+
+The CSS attribute selectors in each file override `--accent` from `:root`. No JS required.
