@@ -296,35 +296,42 @@
         cursor: grabbing;
       }
 
-      .teacher-nav {
+      .single-word {
         display: flex;
-        gap: 8px;
-        margin-top: 4px;
+        flex-direction: column;
+        align-items: center;
+        width: 100%;
+        max-width: 400px;
         margin-bottom: 20px;
-        opacity: 0.18;
-        transition: opacity 0.3s;
       }
 
-      .teacher-nav:hover {
-        opacity: 0.85;
+      .single-word .word-card {
+        width: 100%;
       }
 
-      .teacher-nav button {
-        background: var(--border);
-        color: var(--muted);
-        border: 1px solid var(--border-strong);
+      .single-word .word-image {
+        width: 140px;
+        height: 140px;
+      }
+
+      .single-word .word-name {
+        font-size: 1.6rem;
+      }
+
+      .single-word .word-slots .slot {
+        min-width: 52px;
+        min-height: 48px;
         border-radius: 6px;
-        padding: 4px 12px;
-        font-size: 0.7rem;
-        font-family: "Fredoka", "Nunito", "Segoe UI", sans-serif;
-        font-weight: 600;
-        cursor: pointer;
-        -webkit-tap-highlight-color: transparent;
       }
 
-      .teacher-nav button:disabled {
-        opacity: 0.3;
-        cursor: default;
+      .single-word .draggable-item {
+        width: 56px;
+        height: 46px;
+        font-size: 1.3rem;
+      }
+
+      html.dark .word-card .word-image {
+        border-color: transparent;
       }
 
       @media (max-width: 640px) {
@@ -359,6 +366,22 @@
           width: 38px;
           height: 32px;
           font-size: 0.85rem;
+        }
+        .single-word .word-image {
+          width: 100px;
+          height: 100px;
+        }
+        .single-word .word-name {
+          font-size: 1.3rem;
+        }
+        .single-word .word-slots .slot {
+          min-width: 42px;
+          min-height: 40px;
+        }
+        .single-word .draggable-item {
+          width: 44px;
+          height: 38px;
+          font-size: 1rem;
         }
         .palette {
           padding: 12px;
@@ -424,10 +447,6 @@
       <div class="palette-title">Letters</div>
       <div class="item-container" id="inventory"></div>
     </div>
-    <div class="teacher-nav" id="teacherNav">
-      <button id="prevPhase" type="button">Prev</button>
-      <button id="nextPhase" type="button">Next</button>
-    </div>
     <div id="winOverlay" class="win-overlay">
       <div class="win-box">
         <h2 id="winTitle">You did it!</h2>
@@ -487,30 +506,14 @@
         { word: "Plane",       img: "https://res.cloudinary.com/dqwm4pdbz/image/upload/c_crop,w_189,h_188,x_929,y_384/v1786861646/260811_lesson7ee_01_jzlmlp.png" },
       ];
 
-      var WORDS2 = [
-        { word: "Robot",    img: "https://res.cloudinary.com/dqwm4pdbz/image/upload/c_crop,w_421,h_424,x_0,y_424/r_max/bo_5px_solid_white/v1786599929/260813_toys_01_txjh3y.png" },
-        { word: "Elephant", img: "https://res.cloudinary.com/dp455m4rk/image/upload/c_crop,w_469,h_384,x_469,y_384/r_max/v1786050302/A-F_yhrs9s.png" },
-        { word: "Dog",      img: "https://res.cloudinary.com/dp455m4rk/image/upload/c_crop,w_469,h_384,x_0,y_384/r_max/v1786050302/A-F_yhrs9s.png" },
-        { word: "Bee",      img: "https://res.cloudinary.com/dp455m4rk/image/upload/c_crop,w_469,h_384,x_469,y_0/v1786050302/A-F_yhrs9s.png" },
-        { word: "Car",      img: "https://res.cloudinary.com/dqwm4pdbz/image/upload/c_crop,w_421,h_424,x_0,y_0/r_max/bo_5px_solid_white/v1786599929/260813_toys_01_txjh3y.png" },
-        { word: "Bike",     img: "https://res.cloudinary.com/dqwm4pdbz/image/upload/c_crop,w_421,h_424,x_421,y_424/r_max/bo_5px_solid_white/v1786599929/260813_toys_01_txjh3y.png" },
-      ];
-
       var PHASES = [
-        {
-          id: "words",
-          title: "Word Wizard",
-          goal: "Spell each word by dragging the letters",
-          winTitle: "You spelled them all!",
-          wordList: WORDS,
-        },
-        {
-          id: "words2",
-          title: "Word Wizard",
-          goal: "Spell each word by dragging the letters",
-          winTitle: "Amazing spelling!",
-          wordList: WORDS2,
-        },
+        { id: "w0", title: "Word Wizard", goal: "Spell the word", winTitle: "Great job!", wordList: [WORDS[0]], mode: "single" },
+        { id: "w1", title: "Word Wizard", goal: "Spell the word", winTitle: "Great job!", wordList: [WORDS[1]], mode: "single" },
+        { id: "w2", title: "Word Wizard", goal: "Spell the word", winTitle: "Great job!", wordList: [WORDS[2]], mode: "single" },
+        { id: "w3", title: "Word Wizard", goal: "Spell the word", winTitle: "Great job!", wordList: [WORDS[3]], mode: "single" },
+        { id: "w4", title: "Word Wizard", goal: "Spell the word", winTitle: "Great job!", wordList: [WORDS[4]], mode: "single" },
+        { id: "w5", title: "Word Wizard", goal: "Spell the word", winTitle: "Great job!", wordList: [WORDS[5]], mode: "single" },
+        { id: "all", title: "Word Wizard", goal: "Spell each word by dragging the letters", winTitle: "You spelled them all!", wordList: WORDS, mode: "grid" },
       ];
 
       var currentPhase = 0;
@@ -527,8 +530,6 @@
       var goalText = document.getElementById("goalText");
       var winOverlay = document.getElementById("winOverlay");
       var winTitle = document.getElementById("winTitle");
-      var prevBtn = document.getElementById("prevPhase");
-      var nextBtn = document.getElementById("nextPhase");
 
       function clearOverSlot() {
         if (overSlot) {
@@ -575,7 +576,36 @@
         return b;
       }
 
-      function buildGrid(wordList) {
+      function buildGrid(wordList, mode) {
+        if (mode === "single") {
+          var wrap = document.createElement("div");
+          wrap.className = "single-word";
+          var w = wordList[0];
+          var card = document.createElement("div");
+          card.className = "word-card";
+          card.id = "wcard-0";
+          var img = document.createElement("img");
+          img.className = "word-image";
+          img.src = w.img;
+          img.alt = w.word;
+          card.appendChild(img);
+          var name = document.createElement("div");
+          name.className = "word-name";
+          name.textContent = w.word;
+          card.appendChild(name);
+          var slots = document.createElement("div");
+          slots.className = "word-slots";
+          w.word.split("").forEach(function (ch) {
+            var s = document.createElement("div");
+            s.className = "slot";
+            s.dataset.letter = ch;
+            s.innerHTML = '<span class="slot-label">' + ch + "</span>";
+            slots.appendChild(s);
+          });
+          card.appendChild(slots);
+          wrap.appendChild(card);
+          return wrap;
+        }
         var grid = document.createElement("div");
         grid.className = "words-grid";
         grid.id = "wordsGrid";
@@ -633,7 +663,7 @@
         playArea.innerHTML = "";
 
         var bricks = buildBricks(phase.wordList, "p" + phaseIdx + "-");
-        var grid = buildGrid(phase.wordList);
+        var grid = buildGrid(phase.wordList, phase.mode);
         playArea.appendChild(grid);
 
         phase.wordList.forEach(function (w, i) {
@@ -645,9 +675,6 @@
 
         paletteEl.style.display = "";
         winOverlay.classList.remove("show");
-
-        prevBtn.disabled = phaseIdx === 0;
-        nextBtn.disabled = phaseIdx === PHASES.length - 1;
 
         checkGoal();
       }
@@ -673,19 +700,18 @@
 
         if (allDone) {
           winTitle.textContent = phase.winTitle;
+          var restartBtn = document.getElementById("restartBtn");
+          restartBtn.textContent = currentPhase < PHASES.length - 1 ? "Next" : "Play Again";
           winOverlay.classList.add("show");
         }
       }
 
-      prevBtn.addEventListener("click", function () {
-        if (currentPhase > 0) renderPhase(currentPhase - 1);
-      });
-      nextBtn.addEventListener("click", function () {
-        if (currentPhase < PHASES.length - 1) renderPhase(currentPhase + 1);
-      });
-
       document.getElementById("restartBtn").addEventListener("click", function () {
-        renderPhase(currentPhase);
+        if (currentPhase < PHASES.length - 1) {
+          renderPhase(currentPhase + 1);
+        } else {
+          renderPhase(0);
+        }
       });
 
       document.addEventListener("pointerdown", function (e) {
