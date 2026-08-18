@@ -19,7 +19,7 @@
         --ink: #14213d;
         --muted: #60708d;
         --accent: #4A6B5D;
-        --accent2: #F4F0EA;
+        --accent2: #8BAF9C;
         --good: #19a974;
         --bad: #e05252;
         --mediocre: #f39c12;
@@ -274,37 +274,6 @@
       }
       .clipcard:active {
         transform: scale(0.95);
-      }
-      .translateBox {
-        width: min(34vw, 400px);
-        min-height: 38vh;
-        max-height: 60vh;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        background: var(--panel);
-        border-radius: 18px;
-        border: 2pt solid var(--accent2);
-        box-shadow: var(--shadow);
-        padding: 1.2em;
-        font-size: clamp(1.3rem, 2.2vw, 2.2rem);
-        font-weight: 600;
-        color: var(--ink);
-        overflow-y: auto;
-        word-break: break-word;
-        white-space: pre-wrap;
-      }
-      .translateBox .translatePlaceholder {
-        font-size: clamp(2.2rem, 4.5vw, 3.6rem);
-        opacity: 0.3;
-      }
-      .translateBox.filled {
-        border-color: var(--accent);
-      }
-      .translateBox.left {
-        align-items: flex-start;
-        text-align: left;
       }
       .mediaWrap {
         width: fit-content;
@@ -607,21 +576,6 @@
         margin: 0;
         gap: clamp(8px, 1.5vw, 20px);
         flex-wrap: wrap;
-      }
-      .clipList {
-        display: flex;
-        flex-direction: column;
-        gap: 0.5em;
-        width: 100%;
-        max-height: 24vh;
-        overflow-y: auto;
-        padding-top: 1em;
-        margin-top: 1em;
-        border-top: 2px solid rgba(96, 112, 141, 0.25);
-        scrollbar-width: none;
-      }
-      .clipList::-webkit-scrollbar {
-        display: none;
       }
       .clip {
         width: 100%;
@@ -1166,16 +1120,6 @@
         z-index: 20;
         overflow: hidden;
       }
-      .topbar::after {
-        content: "";
-        position: absolute;
-        right: 0;
-        bottom: 0;
-        border-style: solid;
-        border-width: 0 0 14px 14px;
-        border-color: transparent transparent rgba(0, 0, 0, 0.18) transparent;
-        pointer-events: none;
-      }
       .barLeft,
       .barRight {
         display: flex;
@@ -1198,14 +1142,7 @@
         padding: 0 0.9em;
         background: var(--accent2);
         color: var(--accent);
-        clip-path: polygon(
-          10px 0,
-          calc(100% - 10px) 0,
-          100% 50%,
-          calc(100% - 10px) 100%,
-          10px 100%,
-          0 50%
-        );
+        border-radius: 999px;
         filter: drop-shadow(0 3px 4px rgba(0, 0, 0, 0.22));
       }
       .ledgerIcon {
@@ -1258,36 +1195,31 @@
         min-width: 34px;
         padding: 0 8px;
         filter: drop-shadow(0 3px 4px rgba(0, 0, 0, 0.22));
+        transition: transform 0.2s ease, filter 0.2s ease, background 0.2s ease;
       }
       .navCtrl .tag {
         background: var(--accent2);
         color: var(--accent);
-        clip-path: polygon(10px 0, 100% 0, 100% 100%, 0 100%, 0 10px);
+        border-radius: 8px;
       }
       .navCtrl.primary .tag {
         background: var(--accent2);
         color: var(--accent);
-        clip-path: polygon(
-          0 0,
-          100% 0,
-          100% calc(100% - 10px),
-          calc(100% - 10px) 100%,
-          0 100%
-        );
+        border-radius: 8px;
       }
       #soundBtn .tag {
         background: var(--accent2);
         color: var(--accent);
-        clip-path: polygon(0 0, 100% 0, calc(100% - 8px) 100%, 0 100%);
-      }
-      #upBtn .tag {
-        clip-path: polygon(0 0, 100% 0, calc(100% - 8px) 100%, 0 100%);
-      }
-      #downBtn .tag {
-        clip-path: polygon(8px 0, 100% 0, 100% 100%, 0 100%);
+        border-radius: 8px;
       }
       .ctrl:active .tag {
         transform: scale(0.94);
+        filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.22));
+      }
+      .navCtrl:hover .tag,
+      #soundBtn:hover .tag {
+        transform: scale(1.06);
+        filter: brightness(1.15) drop-shadow(0 4px 6px rgba(0, 0, 0, 0.3));
       }
       @media (max-width: 480px) {
         .topbar {
@@ -1319,15 +1251,6 @@
         }
         .ledgerIcon {
           font-size: 0.72rem;
-        }
-        #nextBtn .tag {
-          clip-path: polygon(
-            0 0,
-            100% 0,
-            100% calc(100% - 8px),
-            calc(100% - 8px) 100%,
-            0 100%
-          );
         }
       }
       #toast {
@@ -1536,10 +1459,6 @@
         .clipcard {
           font-size: clamp(1.2rem, 3.2vw, 1.8rem);
         }
-        .translateBox {
-          width: min(84vw, 420px);
-          min-height: 24vh;
-        }
         .mediaWrap img,
         .mediaWrap video {
           max-height: 54vh;
@@ -1605,25 +1524,7 @@
               </svg>
             </span>
           </button>
-          <button class="ctrl navCtrl" id="downBtn" aria-label="Down">
-            <span class="tag">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="1.2em"
-                height="1.2em"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="2"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                style="vertical-align: -0.2em"
-              >
-                <path d="M12 5v14" />
-                <path d="m19 12-7 7-7-7" />
-              </svg>
-            </span>
-          </button>
+
         </div>
         <div class="barCenter">
           <div class="statusCapsule ledger">
@@ -1677,25 +1578,6 @@
           </div>
         </div>
         <div class="barRight">
-          <button class="ctrl navCtrl" id="upBtn" aria-label="Up">
-            <span class="tag">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="1.2em"
-                height="1.2em"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="2"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                style="vertical-align: -0.2em"
-              >
-                <path d="m5 12 7-7 7 7" />
-                <path d="M12 19V5" />
-              </svg>
-            </span>
-          </button>
           <button
             class="ctrl navCtrl primary"
             id="nextBtn"
@@ -3568,150 +3450,7 @@
 
       <div id="wordSlides"></div>
 
-      <!-- 8: Translator (repeat, not counted in progress) -->
-      <section class="screen title-slide" id="translatorScreen" data-nocount>
-        <div class="content">
-          <div class="stage">
-            <button
-              id="translateBtn"
-              class="clipcard"
-              onclick="translateClipboard()"
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="1.2em"
-                height="1.2em"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="2"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                style="vertical-align: -0.2em"
-              >
-                <path d="m5 8 6 6" />
-                <path d="m4 14 6-6 2-3" />
-                <path d="M2 5h12" />
-                <path d="M7 2h1" />
-                <path d="m22 22-5-10-5 10" />
-                <path d="M14 18h6" />
-              </svg>
-              Translate
-            </button>
-            <div class="panel">
-              <div class="cast">
-                <figure class="castMember">
-                  <div class="translateBox left" id="srcLangBox">
-                    <span class="translatePlaceholder">🔤</span>
-                  </div>
-                  <button class="icardst" onclick="speakTranslate('en')">
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      width="1.2em"
-                      height="1.2em"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      stroke-width="2"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      style="vertical-align: -0.2em"
-                    >
-                      <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" />
-                      <path d="M15.54 8.46a5 5 0 0 1 0 7.07" />
-                    </svg>
-                    <span class="icardtext">ENGLISH</span>
-                  </button>
-                </figure>
-                <figure class="castMember">
-                  <div class="translateBox left" id="zhLangBox">
-                    <span class="translatePlaceholder">中文</span>
-                  </div>
-                  <button class="icardst" onclick="speakTranslate('zh')">
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      width="1.2em"
-                      height="1.2em"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      stroke-width="2"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      style="vertical-align: -0.2em"
-                    >
-                      <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" />
-                      <path d="M15.54 8.46a5 5 0 0 1 0 7.07" />
-                    </svg>
-                    <span class="icardtext">中文</span>
-                  </button>
-                </figure>
-              </div>
-              <div class="clipList" id="clipList"></div>
-              <div class="miniRow">
-                <button
-                  id="downloadBtn"
-                  class="miniChip"
-                  onclick="downloadClipList()"
-                >
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="1.2em"
-                    height="1.2em"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-width="2"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    style="flex: none"
-                  >
-                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
-                    <polyline points="7 10 12 15 17 10" />
-                    <line x1="12" x2="12" y1="15" y2="3" />
-                  </svg>
-                  DOWNLOAD
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
 
-      <!-- Media clipper (tutor tool, not counted in progress) -->
-      <section class="screen title-slide" id="mediaScreen" data-nocount>
-        <div class="content">
-          <div class="stage">
-            <button id="mediaBtn" class="clipcard" onclick="pasteMedia()">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="1.2em"
-                height="1.2em"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="2"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                style="vertical-align: -0.2em"
-              >
-                <rect width="18" height="18" x="3" y="3" rx="2" />
-                <path d="M7 3v18" />
-                <path d="M3 7.5h4" />
-                <path d="M3 12h18" />
-                <path d="M3 16.5h4" />
-                <path d="M17 3v18" />
-                <path d="M17 7.5h4" />
-                <path d="M17 16.5h4" />
-              </svg>
-              Media
-            </button>
-            <div id="mediaWrap" class="mediaWrap">
-              <span class="mediaPlaceholder">🎬</span>
-            </div>
-          </div>
-        </div>
-      </section>
     </div>
 
     <script>
@@ -3808,8 +3547,6 @@
         }
         return -1;
       }
-      var translatorIdx = screenIndexById("translatorScreen");
-      var mediaIdx = screenIndexById("mediaScreen");
       var idx = 0;
       var soundOn = true;
       var points = 0;
@@ -3880,8 +3617,6 @@
         '<svg xmlns="http://www.w3.org/2000/svg" width="1.2em" height="1.2em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: -0.2em"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/></svg>';
       var ICON_VOLUME_OFF =
         '<svg xmlns="http://www.w3.org/2000/svg" width="1.2em" height="1.2em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: -0.2em"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><line x1="22" x2="16" y1="9" y2="15"/><line x1="16" x2="22" y1="9" y2="15"/></svg>';
-      var ICON_CLIPBOARD_TYPE =
-        '<svg xmlns="http://www.w3.org/2000/svg" width="1.1em" height="1.1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex:none"><rect width="8" height="4" x="8" y="2" rx="1" ry="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><path d="M9 12v-1h6v1"/><path d="M11 17h2"/><path d="M12 11v6"/></svg>';
 
       function goColours() {
         for (var i = 0; i < screens.length; i++) {
@@ -4338,324 +4073,6 @@
         }
       }
 
-      function translateClipboard() {
-        var run = function (txt) {
-          if (txt) doTranslate(txt);
-        };
-        if (
-          navigator.clipboard &&
-          typeof navigator.clipboard.readText === "function"
-        ) {
-          navigator.clipboard
-            .readText()
-            .then(function (txt) {
-              txt = String(txt || "").trim();
-              if (!txt) {
-                openInputModal(
-                  "Clipboard is empty. Type or paste the text to translate:",
-                  run,
-                );
-                return;
-              }
-              run(txt);
-            })
-            .catch(function () {
-              openInputModal(
-                "Clipboard is empty. Type or paste the text to translate:",
-                run,
-              );
-            });
-        } else {
-          openInputModal(
-            "Clipboard is empty. Type or paste the text to translate:",
-            run,
-          );
-        }
-      }
-
-      var lastSrcText = "";
-      var lastZhText = "";
-
-      function equalizeBoxes() {
-        var a = document.getElementById("srcLangBox");
-        var b = document.getElementById("zhLangBox");
-        if (!a || !b) return;
-        a.style.height = "";
-        b.style.height = "";
-        var h = Math.max(a.scrollHeight, b.scrollHeight);
-        a.style.height = h + "px";
-        b.style.height = h + "px";
-      }
-
-      function doTranslate(text) {
-        lastSrcText = text;
-        var srcBox = document.getElementById("srcLangBox");
-        var zhBox = document.getElementById("zhLangBox");
-        if (srcBox) {
-          srcBox.textContent = text;
-          srcBox.classList.add("filled");
-        }
-        if (zhBox) {
-          zhBox.textContent = "…";
-          zhBox.classList.add("filled");
-        }
-        equalizeBoxes();
-        var url =
-          "https://translate.googleapis.com/translate_a/single" +
-          "?client=gtx&sl=auto&tl=zh-CN&dt=t&q=" +
-          encodeURIComponent(text);
-        if (typeof fetch !== "function") {
-          if (zhBox) zhBox.textContent = "Translation failed";
-          equalizeBoxes();
-          return;
-        }
-        fetch(url)
-          .then(function (r) {
-            return r.json();
-          })
-          .then(function (data) {
-            var translated = "";
-            try {
-              var segs = data[0];
-              for (var i = 0; i < segs.length; i++) {
-                translated += segs[i][0] || "";
-              }
-            } catch (e) {}
-            if (!translated) translated = text;
-            lastZhText = translated;
-            if (zhBox) zhBox.textContent = translated;
-            equalizeBoxes();
-            addClip(text, translated);
-          })
-          .catch(function () {
-            if (zhBox) zhBox.textContent = "Translation failed";
-            equalizeBoxes();
-          });
-      }
-
-      function speakTranslate(lang) {
-        if (lang === "zh") speakChinese(lastZhText);
-        else say(lastSrcText);
-      }
-
-      var clipList = document.getElementById("clipList");
-      var lastClipKey = "";
-
-      function addClip(en, zh) {
-        if (!clipList) return;
-        var key = en + "|" + zh;
-        if (key === lastClipKey) return;
-        lastClipKey = key;
-        var now = new Date();
-        var time = now.toLocaleTimeString([], {
-          hour: "2-digit",
-          minute: "2-digit",
-          second: "2-digit",
-        });
-        var words = String(en).trim().split(/\s+/);
-        var preview = words.slice(0, 6).join(" ");
-        if (preview.length > 60) preview = preview.slice(0, 60) + "…";
-        var b = document.createElement("button");
-        b.className = "clip";
-        b.type = "button";
-        b.innerHTML = ICON_CLIPBOARD_TYPE;
-        var tm = document.createElement("time");
-        tm.textContent = time;
-        var txt = document.createElement("span");
-        txt.className = "clipText";
-        txt.textContent = preview;
-        b.appendChild(tm);
-        b.appendChild(txt);
-        b._en = en;
-        b._zh = zh;
-        b._time = time;
-        b.onclick = function () {
-          restoreClip(en, zh);
-        };
-        clipList.insertBefore(b, clipList.firstChild);
-      }
-
-      function downloadClipList() {
-        if (!clipList || !clipList.children.length) {
-          toast("No clips to download yet.");
-          return;
-        }
-        var lines = [];
-        var items = clipList.children;
-        for (var i = 0; i < items.length; i++) {
-          var b = items[i];
-          var time = b._time || "";
-          var en = b._en || "";
-          var zh = b._zh || "";
-          if (i > 0) lines.push("");
-          lines.push("[" + time + "] " + en);
-          lines.push("  " + zh);
-        }
-        var content = lines.join("\r\n");
-        var blob = new Blob([content], {
-          type: "text/plain;charset=utf-8",
-        });
-        var url = URL.createObjectURL(blob);
-        var a = document.createElement("a");
-        a.href = url;
-        a.download = "cliplist.txt";
-        document.body.appendChild(a);
-        a.click();
-        setTimeout(function () {
-          document.body.removeChild(a);
-          URL.revokeObjectURL(url);
-        }, 1000);
-        toast("Clip list downloaded.");
-      }
-
-      function restoreClip(en, zh) {
-        lastSrcText = en;
-        lastZhText = zh;
-        var srcBox = document.getElementById("srcLangBox");
-        var zhBox = document.getElementById("zhLangBox");
-        if (srcBox) {
-          srcBox.textContent = en;
-          srcBox.classList.add("filled");
-        }
-        if (zhBox) {
-          zhBox.textContent = zh;
-          zhBox.classList.add("filled");
-        }
-        equalizeBoxes();
-      }
-
-      function extractUrl(text) {
-        var m = String(text).match(/https?:\/\/[^\s"<>]+/);
-        return m ? m[0] : null;
-      }
-
-      function pasteMedia() {
-        var run = function (u) {
-          if (u) injectMedia(u);
-        };
-        if (
-          navigator.clipboard &&
-          typeof navigator.clipboard.readText === "function"
-        ) {
-          navigator.clipboard
-            .readText()
-            .then(function (txt) {
-              var u = extractUrl(String(txt || ""));
-              if (!u) {
-                openInputModal(
-                  "Clipboard is empty. Type or paste the Cloudinary asset link:",
-                  function (v) {
-                    run(extractUrl(v));
-                  },
-                );
-                return;
-              }
-              run(u);
-            })
-            .catch(function () {
-              openInputModal(
-                "Clipboard is empty. Type or paste the Cloudinary asset link:",
-                function (v) {
-                  run(extractUrl(v));
-                },
-              );
-            });
-        } else {
-          openInputModal(
-            "Clipboard is empty. Type or paste the Cloudinary asset link:",
-            function (v) {
-              run(extractUrl(v));
-            },
-          );
-        }
-      }
-
-      function injectMedia(url) {
-        var wrap = document.getElementById("mediaWrap");
-        if (!wrap) return;
-        wrap.innerHTML = "";
-        wrap.classList.remove("withArt");
-        var lower = url.toLowerCase();
-        var isVideo =
-          /\/video\//.test(lower) ||
-          /\.(mp4|webm|mov|m4v|ogv)(\?|#|$)/.test(lower);
-        var isAudio =
-          /\/audio\//.test(lower) ||
-          /\.(mp3|wav|ogg|m4a|aac)(\?|#|$)/.test(lower);
-        var el;
-        if (isVideo) {
-          el = document.createElement("video");
-          el.controls = true;
-          el.preload = "auto";
-          el.playsInline = true;
-          el.muted = true;
-          el.setAttribute("playsinline", "true");
-          el.setAttribute("webkit-playsinline", "true");
-          el.src = url;
-        } else if (isAudio) {
-          el = document.createElement("audio");
-          el.controls = true;
-          el.preload = "auto";
-          el.src = url;
-        } else {
-          el = document.createElement("img");
-          el.src = url;
-          el.alt = "media";
-        }
-        wrap.appendChild(el);
-        if (isAudio) {
-          requestArtwork();
-        }
-      }
-
-      function requestArtwork() {
-        openInputModal(
-          "Audio added. Type or paste an image link to show with the audio:",
-          function (v) {
-            var u = extractUrl(String(v || ""));
-            if (!u) return;
-            var wrap = document.getElementById("mediaWrap");
-            if (!wrap) return;
-            var img = document.createElement("img");
-            img.src = u;
-            img.alt = "artwork";
-            img.loading = "lazy";
-            wrap.insertBefore(img, wrap.firstChild);
-            wrap.classList.add("withArt");
-          },
-        );
-      }
-
-      function speakChinese(text) {
-        if (!soundOn) return;
-        if (window.tizen && window.tizen.tts) {
-          try {
-            tizen.tts.speak(String(text), {
-              locale: "zh-CN",
-              rate: 0.85,
-              pitch: 1.0,
-              type: "TTS_TYPE_SCREEN_READER",
-            });
-            return;
-          } catch (e) {}
-        }
-        if (synth && typeof SpeechSynthesisUtterance !== "undefined") {
-          cancelSpeech();
-          var u = new SpeechSynthesisUtterance(text);
-          u.lang = "zh-CN";
-          u.rate = 0.9;
-          u.pitch = 1.0;
-          var voices = synth.getVoices();
-          for (var i = 0; i < voices.length; i++) {
-            var v = voices[i];
-            if (v && v.lang && v.lang.toLowerCase().indexOf("zh") === 0) {
-              u.voice = v;
-              break;
-            }
-          }
-          synth.speak(u);
-        }
-      }
 
       function burst(el) {
         var r = document.getElementById("reward");
@@ -4759,18 +4176,6 @@
         }
         cancelSpeech();
       };
-      function goUp() {
-        if (isNoCount(idx)) show(0);
-        else if (idx === 0 && translatorIdx >= 0) show(translatorIdx);
-        else show(0);
-      }
-      function goDown() {
-        if (isNoCount(idx)) show(0);
-        else if (idx === 0 && mediaIdx >= 0) show(mediaIdx);
-        else show(0);
-      }
-      document.getElementById("upBtn").onclick = goUp;
-      document.getElementById("downBtn").onclick = goDown;
       document.addEventListener("keydown", function (e) {
         var k = e.key || "";
         var kc = e.keyCode || e.which || 0;
@@ -4790,10 +4195,6 @@
           next();
         } else if (k === "ArrowLeft" || kc === 37) {
           prev();
-        } else if (k === "ArrowUp" || kc === 38) {
-          goUp();
-        } else if (k === "ArrowDown" || kc === 40) {
-          goDown();
         } else if (k === "Escape" || kc === 27 || kc === 10009) {
           show(0);
         } else if (kc === 13 || kc === 29443 || k === "Enter") {
@@ -4828,18 +4229,11 @@
             if (Math.abs(dx) > Math.abs(dy)) {
               if (dx < 0) next();
               else prev();
-            } else if (dy < 0) {
-              goUp();
-            } else if (dy > 0) {
-              goDown();
             }
           },
           { passive: true },
         );
       }
-      window.addEventListener("resize", function () {
-        if (lastSrcText) equalizeBoxes();
-      });
       show(0);
     </script>
     <script>
