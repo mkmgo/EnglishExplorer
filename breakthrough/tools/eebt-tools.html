@@ -1333,7 +1333,6 @@
         --panel: #1f2530;
         --shadow: 0 18px 50px rgba(0, 0, 0, 0.55);
       }
-      :root[data-theme="dark"] .mediaWrap,
       :root[data-theme="dark"] .lessonVideo,
       :root[data-theme="dark"] .clip,
       :root[data-theme="dark"] .word-btn,
@@ -1385,6 +1384,13 @@
       }
       :root[data-theme="dark"] .mediaThumbs .thumb {
         background: #2a3240;
+        border: 1px solid var(--accent);
+      }
+      :root[data-theme="dark"] .mediaWrap {
+        background: #232a36;
+      }
+      :root[data-theme="dark"] .mediaWrap.empty {
+        border: 2px solid var(--accent2);
       }
     </style>
   </head>
@@ -1487,7 +1493,7 @@
               Media
             </button>
             <div id="mediaThumbs" class="mediaThumbs"></div>
-            <div id="mediaWrap" class="mediaWrap">
+            <div id="mediaWrap" class="mediaWrap empty">
               <span class="mediaPlaceholder">🎬</span>
             </div>
           </div>
@@ -2090,6 +2096,7 @@
         wrap.innerHTML = "";
         wrap.classList.remove("withArt");
         if (activeMediaIdx < 0 || !mediaHistory[activeMediaIdx]) {
+          wrap.classList.add("empty");
           var ph = document.createElement("span");
           ph.className = "mediaPlaceholder";
           ph.textContent = "🎬";
@@ -2100,6 +2107,7 @@
           wrap.appendChild(ph);
           return;
         }
+        wrap.classList.remove("empty");
         var entry = mediaHistory[activeMediaIdx];
         var el;
         if (entry.type === "video") {
