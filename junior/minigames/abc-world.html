@@ -966,9 +966,7 @@
             var slots = slotsContainer.querySelectorAll(".slot");
             var complete = true;
             slots.forEach(function (slot) {
-              var letter = slot.dataset.letter;
-              var item = slotsContainer.querySelector('.draggable-item[data-letter="' + letter + '"]');
-              if (!item) complete = false;
+              if (!slot.querySelector(".draggable-item")) complete = false;
             });
             if (complete) reached[cardId] = true;
             card.classList.toggle("goal-reached", reached[cardId]);
