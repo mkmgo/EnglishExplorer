@@ -144,11 +144,11 @@
       }
       .icardst {
         font-size: clamp(0.9rem, 1.5vw, 1.5rem);
-        color: #8a6d00;
-        background: #fff6d6;
+        color: var(--accent);
+        background: #dceee2;
         padding: 0.45em 1.1em;
         border-radius: 22px;
-        box-shadow: 0 8px 20px rgba(138, 109, 0, 0.18);
+        box-shadow: 0 8px 20px rgba(76, 140, 100, 0.18);
         display: inline-flex;
         align-items: center;
         gap: 0.5em;
@@ -162,16 +162,15 @@
         font-weight: bold;
         font-size: clamp(0.9rem, 1.5vw, 1.5rem);
         letter-spacing: 0.05em;
-        text-transform: uppercase;
-        color: #8a6d00;
+        color: var(--accent);
       }
       .icardstb {
         font-size: clamp(0.9rem, 1.5vw, 1.5rem);
-        color: #a35a00;
-        background: #ffe9ce;
+        color: var(--accent);
+        background: #d0e6d5;
         padding: 0.45em 1.1em;
         border-radius: 22px;
-        box-shadow: 0 8px 20px rgba(163, 90, 0, 0.18);
+        box-shadow: 0 8px 20px rgba(76, 140, 100, 0.18);
         display: inline-flex;
         align-items: center;
         gap: 0.5em;
@@ -180,13 +179,21 @@
       .icardstb:active {
         transform: scale(0.95);
       }
+      .icardst svg,
+      .icardstb svg {
+        width: 1.6em;
+        height: 1.8em;
+        border-right: 1.5px solid rgba(0, 0, 0, 0.15);
+        padding-right: 0.5em;
+        margin-right: 0.1em;
+        flex-shrink: 0;
+      }
       .icardtextb {
         font-family: Arial, Helvetica, sans-serif;
         font-weight: bold;
         font-size: clamp(0.9rem, 1.5vw, 1.5rem);
         letter-spacing: 0.05em;
-        text-transform: uppercase;
-        color: #a35a00;
+        color: var(--accent);
       }
       .phraseAvatar {
         width: clamp(30px, 4vw, 48px);
@@ -218,23 +225,25 @@
         box-shadow: 0 1px 3px rgba(0, 0, 0, 0.35);
       }
       .phraseToy {
-        width: clamp(44px, 5.5vw, 68px);
-        height: auto;
-        object-fit: contain;
+        width: clamp(36px, 4.5vw, 56px);
+        aspect-ratio: 1;
+        object-fit: cover;
         background: #fff;
-        border-radius: 10px;
+        border-radius: 50%;
         padding: 2px;
       }
       .phraseToyIcon {
-        width: clamp(36px, 4.4vw, 54px);
-        height: auto;
-        object-fit: contain;
-        background: #fff;
-        border-radius: 10px;
-        padding: 2px;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 70%;
+        height: 70%;
+        background: none;
+        border-radius: 50%;
         fill: #ef8f9a;
         color: #d9534f;
-        display: inline-block;
+        filter: drop-shadow(0 1px 2px rgba(0,0,0,0.3));
       }
       .icardbas {
         min-width: 160px;
@@ -472,21 +481,23 @@
       .grid .icardbas {
         min-width: 0;
       }
-      [dialogue] .grid--2 > :nth-child(n + 3) {
-        margin-top: -1.4em;
+      .dialogue {
+        display: flex;
+        flex-direction: column;
+        gap: 0.8em;
+        width: 100%;
       }
-      #toysPhrasesScreen .grid--2 > :nth-child(n + 3),
-      #likePhrasesScreen .grid--2 > :nth-child(n + 3) {
-        margin-top: -3em;
+      .dialogue > .phraseCard {
+        max-width: 75%;
+        text-align: left;
       }
-      #toysPhrasesScreen .grid--2 > .phraseCard:not(:first-of-type),
-      #likePhrasesScreen .grid--2 > .phraseCard:not(:first-of-type) {
-        display: none;
+      .dialogue > .phraseCard.icardst {
+        align-self: flex-start;
       }
-      #ynDialogueScreen .grid--2 > :nth-child(n + 3) {
-        margin-top: -3em;
+      .dialogue > .phraseCard.icardstb {
+        align-self: flex-end;
       }
-      #ynDialogueScreen .grid--2 > .phraseCard:not(:first-of-type) {
+      .dialogue > .phraseCard:not(:first-of-type) {
         display: none;
       }
       button:focus-visible {
@@ -652,6 +663,7 @@
         min-height: 120px;
         padding: 0.7em;
         border-radius: 26px;
+        border: 3px solid var(--accent2);
         background: var(--panel);
         box-shadow: var(--shadow);
         transition: transform 0.3s ease, filter 0.3s ease;
@@ -989,8 +1001,8 @@
         align-items: center;
         gap: 0.4em;
         background: #fff;
-        border: 3px solid rgba(96, 112, 141, 0.35);
-        border-radius: 16px;
+        border: 3px solid var(--accent2);
+        border-radius: 26px;
         padding: 0.45em 0.7em;
         cursor: pointer;
         transition: transform 0.3s ease, filter 0.3s ease;
@@ -1736,14 +1748,14 @@
       </section>
 
       <!-- 3: Greetings -->
-      <section class="screen" dialogue>
+      <section class="screen" dialogue id="greetingsScreen">
         <div class="content">
           <h1 class="pageTitle">Greeting and Introduction</h1>
           <div class="stage">
             <div class="panel">
-              <div class="grid grid--2">
+              <div class="dialogue">
                 <button
-                  class="icardst"
+                  class="icardst phraseCard"
                   onclick="speakGreeting('Hello. My name is Sam.', 'greetSam')"
                 >
                   <img
@@ -1768,9 +1780,8 @@
                   </svg>
                   <span class="icardtext">Hello. My Name is Sam.</span>
                 </button>
-                <div></div>
                 <button
-                  class="icardst"
+                  class="icardst phraseCard"
                   onclick="speakGreeting('What is your name?', 'greetQ')"
                 >
                   <img
@@ -1795,9 +1806,7 @@
                   </svg>
                   <span class="icardtext">What is your Name?</span>
                 </button>
-                <div></div>
-                <div></div>
-                <button class="icardstb">
+                <button class="icardstb phraseCard">
                   <img
                     class="phraseAvatar"
                     src="https://res.cloudinary.com/dqwm4pdbz/image/upload/c_scale,w_400/q_auto/f_auto/v1786623812/onza_3avface_gyyay8.png"
@@ -1821,7 +1830,7 @@
                   <span class="icardtextb">Hello Sam. My Name is Onza.</span>
                 </button>
                 <button
-                  class="icardst"
+                  class="icardst phraseCard"
                   onclick="say('Hello Onza. How old are you?')"
                 >
                   <img
@@ -1846,9 +1855,7 @@
                   </svg>
                   <span class="icardtext">Hello Onza. How old are you?</span>
                 </button>
-                <div></div>
-                <div></div>
-                <button class="icardstb">
+                <button class="icardstb phraseCard">
                   <img
                     class="phraseAvatar"
                     src="https://res.cloudinary.com/dqwm4pdbz/image/upload/c_scale,w_400/q_auto/f_auto/v1786623812/onza_3avface_gyyay8.png"
@@ -1923,7 +1930,7 @@
           <h1 class="pageTitle">Do You Like?</h1>
           <div class="stage">
             <div class="panel">
-              <div class="grid grid--2">
+              <div class="dialogue">
                 <button
                   class="icardst phraseCard"
                   onclick="speakPhrase('I can see an animal.', 't1')"
@@ -1957,8 +1964,6 @@
                     />
                   </span>
                 </button>
-                <div></div>
-                <div></div>
                 <button
                   class="icardstb phraseCard"
                   onclick="speakPhrase('What is it?', 't2', 'onza')"
@@ -2018,8 +2023,6 @@
                     />
                   </span>
                 </button>
-                <div></div>
-                <div></div>
                 <button
                   class="icardstb phraseCard"
                   onclick="speakPhrase('Do you like dogs?', 't4', 'onza')"
@@ -2051,7 +2054,7 @@
                       src="https://res.cloudinary.com/dp455m4rk/image/upload/c_crop,w_469,h_384,x_0,y_384/r_max/v1786050302/A-F_yhrs9s.png"
                       alt="dog"
                     />
-                    <svg
+                      <svg
                       class="phraseToyIcon"
                       xmlns="http://www.w3.org/2000/svg"
                       viewBox="0 0 24 24"
@@ -2096,7 +2099,7 @@
                       src="https://res.cloudinary.com/dp455m4rk/image/upload/c_crop,w_469,h_384,x_0,y_384/r_max/v1786050302/A-F_yhrs9s.png"
                       alt="dog"
                     />
-                    <svg
+                      <svg
                       class="phraseToyIcon"
                       xmlns="http://www.w3.org/2000/svg"
                       viewBox="0 0 24 24"
@@ -2110,8 +2113,6 @@
                     </svg>
                   </span>
                 </button>
-                <div></div>
-                <div></div>
                 <button
                   class="icardstb phraseCard"
                   onclick="speakPhrase('Do you like cats?', 't6', 'onza')"
@@ -2143,7 +2144,7 @@
                       src="https://res.cloudinary.com/dp455m4rk/image/upload/c_crop,w_469,h_384,x_938,y_0/r_max/v1786050302/A-F_yhrs9s.png"
                       alt="cat"
                     />
-                    <svg
+                      <svg
                       class="phraseToyIcon"
                       xmlns="http://www.w3.org/2000/svg"
                       viewBox="0 0 24 24"
@@ -2204,7 +2205,6 @@
                     </svg>
                   </span>
                 </button>
-                <div></div>
               </div>
             </div>
           </div>
@@ -2446,7 +2446,7 @@
           <h1 class="pageTitle">What Do You Have?</h1>
           <div class="stage">
             <div class="panel">
-              <div class="grid grid--2">
+              <div class="dialogue">
                 <button
                   class="icardst phraseCard"
                   onclick="speakPhrase('I have a car.', 't1')"
@@ -2480,8 +2480,6 @@
                     />
                   </span>
                 </button>
-                <div></div>
-                <div></div>
                 <button
                   class="icardstb phraseCard"
                   onclick="speakPhrase('I have a teddy bear.', 't2', 'onza')"
@@ -2548,8 +2546,6 @@
                     />
                   </span>
                 </button>
-                <div></div>
-                <div></div>
                 <button
                   class="icardstb phraseCard"
                   onclick="speakPhrase('Yes! I have a robot.', 't4', 'onza')"
@@ -2616,8 +2612,6 @@
                     />
                   </span>
                 </button>
-                <div></div>
-                <div></div>
                 <button
                   class="icardstb phraseCard"
                   onclick="speakPhrase('Where is the kite?', 't6', 'onza')"
@@ -2684,7 +2678,6 @@
                     />
                   </span>
                 </button>
-                <div></div>
               </div>
             </div>
           </div>
@@ -2756,7 +2749,7 @@
           <h1 class="pageTitle">Do You Have A…?</h1>
           <div class="stage">
             <div class="panel">
-              <div class="grid grid--2">
+              <div class="dialogue">
                 <button
                   class="icardst phraseCard"
                   onclick="speakPhrase('Do you have a car?', 'yn1')"
@@ -2790,8 +2783,6 @@
                     />
                   </span>
                 </button>
-                <div></div>
-                <div></div>
                 <button
                   class="icardstb phraseCard"
                   onclick="speakPhrase('Yes! I have a car.', 'yn2', 'onza')"
@@ -2858,8 +2849,6 @@
                     />
                   </span>
                 </button>
-                <div></div>
-                <div></div>
                 <button
                   class="icardstb phraseCard"
                   onclick="speakPhrase('No. I don\'t have a robot.', 'yn4', 'onza')"
@@ -2926,8 +2915,6 @@
                     />
                   </span>
                 </button>
-                <div></div>
-                <div></div>
                 <button
                   class="icardstb phraseCard"
                   onclick="speakPhrase('Yes! I have a kite.', 'yn6', 'onza')"
@@ -2994,8 +2981,6 @@
                     />
                   </span>
                 </button>
-                <div></div>
-                <div></div>
                 <button
                   class="icardstb phraseCard"
                   onclick="speakPhrase('No. I don\'t have a teddy bear.', 'yn8', 'onza')"
@@ -3062,8 +3047,6 @@
                     />
                   </span>
                 </button>
-                <div></div>
-                <div></div>
                 <button
                   class="icardstb phraseCard"
                   onclick="speakPhrase('Yes! I have a bike.', 'yn10', 'onza')"
@@ -3130,8 +3113,6 @@
                     />
                   </span>
                 </button>
-                <div></div>
-                <div></div>
                 <button
                   class="icardstb phraseCard"
                   onclick="speakPhrase('No. I don\'t have a rocket.', 'yn12', 'onza')"
@@ -3165,7 +3146,6 @@
                     />
                   </span>
                 </button>
-                <div></div>
               </div>
             </div>
           </div>
@@ -3713,6 +3693,7 @@
           }
         });
       }
+      setupUnfold("greetingsScreen");
       setupUnfold("likePhrasesScreen");
       setupUnfold("ynDialogueScreen");
       setupUnfold("toysPhrasesScreen");
