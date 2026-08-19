@@ -110,6 +110,37 @@
         letter-spacing: -0.02em;
         margin: 0.15em 0;
       }
+      .banner {
+        display: inline-block;
+        background: var(--accent);
+        color: #fff;
+        padding: 0.15em 0.8em;
+        border-radius: 8px;
+        font-size: clamp(0.9rem, 1.6vw, 1.3rem);
+        font-weight: 700;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        margin-bottom: 0.1em;
+      }
+      .ribbon {
+        font-size: clamp(1.4rem, 2.8vw, 2.2rem);
+        font-weight: 800;
+        color: var(--accent);
+        margin: 0 0 0.4em 0;
+        position: relative;
+        display: inline-block;
+        padding: 0 0.3em;
+      }
+      .ribbon::after {
+        content: "";
+        position: absolute;
+        bottom: -4px;
+        left: 10%;
+        right: 10%;
+        height: 3px;
+        background: var(--accent2);
+        border-radius: 2px;
+      }
       .stage {
         display: flex;
         flex-direction: column;
@@ -1750,7 +1781,8 @@
       <!-- 3: Greetings -->
       <section class="screen" dialogue id="greetingsScreen">
         <div class="content">
-          <h1 class="pageTitle">Greeting and Introduction</h1>
+          <span class="banner">Dialogue</span>
+          <h1 class="ribbon">Greeting and Introduction</h1>
           <div class="stage">
             <div class="panel">
               <div class="dialogue">
@@ -1927,7 +1959,8 @@
       <!-- DO YOU LIKE? — phrases (present) -->
       <section class="screen" id="likePhrasesScreen">
         <div class="content">
-          <h1 class="pageTitle">Do You Like?</h1>
+          <span class="banner">Dialogue</span>
+          <h1 class="ribbon">Do You Like?</h1>
           <div class="stage">
             <div class="panel">
               <div class="dialogue">
@@ -2443,7 +2476,8 @@
       <!-- Segment 2: WHAT DO YOU HAVE? — phrases (present) -->
       <section class="screen" id="toysPhrasesScreen">
         <div class="content">
-          <h1 class="pageTitle">What Do You Have?</h1>
+          <span class="banner">Dialogue</span>
+          <h1 class="ribbon">What Do You Have?</h1>
           <div class="stage">
             <div class="panel">
               <div class="dialogue">
@@ -2746,7 +2780,8 @@
       <!-- Segment 5b: DO YOU HAVE A...? — educational dialogue -->
       <section class="screen" id="ynDialogueScreen">
         <div class="content">
-          <h1 class="pageTitle">Do You Have A…?</h1>
+          <span class="banner">Dialogue</span>
+          <h1 class="ribbon">Do You Have A…?</h1>
           <div class="stage">
             <div class="panel">
               <div class="dialogue">
