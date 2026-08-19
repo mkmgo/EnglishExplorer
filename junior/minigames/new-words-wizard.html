@@ -197,9 +197,14 @@
       }
 
       .word-card .word-slots .slot {
-        min-width: 40px;
-        min-height: 38px;
+        min-width: 48px;
+        min-height: 40px;
         border-radius: 4px;
+      }
+
+      .word-separator {
+        flex-basis: 100%;
+        height: 6px;
       }
 
       .palette {
@@ -329,8 +334,8 @@
       }
 
       .single-word .word-slots .slot {
-        min-width: 52px;
-        min-height: 48px;
+        min-width: 56px;
+        min-height: 46px;
         border-radius: 6px;
       }
 
@@ -369,8 +374,8 @@
           border-radius: 50%;
         }
         .word-card .word-slots .slot {
-          min-width: 34px;
-          min-height: 34px;
+          min-width: 38px;
+          min-height: 32px;
         }
         .word-card .draggable-item {
           width: 38px;
@@ -385,8 +390,8 @@
           font-size: 1.3rem;
         }
         .single-word .word-slots .slot {
-          min-width: 42px;
-          min-height: 40px;
+          min-width: 44px;
+          min-height: 38px;
         }
         .single-word .draggable-item {
           width: 44px;
@@ -679,6 +684,7 @@
         var counts = {};
         wordList.forEach(function (w) {
           w.word.split("").forEach(function (ch) {
+            if (ch === " ") return;
             counts[ch] = (counts[ch] || 0) + 1;
           });
         });
@@ -720,12 +726,20 @@
           card.appendChild(name);
           var slots = document.createElement("div");
           slots.className = "word-slots";
-          w.word.split("").forEach(function (ch) {
-            var s = document.createElement("div");
-            s.className = "slot";
-            s.dataset.letter = ch;
-            s.innerHTML = '<span class="slot-label">' + ch + "</span>";
-            slots.appendChild(s);
+          var wordParts = w.word.split(" ");
+          wordParts.forEach(function (part, pi) {
+            if (pi > 0) {
+              var sep = document.createElement("div");
+              sep.className = "word-separator";
+              slots.appendChild(sep);
+            }
+            part.split("").forEach(function (ch) {
+              var s = document.createElement("div");
+              s.className = "slot";
+              s.dataset.letter = ch;
+              s.innerHTML = '<span class="slot-label">' + ch + "</span>";
+              slots.appendChild(s);
+            });
           });
           card.appendChild(slots);
           wrap.appendChild(card);
@@ -749,12 +763,20 @@
           card.appendChild(name);
           var slots = document.createElement("div");
           slots.className = "word-slots";
-          w.word.split("").forEach(function (ch) {
-            var s = document.createElement("div");
-            s.className = "slot";
-            s.dataset.letter = ch;
-            s.innerHTML = '<span class="slot-label">' + ch + "</span>";
-            slots.appendChild(s);
+          var wordParts = w.word.split(" ");
+          wordParts.forEach(function (part, pi) {
+            if (pi > 0) {
+              var sep = document.createElement("div");
+              sep.className = "word-separator";
+              slots.appendChild(sep);
+            }
+            part.split("").forEach(function (ch) {
+              var s = document.createElement("div");
+              s.className = "slot";
+              s.dataset.letter = ch;
+              s.innerHTML = '<span class="slot-label">' + ch + "</span>";
+              slots.appendChild(s);
+            });
           });
           card.appendChild(slots);
           grid.appendChild(card);
