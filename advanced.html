@@ -356,6 +356,7 @@
       .videoWrap {
         width: 100%;
         max-width: 760px;
+        margin: 0 auto;
       }
       .playRow {
         display: flex;
@@ -1551,6 +1552,7 @@
         gap: 1em;
         width: 100%;
         max-width: 700px;
+        margin: 0 auto;
       }
       .bodyBtn {
         display: flex;
@@ -2043,7 +2045,7 @@
                   <span>Hands</span>
                 </button>
               </div>
-              <button class="choice" onclick="bodyHearAll()" style="margin-top:1em">
+              <button class="choice" onclick="bodyHearAll()" style="margin-top:1em; background:var(--accent); color:#fff;">
                 HEAR ALL
               </button>
             </div>
@@ -5853,7 +5855,9 @@
           return;
         }
         var w = bodyWhereOrder[bodyWhereIdx];
-        title.textContent = "Where is the " + w.name + "?";
+        var isPlural = w.name.slice(-1) === "s";
+        var nameCap = w.name.charAt(0).toUpperCase() + w.name.slice(1);
+        title.textContent = "Where " + (isPlural ? "are" : "is") + " the " + nameCap + "?";
         bodyWhereTries = 0;
         pipHost.innerHTML = "";
         for (var p = 0; p < bodyWhereOrder.length; p++) {
