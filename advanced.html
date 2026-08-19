@@ -18,8 +18,8 @@
         --bg: #faf7f2;
         --ink: #14213d;
         --muted: #60708d;
-        --accent: #4A6B5D;
-        --accent2: #8BAF9C;
+        --accent: #4a6b5d;
+        --accent2: #8baf9c;
         --good: #19a974;
         --bad: #e05252;
         --mediocre: #f39c12;
@@ -44,7 +44,10 @@
         font: inherit;
         border: 0;
         cursor: pointer;
-        transition: transform 0.3s ease, filter 0.3s ease, background 0.3s ease;
+        transition:
+          transform 0.3s ease,
+          filter 0.3s ease,
+          background 0.3s ease;
       }
       #app {
         width: 100%;
@@ -177,7 +180,9 @@
         display: inline-flex;
         align-items: center;
         gap: 0.5em;
-        transition: transform 0.3s ease, filter 0.3s ease;
+        transition:
+          transform 0.3s ease,
+          filter 0.3s ease;
       }
       .icardst:active {
         transform: scale(0.95);
@@ -199,7 +204,9 @@
         display: inline-flex;
         align-items: center;
         gap: 0.5em;
-        transition: transform 0.3s ease, filter 0.3s ease;
+        transition:
+          transform 0.3s ease,
+          filter 0.3s ease;
       }
       .icardstb:active {
         transform: scale(0.95);
@@ -268,7 +275,7 @@
         border-radius: 50%;
         fill: #ef8f9a;
         color: #d9534f;
-        filter: drop-shadow(0 1px 2px rgba(0,0,0,0.3));
+        filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.3));
       }
       .icardbas {
         min-width: 160px;
@@ -281,7 +288,9 @@
         align-items: center;
         justify-content: center;
         padding: 0.5em 1em;
-        transition: transform 0.3s ease, filter 0.3s ease;
+        transition:
+          transform 0.3s ease,
+          filter 0.3s ease;
       }
       .icardbas:active {
         transform: scale(0.95);
@@ -305,7 +314,9 @@
         align-items: center;
         gap: 0.5em;
         text-transform: uppercase;
-        transition: transform 0.3s ease, filter 0.3s ease;
+        transition:
+          transform 0.3s ease,
+          filter 0.3s ease;
       }
       .clipcard:active {
         transform: scale(0.95);
@@ -388,7 +399,9 @@
         align-items: center;
         justify-content: center;
         padding: 0.5em 1em;
-        transition: transform 0.3s ease, filter 0.3s ease;
+        transition:
+          transform 0.3s ease,
+          filter 0.3s ease;
       }
       .choice:active {
         transform: scale(0.95);
@@ -403,7 +416,9 @@
         justify-content: flex-start;
         padding: 0.5em 1em;
         box-shadow: var(--shadow);
-        transition: transform 0.3s ease, filter 0.3s ease;
+        transition:
+          transform 0.3s ease,
+          filter 0.3s ease;
       }
       .tabs:active {
         transform: scale(0.95);
@@ -639,7 +654,9 @@
         padding: 0.5em 0.9em;
         font-size: clamp(0.85rem, 1.3vw, 1.15rem);
         text-align: left;
-        transition: transform 0.3s ease, filter 0.3s ease;
+        transition:
+          transform 0.3s ease,
+          filter 0.3s ease;
       }
       .clip:active {
         transform: scale(0.97);
@@ -703,7 +720,9 @@
         border: 3px solid var(--accent2);
         background: var(--panel);
         box-shadow: var(--shadow);
-        transition: transform 0.3s ease, filter 0.3s ease;
+        transition:
+          transform 0.3s ease,
+          filter 0.3s ease;
       }
       .toyBtn:active {
         transform: scale(0.95);
@@ -733,6 +752,54 @@
       .toyGrid .toyBtn {
         min-width: 0;
       }
+      #classroom1Screen .classroom1GameArea,
+      #family1Screen .classroom1GameArea {
+        gap: 0;
+      }
+      #classroom1Screen .classroom1Grid,
+      #family1Screen .classroom1Grid {
+        max-width: 620px;
+        background: var(--panel);
+        border: 2px solid var(--accent2);
+        border-radius: 14px;
+        padding: clamp(0.8em, 2vw, 1.2em);
+      }
+      #classroom1Screen .classroom1Grid .toyBtn,
+      #family1Screen .classroom1Grid .toyBtn {
+        min-height: 0;
+        aspect-ratio: 1;
+        padding: clamp(0.35em, 1vw, 0.7em);
+        border-radius: 12px;
+        background: #fff;
+        border-color: #666;
+        box-shadow: 0 4px 0 rgba(20, 33, 61, 0.14);
+      }
+      #classroom1Screen .classroom1Grid .toyImg,
+      #family1Screen .classroom1Grid .toyImg {
+        width: min(100%, 110px);
+        height: auto;
+        aspect-ratio: 1;
+        border-radius: 8px;
+        background: #fff;
+      }
+      #family1Screen .classroom1Grid .toyBtn {
+        overflow: hidden;
+      }
+      #family1Screen .classroom1Grid .toyImg {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transform: scale(1.1);
+      }
+      #classroom1Screen #classroom1StartBtn,
+      #family1Screen #family1StartBtn {
+        min-width: 150px;
+        min-height: 58px;
+        align-self: center;
+        margin-top: 1em;
+        border-radius: 14px;
+        font-size: clamp(1rem, 1.8vw, 1.4rem);
+      }
       .miniRow {
         display: flex;
         flex-wrap: wrap;
@@ -751,7 +818,9 @@
         padding: 0.5em 1.1em;
         font-size: clamp(1rem, 1.7vw, 1.5rem);
         font-weight: 800;
-        transition: transform 0.3s ease, filter 0.3s ease;
+        transition:
+          transform 0.3s ease,
+          filter 0.3s ease;
       }
       #toysIntroScreen .miniChip {
         font-size: clamp(0.88rem, 1.5vw, 1.3rem);
@@ -854,6 +923,118 @@
         color: var(--muted);
         pointer-events: none;
         opacity: 0.5;
+      }
+      #classroomIntroScreen .slotPanel,
+      #familyIntroScreen .slotPanel {
+        background: var(--panel);
+        border: 2px solid var(--accent2);
+        border-radius: 14px;
+        padding: clamp(0.8em, 2vw, 1.2em);
+      }
+      #classroomIntroScreen .slotWindow,
+      #familyIntroScreen .slotWindow {
+        width: min(210px, 42vw);
+        height: min(210px, 42vw);
+        background: #fff;
+        border: 3px solid #666;
+        border-radius: 12px;
+        box-shadow:
+          inset 0 0 0 3px rgba(20, 33, 61, 0.08),
+          0 5px 0 rgba(20, 33, 61, 0.15);
+      }
+      #classroomIntroScreen .slotImg,
+      #familyIntroScreen .slotImg {
+        background: #fff;
+        padding: clamp(0.35em, 1vw, 0.7em);
+      }
+      #familyIntroScreen .slotImg {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        padding: 0;
+        transform: scale(1.08);
+      }
+      #classroomIntroScreen .classroomSlotReplay,
+      #familyIntroScreen .familySlotReplay {
+        top: 50%;
+        right: -3.75rem;
+        width: 3rem;
+        height: 3.4rem;
+        transform: translateY(-50%);
+        background: #fff;
+        border: 2px solid #666;
+        border-radius: 8px;
+        color: var(--ink);
+        opacity: 1;
+        pointer-events: auto;
+        box-shadow: 0 3px 0 rgba(20, 33, 61, 0.15);
+        flex-direction: column;
+      }
+      #classroomIntroScreen .classroomSlotReplay:active,
+      #familyIntroScreen .familySlotReplay:active {
+        transform: translateY(calc(-50% + 2px));
+        box-shadow: 0 1px 0 rgba(20, 33, 61, 0.15);
+      }
+      #classroomIntroScreen .slotRepeatHint,
+      #familyIntroScreen .slotRepeatHint {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.45em;
+        margin: 0.1em 0 0;
+        color: var(--ink);
+        font-size: clamp(0.8rem, 1.4vw, 1rem);
+        font-weight: 800;
+      }
+      #classroomIntroScreen .slotRepeatHint svg,
+      #familyIntroScreen .slotRepeatHint svg {
+        flex: 0 0 auto;
+        color: var(--accent);
+      }
+      #familyIntroScreen .slotNot {
+        background: #f1c40f;
+        color: var(--ink);
+      }
+      #family1Screen .wherePanel,
+      #classroom1Screen .wherePanel {
+        transition:
+          background 0.35s ease,
+          border-color 0.35s ease,
+          box-shadow 0.35s ease;
+      }
+      #family1Screen .wherePanel.whereStateRed,
+      #classroom1Screen .wherePanel.whereStateRed {
+        background: #fff0f0;
+        border: 3px solid var(--bad);
+      }
+      #family1Screen .wherePanel.whereStateYellow,
+      #classroom1Screen .wherePanel.whereStateYellow {
+        background: #fff9df;
+        border: 3px solid #f1c40f;
+      }
+      #family1Screen .wherePanel.whereStateGreen,
+      #classroom1Screen .wherePanel.whereStateGreen {
+        background: #edfff6;
+        border: 3px solid var(--good);
+      }
+      #family1Screen .whereStart,
+      #classroom1Screen .whereStart {
+        transition: background 0.35s ease, color 0.35s ease;
+      }
+      #family1Screen .whereStart.whereStateRed,
+      #classroom1Screen .whereStart.whereStateRed {
+        background: var(--bad);
+        color: #fff;
+      }
+      #family1Screen .whereStart.whereStateYellow,
+      #classroom1Screen .whereStart.whereStateYellow {
+        background: #f1c40f;
+        color: var(--ink);
+      }
+      #family1Screen .whereStart.whereStateGreen,
+      #classroom1Screen .whereStart.whereStateGreen {
+        background: var(--good);
+        color: #fff;
       }
       .slotYes {
         background: var(--good);
@@ -1042,7 +1223,9 @@
         border-radius: 26px;
         padding: 0.45em 0.7em;
         cursor: pointer;
-        transition: transform 0.3s ease, filter 0.3s ease;
+        transition:
+          transform 0.3s ease,
+          filter 0.3s ease;
         box-shadow: var(--shadow);
         font-family: inherit;
         font-weight: 800;
@@ -1244,7 +1427,10 @@
         min-width: 34px;
         padding: 0 8px;
         filter: drop-shadow(0 3px 4px rgba(0, 0, 0, 0.22));
-        transition: transform 0.3s ease, filter 0.3s ease, background 0.3s ease;
+        transition:
+          transform 0.3s ease,
+          filter 0.3s ease,
+          background 0.3s ease;
       }
       .navCtrl .tag {
         background: var(--accent2);
@@ -1308,11 +1494,13 @@
         top: 12%;
         transform: translateX(-50%);
         z-index: 100;
-        background: var(--ink);
-        color: white;
+        background: #000;
+        color: #fff;
         padding: 0.8em 1.5em;
-        border-radius: 999px;
+        border-radius: 8px;
         font-size: 1.4rem;
+        font-weight: 900;
+        box-shadow: 0 8px 22px rgba(0, 0, 0, 0.38);
         opacity: 0;
         pointer-events: none;
         transition: 0.25s;
@@ -1534,7 +1722,7 @@
       .mediaProgress {
         width: min(80vw, 600px);
         height: 4px;
-        background: rgba(0,0,0,0.1);
+        background: rgba(0, 0, 0, 0.1);
         border-radius: 2px;
         margin-top: 0.6em;
         overflow: hidden;
@@ -1563,13 +1751,15 @@
         background: var(--panel);
         border: 3px solid var(--accent2);
         border-radius: 16px;
-        box-shadow: 0 6px 20px rgba(139,175,156,0.18);
-        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        box-shadow: 0 6px 20px rgba(139, 175, 156, 0.18);
+        transition:
+          transform 0.3s ease,
+          box-shadow 0.3s ease;
         cursor: pointer;
       }
       .bodyBtn:active {
         transform: scale(0.95);
-        box-shadow: 0 2px 8px rgba(139,175,156,0.25);
+        box-shadow: 0 2px 8px rgba(139, 175, 156, 0.25);
       }
       .bodyBtn img {
         width: clamp(60px, 12vw, 100px);
@@ -1633,7 +1823,6 @@
               </svg>
             </span>
           </button>
-
         </div>
         <div class="barCenter">
           <div class="statusCapsule ledger">
@@ -1701,48 +1890,404 @@
         <div class="content">
           <h1 class="ribbon">Index</h1>
           <div class="stage">
-            <div class="panel">
+            <div class="panel wherePanel whereStateRed" id="familyWherePanel">
               <div class="grid grid-tabs">
                 <button class="tabs tab-alphabet myWorldTab">
                   <span class="tabtext">My World</span>
-                  <hr class="myWorldSep">
+                  <hr class="myWorldSep" />
                   <div class="myWorldThemes">
-                    <div class="myWorldTheme" onclick="show(screenIndexById('greetingsScreen'))"><svg xmlns="http://www.w3.org/2000/svg" width="1.15em" height="1.15em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 11V6a2 2 0 0 0-2-2a2 2 0 0 0-2 2"/><path d="M14 10V4a2 2 0 0 0-2-2a2 2 0 0 0-2 2v2"/><path d="M10 10.5V6a2 2 0 0 0-2-2a2 2 0 0 0-2 2v8"/><path d="M18 8a2 2 0 1 1 4 0v6a8 8 0 0 1-8 8h-2c-2.8 0-4.5-.86-5.99-2.34l-3.6-3.6a2 2 0 0 1 2.83-2.82L7 13"/></svg>Hello, English!</div>
-                    <div class="myWorldTheme" onclick="show(screenIndexById('bodyVideoScreen'))"><svg xmlns="http://www.w3.org/2000/svg" width="1.15em" height="1.15em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="5" r="2"/><path d="m10 22 2-7h4l2 7"/><path d="M10 10 6 22"/><path d="M14 10 18 22"/></svg>My Body</div>
-                    <div class="myWorldTheme"><svg xmlns="http://www.w3.org/2000/svg" width="1.15em" height="1.15em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="13.5" cy="6.5" r=".5" fill="currentColor"/><circle cx="17.5" cy="10.5" r=".5" fill="currentColor"/><circle cx="8.5" cy="7.5" r=".5" fill="currentColor"/><circle cx="6.5" cy="12.5" r=".5" fill="currentColor"/><path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.926 0 1.648-.746 1.648-1.688 0-.437-.18-.835-.437-1.125-.29-.289-.438-.652-.438-1.125a1.64 1.64 0 0 1 1.668-1.668h1.996c3.051 0 5.555-2.503 5.555-5.554C21.965 6.012 17.461 2 12 2z"/></svg>Colours Everywhere</div>
-                    <div class="myWorldTheme"><svg xmlns="http://www.w3.org/2000/svg" width="1.15em" height="1.15em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>My Family</div>
-                    <div class="myWorldTheme"><svg xmlns="http://www.w3.org/2000/svg" width="1.15em" height="1.15em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20"/></svg>My Classroom</div>
-                    <div class="myWorldTheme" onclick="show(screenIndexById('animalsIntroScreen'))"><svg xmlns="http://www.w3.org/2000/svg" width="1.15em" height="1.15em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 16a3 3 0 0 1 1.28 2.61V20a1 1 0 0 1-1 1H9a1 1 0 0 1-1-1v-1.39a3 3 0 0 1 1.28-2.61"/><path d="M10 10a3 3 0 0 1 6 0v4a3 3 0 0 1-6 0z"/><path d="M17.73 7.7a3 3 0 0 1 0 4.6"/><path d="M6.27 7.7a3 3 0 0 0 0 4.6"/><path d="M18 12h2"/><path d="M4 12H2"/><path d="M15 9l3-3"/><path d="M6 9l-3-3"/></svg>Animals</div>
-                    <div class="myWorldTheme" onclick="show(screenIndexById('toysIntroScreen'))"><svg xmlns="http://www.w3.org/2000/svg" width="1.15em" height="1.15em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z"/><path d="m3.3 7 8.7 5 8.7-5"/><path d="M12 22V12"/></svg>My Toys &amp; Things I Have</div>
+                    <div
+                      class="myWorldTheme"
+                      onclick="show(screenIndexById('greetingsScreen'))"
+                    >
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="1.15em"
+                        height="1.15em"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                      >
+                        <path d="M18 11V6a2 2 0 0 0-2-2a2 2 0 0 0-2 2" />
+                        <path d="M14 10V4a2 2 0 0 0-2-2a2 2 0 0 0-2 2v2" />
+                        <path d="M10 10.5V6a2 2 0 0 0-2-2a2 2 0 0 0-2 2v8" />
+                        <path
+                          d="M18 8a2 2 0 1 1 4 0v6a8 8 0 0 1-8 8h-2c-2.8 0-4.5-.86-5.99-2.34l-3.6-3.6a2 2 0 0 1 2.83-2.82L7 13"
+                        /></svg
+                      >Hello, English!
+                    </div>
+                    <div
+                      class="myWorldTheme"
+                      onclick="show(screenIndexById('bodyVideoScreen'))"
+                    >
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="1.15em"
+                        height="1.15em"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                      >
+                        <circle cx="12" cy="5" r="2" />
+                        <path d="m10 22 2-7h4l2 7" />
+                        <path d="M10 10 6 22" />
+                        <path d="M14 10 18 22" /></svg
+                      >My Body
+                    </div>
+                    <div class="myWorldTheme">
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="1.15em"
+                        height="1.15em"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                      >
+                        <circle cx="13.5" cy="6.5" r=".5" fill="currentColor" />
+                        <circle
+                          cx="17.5"
+                          cy="10.5"
+                          r=".5"
+                          fill="currentColor"
+                        />
+                        <circle cx="8.5" cy="7.5" r=".5" fill="currentColor" />
+                        <circle cx="6.5" cy="12.5" r=".5" fill="currentColor" />
+                        <path
+                          d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.926 0 1.648-.746 1.648-1.688 0-.437-.18-.835-.437-1.125-.29-.289-.438-.652-.438-1.125a1.64 1.64 0 0 1 1.668-1.668h1.996c3.051 0 5.555-2.503 5.555-5.554C21.965 6.012 17.461 2 12 2z"
+                        /></svg
+                      >Colours Everywhere
+                    </div>
+                    <div class="myWorldTheme">
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="1.15em"
+                        height="1.15em"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                      >
+                        <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
+                        <circle cx="9" cy="7" r="4" />
+                        <path d="M22 21v-2a4 4 0 0 0-3-3.87" />
+                        <path d="M16 3.13a4 4 0 0 1 0 7.75" /></svg
+                      >My Family
+                    </div>
+                    <div class="myWorldTheme">
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="1.15em"
+                        height="1.15em"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                      >
+                        <path
+                          d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20"
+                        /></svg
+                      >My Classroom
+                    </div>
+                    <div
+                      class="myWorldTheme"
+                      onclick="show(screenIndexById('animalsIntroScreen'))"
+                    >
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="1.15em"
+                        height="1.15em"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                      >
+                        <path
+                          d="M13 16a3 3 0 0 1 1.28 2.61V20a1 1 0 0 1-1 1H9a1 1 0 0 1-1-1v-1.39a3 3 0 0 1 1.28-2.61"
+                        />
+                        <path d="M10 10a3 3 0 0 1 6 0v4a3 3 0 0 1-6 0z" />
+                        <path d="M17.73 7.7a3 3 0 0 1 0 4.6" />
+                        <path d="M6.27 7.7a3 3 0 0 0 0 4.6" />
+                        <path d="M18 12h2" />
+                        <path d="M4 12H2" />
+                        <path d="M15 9l3-3" />
+                        <path d="M6 9l-3-3" /></svg
+                      >Animals
+                    </div>
+                    <div
+                      class="myWorldTheme"
+                      onclick="show(screenIndexById('toysIntroScreen'))"
+                    >
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="1.15em"
+                        height="1.15em"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                      >
+                        <path
+                          d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z"
+                        />
+                        <path d="m3.3 7 8.7 5 8.7-5" />
+                        <path d="M12 22V12" /></svg
+                      >My Toys &amp; Things I Have
+                    </div>
                   </div>
                 </button>
                 <button class="tabs tab-numbers myWorldTab">
                   <span class="tabtext">Foundations</span>
-                  <hr class="myWorldSep">
+                  <hr class="myWorldSep" />
                   <div class="myWorldThemes">
-                    <div class="myWorldTheme"><svg xmlns="http://www.w3.org/2000/svg" width="1.15em" height="1.15em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 16 4 4 4-4"/><path d="M7 20V4"/><path d="M20 8h-5"/><path d="M15 10V6.5a2.5 2.5 0 0 1 5 0V10"/><path d="M15 14h5l-5 6h5"/></svg>Alphabet from Aa to Zz</div>
-                    <div class="myWorldTheme" onclick="show(screenIndexById('coloursScreen'))"><svg xmlns="http://www.w3.org/2000/svg" width="1.15em" height="1.15em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18.37 2.63 14 7l-1.59-1.59a2 2 0 0 0-2.82 0L8 7l9 9 1.59-1.59a2 2 0 0 0 0-2.82L17 10l4.37-4.37a2.12 2.12 0 1 0-3-3Z"/><path d="M9 8c-2 3-4 3.5-7 4l8 10c2-1 6-5 6-7"/><path d="M14.5 17.5 4.5 15"/></svg>Colours and Tints</div>
-                    <div class="myWorldTheme"><svg xmlns="http://www.w3.org/2000/svg" width="1.15em" height="1.15em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="10" x2="21" y1="6" y2="6"/><line x1="10" x2="21" y1="12" y2="12"/><line x1="10" x2="21" y1="18" y2="18"/><path d="M4 6h1v4"/><path d="M4 10h2"/><path d="M6 18H4c0-1 2-2 2-3s-1-1.5-2-1"/></svg>Numbers and Calculations</div>
-                    <div class="myWorldTheme" onclick="show(screenIndexById('monthsScreen'))"><svg xmlns="http://www.w3.org/2000/svg" width="1.15em" height="1.15em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 21v-1"/><path d="M10 4V3"/><path d="M10 9a3 3 0 0 0 0 6"/><path d="m14 20 1.25-2.5L18 18"/><path d="m14 4 1.25 2.5L18 6"/><path d="m17 21-3-6 1.5-3H22"/><path d="m17 3-3 6 1.5 3"/><path d="M2 12h1"/><path d="m20 10-1.5 2 1.5 2"/><path d="m3.64 18.36.7-.7"/><path d="m4.34 6.34-.7-.7"/></svg>Months and Seasons</div>
+                    <div class="myWorldTheme">
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="1.15em"
+                        height="1.15em"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                      >
+                        <path d="m3 16 4 4 4-4" />
+                        <path d="M7 20V4" />
+                        <path d="M20 8h-5" />
+                        <path d="M15 10V6.5a2.5 2.5 0 0 1 5 0V10" />
+                        <path d="M15 14h5l-5 6h5" /></svg
+                      >Alphabet from Aa to Zz
+                    </div>
+                    <div
+                      class="myWorldTheme"
+                      onclick="show(screenIndexById('coloursScreen'))"
+                    >
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="1.15em"
+                        height="1.15em"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                      >
+                        <path
+                          d="M18.37 2.63 14 7l-1.59-1.59a2 2 0 0 0-2.82 0L8 7l9 9 1.59-1.59a2 2 0 0 0 0-2.82L17 10l4.37-4.37a2.12 2.12 0 1 0-3-3Z"
+                        />
+                        <path d="M9 8c-2 3-4 3.5-7 4l8 10c2-1 6-5 6-7" />
+                        <path d="M14.5 17.5 4.5 15" /></svg
+                      >Colours and Tints
+                    </div>
+                    <div class="myWorldTheme">
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="1.15em"
+                        height="1.15em"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                      >
+                        <line x1="10" x2="21" y1="6" y2="6" />
+                        <line x1="10" x2="21" y1="12" y2="12" />
+                        <line x1="10" x2="21" y1="18" y2="18" />
+                        <path d="M4 6h1v4" />
+                        <path d="M4 10h2" />
+                        <path d="M6 18H4c0-1 2-2 2-3s-1-1.5-2-1" /></svg
+                      >Numbers and Calculations
+                    </div>
+                    <div
+                      class="myWorldTheme"
+                      onclick="show(screenIndexById('monthsScreen'))"
+                    >
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="1.15em"
+                        height="1.15em"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                      >
+                        <path d="M10 21v-1" />
+                        <path d="M10 4V3" />
+                        <path d="M10 9a3 3 0 0 0 0 6" />
+                        <path d="m14 20 1.25-2.5L18 18" />
+                        <path d="m14 4 1.25 2.5L18 6" />
+                        <path d="m17 21-3-6 1.5-3H22" />
+                        <path d="m17 3-3 6 1.5 3" />
+                        <path d="M2 12h1" />
+                        <path d="m20 10-1.5 2 1.5 2" />
+                        <path d="m3.64 18.36.7-.7" />
+                        <path d="m4.34 6.34-.7-.7" /></svg
+                      >Months and Seasons
+                    </div>
                   </div>
                 </button>
                 <button class="tabs tab-colours myWorldTab">
                   <span class="tabtext">Excercises and Repetition</span>
-                  <hr class="myWorldSep">
+                  <hr class="myWorldSep" />
                   <div class="myWorldThemes">
-                    <div class="myWorldTheme"><svg xmlns="http://www.w3.org/2000/svg" width="1.15em" height="1.15em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12.83 2.18a2 2 0 0 0-1.66 0L2.6 6.08a1 1 0 0 0 0 1.83l8.58 3.91a2 2 0 0 0 1.66 0l8.58-3.9a1 1 0 0 0 0-1.83Z"/><path d="m6.08 9.5-3.5 1.6a1 1 0 0 0 0 1.81l8.6 3.91a2 2 0 0 0 1.65 0l8.58-3.9a1 1 0 0 0 0-1.83l-3.5-1.59"/><path d="m6.08 14.5-3.5 1.6a1 1 0 0 0 0 1.81l8.6 3.91a2 2 0 0 0 1.65 0l8.58-3.9a1 1 0 0 0 0-1.83l-3.5-1.59"/><path d="M12 22v-10"/></svg>Interactive Practices</div>
-                    <div class="myWorldTheme"><svg xmlns="http://www.w3.org/2000/svg" width="1.15em" height="1.15em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19.439 7.85c-.049.322.059.648.289.878l1.568 1.568c.47.47.706 1.087.706 1.704s-.235 1.233-.706 1.704l-1.611 1.611a.98.98 0 0 1-.837.276c-.47-.07-.802-.48-.968-.925a2.501 2.501 0 1 0-3.214 3.214c.446.166.855.497.925.968a.979.979 0 0 1-.276.837l-1.611 1.611a2.404 2.404 0 0 1-1.704.706 2.402 2.402 0 0 1-1.704-.706l-1.568-1.568a1.026 1.026 0 0 0-.877-.29c-.493.074-.84.504-1.02.968a2.5 2.5 0 1 1-3.237-3.237c.464-.18.894-.527.967-1.02a1.026 1.026 0 0 0-.289-.877l-1.568-1.568A2.402 2.402 0 0 1 1.998 12c0-.617.236-1.234.706-1.704L4.315 8.685a.98.98 0 0 1 .837-.276c.47.07.802.48.968.925a2.501 2.501 0 1 0 3.214-3.214c-.446-.166-.855-.497-.925-.968a.979.979 0 0 1 .276-.837l1.611-1.611A2.402 2.402 0 0 1 12 2c.617 0 1.234.236 1.704.706l1.568 1.568c.23.23.556.338.877.29.493-.074.84-.504 1.02-.968a2.5 2.5 0 1 1 3.237 3.237c-.464.18-.894.527-.967 1.02Z"/></svg>Skilled Puzzles</div>
-                    <div class="myWorldTheme"><svg xmlns="http://www.w3.org/2000/svg" width="1.15em" height="1.15em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="15" x="2" y="3" rx="2"/><path d="m7 21 5-3 5 3"/></svg>Media</div>
+                    <div class="myWorldTheme">
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="1.15em"
+                        height="1.15em"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                      >
+                        <path
+                          d="m12.83 2.18a2 2 0 0 0-1.66 0L2.6 6.08a1 1 0 0 0 0 1.83l8.58 3.91a2 2 0 0 0 1.66 0l8.58-3.9a1 1 0 0 0 0-1.83Z"
+                        />
+                        <path
+                          d="m6.08 9.5-3.5 1.6a1 1 0 0 0 0 1.81l8.6 3.91a2 2 0 0 0 1.65 0l8.58-3.9a1 1 0 0 0 0-1.83l-3.5-1.59"
+                        />
+                        <path
+                          d="m6.08 14.5-3.5 1.6a1 1 0 0 0 0 1.81l8.6 3.91a2 2 0 0 0 1.65 0l8.58-3.9a1 1 0 0 0 0-1.83l-3.5-1.59"
+                        />
+                        <path d="M12 22v-10" /></svg
+                      >Interactive Practices
+                    </div>
+                    <div class="myWorldTheme">
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="1.15em"
+                        height="1.15em"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                      >
+                        <path
+                          d="M19.439 7.85c-.049.322.059.648.289.878l1.568 1.568c.47.47.706 1.087.706 1.704s-.235 1.233-.706 1.704l-1.611 1.611a.98.98 0 0 1-.837.276c-.47-.07-.802-.48-.968-.925a2.501 2.501 0 1 0-3.214 3.214c.446.166.855.497.925.968a.979.979 0 0 1-.276.837l-1.611 1.611a2.404 2.404 0 0 1-1.704.706 2.402 2.402 0 0 1-1.704-.706l-1.568-1.568a1.026 1.026 0 0 0-.877-.29c-.493.074-.84.504-1.02.968a2.5 2.5 0 1 1-3.237-3.237c.464-.18.894-.527.967-1.02a1.026 1.026 0 0 0-.289-.877l-1.568-1.568A2.402 2.402 0 0 1 1.998 12c0-.617.236-1.234.706-1.704L4.315 8.685a.98.98 0 0 1 .837-.276c.47.07.802.48.968.925a2.501 2.501 0 1 0 3.214-3.214c-.446-.166-.855-.497-.925-.968a.979.979 0 0 1 .276-.837l1.611-1.611A2.402 2.402 0 0 1 12 2c.617 0 1.234.236 1.704.706l1.568 1.568c.23.23.556.338.877.29.493-.074.84-.504 1.02-.968a2.5 2.5 0 1 1 3.237 3.237c-.464.18-.894.527-.967 1.02Z"
+                        /></svg
+                      >Skilled Puzzles
+                    </div>
+                    <div class="myWorldTheme">
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="1.15em"
+                        height="1.15em"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                      >
+                        <rect width="20" height="15" x="2" y="3" rx="2" />
+                        <path d="m7 21 5-3 5 3" /></svg
+                      >Media
+                    </div>
                   </div>
                 </button>
                 <button class="tabs tab-months myWorldTab">
                   <span class="tabtext">Progress Tracking</span>
-                  <hr class="myWorldSep">
+                  <hr class="myWorldSep" />
                   <div class="myWorldThemes">
-                    <div class="myWorldTheme"><svg xmlns="http://www.w3.org/2000/svg" width="1.15em" height="1.15em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>Targets and Scoring</div>
-                    <div class="myWorldTheme"><svg xmlns="http://www.w3.org/2000/svg" width="1.15em" height="1.15em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M12 8v8"/><path d="m8 14 4-4 4 4"/></svg>Progression of Targets</div>
-                    <div class="myWorldTheme"><svg xmlns="http://www.w3.org/2000/svg" width="1.15em" height="1.15em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 6h4"/><path d="M2 10h4"/><path d="M2 14h4"/><path d="M2 18h4"/><rect width="16" height="20" x="4" y="2" rx="2"/><path d="M9.5 8h5"/><path d="M9.5 12H16"/><path d="M9.5 16H13"/></svg>Reviews and Assessment</div>
-                    <div class="myWorldTheme"><svg xmlns="http://www.w3.org/2000/svg" width="1.15em" height="1.15em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/><path d="m9 12 2 2 4-4"/></svg>Exams and Rewards</div>
+                    <div class="myWorldTheme">
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="1.15em"
+                        height="1.15em"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                      >
+                        <circle cx="12" cy="12" r="10" />
+                        <circle cx="12" cy="12" r="6" />
+                        <circle cx="12" cy="12" r="2" /></svg
+                      >Targets and Scoring
+                    </div>
+                    <div class="myWorldTheme">
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="1.15em"
+                        height="1.15em"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                      >
+                        <rect width="18" height="18" x="3" y="3" rx="2" />
+                        <path d="M12 8v8" />
+                        <path d="m8 14 4-4 4 4" /></svg
+                      >Progression of Targets
+                    </div>
+                    <div class="myWorldTheme">
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="1.15em"
+                        height="1.15em"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                      >
+                        <path d="M2 6h4" />
+                        <path d="M2 10h4" />
+                        <path d="M2 14h4" />
+                        <path d="M2 18h4" />
+                        <rect width="16" height="20" x="4" y="2" rx="2" />
+                        <path d="M9.5 8h5" />
+                        <path d="M9.5 12H16" />
+                        <path d="M9.5 16H13" /></svg
+                      >Reviews and Assessment
+                    </div>
+                    <div class="myWorldTheme">
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="1.15em"
+                        height="1.15em"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                      >
+                        <polygon
+                          points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"
+                        />
+                        <path d="m9 12 2 2 4-4" /></svg
+                      >Exams and Rewards
+                    </div>
                   </div>
                 </button>
               </div>
@@ -2005,7 +2550,12 @@
                 <div class="mediaProgressFill" id="bodyVideoProgressFill"></div>
               </div>
               <div class="mediaAdvance" id="bodyVideoAdvance">
-                <button class="choice yes" onclick="show(screenIndexById('bodyVocabScreen'))">CONTINUE ▶</button>
+                <button
+                  class="choice yes"
+                  onclick="show(screenIndexById('bodyVocabScreen'))"
+                >
+                  CONTINUE ▶
+                </button>
               </div>
             </div>
           </div>
@@ -2021,31 +2571,53 @@
             <div class="panel">
               <div class="bodyGrid">
                 <button class="bodyBtn" onclick="bodySpeak('head')">
-                  <img src="https://res.cloudinary.com/dp455m4rk/image/upload/c_crop,w_464,h_385,x_0,y_0/v1785941763/head_eyes_yi7oro.png" alt="Head" />
+                  <img
+                    src="https://res.cloudinary.com/dp455m4rk/image/upload/c_crop,w_464,h_385,x_0,y_0/v1785941763/head_eyes_yi7oro.png"
+                    alt="Head"
+                  />
                   <span>Head</span>
                 </button>
                 <button class="bodyBtn" onclick="bodySpeak('eyes')">
-                  <img src="https://res.cloudinary.com/dp455m4rk/image/upload/c_crop,w_464,h_385,x_464,y_0/v1785941763/head_eyes_yi7oro.png" alt="Eyes" />
+                  <img
+                    src="https://res.cloudinary.com/dp455m4rk/image/upload/c_crop,w_464,h_385,x_464,y_0/v1785941763/head_eyes_yi7oro.png"
+                    alt="Eyes"
+                  />
                   <span>Eyes</span>
                 </button>
                 <button class="bodyBtn" onclick="bodySpeak('ears')">
-                  <img src="https://res.cloudinary.com/dp455m4rk/image/upload/c_crop,w_464,h_380,x_0,y_0/v1785941763/ears_nose_tmikep.png" alt="Ears" />
+                  <img
+                    src="https://res.cloudinary.com/dp455m4rk/image/upload/c_crop,w_464,h_380,x_0,y_0/v1785941763/ears_nose_tmikep.png"
+                    alt="Ears"
+                  />
                   <span>Ears</span>
                 </button>
                 <button class="bodyBtn" onclick="bodySpeak('nose')">
-                  <img src="https://res.cloudinary.com/dp455m4rk/image/upload/c_crop,w_464,h_380,x_464,y_0/v1785941763/ears_nose_tmikep.png" alt="Nose" />
+                  <img
+                    src="https://res.cloudinary.com/dp455m4rk/image/upload/c_crop,w_464,h_380,x_464,y_0/v1785941763/ears_nose_tmikep.png"
+                    alt="Nose"
+                  />
                   <span>Nose</span>
                 </button>
                 <button class="bodyBtn" onclick="bodySpeak('mouth')">
-                  <img src="https://res.cloudinary.com/dp455m4rk/image/upload/c_crop,w_464,h_369,x_0,y_0/v1785941763/hands_mouth_flcgyw.png" alt="Mouth" />
+                  <img
+                    src="https://res.cloudinary.com/dp455m4rk/image/upload/c_crop,w_464,h_369,x_0,y_0/v1785941763/hands_mouth_flcgyw.png"
+                    alt="Mouth"
+                  />
                   <span>Mouth</span>
                 </button>
                 <button class="bodyBtn" onclick="bodySpeak('hands')">
-                  <img src="https://res.cloudinary.com/dp455m4rk/image/upload/c_crop,w_464,h_369,x_464,y_0/v1785941763/hands_mouth_flcgyw.png" alt="Hands" />
+                  <img
+                    src="https://res.cloudinary.com/dp455m4rk/image/upload/c_crop,w_464,h_369,x_464,y_0/v1785941763/hands_mouth_flcgyw.png"
+                    alt="Hands"
+                  />
                   <span>Hands</span>
                 </button>
               </div>
-              <button class="choice" onclick="bodyHearAll()" style="margin-top:1em; background:var(--accent); color:#fff;">
+              <button
+                class="choice"
+                onclick="bodyHearAll()"
+                style="margin-top: 1em; background: var(--accent); color: #fff"
+              >
                 HEAR ALL
               </button>
             </div>
@@ -2061,60 +2633,295 @@
           <div class="stage">
             <div class="panel">
               <div class="dialogue">
-                <button class="icardst phraseCard" onclick="speakPhrase('Touch your head.', 'bd1')">
-                  <img class="phraseAvatar" src="https://res.cloudinary.com/dqwm4pdbz/image/upload/c_scale,w_450,h_437/q_auto/f_auto/v1786623813/sam_3davface_irvdlj.png" alt="Sam" />
-                  <svg xmlns="http://www.w3.org/2000/svg" width="1.2em" height="1.2em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-0.2em"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/></svg>
+                <button
+                  class="icardst phraseCard"
+                  onclick="speakPhrase('Touch your head.', 'bd1')"
+                >
+                  <img
+                    class="phraseAvatar"
+                    src="https://res.cloudinary.com/dqwm4pdbz/image/upload/c_scale,w_450,h_437/q_auto/f_auto/v1786623813/sam_3davface_irvdlj.png"
+                    alt="Sam"
+                  />
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="1.2em"
+                    height="1.2em"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    style="vertical-align: -0.2em"
+                  >
+                    <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" />
+                    <path d="M15.54 8.46a5 5 0 0 1 0 7.07" />
+                  </svg>
                   <span class="icardtext">Touch your head.</span>
                 </button>
-                <button class="icardstb phraseCard" onclick="speakPhrase('This is my head.', 'bd2', 'onza')">
-                  <img class="phraseAvatar" src="https://res.cloudinary.com/dqwm4pdbz/image/upload/c_scale,w_400/q_auto/f_auto/v1786623812/onza_3avface_gyyay8.png" alt="Onza" />
-                  <svg xmlns="http://www.w3.org/2000/svg" width="1.2em" height="1.2em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-0.2em"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/></svg>
+                <button
+                  class="icardstb phraseCard"
+                  onclick="speakPhrase('This is my head.', 'bd2', 'onza')"
+                >
+                  <img
+                    class="phraseAvatar"
+                    src="https://res.cloudinary.com/dqwm4pdbz/image/upload/c_scale,w_400/q_auto/f_auto/v1786623812/onza_3avface_gyyay8.png"
+                    alt="Onza"
+                  />
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="1.2em"
+                    height="1.2em"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    style="vertical-align: -0.2em"
+                  >
+                    <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" />
+                    <path d="M15.54 8.46a5 5 0 0 1 0 7.07" />
+                  </svg>
                   <span class="icardtextb">This is my head.</span>
-                  <span class="phraseToyWrap"><img class="phraseToy" src="https://res.cloudinary.com/dp455m4rk/image/upload/c_crop,w_464,h_385,x_0,y_0/v1785941763/head_eyes_yi7oro.png" alt="Head" /></span>
+                  <span class="phraseToyWrap"
+                    ><img
+                      class="phraseToy"
+                      src="https://res.cloudinary.com/dp455m4rk/image/upload/c_crop,w_464,h_385,x_0,y_0/v1785941763/head_eyes_yi7oro.png"
+                      alt="Head"
+                  /></span>
                 </button>
-                <button class="icardst phraseCard" onclick="speakPhrase('Touch your eyes.', 'bd3')">
-                  <img class="phraseAvatar" src="https://res.cloudinary.com/dqwm4pdbz/image/upload/c_scale,w_450,h_437/q_auto/f_auto/v1786623813/sam_3davface_irvdlj.png" alt="Sam" />
-                  <svg xmlns="http://www.w3.org/2000/svg" width="1.2em" height="1.2em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-0.2em"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/></svg>
+                <button
+                  class="icardst phraseCard"
+                  onclick="speakPhrase('Touch your eyes.', 'bd3')"
+                >
+                  <img
+                    class="phraseAvatar"
+                    src="https://res.cloudinary.com/dqwm4pdbz/image/upload/c_scale,w_450,h_437/q_auto/f_auto/v1786623813/sam_3davface_irvdlj.png"
+                    alt="Sam"
+                  />
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="1.2em"
+                    height="1.2em"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    style="vertical-align: -0.2em"
+                  >
+                    <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" />
+                    <path d="M15.54 8.46a5 5 0 0 1 0 7.07" />
+                  </svg>
                   <span class="icardtext">Touch your eyes.</span>
                 </button>
-                <button class="icardstb phraseCard" onclick="speakPhrase('These are my eyes.', 'bd4', 'onza')">
-                  <img class="phraseAvatar" src="https://res.cloudinary.com/dqwm4pdbz/image/upload/c_scale,w_400/q_auto/f_auto/v1786623812/onza_3avface_gyyay8.png" alt="Onza" />
-                  <svg xmlns="http://www.w3.org/2000/svg" width="1.2em" height="1.2em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-0.2em"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/></svg>
+                <button
+                  class="icardstb phraseCard"
+                  onclick="speakPhrase('These are my eyes.', 'bd4', 'onza')"
+                >
+                  <img
+                    class="phraseAvatar"
+                    src="https://res.cloudinary.com/dqwm4pdbz/image/upload/c_scale,w_400/q_auto/f_auto/v1786623812/onza_3avface_gyyay8.png"
+                    alt="Onza"
+                  />
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="1.2em"
+                    height="1.2em"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    style="vertical-align: -0.2em"
+                  >
+                    <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" />
+                    <path d="M15.54 8.46a5 5 0 0 1 0 7.07" />
+                  </svg>
                   <span class="icardtextb">These are my eyes.</span>
-                  <span class="phraseToyWrap"><img class="phraseToy" src="https://res.cloudinary.com/dp455m4rk/image/upload/c_crop,w_464,h_385,x_464,y_0/v1785941763/head_eyes_yi7oro.png" alt="Eyes" /></span>
+                  <span class="phraseToyWrap"
+                    ><img
+                      class="phraseToy"
+                      src="https://res.cloudinary.com/dp455m4rk/image/upload/c_crop,w_464,h_385,x_464,y_0/v1785941763/head_eyes_yi7oro.png"
+                      alt="Eyes"
+                  /></span>
                 </button>
-                <button class="icardst phraseCard" onclick="speakPhrase('Touch your nose.', 'bd5')">
-                  <img class="phraseAvatar" src="https://res.cloudinary.com/dqwm4pdbz/image/upload/c_scale,w_450,h_437/q_auto/f_auto/v1786623813/sam_3davface_irvdlj.png" alt="Sam" />
-                  <svg xmlns="http://www.w3.org/2000/svg" width="1.2em" height="1.2em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-0.2em"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/></svg>
+                <button
+                  class="icardst phraseCard"
+                  onclick="speakPhrase('Touch your nose.', 'bd5')"
+                >
+                  <img
+                    class="phraseAvatar"
+                    src="https://res.cloudinary.com/dqwm4pdbz/image/upload/c_scale,w_450,h_437/q_auto/f_auto/v1786623813/sam_3davface_irvdlj.png"
+                    alt="Sam"
+                  />
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="1.2em"
+                    height="1.2em"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    style="vertical-align: -0.2em"
+                  >
+                    <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" />
+                    <path d="M15.54 8.46a5 5 0 0 1 0 7.07" />
+                  </svg>
                   <span class="icardtext">Touch your nose.</span>
                 </button>
-                <button class="icardstb phraseCard" onclick="speakPhrase('This is my nose.', 'bd6', 'onza')">
-                  <img class="phraseAvatar" src="https://res.cloudinary.com/dqwm4pdbz/image/upload/c_scale,w_400/q_auto/f_auto/v1786623812/onza_3avface_gyyay8.png" alt="Onza" />
-                  <svg xmlns="http://www.w3.org/2000/svg" width="1.2em" height="1.2em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-0.2em"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/></svg>
+                <button
+                  class="icardstb phraseCard"
+                  onclick="speakPhrase('This is my nose.', 'bd6', 'onza')"
+                >
+                  <img
+                    class="phraseAvatar"
+                    src="https://res.cloudinary.com/dqwm4pdbz/image/upload/c_scale,w_400/q_auto/f_auto/v1786623812/onza_3avface_gyyay8.png"
+                    alt="Onza"
+                  />
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="1.2em"
+                    height="1.2em"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    style="vertical-align: -0.2em"
+                  >
+                    <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" />
+                    <path d="M15.54 8.46a5 5 0 0 1 0 7.07" />
+                  </svg>
                   <span class="icardtextb">This is my nose.</span>
-                  <span class="phraseToyWrap"><img class="phraseToy" src="https://res.cloudinary.com/dp455m4rk/image/upload/c_crop,w_464,h_380,x_464,y_0/v1785941763/ears_nose_tmikep.png" alt="Nose" /></span>
+                  <span class="phraseToyWrap"
+                    ><img
+                      class="phraseToy"
+                      src="https://res.cloudinary.com/dp455m4rk/image/upload/c_crop,w_464,h_380,x_464,y_0/v1785941763/ears_nose_tmikep.png"
+                      alt="Nose"
+                  /></span>
                 </button>
-                <button class="icardst phraseCard" onclick="speakPhrase('Open your mouth.', 'bd7')">
-                  <img class="phraseAvatar" src="https://res.cloudinary.com/dqwm4pdbz/image/upload/c_scale,w_450,h_437/q_auto/f_auto/v1786623813/sam_3davface_irvdlj.png" alt="Sam" />
-                  <svg xmlns="http://www.w3.org/2000/svg" width="1.2em" height="1.2em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-0.2em"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/></svg>
+                <button
+                  class="icardst phraseCard"
+                  onclick="speakPhrase('Open your mouth.', 'bd7')"
+                >
+                  <img
+                    class="phraseAvatar"
+                    src="https://res.cloudinary.com/dqwm4pdbz/image/upload/c_scale,w_450,h_437/q_auto/f_auto/v1786623813/sam_3davface_irvdlj.png"
+                    alt="Sam"
+                  />
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="1.2em"
+                    height="1.2em"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    style="vertical-align: -0.2em"
+                  >
+                    <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" />
+                    <path d="M15.54 8.46a5 5 0 0 1 0 7.07" />
+                  </svg>
                   <span class="icardtext">Open your mouth.</span>
                 </button>
-                <button class="icardstb phraseCard" onclick="speakPhrase('This is my mouth.', 'bd8', 'onza')">
-                  <img class="phraseAvatar" src="https://res.cloudinary.com/dqwm4pdbz/image/upload/c_scale,w_400/q_auto/f_auto/v1786623812/onza_3avface_gyyay8.png" alt="Onza" />
-                  <svg xmlns="http://www.w3.org/2000/svg" width="1.2em" height="1.2em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-0.2em"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/></svg>
+                <button
+                  class="icardstb phraseCard"
+                  onclick="speakPhrase('This is my mouth.', 'bd8', 'onza')"
+                >
+                  <img
+                    class="phraseAvatar"
+                    src="https://res.cloudinary.com/dqwm4pdbz/image/upload/c_scale,w_400/q_auto/f_auto/v1786623812/onza_3avface_gyyay8.png"
+                    alt="Onza"
+                  />
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="1.2em"
+                    height="1.2em"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    style="vertical-align: -0.2em"
+                  >
+                    <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" />
+                    <path d="M15.54 8.46a5 5 0 0 1 0 7.07" />
+                  </svg>
                   <span class="icardtextb">This is my mouth.</span>
-                  <span class="phraseToyWrap"><img class="phraseToy" src="https://res.cloudinary.com/dp455m4rk/image/upload/c_crop,w_464,h_369,x_0,y_0/v1785941763/hands_mouth_flcgyw.png" alt="Mouth" /></span>
+                  <span class="phraseToyWrap"
+                    ><img
+                      class="phraseToy"
+                      src="https://res.cloudinary.com/dp455m4rk/image/upload/c_crop,w_464,h_369,x_0,y_0/v1785941763/hands_mouth_flcgyw.png"
+                      alt="Mouth"
+                  /></span>
                 </button>
-                <button class="icardst phraseCard" onclick="speakPhrase('Show me your hands.', 'bd9')">
-                  <img class="phraseAvatar" src="https://res.cloudinary.com/dqwm4pdbz/image/upload/c_scale,w_450,h_437/q_auto/f_auto/v1786623813/sam_3davface_irvdlj.png" alt="Sam" />
-                  <svg xmlns="http://www.w3.org/2000/svg" width="1.2em" height="1.2em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-0.2em"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/></svg>
+                <button
+                  class="icardst phraseCard"
+                  onclick="speakPhrase('Show me your hands.', 'bd9')"
+                >
+                  <img
+                    class="phraseAvatar"
+                    src="https://res.cloudinary.com/dqwm4pdbz/image/upload/c_scale,w_450,h_437/q_auto/f_auto/v1786623813/sam_3davface_irvdlj.png"
+                    alt="Sam"
+                  />
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="1.2em"
+                    height="1.2em"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    style="vertical-align: -0.2em"
+                  >
+                    <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" />
+                    <path d="M15.54 8.46a5 5 0 0 1 0 7.07" />
+                  </svg>
                   <span class="icardtext">Show me your hands.</span>
                 </button>
-                <button class="icardstb phraseCard" onclick="speakPhrase('These are my hands.', 'bd10', 'onza')">
-                  <img class="phraseAvatar" src="https://res.cloudinary.com/dqwm4pdbz/image/upload/c_scale,w_400/q_auto/f_auto/v1786623812/onza_3avface_gyyay8.png" alt="Onza" />
-                  <svg xmlns="http://www.w3.org/2000/svg" width="1.2em" height="1.2em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-0.2em"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/></svg>
+                <button
+                  class="icardstb phraseCard"
+                  onclick="speakPhrase('These are my hands.', 'bd10', 'onza')"
+                >
+                  <img
+                    class="phraseAvatar"
+                    src="https://res.cloudinary.com/dqwm4pdbz/image/upload/c_scale,w_400/q_auto/f_auto/v1786623812/onza_3avface_gyyay8.png"
+                    alt="Onza"
+                  />
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="1.2em"
+                    height="1.2em"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    style="vertical-align: -0.2em"
+                  >
+                    <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" />
+                    <path d="M15.54 8.46a5 5 0 0 1 0 7.07" />
+                  </svg>
                   <span class="icardtextb">These are my hands.</span>
-                  <span class="phraseToyWrap"><img class="phraseToy" src="https://res.cloudinary.com/dp455m4rk/image/upload/c_crop,w_464,h_369,x_464,y_0/v1785941763/hands_mouth_flcgyw.png" alt="Hands" /></span>
+                  <span class="phraseToyWrap"
+                    ><img
+                      class="phraseToy"
+                      src="https://res.cloudinary.com/dp455m4rk/image/upload/c_crop,w_464,h_369,x_464,y_0/v1785941763/hands_mouth_flcgyw.png"
+                      alt="Hands"
+                  /></span>
                 </button>
               </div>
             </div>
@@ -2136,15 +2943,121 @@
         </div>
       </section>
 
-      <!-- MY BODY: Where Is It? (exercise copy — animals) -->
-      <section class="screen" id="bodyWhereScreen2">
+      <!-- FAMILY: Where Is It? -->
+      <section class="screen" id="family1Screen">
         <div class="content">
-          <h1 class="ribbon" id="bodyWhereTitle2">Where is the…?</h1>
+          <span class="banner">My Family</span>
+          <h1 class="ribbon" id="familyWhereTitle">Where Is...?</h1>
+          <div class="stage">
+            <div class="panel">
+              <div class="roundPips" id="familyWherePips"></div>
+              <div class="gameArea classroom1GameArea">
+                <div class="toyGrid classroom1Grid" id="familyWhereGrid" style="display: none"></div>
+              </div>
+              <button class="choice yes whereStart whereStateRed" id="family1StartBtn" onclick="family1Start()">&#9654; START</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- FAMILY: vocabulary check -->
+      <section class="screen" id="familyIntroScreen">
+        <div class="content">
+          <span class="banner">My Family</span>
+          <h1 class="ribbon">Look And Listen Well.</h1>
+          <div class="stage">
+            <div class="panel">
+              <div class="roundPips" id="familySlotPips"></div>
+              <div class="slotPanel">
+                <div class="slotWindow" onclick="familySlotSpeakAgain()" style="cursor: pointer">
+                  <img class="slotImg" id="familySlotImg" alt="" />
+                  <button class="slotVoiceIcon familySlotReplay" type="button" aria-label="Hear the word again" onclick="event.stopPropagation(); familySlotSpeakAgain()">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="1.4em" height="1.4em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" />
+                      <path d="M15.54 8.46a5 5 0 0 1 0 7.07" />
+                    </svg>
+                  </button>
+                </div>
+                <div class="slotRepeatHint">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="1.1em" height="1.1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" />
+                    <path d="M15.54 8.46a5 5 0 0 1 0 7.07" />
+                  </svg>
+                  <span>Tap the picture to hear it again</span>
+                </div>
+              </div>
+              <div class="slotAnswers">
+                <button class="choice slotAnswer slotYes" onclick="familySlotAnswer('yes')">YES</button>
+                <button class="choice slotAnswer slotNot" onclick="familySlotAnswer('not-family')">NOT FAMILY</button>
+                <button class="choice slotAnswer slotNo" onclick="familySlotAnswer('no')">NO</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- CLASSROOM OBJECTS: Where Is It? -->
+      <section class="screen" id="classroom1Screen">
+        <div class="content">
+          <span class="banner">My Classroom</span>
+          <h1 class="ribbon" id="bodyWhereTitle2">Where Is...?</h1>
           <div class="stage">
             <div class="panel">
               <div class="roundPips" id="bodyWherePips2"></div>
-              <div class="gameArea">
-                <div class="toyGrid" id="bodyWhereGrid2"></div>
+              <div class="gameArea classroom1GameArea">
+                <div
+                  class="toyGrid classroom1Grid"
+                  id="bodyWhereGrid2"
+                  style="display: none"
+                ></div>
+              </div>
+              <button
+                class="choice yes"
+                id="classroom1StartBtn"
+                onclick="classroom1Start()"
+              >
+                &#9654; START
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- CLASSROOM OBJECTS: vocabulary check -->
+      <section class="screen" id="classroomIntroScreen">
+        <div class="content">
+          <span class="banner">My Classroom</span>
+          <h1 class="ribbon">Look And Listen Well.</h1>
+          <div class="stage">
+            <div class="panel">
+              <div class="roundPips" id="classroomSlotPips"></div>
+              <div class="slotPanel">
+                <div class="slotWindow" onclick="classroomSlotSpeakAgain()" style="cursor: pointer">
+                  <img class="slotImg" id="classroomSlotImg" alt="" />
+                  <button
+                    class="slotVoiceIcon classroomSlotReplay"
+                    type="button"
+                    aria-label="Hear the word again"
+                    onclick="event.stopPropagation(); classroomSlotSpeakAgain()"
+                  >
+                    <svg xmlns="http://www.w3.org/2000/svg" width="1.4em" height="1.4em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" />
+                      <path d="M15.54 8.46a5 5 0 0 1 0 7.07" />
+                    </svg>
+                  </button>
+                </div>
+                <div class="slotRepeatHint">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="1.1em" height="1.1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" />
+                    <path d="M15.54 8.46a5 5 0 0 1 0 7.07" />
+                  </svg>
+                  <span>Tap the picture to hear it again</span>
+                </div>
+              </div>
+              <div class="slotAnswers">
+                <button class="choice slotAnswer slotYes" onclick="classroomSlotAnswer('yes')">YES</button>
+                <button class="choice slotAnswer slotNot" onclick="classroomSlotAnswer('not-a-classroom-object')">NOT A CLASSROOM OBJECT</button>
+                <button class="choice slotAnswer slotNo" onclick="classroomSlotAnswer('no')">NO</button>
               </div>
             </div>
           </div>
@@ -2159,17 +3072,49 @@
             <div class="panel">
               <div class="roundPips" id="animalSlotPips"></div>
               <div class="slotPanel">
-                <div class="slotWindow" onclick="animalSlotSpeakAgain()" style="cursor:pointer">
+                <div
+                  class="slotWindow"
+                  onclick="animalSlotSpeakAgain()"
+                  style="cursor: pointer"
+                >
                   <img class="slotImg" id="animalSlotImg" alt="" />
                   <span class="slotVoiceIcon">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="1.4em" height="1.4em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/></svg>
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="1.4em"
+                      height="1.4em"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    >
+                      <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" />
+                      <path d="M15.54 8.46a5 5 0 0 1 0 7.07" />
+                    </svg>
                   </span>
                 </div>
               </div>
               <div class="slotAnswers">
-                <button class="choice slotAnswer slotYes" onclick="animalSlotAnswer('yes')">YES</button>
-                <button class="choice slotAnswer slotNot" onclick="animalSlotAnswer('not-an-animal')">NOT AN ANIMAL</button>
-                <button class="choice slotAnswer slotNo" onclick="animalSlotAnswer('no')">NO</button>
+                <button
+                  class="choice slotAnswer slotYes"
+                  onclick="animalSlotAnswer('yes')"
+                >
+                  YES
+                </button>
+                <button
+                  class="choice slotAnswer slotNot"
+                  onclick="animalSlotAnswer('not-an-animal')"
+                >
+                  NOT AN ANIMAL
+                </button>
+                <button
+                  class="choice slotAnswer slotNo"
+                  onclick="animalSlotAnswer('no')"
+                >
+                  NO
+                </button>
               </div>
             </div>
           </div>
@@ -2322,7 +3267,7 @@
                       src="https://res.cloudinary.com/dp455m4rk/image/upload/c_crop,w_469,h_384,x_0,y_384/r_max/v1786050302/A-F_yhrs9s.png"
                       alt="dog"
                     />
-                      <svg
+                    <svg
                       class="phraseToyIcon"
                       xmlns="http://www.w3.org/2000/svg"
                       viewBox="0 0 24 24"
@@ -2332,7 +3277,9 @@
                       stroke-linecap="round"
                       stroke-linejoin="round"
                     >
-                      <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z" />
+                      <path
+                        d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"
+                      />
                     </svg>
                   </span>
                 </button>
@@ -2367,7 +3314,7 @@
                       src="https://res.cloudinary.com/dp455m4rk/image/upload/c_crop,w_469,h_384,x_0,y_384/r_max/v1786050302/A-F_yhrs9s.png"
                       alt="dog"
                     />
-                      <svg
+                    <svg
                       class="phraseToyIcon"
                       xmlns="http://www.w3.org/2000/svg"
                       viewBox="0 0 24 24"
@@ -2377,7 +3324,9 @@
                       stroke-linecap="round"
                       stroke-linejoin="round"
                     >
-                      <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z" />
+                      <path
+                        d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"
+                      />
                     </svg>
                   </span>
                 </button>
@@ -2412,7 +3361,7 @@
                       src="https://res.cloudinary.com/dp455m4rk/image/upload/c_crop,w_469,h_384,x_938,y_0/r_max/v1786050302/A-F_yhrs9s.png"
                       alt="cat"
                     />
-                      <svg
+                    <svg
                       class="phraseToyIcon"
                       xmlns="http://www.w3.org/2000/svg"
                       viewBox="0 0 24 24"
@@ -2422,7 +3371,9 @@
                       stroke-linecap="round"
                       stroke-linejoin="round"
                     >
-                      <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z" />
+                      <path
+                        d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"
+                      />
                     </svg>
                   </span>
                 </button>
@@ -2467,8 +3418,12 @@
                       stroke-linecap="round"
                       stroke-linejoin="round"
                     >
-                      <path d="M10.5 4.893a5.5 5.5 0 0 1 1.091.931.56.56 0 0 0 .818 0A5.49 5.49 0 0 1 22 9.5c0 1.872-1.002 3.356-2.187 4.655" />
-                      <path d="m16.967 16.967-3.459 3.346a2 2 0 0 1-3 .019L5 15c-1.5-1.5-3-3.2-3-5.5a5.5 5.5 0 0 1 2.747-4.761" />
+                      <path
+                        d="M10.5 4.893a5.5 5.5 0 0 1 1.091.931.56.56 0 0 0 .818 0A5.49 5.49 0 0 1 22 9.5c0 1.872-1.002 3.356-2.187 4.655"
+                      />
+                      <path
+                        d="m16.967 16.967-3.459 3.346a2 2 0 0 1-3 .019L5 15c-1.5-1.5-3-3.2-3-5.5a5.5 5.5 0 0 1 2.747-4.761"
+                      />
                       <path d="m2 2 20 20" />
                     </svg>
                   </span>
@@ -2488,7 +3443,11 @@
               <div class="roundPips" id="likePips"></div>
               <div class="gameArea">
                 <div class="likeStage">
-                  <div class="likeHeader" id="likeSamHeader" style="display: none">
+                  <div
+                    class="likeHeader"
+                    id="likeSamHeader"
+                    style="display: none"
+                  >
                     <img
                       class="ynAvatar"
                       src="https://res.cloudinary.com/dqwm4pdbz/image/upload/c_scale,w_450,h_437/q_auto/f_auto/v1786623813/sam_3davface_irvdlj.png"
@@ -2505,8 +3464,15 @@
                     <span class="ynName">Onza</span>
                   </div>
                   <div class="likeSides">
-                    <div class="likeSide" id="likeSamLike" style="display: none">
-                      <button class="likeHeart" onclick="likePress('sam', 'like')">
+                    <div
+                      class="likeSide"
+                      id="likeSamLike"
+                      style="display: none"
+                    >
+                      <button
+                        class="likeHeart"
+                        onclick="likePress('sam', 'like')"
+                      >
                         <svg
                           class="likeHeartIcon"
                           xmlns="http://www.w3.org/2000/svg"
@@ -2517,7 +3483,9 @@
                           stroke-linecap="round"
                           stroke-linejoin="round"
                         >
-                          <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z" />
+                          <path
+                            d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"
+                          />
                         </svg>
                       </button>
                       <div class="ynToys">
@@ -2534,7 +3502,10 @@
                       </div>
                     </div>
                     <div class="likeSide" id="likeOnzaLike">
-                      <button class="likeHeart" onclick="likePress('onza', 'like')">
+                      <button
+                        class="likeHeart"
+                        onclick="likePress('onza', 'like')"
+                      >
                         <svg
                           class="likeHeartIcon"
                           xmlns="http://www.w3.org/2000/svg"
@@ -2545,7 +3516,9 @@
                           stroke-linecap="round"
                           stroke-linejoin="round"
                         >
-                          <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z" />
+                          <path
+                            d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"
+                          />
                         </svg>
                       </button>
                       <div class="ynToys">
@@ -2567,7 +3540,10 @@
                       </button>
                     </div>
                     <div class="likeSide" id="likeOnzaDislike">
-                      <button class="likeHeart" onclick="likePress('onza', 'dislike')">
+                      <button
+                        class="likeHeart"
+                        onclick="likePress('onza', 'dislike')"
+                      >
                         <svg
                           class="likeHeartIcon"
                           xmlns="http://www.w3.org/2000/svg"
@@ -2578,8 +3554,12 @@
                           stroke-linecap="round"
                           stroke-linejoin="round"
                         >
-                          <path d="M10.5 4.893a5.5 5.5 0 0 1 1.091.931.56.56 0 0 0 .818 0A5.49 5.49 0 0 1 22 9.5c0 1.872-1.002 3.356-2.187 4.655" />
-                          <path d="m16.967 16.967-3.459 3.346a2 2 0 0 1-3 .019L5 15c-1.5-1.5-3-3.2-3-5.5a5.5 5.5 0 0 1 2.747-4.761" />
+                          <path
+                            d="M10.5 4.893a5.5 5.5 0 0 1 1.091.931.56.56 0 0 0 .818 0A5.49 5.49 0 0 1 22 9.5c0 1.872-1.002 3.356-2.187 4.655"
+                          />
+                          <path
+                            d="m16.967 16.967-3.459 3.346a2 2 0 0 1-3 .019L5 15c-1.5-1.5-3-3.2-3-5.5a5.5 5.5 0 0 1 2.747-4.761"
+                          />
                           <path d="m2 2 20 20" />
                         </svg>
                       </button>
@@ -2596,8 +3576,15 @@
                         />
                       </div>
                     </div>
-                    <div class="likeSide" id="likeSamDislike" style="display: none">
-                      <button class="likeHeart" onclick="likePress('sam', 'dislike')">
+                    <div
+                      class="likeSide"
+                      id="likeSamDislike"
+                      style="display: none"
+                    >
+                      <button
+                        class="likeHeart"
+                        onclick="likePress('sam', 'dislike')"
+                      >
                         <svg
                           class="likeHeartIcon"
                           xmlns="http://www.w3.org/2000/svg"
@@ -2608,8 +3595,12 @@
                           stroke-linecap="round"
                           stroke-linejoin="round"
                         >
-                          <path d="M10.5 4.893a5.5 5.5 0 0 1 1.091.931.56.56 0 0 0 .818 0A5.49 5.49 0 0 1 22 9.5c0 1.872-1.002 3.356-2.187 4.655" />
-                          <path d="m16.967 16.967-3.459 3.346a2 2 0 0 1-3 .019L5 15c-1.5-1.5-3-3.2-3-5.5a5.5 5.5 0 0 1 2.747-4.761" />
+                          <path
+                            d="M10.5 4.893a5.5 5.5 0 0 1 1.091.931.56.56 0 0 0 .818 0A5.49 5.49 0 0 1 22 9.5c0 1.872-1.002 3.356-2.187 4.655"
+                          />
+                          <path
+                            d="m16.967 16.967-3.459 3.346a2 2 0 0 1-3 .019L5 15c-1.5-1.5-3-3.2-3-5.5a5.5 5.5 0 0 1 2.747-4.761"
+                          />
                           <path d="m2 2 20 20" />
                         </svg>
                       </button>
@@ -2691,17 +3682,49 @@
             <div class="panel">
               <div class="roundPips" id="slotPips"></div>
               <div class="slotPanel">
-                <div class="slotWindow" onclick="toysSlotSpeakAgain()" style="cursor:pointer">
+                <div
+                  class="slotWindow"
+                  onclick="toysSlotSpeakAgain()"
+                  style="cursor: pointer"
+                >
                   <img class="slotImg" id="toysSlotImg" alt="" />
                   <span class="slotVoiceIcon">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="1.4em" height="1.4em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/></svg>
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="1.4em"
+                      height="1.4em"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    >
+                      <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" />
+                      <path d="M15.54 8.46a5 5 0 0 1 0 7.07" />
+                    </svg>
                   </span>
                 </div>
               </div>
               <div class="slotAnswers">
-                <button class="choice slotAnswer slotYes" onclick="toysSlotAnswer('yes')">YES</button>
-                <button class="choice slotAnswer slotNot" onclick="toysSlotAnswer('not-a-toy')">NOT A TOY</button>
-                <button class="choice slotAnswer slotNo" onclick="toysSlotAnswer('no')">NO</button>
+                <button
+                  class="choice slotAnswer slotYes"
+                  onclick="toysSlotAnswer('yes')"
+                >
+                  YES
+                </button>
+                <button
+                  class="choice slotAnswer slotNot"
+                  onclick="toysSlotAnswer('not-a-toy')"
+                >
+                  NOT A TOY
+                </button>
+                <button
+                  class="choice slotAnswer slotNo"
+                  onclick="toysSlotAnswer('no')"
+                >
+                  NO
+                </button>
               </div>
             </div>
           </div>
@@ -3121,7 +4144,9 @@
                 </button>
                 <button
                   class="icardstb phraseCard"
-                  onclick="speakPhrase('No. I don\'t have a robot.', 'yn4', 'onza')"
+                  onclick="
+                    speakPhrase('No. I don\'t have a robot.', 'yn4', 'onza')
+                  "
                 >
                   <img
                     class="phraseAvatar"
@@ -3253,7 +4278,13 @@
                 </button>
                 <button
                   class="icardstb phraseCard"
-                  onclick="speakPhrase('No. I don\'t have a teddy bear.', 'yn8', 'onza')"
+                  onclick="
+                    speakPhrase(
+                      'No. I don\'t have a teddy bear.',
+                      'yn8',
+                      'onza',
+                    )
+                  "
                 >
                   <img
                     class="phraseAvatar"
@@ -3385,7 +4416,9 @@
                 </button>
                 <button
                   class="icardstb phraseCard"
-                  onclick="speakPhrase('No. I don\'t have a rocket.', 'yn12', 'onza')"
+                  onclick="
+                    speakPhrase('No. I don\'t have a rocket.', 'yn12', 'onza')
+                  "
                 >
                   <img
                     class="phraseAvatar"
@@ -3698,8 +4731,6 @@
         </div>
       </section>
       <div id="wordSlides"></div>
-
-
     </div>
 
     <script src="config.js"></script>
@@ -4005,6 +5036,14 @@
           clearTimeout(animalSlotTimer);
           animalSlotTimer = null;
         }
+        if (typeof classroomSlotTimer !== "undefined" && classroomSlotTimer) {
+          clearTimeout(classroomSlotTimer);
+          classroomSlotTimer = null;
+        }
+        if (typeof familySlotTimer !== "undefined" && familySlotTimer) {
+          clearTimeout(familySlotTimer);
+          familySlotTimer = null;
+        }
         if (screens[idx].id === "animalsIntroScreen") animalSlotReset();
         else if (screens[idx].id === "animalsWhereScreen") animalWhereReset();
         else if (screens[idx].id === "toysChipsScreen") chipsReset();
@@ -4015,7 +5054,10 @@
         else if (screens[idx].id === "toysWhereScreen") whereReset();
         else if (screens[idx].id === "likeDislikeScreen") likeReset();
         else if (screens[idx].id === "bodyWhereScreen") bodyWhereReset();
-        else if (screens[idx].id === "bodyWhereScreen2") bodyWhere2Reset();
+        else if (screens[idx].id === "family1Screen") familyWhereReset();
+        else if (screens[idx].id === "familyIntroScreen") familySlotReset();
+        else if (screens[idx].id === "classroom1Screen") bodyWhere2Reset();
+        else if (screens[idx].id === "classroomIntroScreen") classroomSlotReset();
         if (screens[idx].id === "resultsScreen") {
           showRewards();
         }
@@ -4099,16 +5141,20 @@
         if (!soundOn) return;
         if (window.tizen && window.tizen.tts) {
           try {
-            tizen.tts.speak(String(text), {
-              locale: "en-US",
-              rate: 0.85,
-              pitch: 1.0,
-              type: "TTS_TYPE_SCREEN_READER",
-            }, {
-              onfinish: function () {
-                flushReveal();
-              }
-            });
+            tizen.tts.speak(
+              String(text),
+              {
+                locale: "en-US",
+                rate: 0.85,
+                pitch: 1.0,
+                type: "TTS_TYPE_SCREEN_READER",
+              },
+              {
+                onfinish: function () {
+                  flushReveal();
+                },
+              },
+            );
             return;
           } catch (e) {}
         }
@@ -4325,7 +5371,6 @@
           cb(val);
         }
       }
-
 
       function burst(el) {
         var r = document.getElementById("reward");
@@ -5016,7 +6061,7 @@
             n +
             '" data-size="small" onclick="chipsAnswer(\'small\',\'' +
             n +
-            '\')">' +
+            "')\">" +
             '<img class="small" src="' +
             toyImg(n) +
             '" alt="' +
@@ -5029,7 +6074,7 @@
             n +
             '" data-size="big" onclick="chipsAnswer(\'big\',\'' +
             n +
-            '\')">' +
+            "')\">" +
             '<img class="big" src="' +
             toyImg(n) +
             '" alt="' +
@@ -5202,7 +6247,11 @@
         }
         setHeadline(
           "ynTitle",
-          "Do You Have " + toyCap(ynArticle(r.name)) + " " + toyCap(r.name) + "?",
+          "Do You Have " +
+            toyCap(ynArticle(r.name)) +
+            " " +
+            toyCap(r.name) +
+            "?",
         );
         ynSetOwner(r);
         ynTries = 0;
@@ -5309,7 +6358,11 @@
         }
         setHeadline(
           "yn2Title",
-          "Do You Have " + toyCap(ynArticle(r.name)) + " " + toyCap(r.name) + "?",
+          "Do You Have " +
+            toyCap(ynArticle(r.name)) +
+            " " +
+            toyCap(r.name) +
+            "?",
         );
         ynSetOwner2(r);
         yn2Tries = 0;
@@ -5408,10 +6461,10 @@
         var showSam = r.who === "sam";
         var showOnza = r.who === "onza";
         var sides = {
-          "likeSamLike": showSam,
-          "likeSamDislike": showSam,
-          "likeOnzaLike": showOnza,
-          "likeOnzaDislike": showOnza,
+          likeSamLike: showSam,
+          likeSamDislike: showSam,
+          likeOnzaLike: showOnza,
+          likeOnzaDislike: showOnza,
         };
         for (var id in sides) {
           var el = document.getElementById(id);
@@ -5664,7 +6717,10 @@
       }
       function whereStart() {
         if (whereIdx >= whereOrder.length) return;
-        setHeadline("whereTitle", "Where is the " + toyCap(whereOrder[whereIdx]) + "?");
+        setHeadline(
+          "whereTitle",
+          "Where is the " + toyCap(whereOrder[whereIdx]) + "?",
+        );
         whereTries = 0;
         setPips("wherePips", whereResults, whereIdx);
         whereBuildGrid();
@@ -5754,7 +6810,10 @@
       }
       function animalWhereStart() {
         if (animalWhereIdx >= animalWhereOrder.length) return;
-        setHeadline("animalWhereTitle", "Where is the " + toyCap(animalWhereOrder[animalWhereIdx]) + "?");
+        setHeadline(
+          "animalWhereTitle",
+          "Where is the " + toyCap(animalWhereOrder[animalWhereIdx]) + "?",
+        );
         animalWhereTries = 0;
         setPips("animalWherePips", animalWhereResults, animalWhereIdx);
         animalWhereBuildGrid();
@@ -5805,7 +6864,7 @@
         var adv = document.getElementById("bodyVideoAdvance");
         if (!vid || !fill) return;
         if (vid.duration) {
-          fill.style.width = (vid.currentTime / vid.duration * 100) + "%";
+          fill.style.width = (vid.currentTime / vid.duration) * 100 + "%";
         }
       }
       function bodyVideoEnd() {
@@ -5823,12 +6882,30 @@
 
       /* ── MY BODY: Vocabulary ── */
       var BODY_WORDS = [
-        { name: "head", img: "https://res.cloudinary.com/dp455m4rk/image/upload/c_crop,w_464,h_385,x_0,y_0/v1785941763/head_eyes_yi7oro.png" },
-        { name: "eyes", img: "https://res.cloudinary.com/dp455m4rk/image/upload/c_crop,w_464,h_385,x_464,y_0/v1785941763/head_eyes_yi7oro.png" },
-        { name: "ears", img: "https://res.cloudinary.com/dp455m4rk/image/upload/c_crop,w_464,h_380,x_0,y_0/v1785941763/ears_nose_tmikep.png" },
-        { name: "nose", img: "https://res.cloudinary.com/dp455m4rk/image/upload/c_crop,w_464,h_380,x_464,y_0/v1785941763/ears_nose_tmikep.png" },
-        { name: "mouth", img: "https://res.cloudinary.com/dp455m4rk/image/upload/c_crop,w_464,h_369,x_0,y_0/v1785941763/hands_mouth_flcgyw.png" },
-        { name: "hands", img: "https://res.cloudinary.com/dp455m4rk/image/upload/c_crop,w_464,h_369,x_464,y_0/v1785941763/hands_mouth_flcgyw.png" }
+        {
+          name: "head",
+          img: "https://res.cloudinary.com/dp455m4rk/image/upload/c_crop,w_464,h_385,x_0,y_0/v1785941763/head_eyes_yi7oro.png",
+        },
+        {
+          name: "eyes",
+          img: "https://res.cloudinary.com/dp455m4rk/image/upload/c_crop,w_464,h_385,x_464,y_0/v1785941763/head_eyes_yi7oro.png",
+        },
+        {
+          name: "ears",
+          img: "https://res.cloudinary.com/dp455m4rk/image/upload/c_crop,w_464,h_380,x_0,y_0/v1785941763/ears_nose_tmikep.png",
+        },
+        {
+          name: "nose",
+          img: "https://res.cloudinary.com/dp455m4rk/image/upload/c_crop,w_464,h_380,x_464,y_0/v1785941763/ears_nose_tmikep.png",
+        },
+        {
+          name: "mouth",
+          img: "https://res.cloudinary.com/dp455m4rk/image/upload/c_crop,w_464,h_369,x_0,y_0/v1785941763/hands_mouth_flcgyw.png",
+        },
+        {
+          name: "hands",
+          img: "https://res.cloudinary.com/dp455m4rk/image/upload/c_crop,w_464,h_369,x_464,y_0/v1785941763/hands_mouth_flcgyw.png",
+        },
       ];
       function bodySpeak(word) {
         say(word);
@@ -5854,7 +6931,9 @@
       var bodyWhereTries = 0;
 
       function bodyWhereReset() {
-        bodyWhereOrder = BODY_WORDS.slice().sort(function () { return Math.random() - 0.5; });
+        bodyWhereOrder = BODY_WORDS.slice().sort(function () {
+          return Math.random() - 0.5;
+        });
         bodyWhereIdx = 0;
         bodyWhereResults = [];
         bodyWhereTries = 0;
@@ -5873,20 +6952,33 @@
         var w = bodyWhereOrder[bodyWhereIdx];
         var isPlural = w.name.slice(-1) === "s";
         var nameCap = w.name.charAt(0).toUpperCase() + w.name.slice(1);
-        title.textContent = "Where " + (isPlural ? "are" : "is") + " the " + nameCap + "?";
+        title.textContent =
+          "Where " + (isPlural ? "are" : "is") + " the " + nameCap + "?";
         bodyWhereTries = 0;
         pipHost.innerHTML = "";
         for (var p = 0; p < bodyWhereOrder.length; p++) {
           var d = document.createElement("div");
-          d.className = "pip" + (p < bodyWhereIdx ? " done" : p === bodyWhereIdx ? " active" : "");
+          d.className =
+            "pip" +
+            (p < bodyWhereIdx ? " done" : p === bodyWhereIdx ? " active" : "");
           pipHost.appendChild(d);
         }
-        var shuffled = BODY_WORDS.slice().sort(function () { return Math.random() - 0.5; });
+        var shuffled = BODY_WORDS.slice().sort(function () {
+          return Math.random() - 0.5;
+        });
         grid.innerHTML = "";
         shuffled.forEach(function (item) {
           var btn = document.createElement("button");
           btn.className = "bodyBtn";
-          btn.innerHTML = '<img src="' + item.img + '" alt="' + item.name + '" /><span>' + item.name.charAt(0).toUpperCase() + item.name.slice(1) + '</span>';
+          btn.innerHTML =
+            '<img src="' +
+            item.img +
+            '" alt="' +
+            item.name +
+            '" /><span>' +
+            item.name.charAt(0).toUpperCase() +
+            item.name.slice(1) +
+            "</span>";
           btn.onclick = function () {
             if (item.name === w.name) {
               bodyWhereResults.push(bodyWhereTries === 0 ? "good" : "mediocre");
@@ -5913,21 +7005,384 @@
         if (title) title.textContent = "Well done!";
         if (pipHost) pipHost.innerHTML = "";
         if (grid) {
-          grid.innerHTML = '<button class="choice yes" onclick="show(screenIndexById(\'bodyVocabScreen\'))">&#9654; PLAY AGAIN</button>';
+          grid.innerHTML =
+            '<button class="choice yes" onclick="show(screenIndexById(\'bodyVocabScreen\'))">&#9654; PLAY AGAIN</button>';
         }
-        var pts = bodyWhereResults.filter(function (r) { return r === "good"; }).length;
+        var pts = bodyWhereResults.filter(function (r) {
+          return r === "good";
+        }).length;
         addPoints(pts);
+      }
+
+      /* ── MY FAMILY ── */
+      var FAMILY = [
+        { name: "sister", img: "https://res.cloudinary.com/dp455m4rk/image/upload/c_crop,w_352,h_504,x_0,y_464/v1786204719/260808_family_2x3f_01_qtm9bo.png" },
+        { name: "brother", img: "https://res.cloudinary.com/dp455m4rk/image/upload/c_crop,w_352,h_504,x_352,y_464/v1786204719/260808_family_2x3f_01_qtm9bo.png" },
+        { name: "baby", img: "https://res.cloudinary.com/dp455m4rk/image/upload/c_crop,w_352,h_504,x_704,y_464/v1786204719/260808_family_2x3f_01_qtm9bo.png" },
+        { name: "family", img: "https://res.cloudinary.com/dp455m4rk/image/upload/c_crop,w_528,h_504,x_0,y_0/v1786204719/260808_family_2x3f_01_qtm9bo.png" },
+        { name: "mom and dad", img: "https://res.cloudinary.com/dp455m4rk/image/upload/c_crop,w_528,h_504,x_528,y_0/v1786204719/260808_family_2x3f_01_qtm9bo.png" },
+      ];
+      var FAMILY_NON_MEMBERS = [
+        { name: "friend", img: "https://res.cloudinary.com/dqwm4pdbz/image/upload/c_crop,w_688,h_768,x_0,y_0/v1786716782/260812_nimza_friends_01_g8jci2.jpg" },
+        { name: "teacher", img: "https://res.cloudinary.com/dqwm4pdbz/image/upload/c_crop,w_688,h_768,x_688,y_0/v1786716782/260812_nimza_friends_01_g8jci2.jpg" },
+      ];
+
+      var familyWhereOrder = [];
+      var familyWhereIdx = 0;
+      var familyWhereResults = [];
+      var familyWhereTries = 0;
+      var familyWhereRewarded = false;
+      function familyCap(name) {
+        return name.replace(/\b\w/g, function (letter) { return letter.toUpperCase(); });
+      }
+      function familyWherePrompt(name) {
+        return name === "mom and dad" ? "Where Are Mom And Dad?" : "Where Is the " + name + "?";
+      }
+      function familyWhereReset() {
+        familyWhereOrder = FAMILY.slice();
+        while (familyWhereOrder.length < 8) {
+          familyWhereOrder.push(
+            FAMILY[Math.floor(Math.random() * FAMILY.length)],
+          );
+        }
+        for (var i = familyWhereOrder.length - 1; i > 0; i--) {
+          var j = Math.floor(Math.random() * (i + 1));
+          var temp = familyWhereOrder[i];
+          familyWhereOrder[i] = familyWhereOrder[j];
+          familyWhereOrder[j] = temp;
+        }
+        familyWhereIdx = 0;
+        familyWhereResults = [];
+        familyWhereTries = 0;
+        buildPips("familyWherePips", familyWhereOrder.length);
+        var grid = document.getElementById("familyWhereGrid");
+        var startBtn = document.getElementById("family1StartBtn");
+        var title = document.getElementById("familyWhereTitle");
+        if (grid) { grid.innerHTML = ""; grid.style.display = "none"; }
+        if (startBtn) startBtn.style.display = "inline-flex";
+        if (title) title.textContent = "Where Is...?";
+      }
+      function family1Start() {
+        var grid = document.getElementById("familyWhereGrid");
+        if (grid && grid.style.display !== "none") return;
+        if (grid) grid.style.display = "";
+        familyWhereRender();
+      }
+      function familyWhereRender() {
+        var grid = document.getElementById("familyWhereGrid");
+        var title = document.getElementById("familyWhereTitle");
+        if (!grid || !title) return;
+        if (familyWhereIdx >= familyWhereOrder.length) { familyWhereDone(); return; }
+        var target = familyWhereOrder[familyWhereIdx];
+        familyWhereTries = 0;
+        title.textContent = familyWherePrompt(target.name);
+        setPips("familyWherePips", familyWhereResults, familyWhereIdx);
+        var shuffled = FAMILY.slice();
+        for (var i = shuffled.length - 1; i > 0; i--) {
+          var j = Math.floor(Math.random() * (i + 1));
+          var temp = shuffled[i];
+          shuffled[i] = shuffled[j];
+          shuffled[j] = temp;
+        }
+        grid.innerHTML = "";
+        shuffled.forEach(function (item, itemIdx) {
+          var button = document.createElement("button");
+          button.className = "toyBtn";
+          var img = document.createElement("img");
+          img.className = "toyImg";
+          img.src = item.img;
+          img.alt = familyCap(item.name);
+          button.appendChild(img);
+          button.onclick = function () {
+            (itemIdx % 2 === 0 ? say : sayOther)(item.name);
+            if (item.name === target.name) {
+              familyWhereResults.push(familyWhereTries === 0 ? "good" : "mediocre");
+              toast(familyCap(target.name) + " — WELL DONE!");
+              familyWhereIdx++;
+              setTimeout(familyWhereRender, 1000);
+            } else {
+              familyWhereTries++;
+              toast(familyCap(target.name) + " — NO");
+              button.style.opacity = "0.4";
+              button.style.pointerEvents = "none";
+            }
+          };
+          grid.appendChild(button);
+        });
+        (familyWhereIdx % 2 === 0 ? say : sayOther)(familyWherePrompt(target.name));
+      }
+      function familyWhereDone() {
+        var grid = document.getElementById("familyWhereGrid");
+        var title = document.getElementById("familyWhereTitle");
+        var pips = document.getElementById("familyWherePips");
+        var startBtn = document.getElementById("family1StartBtn");
+        if (title) title.textContent = "";
+        if (pips) pips.innerHTML = "";
+        if (startBtn) startBtn.style.display = "none";
+        if (grid) {
+          grid.removeAttribute("style");
+          grid.innerHTML = '<div style="grid-column:1/-1;text-align:center;"><p style="font-size:clamp(1.4rem,2.6vw,2.6rem);font-weight:900;margin:0.6em 0;">Well Done!</p><button class="choice yes" id="familyWherePlayBtn">&#9654; PLAY AGAIN</button></div>';
+          var button = document.getElementById("familyWherePlayBtn");
+          if (button) button.onclick = function () { show(screenIndexById("family1Screen")); };
+        }
+        if (!familyWhereRewarded && qualifies(familyWhereResults)) {
+          familyWhereRewarded = true;
+          reward("MY FAMILY! +1 ⭐");
+        }
+      }
+
+      var familySlotPool = [];
+      var familySlotTimer = null;
+      var familySlotCurrent = null;
+      var familySlotIsNonMember = false;
+      var familySlotWord = "";
+      var familySlotResults = [];
+      var familySlotIdx = 0;
+      var familySlotTotal = 10;
+      var familySlotRewarded = false;
+      function familySlotBuildPool() {
+        var pool = FAMILY.slice();
+        var nonMember = FAMILY_NON_MEMBERS[Math.floor(Math.random() * FAMILY_NON_MEMBERS.length)];
+        pool.push({ name: nonMember.name, img: nonMember.img, isNonMember: true });
+        return pool;
+      }
+      function familySlotAllNames() {
+        var names = [];
+        for (var i = 0; i < FAMILY.length; i++) names.push(FAMILY[i].name);
+        for (var j = 0; j < FAMILY_NON_MEMBERS.length; j++) names.push(FAMILY_NON_MEMBERS[j].name);
+        return names;
+      }
+      function familySlotPickWrong(name) {
+        var names = familySlotAllNames().filter(function (candidate) { return candidate !== name; });
+        return names[Math.floor(Math.random() * names.length)];
+      }
+      function familySlotSpeak(name) {
+        (familySlotIdx % 2 === 0 ? say : sayOther)(name);
+      }
+      function familySlotSpin() {
+        if (familySlotTimer || familySlotIdx >= familySlotTotal) return;
+        familySlotPool = familySlotBuildPool();
+        familySlotCurrent = null;
+        familySlotIsNonMember = false;
+        var img = document.getElementById("familySlotImg");
+        if (!img) return;
+        var target = familySlotPool[Math.floor(Math.random() * familySlotPool.length)];
+        var spinIdx = Math.floor(Math.random() * familySlotPool.length);
+        var start = Date.now();
+        var duration = 2400 + Math.random() * 800;
+        function tick() {
+          var elapsed = Date.now() - start;
+          if (elapsed >= duration) {
+            familySlotTimer = null;
+            img.src = target.img;
+            img.alt = target.name;
+            familySlotCurrent = target;
+            familySlotIsNonMember = !!target.isNonMember;
+            familySlotWord = familySlotIsNonMember ? familySlotPickWrong(target.name) : Math.random() < 0.6 ? target.name : familySlotPickWrong(target.name);
+            setTimeout(function () { familySlotSpeak(familySlotWord); }, 300);
+            return;
+          }
+          img.src = familySlotPool[spinIdx].img;
+          img.alt = familySlotPool[spinIdx].name;
+          var remain = duration - elapsed;
+          var delay = 40 + (1 - remain / duration) * 260;
+          spinIdx = (spinIdx + 1) % familySlotPool.length;
+          familySlotTimer = window.setTimeout(tick, Math.max(30, delay));
+        }
+        familySlotTimer = window.setTimeout(tick, 60);
+      }
+      function familySlotSpeakAgain() {
+        if (familySlotTimer || !familySlotCurrent) return;
+        familySlotSpeak(familySlotWord);
+      }
+      function familySlotReset() {
+        familySlotResults = [];
+        familySlotIdx = 0;
+        buildPips("familySlotPips", familySlotTotal);
+        setPips("familySlotPips", familySlotResults, familySlotIdx);
+        familySlotSpin();
+      }
+      function familySlotAnswer(answer) {
+        if (familySlotTimer || !familySlotCurrent || familySlotIdx >= familySlotTotal) return;
+        var truth = familySlotIsNonMember ? "not-family" : familySlotWord === familySlotCurrent.name ? "yes" : "no";
+        var won = answer === truth;
+        familySlotResults.push(won ? "good" : "bad");
+        setPips("familySlotPips", familySlotResults, familySlotIdx);
+        toast(won ? "WELL DONE!" : "Try again!");
+        familySlotIdx++;
+        if (familySlotIdx >= familySlotTotal) {
+          var greens = familySlotResults.filter(function (result) { return result === "good"; }).length;
+          if (greens >= 8 && !familySlotRewarded) {
+            familySlotRewarded = true;
+            reward("MY FAMILY! +1 ⭐");
+          }
+          return;
+        }
+        setTimeout(familySlotSpin, 1200);
       }
 
       /* ── MY CLASSROOM: Where Is It? ── */
       var CLASSROOM = [
-        { name: "book", img: "https://res.cloudinary.com/dqwm4pdbz/image/upload/c_crop,w_421,h_424,x_0,y_0/v1787085441/classroom_ogqnzw.png" },
-        { name: "pencil", img: "https://res.cloudinary.com/dqwm4pdbz/image/upload/c_crop,w_421,h_424,x_421,y_0/v1787085441/classroom_ogqnzw.png" },
-        { name: "bag", img: "https://res.cloudinary.com/dqwm4pdbz/image/upload/c_crop,w_421,h_424,x_842,y_0/v1787085441/classroom_ogqnzw.png" },
-        { name: "chair", img: "https://res.cloudinary.com/dqwm4pdbz/image/upload/c_crop,w_421,h_424,x_0,y_424/v1787085441/classroom_ogqnzw.png" },
-        { name: "table", img: "https://res.cloudinary.com/dqwm4pdbz/image/upload/c_crop,w_421,h_424,x_421,y_424/v1787085441/classroom_ogqnzw.png" },
-        { name: "door", img: "https://res.cloudinary.com/dqwm4pdbz/image/upload/c_crop,w_421,h_424,x_842,y_424/v1787085441/classroom_ogqnzw.png" }
+        {
+          name: "book",
+          img: "https://res.cloudinary.com/dqwm4pdbz/image/upload/c_crop,w_421,h_424,x_0,y_0/v1787085441/classroom_ogqnzw.png",
+        },
+        {
+          name: "pencil",
+          img: "https://res.cloudinary.com/dqwm4pdbz/image/upload/c_crop,w_421,h_424,x_421,y_0/v1787085441/classroom_ogqnzw.png",
+        },
+        {
+          name: "bag",
+          img: "https://res.cloudinary.com/dqwm4pdbz/image/upload/c_crop,w_421,h_424,x_842,y_0/v1787085441/classroom_ogqnzw.png",
+        },
+        {
+          name: "chair",
+          img: "https://res.cloudinary.com/dqwm4pdbz/image/upload/c_crop,w_421,h_424,x_0,y_424/v1787085441/classroom_ogqnzw.png",
+        },
+        {
+          name: "table",
+          img: "https://res.cloudinary.com/dqwm4pdbz/image/upload/c_crop,w_421,h_424,x_421,y_424/v1787085441/classroom_ogqnzw.png",
+        },
+        {
+          name: "door",
+          img: "https://res.cloudinary.com/dp455m4rk/image/upload/c_crop,w_424,h_421,x_424,y_842/v1786261038/book_pencil_v8ipxw.png",
+        },
       ];
+
+      var CLASSROOM_NON_OBJECTS = [
+        {
+          name: "ball",
+          img: "https://res.cloudinary.com/dqwm4pdbz/image/upload/c_crop,w_421,h_424,x_0,y_0/v1787144151/260819_more_objects_02_lk3hul.png",
+        },
+        {
+          name: "shoe",
+          img: "https://res.cloudinary.com/dqwm4pdbz/image/upload/c_crop,w_421,h_424,x_421,y_0/v1787144151/260819_more_objects_02_lk3hul.png",
+        },
+        {
+          name: "clock",
+          img: "https://res.cloudinary.com/dqwm4pdbz/image/upload/c_crop,w_421,h_424,x_842,y_0/v1787144151/260819_more_objects_02_lk3hul.png",
+        },
+        {
+          name: "hat",
+          img: "https://res.cloudinary.com/dqwm4pdbz/image/upload/c_crop,w_421,h_424,x_0,y_424/v1787144151/260819_more_objects_02_lk3hul.png",
+        },
+      ];
+      var classroomSlotPool = [];
+      var classroomSlotTimer = null;
+      var classroomSlotCurrent = null;
+      var classroomSlotIsNonObject = false;
+      var classroomSlotWord = "";
+      var classroomSlotResults = [];
+      var classroomSlotIdx = 0;
+      var classroomSlotTotal = 10;
+      var classroomSlotRewarded = false;
+
+      function classroomSlotBuildPool() {
+        var pool = CLASSROOM.slice();
+        var nonObject =
+          CLASSROOM_NON_OBJECTS[
+            Math.floor(Math.random() * CLASSROOM_NON_OBJECTS.length)
+          ];
+        pool.push({ name: nonObject.name, img: nonObject.img, isNonObject: true });
+        return pool;
+      }
+      function classroomSlotAllNames() {
+        var names = [];
+        for (var i = 0; i < CLASSROOM.length; i++) names.push(CLASSROOM[i].name);
+        for (var j = 0; j < CLASSROOM_NON_OBJECTS.length; j++) {
+          names.push(CLASSROOM_NON_OBJECTS[j].name);
+        }
+        return names;
+      }
+      function classroomSlotPickWrong(name) {
+        var names = classroomSlotAllNames();
+        var filtered = [];
+        for (var i = 0; i < names.length; i++) {
+          if (names[i] !== name) filtered.push(names[i]);
+        }
+        return filtered[Math.floor(Math.random() * filtered.length)];
+      }
+      function classroomSlotSpeak(name) {
+        if (classroomSlotIdx % 2 === 0) say(name);
+        else sayOther(name);
+      }
+      function classroomSlotSpin() {
+        if (classroomSlotTimer || classroomSlotIdx >= classroomSlotTotal) return;
+        classroomSlotPool = classroomSlotBuildPool();
+        classroomSlotCurrent = null;
+        classroomSlotIsNonObject = false;
+        var img = document.getElementById("classroomSlotImg");
+        if (!img) return;
+        var target = classroomSlotPool[Math.floor(Math.random() * classroomSlotPool.length)];
+        var spinIdx = Math.floor(Math.random() * classroomSlotPool.length);
+        var start = Date.now();
+        var duration = 2400 + Math.random() * 800;
+        function tick() {
+          var elapsed = Date.now() - start;
+          if (elapsed >= duration) {
+            classroomSlotTimer = null;
+            img.src = target.img;
+            img.alt = target.name;
+            classroomSlotCurrent = target;
+            classroomSlotIsNonObject = !!target.isNonObject;
+            classroomSlotWord = classroomSlotIsNonObject
+              ? classroomSlotPickWrong(target.name)
+              : Math.random() < 0.6
+                ? target.name
+                : classroomSlotPickWrong(target.name);
+            setTimeout(function () {
+              classroomSlotSpeak(classroomSlotWord);
+            }, 300);
+            return;
+          }
+          img.src = classroomSlotPool[spinIdx].img;
+          img.alt = classroomSlotPool[spinIdx].name;
+          var remain = duration - elapsed;
+          var delay = 40 + (1 - remain / duration) * 260;
+          spinIdx = (spinIdx + 1) % classroomSlotPool.length;
+          classroomSlotTimer = window.setTimeout(tick, Math.max(30, delay));
+        }
+        classroomSlotTimer = window.setTimeout(tick, 60);
+      }
+      function classroomSlotSpeakAgain() {
+        if (classroomSlotTimer || !classroomSlotCurrent) return;
+        classroomSlotSpeak(classroomSlotWord);
+      }
+      function classroomSlotReset() {
+        classroomSlotResults = [];
+        classroomSlotIdx = 0;
+        buildPips("classroomSlotPips", classroomSlotTotal);
+        setPips("classroomSlotPips", classroomSlotResults, classroomSlotIdx);
+        classroomSlotSpin();
+      }
+      function classroomSlotAnswer(answer) {
+        if (classroomSlotTimer || !classroomSlotCurrent) return;
+        if (classroomSlotIdx >= classroomSlotTotal) return;
+        var truth = classroomSlotIsNonObject
+          ? "not-a-classroom-object"
+          : classroomSlotWord === classroomSlotCurrent.name
+            ? "yes"
+            : "no";
+        var won = answer === truth;
+        classroomSlotResults.push(won ? "good" : "bad");
+        setPips("classroomSlotPips", classroomSlotResults, classroomSlotIdx);
+        toast(won ? "WELL DONE!" : "Try again!");
+        classroomSlotIdx++;
+        if (classroomSlotIdx >= classroomSlotTotal) {
+          var greens = 0;
+          for (var i = 0; i < classroomSlotResults.length; i++) {
+            if (classroomSlotResults[i] === "good") greens++;
+          }
+          if (greens >= 8 && !classroomSlotRewarded) {
+            classroomSlotRewarded = true;
+            reward("MY CLASSROOM! +1 ⭐");
+          }
+          return;
+        }
+        setTimeout(function () {
+          classroomSlotSpin();
+        }, 1200);
+      }
 
       var bodyWhere2Order = [];
       var bodyWhere2Idx = 0;
@@ -5937,17 +7392,41 @@
 
       function bodyWhere2Reset() {
         bodyWhere2Order = CLASSROOM.slice();
+        while (bodyWhere2Order.length < 8) {
+          bodyWhere2Order.push(
+            CLASSROOM[Math.floor(Math.random() * CLASSROOM.length)],
+          );
+        }
         for (var i = bodyWhere2Order.length - 1; i > 0; i--) {
           var j = Math.floor(Math.random() * (i + 1));
           var tmp = bodyWhere2Order[i];
           bodyWhere2Order[i] = bodyWhere2Order[j];
           bodyWhere2Order[j] = tmp;
         }
-        bodyWhere2Order = bodyWhere2Order.map(function (c) { return c.name; });
+        bodyWhere2Order = bodyWhere2Order.map(function (c) {
+          return c.name;
+        });
         buildPips("bodyWherePips2", bodyWhere2Order.length);
         bodyWhere2Idx = 0;
         bodyWhere2Results = [];
         bodyWhere2Tries = 0;
+        var grid = document.getElementById("bodyWhereGrid2");
+        var startBtn = document.getElementById("classroom1StartBtn");
+        var title = document.getElementById("bodyWhereTitle2");
+        if (grid) {
+          grid.innerHTML = "";
+          grid.style.display = "none";
+        }
+        if (startBtn) startBtn.style.display = "inline-flex";
+        if (title) title.textContent = "Where Is...?";
+      }
+
+      function classroom1Start() {
+        var startBtn = document.getElementById("classroom1StartBtn");
+        var grid = document.getElementById("bodyWhereGrid2");
+        if (grid && grid.style.display !== "none") return;
+        if (startBtn) startBtn.style.display = "inline-flex";
+        if (grid) grid.style.display = "";
         bodyWhere2Render();
       }
 
@@ -5962,7 +7441,7 @@
         }
         var w = bodyWhere2Order[bodyWhere2Idx];
         var nameCap = w.charAt(0).toUpperCase() + w.slice(1);
-        title.textContent = "Where is the " + nameCap + "?";
+        title.textContent = "Where Is the " + nameCap + "?";
         bodyWhere2Tries = 0;
         setPips("bodyWherePips2", bodyWhere2Results, bodyWhere2Idx);
         grid.style.display = "";
@@ -5975,7 +7454,7 @@
           shuffled[j] = tmp;
         }
         grid.innerHTML = "";
-        shuffled.forEach(function (item) {
+        shuffled.forEach(function (item, itemIdx) {
           var b = document.createElement("button");
           b.className = "toyBtn";
           var img = document.createElement("img");
@@ -5984,39 +7463,48 @@
           img.alt = item.name;
           b.appendChild(img);
           b.onclick = function () {
-            say(item.name);
+            var speakObject = itemIdx % 2 === 0 ? say : sayOther;
+            speakObject(item.name);
             if (item.name === w) {
-              bodyWhere2Results.push(bodyWhere2Tries === 0 ? "good" : "mediocre");
-              toast("WELL DONE!");
+              bodyWhere2Results.push(
+                bodyWhere2Tries === 0 ? "good" : "mediocre",
+              );
+              toast(nameCap + " — WELL DONE!");
               bodyWhere2Idx++;
               setTimeout(bodyWhere2Render, 1000);
             } else {
               bodyWhere2Tries++;
-              toast("No");
+              toast(nameCap + " — NO");
               b.style.opacity = "0.4";
               b.style.pointerEvents = "none";
             }
           };
           grid.appendChild(b);
         });
-        say("Where is the " + w + "?");
+        var speakPrompt = bodyWhere2Idx % 2 === 0 ? say : sayOther;
+        speakPrompt("Where is the " + w + "?");
       }
 
       function bodyWhere2Done() {
         var grid = document.getElementById("bodyWhereGrid2");
         var title = document.getElementById("bodyWhereTitle2");
         var pipHost = document.getElementById("bodyWherePips2");
+        var startBtn = document.getElementById("classroom1StartBtn");
         if (title) title.textContent = "";
         if (pipHost) pipHost.innerHTML = "";
+        if (startBtn) startBtn.style.display = "none";
         if (grid) {
           grid.removeAttribute("style");
           grid.innerHTML =
             '<div style="grid-column:1/-1;text-align:center;">' +
             '<p style="font-size:clamp(1.4rem,2.6vw,2.6rem);font-weight:900;margin:0.6em 0;">Well Done!</p>' +
             '<button class="choice yes" id="bodyWhere2PlayBtn">&#9654; PLAY AGAIN</button>' +
-            '</div>';
+            "</div>";
           var btn = document.getElementById("bodyWhere2PlayBtn");
-          if (btn) btn.onclick = function () { show(screenIndexById("bodyWhereScreen2")); };
+          if (btn)
+            btn.onclick = function () {
+              show(screenIndexById("classroom1Screen"));
+            };
         }
         if (!bodyWhere2Rewarded && qualifies(bodyWhere2Results)) {
           bodyWhere2Rewarded = true;
@@ -6028,7 +7516,9 @@
       var AT_TTL = 24 * 60 * 60 * 1000;
 
       function atCacheKey(table, filter) {
-        return "at_" + table + (filter ? "_" + btoa(filter).replace(/=/g, "") : "");
+        return (
+          "at_" + table + (filter ? "_" + btoa(filter).replace(/=/g, "") : "")
+        );
       }
 
       function atReadCache(key) {
@@ -6038,25 +7528,39 @@
           var obj = JSON.parse(raw);
           if (Date.now() - obj.ts > AT_TTL) return null;
           return obj.data;
-        } catch (e) { return null; }
+        } catch (e) {
+          return null;
+        }
       }
 
       function atWriteCache(key, data) {
         try {
-          localStorage.setItem(key, JSON.stringify({ ts: Date.now(), data: data }));
-        } catch (e) { /* quota exceeded — silently ignore */ }
+          localStorage.setItem(
+            key,
+            JSON.stringify({ ts: Date.now(), data: data }),
+          );
+        } catch (e) {
+          /* quota exceeded — silently ignore */
+        }
       }
 
       function atBuildURL(table, filterFormula, pageSize, offset) {
-        var url = "https://api.airtable.com/v0/" + AT_BASE + "/" + encodeURIComponent(table) + "?pageSize=" + (pageSize || 100);
-        if (filterFormula) url += "&filterByFormula=" + encodeURIComponent(filterFormula);
+        var url =
+          "https://api.airtable.com/v0/" +
+          AT_BASE +
+          "/" +
+          encodeURIComponent(table) +
+          "?pageSize=" +
+          (pageSize || 100);
+        if (filterFormula)
+          url += "&filterByFormula=" + encodeURIComponent(filterFormula);
         if (offset) url += "&offset=" + offset;
         return url;
       }
 
       function atFetchPage(url) {
         return fetch(url, {
-          headers: { "Authorization": "Bearer " + AT_PAT }
+          headers: { Authorization: "Bearer " + AT_PAT },
         }).then(function (r) {
           if (!r.ok) throw new Error("Airtable " + r.status);
           return r.json();
@@ -6090,39 +7594,45 @@
       }
 
       function atGetMediaByTag(tag) {
-        return atFetch("Media", 'SEARCH("' + tag + '", {Tag})').then(function (records) {
-          return records.filter(function (r) {
-            return r.fields.Style === "Pixar-3D";
-          }).map(function (r) {
-            var f = r.fields;
-            return {
-              asset: f.Asset || "",
-              url: f["Cloudinary URL"] || f["Basic Link"] || "",
-              type: f["Media Type"] || "Image",
-              tag: (f.Tag || [])[0] || "",
-              id: f.ID || "",
-              w: f.W || 0,
-              h: f.H || 0,
-              x: f.X || 0,
-              y: f.Y || 0
-            };
-          });
-        });
+        return atFetch("Media", 'SEARCH("' + tag + '", {Tag})').then(
+          function (records) {
+            return records
+              .filter(function (r) {
+                return r.fields.Style === "Pixar-3D";
+              })
+              .map(function (r) {
+                var f = r.fields;
+                return {
+                  asset: f.Asset || "",
+                  url: f["Cloudinary URL"] || f["Basic Link"] || "",
+                  type: f["Media Type"] || "Image",
+                  tag: (f.Tag || [])[0] || "",
+                  id: f.ID || "",
+                  w: f.W || 0,
+                  h: f.H || 0,
+                  x: f.X || 0,
+                  y: f.Y || 0,
+                };
+              });
+          },
+        );
       }
 
       function atGetMediaByType(type) {
-        return atFetch("Media", '{Media Type} = "' + type + '"').then(function (records) {
-          return records.map(function (r) {
-            var f = r.fields;
-            return {
-              asset: f.Asset || "",
-              url: f["Cloudinary URL"] || f["Basic Link"] || "",
-              type: f["Media Type"] || "Image",
-              tag: (f.Tag || [])[0] || "",
-              id: f.ID || ""
-            };
-          });
-        });
+        return atFetch("Media", '{Media Type} = "' + type + '"').then(
+          function (records) {
+            return records.map(function (r) {
+              var f = r.fields;
+              return {
+                asset: f.Asset || "",
+                url: f["Cloudinary URL"] || f["Basic Link"] || "",
+                type: f["Media Type"] || "Image",
+                tag: (f.Tag || [])[0] || "",
+                id: f.ID || "",
+              };
+            });
+          },
+        );
       }
 
       function atClearCache(table) {
@@ -6131,7 +7641,9 @@
           var k = localStorage.key(i);
           if (k && k.indexOf("at_" + (table || "")) === 0) keys.push(k);
         }
-        keys.forEach(function (k) { localStorage.removeItem(k); });
+        keys.forEach(function (k) {
+          localStorage.removeItem(k);
+        });
       }
     </script>
     <script src="https://unpkg.com/lucide@latest"></script>
