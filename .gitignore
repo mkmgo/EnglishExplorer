@@ -2,3 +2,6 @@
 Desktop.ini
 Thumbs.db
 .DS_Store
+
+# Config (secrets — never commit)
+config.js
