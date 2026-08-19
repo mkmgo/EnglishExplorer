@@ -2136,6 +2136,21 @@
         </div>
       </section>
 
+      <!-- MY BODY: Where Is It? (exercise copy — animals) -->
+      <section class="screen" id="bodyWhereScreen2">
+        <div class="content">
+          <h1 class="ribbon" id="bodyWhereTitle2">Where is the…?</h1>
+          <div class="stage">
+            <div class="panel">
+              <div class="roundPips" id="bodyWherePips2"></div>
+              <div class="gameArea">
+                <div class="toyGrid" id="bodyWhereGrid2"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
       <!-- Segment 1: ANIMALS — vocabulary (present) -->
       <section class="screen" id="animalsIntroScreen">
         <div class="content">
@@ -4000,6 +4015,7 @@
         else if (screens[idx].id === "toysWhereScreen") whereReset();
         else if (screens[idx].id === "likeDislikeScreen") likeReset();
         else if (screens[idx].id === "bodyWhereScreen") bodyWhereReset();
+        else if (screens[idx].id === "bodyWhereScreen2") bodyWhere2Reset();
         if (screens[idx].id === "resultsScreen") {
           showRewards();
         }
@@ -5901,6 +5917,111 @@
         }
         var pts = bodyWhereResults.filter(function (r) { return r === "good"; }).length;
         addPoints(pts);
+      }
+
+      /* ── MY CLASSROOM: Where Is It? ── */
+      var CLASSROOM = [
+        { name: "book", img: "https://res.cloudinary.com/dqwm4pdbz/image/upload/c_crop,w_421,h_424,x_0,y_0/v1787085441/classroom_ogqnzw.png" },
+        { name: "pencil", img: "https://res.cloudinary.com/dqwm4pdbz/image/upload/c_crop,w_421,h_424,x_421,y_0/v1787085441/classroom_ogqnzw.png" },
+        { name: "bag", img: "https://res.cloudinary.com/dqwm4pdbz/image/upload/c_crop,w_421,h_424,x_842,y_0/v1787085441/classroom_ogqnzw.png" },
+        { name: "chair", img: "https://res.cloudinary.com/dqwm4pdbz/image/upload/c_crop,w_421,h_424,x_0,y_424/v1787085441/classroom_ogqnzw.png" },
+        { name: "table", img: "https://res.cloudinary.com/dqwm4pdbz/image/upload/c_crop,w_421,h_424,x_421,y_424/v1787085441/classroom_ogqnzw.png" },
+        { name: "door", img: "https://res.cloudinary.com/dqwm4pdbz/image/upload/c_crop,w_421,h_424,x_842,y_424/v1787085441/classroom_ogqnzw.png" }
+      ];
+
+      var bodyWhere2Order = [];
+      var bodyWhere2Idx = 0;
+      var bodyWhere2Rewarded = false;
+      var bodyWhere2Results = [];
+      var bodyWhere2Tries = 0;
+
+      function bodyWhere2Reset() {
+        bodyWhere2Order = CLASSROOM.slice();
+        for (var i = bodyWhere2Order.length - 1; i > 0; i--) {
+          var j = Math.floor(Math.random() * (i + 1));
+          var tmp = bodyWhere2Order[i];
+          bodyWhere2Order[i] = bodyWhere2Order[j];
+          bodyWhere2Order[j] = tmp;
+        }
+        bodyWhere2Order = bodyWhere2Order.map(function (c) { return c.name; });
+        buildPips("bodyWherePips2", bodyWhere2Order.length);
+        bodyWhere2Idx = 0;
+        bodyWhere2Results = [];
+        bodyWhere2Tries = 0;
+        bodyWhere2Render();
+      }
+
+      function bodyWhere2Render() {
+        var pipHost = document.getElementById("bodyWherePips2");
+        var grid = document.getElementById("bodyWhereGrid2");
+        var title = document.getElementById("bodyWhereTitle2");
+        if (!pipHost || !grid || !title) return;
+        if (bodyWhere2Idx >= bodyWhere2Order.length) {
+          bodyWhere2Done();
+          return;
+        }
+        var w = bodyWhere2Order[bodyWhere2Idx];
+        var nameCap = w.charAt(0).toUpperCase() + w.slice(1);
+        title.textContent = "Where is the " + nameCap + "?";
+        bodyWhere2Tries = 0;
+        setPips("bodyWherePips2", bodyWhere2Results, bodyWhere2Idx);
+        grid.style.display = "";
+        grid.style.justifyContent = "";
+        var shuffled = CLASSROOM.slice();
+        for (var i = shuffled.length - 1; i > 0; i--) {
+          var j = Math.floor(Math.random() * (i + 1));
+          var tmp = shuffled[i];
+          shuffled[i] = shuffled[j];
+          shuffled[j] = tmp;
+        }
+        grid.innerHTML = "";
+        shuffled.forEach(function (item) {
+          var b = document.createElement("button");
+          b.className = "toyBtn";
+          var img = document.createElement("img");
+          img.className = "toyImg";
+          img.src = item.img;
+          img.alt = item.name;
+          b.appendChild(img);
+          b.onclick = function () {
+            say(item.name);
+            if (item.name === w) {
+              bodyWhere2Results.push(bodyWhere2Tries === 0 ? "good" : "mediocre");
+              toast("WELL DONE!");
+              bodyWhere2Idx++;
+              setTimeout(bodyWhere2Render, 1000);
+            } else {
+              bodyWhere2Tries++;
+              toast("No");
+              b.style.opacity = "0.4";
+              b.style.pointerEvents = "none";
+            }
+          };
+          grid.appendChild(b);
+        });
+        say("Where is the " + w + "?");
+      }
+
+      function bodyWhere2Done() {
+        var grid = document.getElementById("bodyWhereGrid2");
+        var title = document.getElementById("bodyWhereTitle2");
+        var pipHost = document.getElementById("bodyWherePips2");
+        if (title) title.textContent = "";
+        if (pipHost) pipHost.innerHTML = "";
+        if (grid) {
+          grid.removeAttribute("style");
+          grid.innerHTML =
+            '<div style="grid-column:1/-1;text-align:center;">' +
+            '<p style="font-size:clamp(1.4rem,2.6vw,2.6rem);font-weight:900;margin:0.6em 0;">Well Done!</p>' +
+            '<button class="choice yes" id="bodyWhere2PlayBtn">&#9654; PLAY AGAIN</button>' +
+            '</div>';
+          var btn = document.getElementById("bodyWhere2PlayBtn");
+          if (btn) btn.onclick = function () { show(screenIndexById("bodyWhereScreen2")); };
+        }
+        if (!bodyWhere2Rewarded && qualifies(bodyWhere2Results)) {
+          bodyWhere2Rewarded = true;
+          reward("MY CLASSROOM! +1 ⭐");
+        }
       }
 
       /* ── Airtable Fetch Layer ── */
