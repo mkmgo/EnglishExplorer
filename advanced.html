@@ -461,12 +461,23 @@
         display: flex;
         align-items: center;
         gap: 0.5em;
+        padding: 0.35em 0.6em;
+        border-radius: 8px;
         font-size: clamp(0.78rem, 1.2vw, 1.05rem);
         font-weight: 600;
         color: var(--ink);
         line-height: 1.35;
         text-transform: none;
         letter-spacing: 0;
+        border: none;
+        background: none;
+        cursor: pointer;
+        transition: background 0.2s ease;
+        text-align: left;
+        width: 100%;
+      }
+      .myWorldTheme:hover {
+        background: rgba(255, 255, 255, 0.45);
       }
       .myWorldTheme svg {
         flex-shrink: 0;
@@ -1510,6 +1521,65 @@
           max-height: 42vh;
         }
       }
+      .mediaAdvance {
+        display: none;
+        margin-top: 1em;
+      }
+      .mediaAdvance.visible {
+        display: flex;
+        justify-content: center;
+        gap: 1rem;
+      }
+      .mediaProgress {
+        width: min(80vw, 600px);
+        height: 4px;
+        background: rgba(0,0,0,0.1);
+        border-radius: 2px;
+        margin-top: 0.6em;
+        overflow: hidden;
+      }
+      .mediaProgressFill {
+        height: 100%;
+        width: 0%;
+        background: var(--accent);
+        border-radius: 2px;
+        transition: width 0.3s ease;
+      }
+      .bodyGrid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+        gap: 1em;
+        width: 100%;
+        max-width: 700px;
+      }
+      .bodyBtn {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 0.4em;
+        padding: 1em 0.6em;
+        background: var(--panel);
+        border: 3px solid var(--accent2);
+        border-radius: 16px;
+        box-shadow: 0 6px 20px rgba(139,175,156,0.18);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        cursor: pointer;
+      }
+      .bodyBtn:active {
+        transform: scale(0.95);
+        box-shadow: 0 2px 8px rgba(139,175,156,0.25);
+      }
+      .bodyBtn img {
+        width: clamp(60px, 12vw, 100px);
+        height: clamp(60px, 12vw, 100px);
+        object-fit: cover;
+        border-radius: 12px;
+      }
+      .bodyBtn span {
+        font-size: clamp(0.9rem, 1.8vw, 1.3rem);
+        font-weight: 700;
+        color: var(--accent);
+      }
     </style>
   </head>
   <body>
@@ -1635,13 +1705,13 @@
                   <span class="tabtext">My World</span>
                   <hr class="myWorldSep">
                   <div class="myWorldThemes">
-                    <div class="myWorldTheme"><svg xmlns="http://www.w3.org/2000/svg" width="1.15em" height="1.15em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 11V6a2 2 0 0 0-2-2a2 2 0 0 0-2 2"/><path d="M14 10V4a2 2 0 0 0-2-2a2 2 0 0 0-2 2v2"/><path d="M10 10.5V6a2 2 0 0 0-2-2a2 2 0 0 0-2 2v8"/><path d="M18 8a2 2 0 1 1 4 0v6a8 8 0 0 1-8 8h-2c-2.8 0-4.5-.86-5.99-2.34l-3.6-3.6a2 2 0 0 1 2.83-2.82L7 13"/></svg>Hello, English!</div>
-                    <div class="myWorldTheme"><svg xmlns="http://www.w3.org/2000/svg" width="1.15em" height="1.15em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="5" r="2"/><path d="m10 22 2-7h4l2 7"/><path d="M10 10 6 22"/><path d="M14 10 18 22"/></svg>My Body</div>
+                    <div class="myWorldTheme" onclick="show(screenIndexById('greetingsScreen'))"><svg xmlns="http://www.w3.org/2000/svg" width="1.15em" height="1.15em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 11V6a2 2 0 0 0-2-2a2 2 0 0 0-2 2"/><path d="M14 10V4a2 2 0 0 0-2-2a2 2 0 0 0-2 2v2"/><path d="M10 10.5V6a2 2 0 0 0-2-2a2 2 0 0 0-2 2v8"/><path d="M18 8a2 2 0 1 1 4 0v6a8 8 0 0 1-8 8h-2c-2.8 0-4.5-.86-5.99-2.34l-3.6-3.6a2 2 0 0 1 2.83-2.82L7 13"/></svg>Hello, English!</div>
+                    <div class="myWorldTheme" onclick="show(screenIndexById('bodyVideoScreen'))"><svg xmlns="http://www.w3.org/2000/svg" width="1.15em" height="1.15em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="5" r="2"/><path d="m10 22 2-7h4l2 7"/><path d="M10 10 6 22"/><path d="M14 10 18 22"/></svg>My Body</div>
                     <div class="myWorldTheme"><svg xmlns="http://www.w3.org/2000/svg" width="1.15em" height="1.15em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="13.5" cy="6.5" r=".5" fill="currentColor"/><circle cx="17.5" cy="10.5" r=".5" fill="currentColor"/><circle cx="8.5" cy="7.5" r=".5" fill="currentColor"/><circle cx="6.5" cy="12.5" r=".5" fill="currentColor"/><path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.926 0 1.648-.746 1.648-1.688 0-.437-.18-.835-.437-1.125-.29-.289-.438-.652-.438-1.125a1.64 1.64 0 0 1 1.668-1.668h1.996c3.051 0 5.555-2.503 5.555-5.554C21.965 6.012 17.461 2 12 2z"/></svg>Colours Everywhere</div>
                     <div class="myWorldTheme"><svg xmlns="http://www.w3.org/2000/svg" width="1.15em" height="1.15em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>My Family</div>
                     <div class="myWorldTheme"><svg xmlns="http://www.w3.org/2000/svg" width="1.15em" height="1.15em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20"/></svg>My Classroom</div>
-                    <div class="myWorldTheme"><svg xmlns="http://www.w3.org/2000/svg" width="1.15em" height="1.15em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 16a3 3 0 0 1 1.28 2.61V20a1 1 0 0 1-1 1H9a1 1 0 0 1-1-1v-1.39a3 3 0 0 1 1.28-2.61"/><path d="M10 10a3 3 0 0 1 6 0v4a3 3 0 0 1-6 0z"/><path d="M17.73 7.7a3 3 0 0 1 0 4.6"/><path d="M6.27 7.7a3 3 0 0 0 0 4.6"/><path d="M18 12h2"/><path d="M4 12H2"/><path d="M15 9l3-3"/><path d="M6 9l-3-3"/></svg>Animals</div>
-                    <div class="myWorldTheme"><svg xmlns="http://www.w3.org/2000/svg" width="1.15em" height="1.15em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z"/><path d="m3.3 7 8.7 5 8.7-5"/><path d="M12 22V12"/></svg>My Toys &amp; Things I Have</div>
+                    <div class="myWorldTheme" onclick="show(screenIndexById('animalsIntroScreen'))"><svg xmlns="http://www.w3.org/2000/svg" width="1.15em" height="1.15em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 16a3 3 0 0 1 1.28 2.61V20a1 1 0 0 1-1 1H9a1 1 0 0 1-1-1v-1.39a3 3 0 0 1 1.28-2.61"/><path d="M10 10a3 3 0 0 1 6 0v4a3 3 0 0 1-6 0z"/><path d="M17.73 7.7a3 3 0 0 1 0 4.6"/><path d="M6.27 7.7a3 3 0 0 0 0 4.6"/><path d="M18 12h2"/><path d="M4 12H2"/><path d="M15 9l3-3"/><path d="M6 9l-3-3"/></svg>Animals</div>
+                    <div class="myWorldTheme" onclick="show(screenIndexById('toysIntroScreen'))"><svg xmlns="http://www.w3.org/2000/svg" width="1.15em" height="1.15em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z"/><path d="m3.3 7 8.7 5 8.7-5"/><path d="M12 22V12"/></svg>My Toys &amp; Things I Have</div>
                   </div>
                 </button>
                 <button class="tabs tab-numbers myWorldTab">
@@ -1649,9 +1719,9 @@
                   <hr class="myWorldSep">
                   <div class="myWorldThemes">
                     <div class="myWorldTheme"><svg xmlns="http://www.w3.org/2000/svg" width="1.15em" height="1.15em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 16 4 4 4-4"/><path d="M7 20V4"/><path d="M20 8h-5"/><path d="M15 10V6.5a2.5 2.5 0 0 1 5 0V10"/><path d="M15 14h5l-5 6h5"/></svg>Alphabet from Aa to Zz</div>
-                    <div class="myWorldTheme"><svg xmlns="http://www.w3.org/2000/svg" width="1.15em" height="1.15em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18.37 2.63 14 7l-1.59-1.59a2 2 0 0 0-2.82 0L8 7l9 9 1.59-1.59a2 2 0 0 0 0-2.82L17 10l4.37-4.37a2.12 2.12 0 1 0-3-3Z"/><path d="M9 8c-2 3-4 3.5-7 4l8 10c2-1 6-5 6-7"/><path d="M14.5 17.5 4.5 15"/></svg>Colours and Tints</div>
+                    <div class="myWorldTheme" onclick="show(screenIndexById('coloursScreen'))"><svg xmlns="http://www.w3.org/2000/svg" width="1.15em" height="1.15em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18.37 2.63 14 7l-1.59-1.59a2 2 0 0 0-2.82 0L8 7l9 9 1.59-1.59a2 2 0 0 0 0-2.82L17 10l4.37-4.37a2.12 2.12 0 1 0-3-3Z"/><path d="M9 8c-2 3-4 3.5-7 4l8 10c2-1 6-5 6-7"/><path d="M14.5 17.5 4.5 15"/></svg>Colours and Tints</div>
                     <div class="myWorldTheme"><svg xmlns="http://www.w3.org/2000/svg" width="1.15em" height="1.15em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="10" x2="21" y1="6" y2="6"/><line x1="10" x2="21" y1="12" y2="12"/><line x1="10" x2="21" y1="18" y2="18"/><path d="M4 6h1v4"/><path d="M4 10h2"/><path d="M6 18H4c0-1 2-2 2-3s-1-1.5-2-1"/></svg>Numbers and Calculations</div>
-                    <div class="myWorldTheme"><svg xmlns="http://www.w3.org/2000/svg" width="1.15em" height="1.15em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 21v-1"/><path d="M10 4V3"/><path d="M10 9a3 3 0 0 0 0 6"/><path d="m14 20 1.25-2.5L18 18"/><path d="m14 4 1.25 2.5L18 6"/><path d="m17 21-3-6 1.5-3H22"/><path d="m17 3-3 6 1.5 3"/><path d="M2 12h1"/><path d="m20 10-1.5 2 1.5 2"/><path d="m3.64 18.36.7-.7"/><path d="m4.34 6.34-.7-.7"/></svg>Months and Seasons</div>
+                    <div class="myWorldTheme" onclick="show(screenIndexById('monthsScreen'))"><svg xmlns="http://www.w3.org/2000/svg" width="1.15em" height="1.15em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 21v-1"/><path d="M10 4V3"/><path d="M10 9a3 3 0 0 0 0 6"/><path d="m14 20 1.25-2.5L18 18"/><path d="m14 4 1.25 2.5L18 6"/><path d="m17 21-3-6 1.5-3H22"/><path d="m17 3-3 6 1.5 3"/><path d="M2 12h1"/><path d="m20 10-1.5 2 1.5 2"/><path d="m3.64 18.36.7-.7"/><path d="m4.34 6.34-.7-.7"/></svg>Months and Seasons</div>
                   </div>
                 </button>
                 <button class="tabs tab-colours myWorldTab">
@@ -1688,7 +1758,7 @@
               <figure class="castMember">
                 <img
                   class="character"
-                  src="https://res.cloudinary.com/dp455m4rk/image/upload/c_scale,w_800/q_auto/f_auto/e_bgremoval/v1786010283/sam_3d_awiawr.png"
+                  src="https://res.cloudinary.com/dqwm4pdbz/image/upload/c_scale,w_450,h_437/q_auto/f_auto/v1786623813/sam_3davface_irvdlj.png"
                   alt="Sam"
                 />
                 <button
@@ -1905,6 +1975,159 @@
                   <span class="icardtextb">I am 7 years old.</span>
                 </button>
               </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- MY BODY: Video -->
+      <section class="screen" id="bodyVideoScreen">
+        <div class="content">
+          <span class="banner">My Body</span>
+          <h1 class="ribbon">Watch and Learn</h1>
+          <div class="stage">
+            <div class="panel">
+              <div class="videoWrap">
+                <video
+                  id="bodyVideo"
+                  class="lessonVideo"
+                  playsinline
+                  webkit-playsinline
+                  x5-playsinline
+                  preload="auto"
+                  src="https://res.cloudinary.com/dqwm4pdbz/video/upload/q_auto/f_auto/v1787085299/bodyparts_gqvy2u.mp4"
+                ></video>
+              </div>
+              <div class="mediaProgress" id="bodyVideoProgress">
+                <div class="mediaProgressFill" id="bodyVideoProgressFill"></div>
+              </div>
+              <div class="mediaAdvance" id="bodyVideoAdvance">
+                <button class="choice yes" onclick="show(screenIndexById('bodyVocabScreen'))">CONTINUE ▶</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- MY BODY: Vocabulary -->
+      <section class="screen" id="bodyVocabScreen">
+        <div class="content">
+          <span class="banner">My Body</span>
+          <h1 class="ribbon">Parts of the Body</h1>
+          <div class="stage">
+            <div class="panel">
+              <div class="bodyGrid">
+                <button class="bodyBtn" onclick="bodySpeak('head')">
+                  <img src="https://res.cloudinary.com/dp455m4rk/image/upload/c_crop,w_464,h_385,x_0,y_0/v1785941763/head_eyes_yi7oro.png" alt="Head" />
+                  <span>Head</span>
+                </button>
+                <button class="bodyBtn" onclick="bodySpeak('eyes')">
+                  <img src="https://res.cloudinary.com/dp455m4rk/image/upload/c_crop,w_464,h_385,x_464,y_0/v1785941763/head_eyes_yi7oro.png" alt="Eyes" />
+                  <span>Eyes</span>
+                </button>
+                <button class="bodyBtn" onclick="bodySpeak('ears')">
+                  <img src="https://res.cloudinary.com/dp455m4rk/image/upload/c_crop,w_464,h_380,x_0,y_0/v1785941763/ears_nose_tmikep.png" alt="Ears" />
+                  <span>Ears</span>
+                </button>
+                <button class="bodyBtn" onclick="bodySpeak('nose')">
+                  <img src="https://res.cloudinary.com/dp455m4rk/image/upload/c_crop,w_464,h_380,x_464,y_0/v1785941763/ears_nose_tmikep.png" alt="Nose" />
+                  <span>Nose</span>
+                </button>
+                <button class="bodyBtn" onclick="bodySpeak('mouth')">
+                  <img src="https://res.cloudinary.com/dp455m4rk/image/upload/c_crop,w_464,h_369,x_0,y_0/v1785941763/hands_mouth_flcgyw.png" alt="Mouth" />
+                  <span>Mouth</span>
+                </button>
+                <button class="bodyBtn" onclick="bodySpeak('hands')">
+                  <img src="https://res.cloudinary.com/dp455m4rk/image/upload/c_crop,w_464,h_369,x_464,y_0/v1785941763/hands_mouth_flcgyw.png" alt="Hands" />
+                  <span>Hands</span>
+                </button>
+              </div>
+              <button class="choice" onclick="bodyHearAll()" style="margin-top:1em">
+                HEAR ALL
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- MY BODY: Dialogue -->
+      <section class="screen" id="bodyDialogueScreen">
+        <div class="content">
+          <span class="banner">Dialogue</span>
+          <h1 class="ribbon">This Is My Body</h1>
+          <div class="stage">
+            <div class="panel">
+              <div class="dialogue">
+                <button class="icardst phraseCard" onclick="speakPhrase('Touch your head.', 'bd1')">
+                  <img class="phraseAvatar" src="https://res.cloudinary.com/dqwm4pdbz/image/upload/c_scale,w_450,h_437/q_auto/f_auto/v1786623813/sam_3davface_irvdlj.png" alt="Sam" />
+                  <svg xmlns="http://www.w3.org/2000/svg" width="1.2em" height="1.2em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-0.2em"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/></svg>
+                  <span class="icardtext">Touch your head.</span>
+                </button>
+                <button class="icardstb phraseCard" onclick="speakPhrase('This is my head.', 'bd2', 'onza')">
+                  <img class="phraseAvatar" src="https://res.cloudinary.com/dqwm4pdbz/image/upload/c_scale,w_400/q_auto/f_auto/v1786623812/onza_3avface_gyyay8.png" alt="Onza" />
+                  <svg xmlns="http://www.w3.org/2000/svg" width="1.2em" height="1.2em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-0.2em"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/></svg>
+                  <span class="icardtextb">This is my head.</span>
+                  <span class="phraseToyWrap"><img class="phraseToy" src="https://res.cloudinary.com/dp455m4rk/image/upload/c_crop,w_464,h_385,x_0,y_0/v1785941763/head_eyes_yi7oro.png" alt="Head" /></span>
+                </button>
+                <button class="icardst phraseCard" onclick="speakPhrase('Touch your eyes.', 'bd3')">
+                  <img class="phraseAvatar" src="https://res.cloudinary.com/dqwm4pdbz/image/upload/c_scale,w_450,h_437/q_auto/f_auto/v1786623813/sam_3davface_irvdlj.png" alt="Sam" />
+                  <svg xmlns="http://www.w3.org/2000/svg" width="1.2em" height="1.2em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-0.2em"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/></svg>
+                  <span class="icardtext">Touch your eyes.</span>
+                </button>
+                <button class="icardstb phraseCard" onclick="speakPhrase('These are my eyes.', 'bd4', 'onza')">
+                  <img class="phraseAvatar" src="https://res.cloudinary.com/dqwm4pdbz/image/upload/c_scale,w_400/q_auto/f_auto/v1786623812/onza_3avface_gyyay8.png" alt="Onza" />
+                  <svg xmlns="http://www.w3.org/2000/svg" width="1.2em" height="1.2em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-0.2em"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/></svg>
+                  <span class="icardtextb">These are my eyes.</span>
+                  <span class="phraseToyWrap"><img class="phraseToy" src="https://res.cloudinary.com/dp455m4rk/image/upload/c_crop,w_464,h_385,x_464,y_0/v1785941763/head_eyes_yi7oro.png" alt="Eyes" /></span>
+                </button>
+                <button class="icardst phraseCard" onclick="speakPhrase('Touch your nose.', 'bd5')">
+                  <img class="phraseAvatar" src="https://res.cloudinary.com/dqwm4pdbz/image/upload/c_scale,w_450,h_437/q_auto/f_auto/v1786623813/sam_3davface_irvdlj.png" alt="Sam" />
+                  <svg xmlns="http://www.w3.org/2000/svg" width="1.2em" height="1.2em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-0.2em"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/></svg>
+                  <span class="icardtext">Touch your nose.</span>
+                </button>
+                <button class="icardstb phraseCard" onclick="speakPhrase('This is my nose.', 'bd6', 'onza')">
+                  <img class="phraseAvatar" src="https://res.cloudinary.com/dqwm4pdbz/image/upload/c_scale,w_400/q_auto/f_auto/v1786623812/onza_3avface_gyyay8.png" alt="Onza" />
+                  <svg xmlns="http://www.w3.org/2000/svg" width="1.2em" height="1.2em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-0.2em"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/></svg>
+                  <span class="icardtextb">This is my nose.</span>
+                  <span class="phraseToyWrap"><img class="phraseToy" src="https://res.cloudinary.com/dp455m4rk/image/upload/c_crop,w_464,h_380,x_464,y_0/v1785941763/ears_nose_tmikep.png" alt="Nose" /></span>
+                </button>
+                <button class="icardst phraseCard" onclick="speakPhrase('Open your mouth.', 'bd7')">
+                  <img class="phraseAvatar" src="https://res.cloudinary.com/dqwm4pdbz/image/upload/c_scale,w_450,h_437/q_auto/f_auto/v1786623813/sam_3davface_irvdlj.png" alt="Sam" />
+                  <svg xmlns="http://www.w3.org/2000/svg" width="1.2em" height="1.2em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-0.2em"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/></svg>
+                  <span class="icardtext">Open your mouth.</span>
+                </button>
+                <button class="icardstb phraseCard" onclick="speakPhrase('This is my mouth.', 'bd8', 'onza')">
+                  <img class="phraseAvatar" src="https://res.cloudinary.com/dqwm4pdbz/image/upload/c_scale,w_400/q_auto/f_auto/v1786623812/onza_3avface_gyyay8.png" alt="Onza" />
+                  <svg xmlns="http://www.w3.org/2000/svg" width="1.2em" height="1.2em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-0.2em"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/></svg>
+                  <span class="icardtextb">This is my mouth.</span>
+                  <span class="phraseToyWrap"><img class="phraseToy" src="https://res.cloudinary.com/dp455m4rk/image/upload/c_crop,w_464,h_369,x_0,y_0/v1785941763/hands_mouth_flcgyw.png" alt="Mouth" /></span>
+                </button>
+                <button class="icardst phraseCard" onclick="speakPhrase('Show me your hands.', 'bd9')">
+                  <img class="phraseAvatar" src="https://res.cloudinary.com/dqwm4pdbz/image/upload/c_scale,w_450,h_437/q_auto/f_auto/v1786623813/sam_3davface_irvdlj.png" alt="Sam" />
+                  <svg xmlns="http://www.w3.org/2000/svg" width="1.2em" height="1.2em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-0.2em"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/></svg>
+                  <span class="icardtext">Show me your hands.</span>
+                </button>
+                <button class="icardstb phraseCard" onclick="speakPhrase('These are my hands.', 'bd10', 'onza')">
+                  <img class="phraseAvatar" src="https://res.cloudinary.com/dqwm4pdbz/image/upload/c_scale,w_400/q_auto/f_auto/v1786623812/onza_3avface_gyyay8.png" alt="Onza" />
+                  <svg xmlns="http://www.w3.org/2000/svg" width="1.2em" height="1.2em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-0.2em"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/></svg>
+                  <span class="icardtextb">These are my hands.</span>
+                  <span class="phraseToyWrap"><img class="phraseToy" src="https://res.cloudinary.com/dp455m4rk/image/upload/c_crop,w_464,h_369,x_464,y_0/v1785941763/hands_mouth_flcgyw.png" alt="Hands" /></span>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- MY BODY: Where Is It? (exercise) -->
+      <section class="screen" id="bodyWhereScreen">
+        <div class="content">
+          <span class="banner">Exercise</span>
+          <h1 class="ribbon" id="bodyWhereTitle">Where is the…?</h1>
+          <div class="stage">
+            <div class="panel">
+              <div class="roundPips" id="bodyWherePips"></div>
+              <div class="bodyGrid" id="bodyWhereGrid"></div>
             </div>
           </div>
         </div>
@@ -3456,7 +3679,6 @@
           </div>
         </div>
       </section>
-
       <div id="wordSlides"></div>
 
 
@@ -3773,6 +3995,7 @@
         else if (screens[idx].id === "toysHaveScreen") haveReset();
         else if (screens[idx].id === "toysWhereScreen") whereReset();
         else if (screens[idx].id === "likeDislikeScreen") likeReset();
+        else if (screens[idx].id === "bodyWhereScreen") bodyWhereReset();
         if (screens[idx].id === "resultsScreen") {
           showRewards();
         }
@@ -5553,6 +5776,238 @@
         ynFillAnimals("yn2SamToys", yn2Owned.sam);
         ynFillAnimals("yn2OnzaToys", yn2Owned.onza);
       })();
+
+      /* ── MY BODY: Video progress & auto-advance ── */
+      var bodyVideoTimer = null;
+      function bodyVideoProgress() {
+        var vid = document.getElementById("bodyVideo");
+        var fill = document.getElementById("bodyVideoProgressFill");
+        var adv = document.getElementById("bodyVideoAdvance");
+        if (!vid || !fill) return;
+        if (vid.duration) {
+          fill.style.width = (vid.currentTime / vid.duration * 100) + "%";
+        }
+      }
+      function bodyVideoEnd() {
+        var adv = document.getElementById("bodyVideoAdvance");
+        var fill = document.getElementById("bodyVideoProgressFill");
+        if (adv) adv.classList.add("visible");
+        if (fill) fill.style.width = "100%";
+      }
+      (function () {
+        var vid = document.getElementById("bodyVideo");
+        if (!vid) return;
+        vid.addEventListener("timeupdate", bodyVideoProgress);
+        vid.addEventListener("ended", bodyVideoEnd);
+      })();
+
+      /* ── MY BODY: Vocabulary ── */
+      var BODY_WORDS = [
+        { name: "head", img: "https://res.cloudinary.com/dp455m4rk/image/upload/c_crop,w_464,h_385,x_0,y_0/v1785941763/head_eyes_yi7oro.png" },
+        { name: "eyes", img: "https://res.cloudinary.com/dp455m4rk/image/upload/c_crop,w_464,h_385,x_464,y_0/v1785941763/head_eyes_yi7oro.png" },
+        { name: "ears", img: "https://res.cloudinary.com/dp455m4rk/image/upload/c_crop,w_464,h_380,x_0,y_0/v1785941763/ears_nose_tmikep.png" },
+        { name: "nose", img: "https://res.cloudinary.com/dp455m4rk/image/upload/c_crop,w_464,h_380,x_464,y_0/v1785941763/ears_nose_tmikep.png" },
+        { name: "mouth", img: "https://res.cloudinary.com/dp455m4rk/image/upload/c_crop,w_464,h_369,x_0,y_0/v1785941763/hands_mouth_flcgyw.png" },
+        { name: "hands", img: "https://res.cloudinary.com/dp455m4rk/image/upload/c_crop,w_464,h_369,x_464,y_0/v1785941763/hands_mouth_flcgyw.png" }
+      ];
+      function bodySpeak(word) {
+        say(word);
+      }
+      function bodyHearAll() {
+        var i = 0;
+        function next() {
+          if (i >= BODY_WORDS.length) return;
+          say(BODY_WORDS[i].name);
+          i++;
+          if (i < BODY_WORDS.length) setTimeout(next, 1200);
+        }
+        next();
+      }
+
+      /* ── MY BODY: Unfold dialogue ── */
+      setupUnfold("bodyDialogueScreen");
+
+      /* ── MY BODY: Where Is It? exercise ── */
+      var bodyWhereOrder = [];
+      var bodyWhereIdx = 0;
+      var bodyWhereResults = [];
+      var bodyWhereTries = 0;
+
+      function bodyWhereReset() {
+        bodyWhereOrder = BODY_WORDS.slice().sort(function () { return Math.random() - 0.5; });
+        bodyWhereIdx = 0;
+        bodyWhereResults = [];
+        bodyWhereTries = 0;
+        bodyWhereRender();
+      }
+
+      function bodyWhereRender() {
+        var pipHost = document.getElementById("bodyWherePips");
+        var grid = document.getElementById("bodyWhereGrid");
+        var title = document.getElementById("bodyWhereTitle");
+        if (!pipHost || !grid || !title) return;
+        if (bodyWhereIdx >= bodyWhereOrder.length) {
+          bodyWhereDone();
+          return;
+        }
+        var w = bodyWhereOrder[bodyWhereIdx];
+        title.textContent = "Where is the " + w.name + "?";
+        bodyWhereTries = 0;
+        pipHost.innerHTML = "";
+        for (var p = 0; p < bodyWhereOrder.length; p++) {
+          var d = document.createElement("div");
+          d.className = "pip" + (p < bodyWhereIdx ? " done" : p === bodyWhereIdx ? " active" : "");
+          pipHost.appendChild(d);
+        }
+        var shuffled = BODY_WORDS.slice().sort(function () { return Math.random() - 0.5; });
+        grid.innerHTML = "";
+        shuffled.forEach(function (item) {
+          var btn = document.createElement("button");
+          btn.className = "bodyBtn";
+          btn.innerHTML = '<img src="' + item.img + '" alt="' + item.name + '" /><span>' + item.name.charAt(0).toUpperCase() + item.name.slice(1) + '</span>';
+          btn.onclick = function () {
+            if (item.name === w.name) {
+              bodyWhereResults.push(bodyWhereTries === 0 ? "good" : "mediocre");
+              toast("YES!");
+              say("Yes! " + w.name);
+              bodyWhereIdx++;
+              setTimeout(bodyWhereRender, 1000);
+            } else {
+              bodyWhereTries++;
+              toast("Try again!");
+              btn.style.opacity = "0.4";
+              btn.style.pointerEvents = "none";
+            }
+          };
+          grid.appendChild(btn);
+        });
+        say("Where is the " + w.name + "?");
+      }
+
+      function bodyWhereDone() {
+        var grid = document.getElementById("bodyWhereGrid");
+        var title = document.getElementById("bodyWhereTitle");
+        var pipHost = document.getElementById("bodyWherePips");
+        if (title) title.textContent = "Well done!";
+        if (pipHost) pipHost.innerHTML = "";
+        if (grid) {
+          grid.innerHTML = '<button class="choice yes" onclick="show(screenIndexById(\'bodyVocabScreen\'))">&#9654; PLAY AGAIN</button>';
+        }
+        var pts = bodyWhereResults.filter(function (r) { return r === "good"; }).length;
+        addPoints(pts);
+      }
+
+      /* ── Airtable Fetch Layer ── */
+      var AT_BASE = "appkjmIp7zdE4qjND";
+      var AT_PAT = "";
+      var AT_TTL = 24 * 60 * 60 * 1000;
+
+      function atCacheKey(table, filter) {
+        return "at_" + table + (filter ? "_" + btoa(filter).replace(/=/g, "") : "");
+      }
+
+      function atReadCache(key) {
+        try {
+          var raw = localStorage.getItem(key);
+          if (!raw) return null;
+          var obj = JSON.parse(raw);
+          if (Date.now() - obj.ts > AT_TTL) return null;
+          return obj.data;
+        } catch (e) { return null; }
+      }
+
+      function atWriteCache(key, data) {
+        try {
+          localStorage.setItem(key, JSON.stringify({ ts: Date.now(), data: data }));
+        } catch (e) { /* quota exceeded — silently ignore */ }
+      }
+
+      function atBuildURL(table, filterFormula, pageSize, offset) {
+        var url = "https://api.airtable.com/v0/" + AT_BASE + "/" + encodeURIComponent(table) + "?pageSize=" + (pageSize || 100);
+        if (filterFormula) url += "&filterByFormula=" + encodeURIComponent(filterFormula);
+        if (offset) url += "&offset=" + offset;
+        return url;
+      }
+
+      function atFetchPage(url) {
+        return fetch(url, {
+          headers: { "Authorization": "Bearer " + AT_PAT }
+        }).then(function (r) {
+          if (!r.ok) throw new Error("Airtable " + r.status);
+          return r.json();
+        });
+      }
+
+      function atFetchAll(table, filterFormula, pageSize) {
+        var cacheKey = atCacheKey(table, filterFormula);
+        var cached = atReadCache(cacheKey);
+        if (cached) return Promise.resolve(cached);
+
+        var allRecords = [];
+        var offset = null;
+        function page() {
+          var url = atBuildURL(table, filterFormula, pageSize || 100, offset);
+          return atFetchPage(url).then(function (data) {
+            allRecords = allRecords.concat(data.records);
+            if (data.offset) {
+              offset = data.offset;
+              return page();
+            }
+            atWriteCache(cacheKey, allRecords);
+            return allRecords;
+          });
+        }
+        return page();
+      }
+
+      function atFetch(table, filterFormula) {
+        return atFetchAll(table, filterFormula, 100);
+      }
+
+      function atGetMediaByTag(tag) {
+        return atFetch("Media", 'SEARCH("' + tag + '", {Tag})').then(function (records) {
+          return records.filter(function (r) {
+            return r.fields.Style === "Pixar-3D";
+          }).map(function (r) {
+            var f = r.fields;
+            return {
+              asset: f.Asset || "",
+              url: f["Cloudinary URL"] || f["Basic Link"] || "",
+              type: f["Media Type"] || "Image",
+              tag: (f.Tag || [])[0] || "",
+              id: f.ID || "",
+              w: f.W || 0,
+              h: f.H || 0,
+              x: f.X || 0,
+              y: f.Y || 0
+            };
+          });
+        });
+      }
+
+      function atGetMediaByType(type) {
+        return atFetch("Media", '{Media Type} = "' + type + '"').then(function (records) {
+          return records.map(function (r) {
+            var f = r.fields;
+            return {
+              asset: f.Asset || "",
+              url: f["Cloudinary URL"] || f["Basic Link"] || "",
+              type: f["Media Type"] || "Image",
+              tag: (f.Tag || [])[0] || "",
+              id: f.ID || ""
+            };
+          });
+        });
+      }
+
+      function atClearCache(table) {
+        var keys = [];
+        for (var i = 0; i < localStorage.length; i++) {
+          var k = localStorage.key(i);
+          if (k && k.indexOf("at_" + (table || "")) === 0) keys.push(k);
+        }
+        keys.forEach(function (k) { localStorage.removeItem(k); });
+      }
     </script>
     <script src="https://unpkg.com/lucide@latest"></script>
     <script>
