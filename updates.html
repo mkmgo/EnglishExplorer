@@ -246,7 +246,7 @@
   <body>
     <div id="app">
       <div class="topbar">
-        <span class="topbarTitle">Updates — 20/08/2026 16:08</span>
+        <span class="topbarTitle" id="topbarTitle">Updates — …</span>
         <button id="themeBtn" aria-label="Toggle dark mode">
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -307,7 +307,7 @@
                       >Lesson Protocol 19/08/2026</a
                     >
                   </td>
-                  <td class="colNote">For tomorrow</td>
+                  <td class="colNote">Well done</td>
                 </tr>
                 <tr>
                   <td class="colDate">19/08/2026</td>
@@ -319,7 +319,7 @@
                       >Reading List</a
                     >
                   </td>
-                  <td class="colNote">Repeat</td>
+                  <td class="colNote">Well done</td>
                 </tr>
                 <tr>
                   <td class="colDate">18/08/2026</td>
@@ -332,7 +332,7 @@
                       >Lesson Protocol 18/08/2026</a
                     >
                   </td>
-                  <td class="colNote">For tomorrow</td>
+                  <td class="colNote">Well done</td>
                 </tr>
                 <tr>
                   <td class="colDate">17/08/2026</td>
@@ -363,7 +363,7 @@
               </thead>
               <tbody>
                 <tr>
-                  <td class="colDate">19/08/2026</td>
+                  <td class="colDate">20/08/2026</td>
                   <td class="colFile">
                     <a
                       class="onza-col"
@@ -378,7 +378,7 @@
                   </td>
                 </tr>
                 <tr>
-                  <td class="colDate">19/08/2026</td>
+                  <td class="colDate">20/08/2026</td>
                   <td class="colFile">
                     <a
                       class="onza-col"
@@ -389,7 +389,7 @@
                     >
                   </td>
                   <td class="colNote">
-                    Fold page in exercis@e book and write each word at least 5x.
+                    Fold page in exercise book and write each word at least 5x.
                   </td>
                 </tr>
                 <tr>
@@ -455,6 +455,26 @@
           } catch (e) {}
         };
       }
+
+      (function () {
+        var el = document.getElementById("topbarTitle");
+        if (!el) return;
+        var API =
+          "https://api.github.com/repos/mkmgo/EnglishExplorer/commits?path=updates.html&per_page=1";
+        fetch(API)
+          .then(function (r) { return r.json(); })
+          .then(function (data) {
+            if (!Array.isArray(data) || !data.length) return;
+            var d = new Date(data[0].commit.committer.date);
+            var dd = String(d.getDate()).padStart(2, "0");
+            var mm = String(d.getMonth() + 1).padStart(2, "0");
+            var yyyy = d.getFullYear();
+            var hh = String(d.getHours()).padStart(2, "0");
+            var mi = String(d.getMinutes()).padStart(2, "0");
+            el.textContent = "Updates \u2014 " + dd + "/" + mm + "/" + yyyy + " " + hh + ":" + mi;
+          })
+          .catch(function () {});
+      })();
     </script>
   </body>
 </html>
