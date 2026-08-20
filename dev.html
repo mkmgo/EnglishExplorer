@@ -180,8 +180,8 @@
         border: 1px solid var(--border);
       }
       .linkCard.today {
-        background: rgba(255, 184, 102, 0.13);
-        border-color: rgba(255, 184, 102, 0.4);
+        background: rgba(255, 184, 102, 0.18);
+        border-color: rgba(255, 184, 102, 0.5);
       }
       .linkCard:hover {
         background: #e2e8f0;
@@ -233,7 +233,7 @@
         border-bottom: 2px solid var(--accent);
       }
       :root[data-theme="dark"] .linkCard:hover { background: #263044; }
-      :root[data-theme="dark"] .linkCard.today { background: rgba(255, 184, 102, 0.1); border-color: rgba(255, 184, 102, 0.3); }
+      :root[data-theme="dark"] .linkCard.today { background: rgba(255, 184, 102, 0.15); border-color: rgba(255, 184, 102, 0.4); }
       :root[data-theme="dark"] .folderLabel { border-bottom-color: rgba(255,184,102,0.3); }
     </style>
   </head>
@@ -483,22 +483,41 @@
           var todayStr = today.getFullYear() + "-" +
             String(today.getMonth() + 1).padStart(2, "0") + "-" +
             String(today.getDate()).padStart(2, "0");
-          var since = todayStr + "T00:00:00Z";
-          var COMMITS_API = "https://api.github.com/repos/" + REPO + "/commits?since=" + since + "&per_page=100";
+          var COMMITS_API = "https://api.github.com/repos/" + REPO + "/commits?per_page=30";
           fetch(COMMITS_API)
             .then(function (r) { return r.json(); })
             .then(function (commits) {
               if (!Array.isArray(commits)) return;
-              var todayFiles = {};
+              var todaySHAs = [];
               commits.forEach(function (c) {
-                if (!c.files) return;
-                c.files.forEach(function (f) {
-                  todayFiles[f.filename] = true;
-                });
+                if (c.commit && c.commit.committer && c.commit.committer.date &&
+                    c.commit.committer.date.indexOf(todayStr) === 0) {
+                  todaySHAs.push(c.sha);
+                }
+              });
+              if (!todaySHAs.length) return;
+              return Promise.all(todaySHAs.map(function (sha) {
+                return fetch("https://api.github.com/repos/" + REPO + "/commits/" + sha)
+                  .then(function (r) { return r.json(); })
+                  .then(function (detail) {
+                    var files = [];
+                    if (detail && Array.isArray(detail.files)) {
+                      detail.files.forEach(function (f) { files.push(f.filename); });
+                    }
+                    return files;
+                  })
+                  .catch(function () { return []; });
+              }));
+            })
+            .then(function (fileArrays) {
+              if (!fileArrays) return;
+              var todayFiles = {};
+              fileArrays.forEach(function (arr) {
+                arr.forEach(function (name) { todayFiles[name] = true; });
               });
               document.querySelectorAll(".linkCard").forEach(function (card) {
-                var filePath = card.querySelector(".lcFile");
-                if (filePath && todayFiles[filePath.textContent]) {
+                var fp = card.querySelector(".lcFile");
+                if (fp && todayFiles[fp.textContent]) {
                   card.classList.add("today");
                 }
               });
