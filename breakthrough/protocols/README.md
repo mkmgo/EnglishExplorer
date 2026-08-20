@@ -88,6 +88,11 @@ Use the date in `YYYY-MM-DD.html` format. Every file is a standalone HTML page â
 - Inline `<style>` only â€” no external files.
 - Use the same `:root` colour variables and `clamp()` font sizing as existing files.
 - No JavaScript unless the protocol specifically requires interactivity.
+- **When a new protocol is created, add a row to `updates.html`** in the **Nimza** (left) column table. The row format is:
+  - **Date**: the protocol date in `DD/MM/YYYY` format
+  - **File**: link text `Lesson Protocol DD/MM/YYYY`, href pointing to the protocol file on GitHub Pages (e.g. `https://mkmgo.github.io/EnglishExplorer/breakthrough/protocols/YYYY-MM-DD.html`), with class `nima-col` and `target="_blank"`
+  - **Note**: `For tomorrow`
+  - Place the new row **at the top** of Nimza's `<tbody>`, above any existing rows.
 
 ## Weekday colours
 
