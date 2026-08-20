@@ -401,24 +401,69 @@
         display: flex;
       }
       .mediaThumbs .thumb {
-        width: 60px;
-        height: 60px;
-        border-radius: 12px;
-        overflow: hidden;
-        border: 3px solid transparent;
+        width: 80px;
+        height: 80px;
+        border: none;
         padding: 0;
         cursor: pointer;
-        background: #e0e0e0;
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+        background: none;
+        box-shadow: none;
         flex: 0 0 auto;
         display: flex;
         align-items: center;
         justify-content: center;
         font-size: 1.5em;
-        transition: border-color 0.2s ease, transform 0.2s ease;
+        transition: transform 0.2s ease;
+        position: relative;
+        user-select: none;
+        -webkit-user-select: none;
       }
-      .mediaThumbs .thumb.active {
+      .mediaThumbs .thumbClip {
+        width: 100%;
+        height: 100%;
+        border-radius: 12px;
+        overflow: hidden;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: #e0e0e0;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+        border: 3px solid transparent;
+        transition: border-color 0.2s ease, box-shadow 0.2s ease;
+      }
+      .mediaThumbs .thumb.active .thumbClip {
         border-color: var(--accent);
+      }
+      .mediaThumbs .thumb .thumbClose {
+        position: absolute;
+        top: -6px;
+        right: -6px;
+        width: 22px;
+        height: 22px;
+        border-radius: 50%;
+        background: var(--bad);
+        color: #fff;
+        font-size: 13px;
+        font-weight: 900;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border: 2px solid #fff;
+        cursor: pointer;
+        z-index: 2;
+        line-height: 1;
+        padding: 0;
+        transition: transform 0.15s ease;
+      }
+      .mediaThumbs .thumb .thumbClose:active {
+        transform: scale(0.85);
+      }
+      .mediaThumbs .thumb.dragging {
+        opacity: 0.4;
+        transform: scale(0.9);
+      }
+      .mediaThumbs .thumb.dragOver .thumbClip {
+        box-shadow: 0 0 0 3px var(--accent2), 0 2px 8px rgba(0, 0, 0, 0.15);
       }
       .mediaThumbs .thumb img,
       .mediaThumbs .thumb video {
@@ -1382,9 +1427,9 @@
       :root[data-theme="dark"] #themeBtn {
         border: 2px solid var(--accent);
       }
-      :root[data-theme="dark"] .mediaThumbs .thumb {
+      :root[data-theme="dark"] .mediaThumbs .thumbClip {
         background: #2a3240;
-        border: 1px solid var(--accent);
+        border-color: var(--accent);
       }
       :root[data-theme="dark"] .mediaWrap {
         background: #232a36;
@@ -2142,6 +2187,40 @@
         renderMediaThumbs();
       }
 
+      var dragFromIdx = -1;
+      var dragOverIdx = -1;
+
+      function removeMedia(idx) {
+        if (idx < 0 || idx >= mediaHistory.length) return;
+        pauseActiveMedia();
+        mediaHistory.splice(idx, 1);
+        if (activeMediaIdx === idx) {
+          activeMediaIdx = -1;
+        } else if (activeMediaIdx > idx) {
+          activeMediaIdx--;
+        }
+        renderMedia();
+        renderMediaThumbs();
+        toast("Removed");
+      }
+
+      function swapMedia(fromIdx, toIdx) {
+        if (fromIdx === toIdx) return;
+        if (fromIdx < 0 || fromIdx >= mediaHistory.length) return;
+        if (toIdx < 0 || toIdx >= mediaHistory.length) return;
+        var item = mediaHistory.splice(fromIdx, 1)[0];
+        mediaHistory.splice(toIdx, 0, item);
+        if (activeMediaIdx === fromIdx) {
+          activeMediaIdx = toIdx;
+        } else if (
+          activeMediaIdx >= Math.min(fromIdx, toIdx) &&
+          activeMediaIdx <= Math.max(fromIdx, toIdx)
+        ) {
+          activeMediaIdx += fromIdx < toIdx ? -1 : 1;
+        }
+        renderMediaThumbs();
+      }
+
       function renderMediaThumbs() {
         var container = document.getElementById("mediaThumbs");
         if (!container) return;
@@ -2159,24 +2238,117 @@
             var btn = document.createElement("button");
             btn.className = "thumb";
             btn.type = "button";
+            btn.draggable = true;
+
+            var clip = document.createElement("div");
+            clip.className = "thumbClip";
             if (entry.type === "image") {
               var img = document.createElement("img");
               img.src = entry.url;
               img.alt = "thumb";
               img.loading = "lazy";
-              btn.appendChild(img);
+              clip.appendChild(img);
             } else if (entry.type === "video") {
               var vid = document.createElement("video");
               vid.muted = true;
               vid.preload = "metadata";
               vid.src = entry.url;
-              btn.appendChild(vid);
+              clip.appendChild(vid);
             } else {
-              btn.textContent = "🎵";
+              clip.textContent = "🎵";
             }
-            btn.addEventListener("click", function () {
+            btn.appendChild(clip);
+
+            var closeBtn = document.createElement("button");
+            closeBtn.className = "thumbClose";
+            closeBtn.type = "button";
+            closeBtn.innerHTML = "×";
+            closeBtn.addEventListener("click", function (e) {
+              e.stopPropagation();
+              e.preventDefault();
+              removeMedia(idx);
+            });
+            btn.appendChild(closeBtn);
+
+            var didDrag = false;
+            var touchStartPos = null;
+
+            btn.addEventListener("dragstart", function (e) {
+              dragFromIdx = idx;
+              btn.classList.add("dragging");
+              e.dataTransfer.effectAllowed = "move";
+              e.dataTransfer.setData("text/plain", String(idx));
+            });
+            btn.addEventListener("dragend", function () {
+              btn.classList.remove("dragging");
+              dragFromIdx = -1;
+              var overs = container.querySelectorAll(".dragOver");
+              for (var k = 0; k < overs.length; k++) overs[k].classList.remove("dragOver");
+            });
+            btn.addEventListener("dragover", function (e) {
+              e.preventDefault();
+              e.dataTransfer.dropEffect = "move";
+              btn.classList.add("dragOver");
+            });
+            btn.addEventListener("dragleave", function () {
+              btn.classList.remove("dragOver");
+            });
+            btn.addEventListener("drop", function (e) {
+              e.preventDefault();
+              btn.classList.remove("dragOver");
+              if (dragFromIdx >= 0 && dragFromIdx !== idx) {
+                swapMedia(dragFromIdx, idx);
+              }
+              dragFromIdx = -1;
+            });
+
+            btn.addEventListener("touchstart", function (e) {
+              var t = e.touches[0];
+              if (t) touchStartPos = { x: t.clientX, y: t.clientY };
+              dragFromIdx = idx;
+              didDrag = false;
+            }, { passive: true });
+            btn.addEventListener("touchmove", function (e) {
+              if (dragFromIdx < 0) return;
+              e.preventDefault();
+              var t = e.touches[0];
+              if (!t) return;
+              if (touchStartPos) {
+                var dx = Math.abs(t.clientX - touchStartPos.x);
+                var dy = Math.abs(t.clientY - touchStartPos.y);
+                if (dx > 10 || dy > 10) didDrag = true;
+              }
+              var el = document.elementFromPoint(t.clientX, t.clientY);
+              var over = el ? el.closest(".thumb") : null;
+              var overs = container.querySelectorAll(".dragOver");
+              for (var k = 0; k < overs.length; k++) overs[k].classList.remove("dragOver");
+              if (over && over !== btn) {
+                over.classList.add("dragOver");
+                dragOverIdx = Array.prototype.indexOf.call(container.children, over);
+              } else {
+                dragOverIdx = -1;
+              }
+            }, { passive: false });
+            btn.addEventListener("touchend", function () {
+              if (dragFromIdx >= 0 && dragOverIdx >= 0 && dragFromIdx !== dragOverIdx) {
+                swapMedia(dragFromIdx, dragOverIdx);
+              }
+              dragFromIdx = -1;
+              dragOverIdx = -1;
+              touchStartPos = null;
+              var overs = container.querySelectorAll(".dragOver");
+              for (var k = 0; k < overs.length; k++) overs[k].classList.remove("dragOver");
+            });
+
+            btn.addEventListener("click", function (e) {
+              if (didDrag) {
+                didDrag = false;
+                e.preventDefault();
+                return;
+              }
               selectMedia(idx);
             });
+
             container.appendChild(btn);
           })(i);
         }
@@ -2187,8 +2359,11 @@
           dlBtn.type = "button";
           dlBtn.style.color = "var(--muted)";
           dlBtn.style.fontSize = "1.2em";
-          dlBtn.innerHTML =
+          var dlClip = document.createElement("div");
+          dlClip.className = "thumbClip";
+          dlClip.innerHTML =
             '<svg xmlns="http://www.w3.org/2000/svg" width="1.2em" height="1.2em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" x2="12" y1="15" y2="3"/></svg>';
+          dlBtn.appendChild(dlClip);
           dlBtn.addEventListener("click", function () {
             downloadMediaUrls();
           });
