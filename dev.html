@@ -1,0 +1,421 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no"
+    />
+    <meta
+      http-equiv="Cache-Control"
+      content="no-cache, no-store, must-revalidate"
+    />
+    <meta http-equiv="Pragma" content="no-cache" />
+    <meta http-equiv="Expires" content="0" />
+    <title>English Explorer — Dev Hub</title>
+    <meta name="description" content="English Explorer Developer Hub — project structure and quick links" />
+    <meta property="og:title" content="English Explorer — Dev Hub" />
+    <meta property="og:description" content="Developer hub for the English Explorer project" />
+    <link
+      rel="icon"
+      type="image/png"
+      href="https://res.cloudinary.com/dqwm4pdbz/image/upload/v1766700880/my-express-uploads/vii2nhjxitkmcoet6jbg.png"
+    />
+    <link
+      rel="apple-touch-icon"
+      href="https://res.cloudinary.com/dqwm4pdbz/image/upload/v1766700880/my-express-uploads/vii2nhjxitkmcoet6jbg.png"
+    />
+    <style>
+      :root {
+        --bg: #faf7f2;
+        --ink: #14213d;
+        --muted: #60708d;
+        --accent: #e43703;
+        --accent2: #ffb866;
+        --good: #19a974;
+        --panel: #fcfcfc;
+        --shadow: 0 18px 50px rgba(20, 33, 61, 0.14);
+        --code-bg: #f1f5f9;
+        --border: rgba(96, 112, 141, 0.15);
+      }
+      * { box-sizing: border-box; }
+      html, body {
+        margin: 0;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+        background: var(--bg);
+        font-family: Arial, Helvetica, sans-serif;
+        color: var(--ink);
+        touch-action: manipulation;
+      }
+      #app {
+        width: 100%;
+        height: 100vh;
+        height: 100dvh;
+        position: relative;
+        overflow: hidden;
+      }
+      .topbar {
+        position: absolute;
+        top: 0; left: 0; right: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 1vh 2vw;
+        background: var(--accent);
+        z-index: 20;
+        height: clamp(44px, 6vh, 60px);
+      }
+      .topbarTitle {
+        font-family: Verdana, "Trebuchet MS", sans-serif;
+        font-size: clamp(1.1rem, 2vw, 1.6rem);
+        font-weight: 700;
+        letter-spacing: 0.12em;
+        color: var(--accent2);
+        text-transform: uppercase;
+      }
+      #themeBtn {
+        position: absolute;
+        right: 2vw; top: 50%;
+        transform: translateY(-50%);
+        width: 2rem; height: 2rem;
+        border-radius: 999px;
+        border: 2px solid var(--accent2);
+        background: var(--panel);
+        color: var(--accent);
+        font-size: 1.1rem;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        transition: transform 0.2s ease, background 0.3s ease, color 0.3s ease;
+      }
+      #themeBtn:active { transform: translateY(-50%) scale(0.92); }
+      #themeBtn.dark { background: var(--accent2); color: var(--accent); }
+      .main {
+        position: absolute;
+        top: clamp(44px, 6vh, 60px);
+        left: 0; right: 0; bottom: 0;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: clamp(12px, 2vw, 24px);
+        overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
+        overscroll-behavior: contain;
+        scrollbar-width: none;
+      }
+      .main::-webkit-scrollbar { display: none; }
+      .container {
+        width: 100%;
+        max-width: 900px;
+        background: var(--panel);
+        border-radius: 24px;
+        box-shadow: var(--shadow);
+        padding: clamp(1rem, 2.5vw, 2rem);
+        display: flex;
+        flex-direction: column;
+        gap: 1.6em;
+      }
+      .sectionHead {
+        font-size: clamp(1.2rem, 2.5vw, 1.8rem);
+        font-weight: 900;
+        text-align: center;
+        margin: 0;
+        letter-spacing: -0.01em;
+        color: var(--accent);
+      }
+      .tree {
+        background: var(--code-bg);
+        border-radius: 12px;
+        padding: clamp(0.8rem, 1.5vw, 1.2rem);
+        font-family: "Cascadia Code", "Fira Code", Consolas, monospace;
+        font-size: clamp(0.78rem, 1.2vw, 0.95rem);
+        line-height: 1.65;
+        overflow-x: auto;
+        white-space: pre;
+        color: var(--ink);
+      }
+      .tree .dir { color: var(--accent); font-weight: 700; }
+      .tree .file { color: var(--muted); }
+      .tree .note { opacity: 0.5; }
+      .folderSection {
+        display: flex;
+        flex-direction: column;
+        gap: 0.6em;
+      }
+      .folderLabel {
+        font-weight: 800;
+        font-size: clamp(0.95rem, 1.5vw, 1.15rem);
+        color: var(--ink);
+        margin: 0;
+        padding-bottom: 0.25em;
+        border-bottom: 2px solid var(--accent2);
+      }
+      .folderLabel span { color: var(--muted); font-weight: 400; }
+      .linkGrid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+        gap: 8px;
+      }
+      .linkCard {
+        display: flex;
+        flex-direction: column;
+        text-decoration: none;
+        color: var(--ink);
+        background: var(--code-bg);
+        border-radius: 10px;
+        padding: 0.6em 0.8em;
+        transition: background 0.2s, transform 0.15s;
+        border: 1px solid var(--border);
+      }
+      .linkCard:hover {
+        background: #e2e8f0;
+        transform: translateY(-1px);
+      }
+      .linkCard:active { transform: scale(0.97); }
+      .linkCard .lcName {
+        font-weight: 700;
+        font-size: clamp(0.85rem, 1.2vw, 1rem);
+        color: var(--accent);
+      }
+      .linkCard .lcFile {
+        font-family: "Cascadia Code", Consolas, monospace;
+        font-size: 0.78em;
+        color: var(--muted);
+        margin-top: 2px;
+      }
+      .linkCard .lcDesc {
+        font-size: 0.78em;
+        color: var(--muted);
+        margin-top: 4px;
+      }
+      .legend {
+        font-size: clamp(0.8rem, 1vw, 0.9rem);
+        color: var(--muted);
+        text-align: center;
+        margin-top: 0.5em;
+      }
+      @media (max-aspect-ratio: 1/1) {
+        .linkGrid { grid-template-columns: 1fr; }
+      }
+      :root[data-theme="dark"] {
+        --bg: #161a24;
+        --ink: #e8ecf4;
+        --muted: #93a1b8;
+        --panel: #1f2530;
+        --shadow: 0 18px 50px rgba(0,0,0,0.55);
+        --code-bg: #171d2a;
+        --border: rgba(147,161,184,0.15);
+      }
+      :root[data-theme="dark"] .topbar {
+        background: #232a36;
+        border-bottom: 2px solid var(--accent);
+      }
+      :root[data-theme="dark"] .linkCard:hover { background: #263044; }
+      :root[data-theme="dark"] .folderLabel { border-bottom-color: rgba(255,184,102,0.3); }
+    </style>
+  </head>
+  <body>
+    <div id="app">
+      <div class="topbar">
+        <span class="topbarTitle">Dev Hub</span>
+        <button id="themeBtn" aria-label="Toggle dark mode">
+          <svg xmlns="http://www.w3.org/2000/svg" width="1.1em" height="1.1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="4"/>
+            <path d="M12 2v2"/><path d="m4.93 4.93 1.41 1.41"/>
+            <path d="M20 12h2"/><path d="m19.07 4.93-1.41 1.41"/>
+            <path d="M15.947 12.65a4 4 0 0 0-5.925-4.128"/>
+            <path d="M13 22H7a5 5 0 1 1 4.9-6H13a3 3 0 0 1 0 6Z"/>
+          </svg>
+        </button>
+      </div>
+
+      <div class="main">
+        <div class="container">
+
+          <h1 class="sectionHead">Quick Links</h1>
+
+          <div class="folderSection">
+            <h2 class="folderLabel">Root <span>/</span></h2>
+            <div class="linkGrid">
+              <a class="linkCard" href="index.html" target="_blank" rel="noopener">
+                <span class="lcName">index.html</span>
+                <span class="lcFile">index.html</span>
+                <span class="lcDesc">Stable, production-ready release</span>
+              </a>
+              <a class="linkCard" href="advanced.html" target="_blank" rel="noopener">
+                <span class="lcName">advanced.html</span>
+                <span class="lcFile">advanced.html</span>
+                <span class="lcDesc">Active sandbox / current dev version</span>
+              </a>
+              <a class="linkCard" href="updates.html" target="_blank" rel="noopener">
+                <span class="lcName">updates.html</span>
+                <span class="lcFile">updates.html</span>
+                <span class="lcDesc">Updates log</span>
+              </a>
+            </div>
+          </div>
+
+          <div class="folderSection">
+            <h2 class="folderLabel">junior / thematic <span>/ Thematic lesson decks</span></h2>
+            <div class="linkGrid">
+              <a class="linkCard" href="junior/thematic/animals.html" target="_blank" rel="noopener">
+                <span class="lcName">animals.html</span>
+                <span class="lcFile">junior/thematic/animals.html</span>
+                <span class="lcDesc">Animals lesson deck</span>
+              </a>
+              <a class="linkCard" href="junior/thematic/my-family-my-classroom.html" target="_blank" rel="noopener">
+                <span class="lcName">my-family-my-classroom.html</span>
+                <span class="lcFile">junior/thematic/my-family-my-classroom.html</span>
+                <span class="lcDesc">Family &amp; Classroom</span>
+              </a>
+              <a class="linkCard" href="junior/thematic/toys-things.html" target="_blank" rel="noopener">
+                <span class="lcName">toys-things.html</span>
+                <span class="lcFile">junior/thematic/toys-things.html</span>
+                <span class="lcDesc">Toys &amp; Things</span>
+              </a>
+            </div>
+          </div>
+
+          <div class="folderSection">
+            <h2 class="folderLabel">junior / minigames <span>/ Gamified mini-games</span></h2>
+            <div class="linkGrid">
+              <a class="linkCard" href="junior/minigames/abc-world.html" target="_blank" rel="noopener">
+                <span class="lcName">abc-world.html</span>
+                <span class="lcFile">junior/minigames/abc-world.html</span>
+                <span class="lcDesc">ABC World game</span>
+              </a>
+              <a class="linkCard" href="junior/minigames/new-words-wizard.html" target="_blank" rel="noopener">
+                <span class="lcName">new-words-wizard.html</span>
+                <span class="lcFile">junior/minigames/new-words-wizard.html</span>
+                <span class="lcDesc">New Words Wizard game</span>
+              </a>
+              <a class="linkCard" href="junior/minigames/unlock-mystery.html" target="_blank" rel="noopener">
+                <span class="lcName">unlock-mystery.html</span>
+                <span class="lcFile">junior/minigames/unlock-mystery.html</span>
+                <span class="lcDesc">Unlock Mystery (original)</span>
+              </a>
+              <a class="linkCard" href="junior/minigames/unlock-mystery-plus.html" target="_blank" rel="noopener">
+                <span class="lcName">unlock-mystery-plus.html</span>
+                <span class="lcFile">junior/minigames/unlock-mystery-plus.html</span>
+                <span class="lcDesc">Unlock Mystery Plus</span>
+              </a>
+            </div>
+          </div>
+
+          <div class="folderSection">
+            <h2 class="folderLabel">breakthrough / tools <span>/ Standalone utilities</span></h2>
+            <div class="linkGrid">
+              <a class="linkCard" href="breakthrough/tools/eebt-tools.html" target="_blank" rel="noopener">
+                <span class="lcName">eebt-tools.html</span>
+                <span class="lcFile">breakthrough/tools/eebt-tools.html</span>
+                <span class="lcDesc">EEBT Tools collection</span>
+              </a>
+              <a class="linkCard" href="breakthrough/tools/eebt-translator.html" target="_blank" rel="noopener">
+                <span class="lcName">eebt-translator.html</span>
+                <span class="lcFile">breakthrough/tools/eebt-translator.html</span>
+                <span class="lcDesc">EEBT Translator</span>
+              </a>
+            </div>
+          </div>
+
+          <div class="folderSection">
+            <h2 class="folderLabel">breakthrough / protocols <span>/ Daily lesson protocols</span></h2>
+            <div class="linkGrid">
+              <a class="linkCard" href="breakthrough/protocols/2026-08-17.html" target="_blank" rel="noopener">
+                <span class="lcName">2026-08-17.html</span>
+                <span class="lcFile">breakthrough/protocols/2026-08-17.html</span>
+                <span class="lcDesc">17 August 2026</span>
+              </a>
+              <a class="linkCard" href="breakthrough/protocols/2026-08-18.html" target="_blank" rel="noopener">
+                <span class="lcName">2026-08-18.html</span>
+                <span class="lcFile">breakthrough/protocols/2026-08-18.html</span>
+                <span class="lcDesc">18 August 2026</span>
+              </a>
+              <a class="linkCard" href="breakthrough/protocols/2026-08-19.html" target="_blank" rel="noopener">
+                <span class="lcName">2026-08-19.html</span>
+                <span class="lcFile">breakthrough/protocols/2026-08-19.html</span>
+                <span class="lcDesc">19 August 2026</span>
+              </a>
+              <a class="linkCard" href="breakthrough/protocols/2026-08-20.html" target="_blank" rel="noopener">
+                <span class="lcName">2026-08-20.html</span>
+                <span class="lcFile">breakthrough/protocols/2026-08-20.html</span>
+                <span class="lcDesc">20 August 2026</span>
+              </a>
+            </div>
+          </div>
+
+          <div class="folderSection">
+            <h2 class="folderLabel">archive <span>/ Older versions &amp; backups</span></h2>
+            <div class="linkGrid">
+              <a class="linkCard" href="archive/develop.html" target="_blank" rel="noopener">
+                <span class="lcName">develop.html</span>
+                <span class="lcFile">archive/develop.html</span>
+                <span class="lcDesc">Older development version</span>
+              </a>
+            </div>
+          </div>
+
+          <h2 class="sectionHead" style="font-size:clamp(1rem,2vw,1.3rem);margin-top:0.5em">Folder Structure</h2>
+
+          <div class="tree"><span class="dir">EnglishExplorer/</span>
+├── <span class="file">index.html</span>               <span class="note">&lt;-- Stable, production release</span>
+├── <span class="file">advanced.html</span>            <span class="note">&lt;-- Active sandbox / dev version</span>
+├── <span class="file">updates.html</span>             <span class="note">&lt;-- Updates log (Nimza + Onza)</span>
+├── <span class="file">dev.html</span>                 <span class="note">&lt;-- This page</span>
+├── <span class="dir">junior/</span>                  <span class="note">&lt;-- Ages 6-9 ecosystem</span>
+│   ├── <span class="dir">thematic/</span>            <span class="note">&lt;-- Thematic lesson decks</span>
+│   │   ├── <span class="file">animals.html</span>
+│   │   ├── <span class="file">my-family-my-classroom.html</span>
+│   │   └── <span class="file">toys-things.html</span>
+│   └── <span class="dir">minigames/</span>           <span class="note">&lt;-- Gamified mini-games</span>
+│       ├── <span class="file">abc-world.html</span>
+│       ├── <span class="file">new-words-wizard.html</span>
+│       ├── <span class="file">unlock-mystery.html</span>
+│       └── <span class="file">unlock-mystery-plus.html</span>
+├── <span class="dir">breakthrough/</span>            <span class="note">&lt;-- Older pupils (EEBT)</span>
+│   ├── <span class="dir">tools/</span>               <span class="note">&lt;-- Standalone utilities</span>
+│   │   ├── <span class="file">eebt-tools.html</span>
+│   │   └── <span class="file">eebt-translator.html</span>
+│   └── <span class="dir">protocols/</span>           <span class="note">&lt;-- Daily lesson protocols</span>
+│       ├── <span class="file">2026-08-17.html</span>
+│       ├── <span class="file">2026-08-18.html</span>
+│       ├── <span class="file">2026-08-19.html</span>
+│       └── <span class="file">2026-08-20.html</span>
+└── <span class="dir">archive/</span>                 <span class="note">&lt;-- Older versions / backups</span>
+    └── <span class="file">develop.html</span></div>
+
+          <p class="legend">16 HTML files &middot; 7 folders &middot; All pages open in new tab</p>
+
+        </div>
+      </div>
+    </div>
+
+    <script>
+      var themeBtn = document.getElementById("themeBtn");
+      var themeDark = false;
+      function applyTheme(dark) {
+        themeDark = dark;
+        if (themeBtn) themeBtn.classList.toggle("dark", dark);
+        document.documentElement.setAttribute("data-theme", dark ? "dark" : "light");
+      }
+      try {
+        var storedTheme = localStorage.getItem("eebt-theme");
+        if (storedTheme === "dark") applyTheme(true);
+        else if (storedTheme === "light") applyTheme(false);
+        else if (window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches) {
+          applyTheme(true);
+        }
+      } catch (e) {}
+      if (themeBtn) {
+        themeBtn.onclick = function () {
+          applyTheme(!themeDark);
+          try { localStorage.setItem("eebt-theme", themeDark ? "dark" : "light"); } catch (e) {}
+        };
+      }
+    </script>
+  </body>
+</html>
