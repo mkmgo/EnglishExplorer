@@ -75,6 +75,14 @@
         color: var(--accent2);
         text-transform: uppercase;
       }
+      .topbarDate {
+        font-size: 0.55em;
+        font-weight: 400;
+        letter-spacing: 0.04em;
+        opacity: 0.75;
+        margin-left: 0.5em;
+        text-transform: none;
+      }
       #themeBtn {
         position: absolute;
         right: 2vw; top: 50%;
@@ -171,6 +179,10 @@
         transition: background 0.2s, transform 0.15s;
         border: 1px solid var(--border);
       }
+      .linkCard.today {
+        background: rgba(255, 184, 102, 0.13);
+        border-color: rgba(255, 184, 102, 0.4);
+      }
       .linkCard:hover {
         background: #e2e8f0;
         transform: translateY(-1px);
@@ -198,6 +210,12 @@
         text-align: center;
         margin-top: 0.5em;
       }
+      .loading {
+        text-align: center;
+        color: var(--muted);
+        font-style: italic;
+        padding: 2em 0;
+      }
       @media (max-aspect-ratio: 1/1) {
         .linkGrid { grid-template-columns: 1fr; }
       }
@@ -215,13 +233,14 @@
         border-bottom: 2px solid var(--accent);
       }
       :root[data-theme="dark"] .linkCard:hover { background: #263044; }
+      :root[data-theme="dark"] .linkCard.today { background: rgba(255, 184, 102, 0.1); border-color: rgba(255, 184, 102, 0.3); }
       :root[data-theme="dark"] .folderLabel { border-bottom-color: rgba(255,184,102,0.3); }
     </style>
   </head>
   <body>
     <div id="app">
       <div class="topbar">
-        <span class="topbarTitle">Dev Hub</span>
+        <span class="topbarTitle" id="topbarTitle">Hub</span>
         <button id="themeBtn" aria-label="Toggle dark mode">
           <svg xmlns="http://www.w3.org/2000/svg" width="1.1em" height="1.1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <circle cx="12" cy="12" r="4"/>
@@ -235,166 +254,18 @@
 
       <div class="main">
         <div class="container">
-
           <h1 class="sectionHead">Quick Links</h1>
-
-          <div class="folderSection">
-            <h2 class="folderLabel">Root <span>/</span></h2>
-            <div class="linkGrid">
-              <a class="linkCard" href="index.html" target="_blank" rel="noopener">
-                <span class="lcName">index.html</span>
-                <span class="lcFile">index.html</span>
-                <span class="lcDesc">Stable, production-ready release</span>
-              </a>
-              <a class="linkCard" href="advanced.html" target="_blank" rel="noopener">
-                <span class="lcName">advanced.html</span>
-                <span class="lcFile">advanced.html</span>
-                <span class="lcDesc">Active sandbox / current dev version</span>
-              </a>
-              <a class="linkCard" href="updates.html" target="_blank" rel="noopener">
-                <span class="lcName">updates.html</span>
-                <span class="lcFile">updates.html</span>
-                <span class="lcDesc">Updates log</span>
-              </a>
-            </div>
-          </div>
-
-          <div class="folderSection">
-            <h2 class="folderLabel">junior / thematic <span>/ Thematic lesson decks</span></h2>
-            <div class="linkGrid">
-              <a class="linkCard" href="junior/thematic/animals.html" target="_blank" rel="noopener">
-                <span class="lcName">animals.html</span>
-                <span class="lcFile">junior/thematic/animals.html</span>
-                <span class="lcDesc">Animals lesson deck</span>
-              </a>
-              <a class="linkCard" href="junior/thematic/my-family-my-classroom.html" target="_blank" rel="noopener">
-                <span class="lcName">my-family-my-classroom.html</span>
-                <span class="lcFile">junior/thematic/my-family-my-classroom.html</span>
-                <span class="lcDesc">Family &amp; Classroom</span>
-              </a>
-              <a class="linkCard" href="junior/thematic/toys-things.html" target="_blank" rel="noopener">
-                <span class="lcName">toys-things.html</span>
-                <span class="lcFile">junior/thematic/toys-things.html</span>
-                <span class="lcDesc">Toys &amp; Things</span>
-              </a>
-            </div>
-          </div>
-
-          <div class="folderSection">
-            <h2 class="folderLabel">junior / minigames <span>/ Gamified mini-games</span></h2>
-            <div class="linkGrid">
-              <a class="linkCard" href="junior/minigames/abc-world.html" target="_blank" rel="noopener">
-                <span class="lcName">abc-world.html</span>
-                <span class="lcFile">junior/minigames/abc-world.html</span>
-                <span class="lcDesc">ABC World game</span>
-              </a>
-              <a class="linkCard" href="junior/minigames/new-words-wizard.html" target="_blank" rel="noopener">
-                <span class="lcName">new-words-wizard.html</span>
-                <span class="lcFile">junior/minigames/new-words-wizard.html</span>
-                <span class="lcDesc">New Words Wizard game</span>
-              </a>
-              <a class="linkCard" href="junior/minigames/unlock-mystery.html" target="_blank" rel="noopener">
-                <span class="lcName">unlock-mystery.html</span>
-                <span class="lcFile">junior/minigames/unlock-mystery.html</span>
-                <span class="lcDesc">Unlock Mystery (original)</span>
-              </a>
-              <a class="linkCard" href="junior/minigames/unlock-mystery-plus.html" target="_blank" rel="noopener">
-                <span class="lcName">unlock-mystery-plus.html</span>
-                <span class="lcFile">junior/minigames/unlock-mystery-plus.html</span>
-                <span class="lcDesc">Unlock Mystery Plus</span>
-              </a>
-            </div>
-          </div>
-
-          <div class="folderSection">
-            <h2 class="folderLabel">breakthrough / tools <span>/ Standalone utilities</span></h2>
-            <div class="linkGrid">
-              <a class="linkCard" href="breakthrough/tools/eebt-tools.html" target="_blank" rel="noopener">
-                <span class="lcName">eebt-tools.html</span>
-                <span class="lcFile">breakthrough/tools/eebt-tools.html</span>
-                <span class="lcDesc">EEBT Tools collection</span>
-              </a>
-              <a class="linkCard" href="breakthrough/tools/eebt-translator.html" target="_blank" rel="noopener">
-                <span class="lcName">eebt-translator.html</span>
-                <span class="lcFile">breakthrough/tools/eebt-translator.html</span>
-                <span class="lcDesc">EEBT Translator</span>
-              </a>
-            </div>
-          </div>
-
-          <div class="folderSection">
-            <h2 class="folderLabel">breakthrough / protocols <span>/ Daily lesson protocols</span></h2>
-            <div class="linkGrid">
-              <a class="linkCard" href="breakthrough/protocols/2026-08-17.html" target="_blank" rel="noopener">
-                <span class="lcName">2026-08-17.html</span>
-                <span class="lcFile">breakthrough/protocols/2026-08-17.html</span>
-                <span class="lcDesc">17 August 2026</span>
-              </a>
-              <a class="linkCard" href="breakthrough/protocols/2026-08-18.html" target="_blank" rel="noopener">
-                <span class="lcName">2026-08-18.html</span>
-                <span class="lcFile">breakthrough/protocols/2026-08-18.html</span>
-                <span class="lcDesc">18 August 2026</span>
-              </a>
-              <a class="linkCard" href="breakthrough/protocols/2026-08-19.html" target="_blank" rel="noopener">
-                <span class="lcName">2026-08-19.html</span>
-                <span class="lcFile">breakthrough/protocols/2026-08-19.html</span>
-                <span class="lcDesc">19 August 2026</span>
-              </a>
-              <a class="linkCard" href="breakthrough/protocols/2026-08-20.html" target="_blank" rel="noopener">
-                <span class="lcName">2026-08-20.html</span>
-                <span class="lcFile">breakthrough/protocols/2026-08-20.html</span>
-                <span class="lcDesc">20 August 2026</span>
-              </a>
-            </div>
-          </div>
-
-          <div class="folderSection">
-            <h2 class="folderLabel">archive <span>/ Older versions &amp; backups</span></h2>
-            <div class="linkGrid">
-              <a class="linkCard" href="archive/develop.html" target="_blank" rel="noopener">
-                <span class="lcName">develop.html</span>
-                <span class="lcFile">archive/develop.html</span>
-                <span class="lcDesc">Older development version</span>
-              </a>
-            </div>
-          </div>
+          <div id="links"><p class="loading">Loading file tree&hellip;</p></div>
 
           <h2 class="sectionHead" style="font-size:clamp(1rem,2vw,1.3rem);margin-top:0.5em">Folder Structure</h2>
-
-          <div class="tree"><span class="dir">EnglishExplorer/</span>
-├── <span class="file">index.html</span>               <span class="note">&lt;-- Stable, production release</span>
-├── <span class="file">advanced.html</span>            <span class="note">&lt;-- Active sandbox / dev version</span>
-├── <span class="file">updates.html</span>             <span class="note">&lt;-- Updates log (Nimza + Onza)</span>
-├── <span class="file">dev.html</span>                 <span class="note">&lt;-- This page</span>
-├── <span class="dir">junior/</span>                  <span class="note">&lt;-- Ages 6-9 ecosystem</span>
-│   ├── <span class="dir">thematic/</span>            <span class="note">&lt;-- Thematic lesson decks</span>
-│   │   ├── <span class="file">animals.html</span>
-│   │   ├── <span class="file">my-family-my-classroom.html</span>
-│   │   └── <span class="file">toys-things.html</span>
-│   └── <span class="dir">minigames/</span>           <span class="note">&lt;-- Gamified mini-games</span>
-│       ├── <span class="file">abc-world.html</span>
-│       ├── <span class="file">new-words-wizard.html</span>
-│       ├── <span class="file">unlock-mystery.html</span>
-│       └── <span class="file">unlock-mystery-plus.html</span>
-├── <span class="dir">breakthrough/</span>            <span class="note">&lt;-- Older pupils (EEBT)</span>
-│   ├── <span class="dir">tools/</span>               <span class="note">&lt;-- Standalone utilities</span>
-│   │   ├── <span class="file">eebt-tools.html</span>
-│   │   └── <span class="file">eebt-translator.html</span>
-│   └── <span class="dir">protocols/</span>           <span class="note">&lt;-- Daily lesson protocols</span>
-│       ├── <span class="file">2026-08-17.html</span>
-│       ├── <span class="file">2026-08-18.html</span>
-│       ├── <span class="file">2026-08-19.html</span>
-│       └── <span class="file">2026-08-20.html</span>
-└── <span class="dir">archive/</span>                 <span class="note">&lt;-- Older versions / backups</span>
-    └── <span class="file">develop.html</span></div>
-
-          <p class="legend">16 HTML files &middot; 7 folders &middot; All pages open in new tab</p>
-
+          <div id="treeView" class="tree"></div>
+          <p class="legend" id="legend"></p>
         </div>
       </div>
     </div>
 
     <script>
+      /* ---- Theme toggle ---- */
       var themeBtn = document.getElementById("themeBtn");
       var themeDark = false;
       function applyTheme(dark) {
@@ -406,9 +277,7 @@
         var storedTheme = localStorage.getItem("eebt-theme");
         if (storedTheme === "dark") applyTheme(true);
         else if (storedTheme === "light") applyTheme(false);
-        else if (window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches) {
-          applyTheme(true);
-        }
+        else if (window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches) applyTheme(true);
       } catch (e) {}
       if (themeBtn) {
         themeBtn.onclick = function () {
@@ -416,6 +285,247 @@
           try { localStorage.setItem("eebt-theme", themeDark ? "dark" : "light"); } catch (e) {}
         };
       }
+
+      /* ---- Dynamic commit date (small) ---- */
+      (function () {
+        var el = document.getElementById("topbarTitle");
+        if (!el) return;
+        var API = "https://api.github.com/repos/mkmgo/EnglishExplorer/commits?path=dev.html&per_page=1";
+        fetch(API)
+          .then(function (r) { return r.json(); })
+          .then(function (data) {
+            if (!Array.isArray(data) || !data.length) return;
+            var d = new Date(data[0].commit.committer.date);
+            var dd = String(d.getDate()).padStart(2, "0");
+            var mm = String(d.getMonth() + 1).padStart(2, "0");
+            var yyyy = d.getFullYear();
+            var hh = String(d.getHours()).padStart(2, "0");
+            var mi = String(d.getMinutes()).padStart(2, "0");
+            var span = document.createElement("span");
+            span.className = "topbarDate";
+            span.textContent = dd + "/" + mm + "/" + yyyy + " " + hh + ":" + mi;
+            el.appendChild(span);
+          })
+          .catch(function () {});
+      })();
+
+      /* ---- Auto-discover pages from GitHub tree ---- */
+      (function () {
+        var REPO = "mkmgo/EnglishExplorer";
+        var BRANCH = "main";
+        var BASE = "https://" + REPO.split("/")[0] + ".github.io/" + REPO.split("/")[1] + "/";
+        var TREE_API = "https://api.github.com/repos/" + REPO + "/git/trees/" + BRANCH + "?recursive=1";
+
+        var DESC = {
+          "index.html":              "Stable, production-ready release",
+          "advanced.html":           "Active sandbox / current dev version",
+          "updates.html":            "Updates log (Nimza + Onza)",
+          "dev.html":                "This page",
+          "config.js":               "Project config",
+          "animals.html":            "Animals lesson deck",
+          "my-family-my-classroom.html": "Family & Classroom",
+          "toys-things.html":        "Toys & Things",
+          "abc-world.html":          "ABC World game",
+          "new-words-wizard.html":   "New Words Wizard game",
+          "unlock-mystery.html":     "Unlock Mystery (original)",
+          "unlock-mystery-plus.html":"Unlock Mystery Plus",
+          "eebt-tools.html":         "EEBT Tools collection",
+          "eebt-translator.html":    "EEBT Translator",
+          "develop.html":            "Older development version"
+        };
+
+        var FOLDER_ORDER = [
+          "",
+          "junior/thematic",
+          "junior/minigames",
+          "breakthrough/tools",
+          "breakthrough/protocols",
+          "archive"
+        ];
+
+        var FOLDER_LABELS = {
+          "":                    ["Root", "/"],
+          "junior/thematic":     ["junior / thematic", "/ Thematic lesson decks"],
+          "junior/minigames":    ["junior / minigames", "/ Gamified mini-games"],
+          "breakthrough/tools":  ["breakthrough / tools", "/ Standalone utilities"],
+          "breakthrough/protocols": ["breakthrough / protocols", "/ Daily lesson protocols"],
+          "archive":             ["archive", "/ Older versions & backups"]
+        };
+
+        function filenameToName(f) {
+          return f.replace(/\.html$/, "").replace(/-/g, " ").replace(/\b\w/g, function (c) { return c.toUpperCase(); });
+        }
+
+        function folderSortKey(folder) {
+          var idx = FOLDER_ORDER.indexOf(folder);
+          return idx >= 0 ? idx : FOLDER_ORDER.length;
+        }
+
+        function buildLinks(files) {
+          var grouped = {};
+          files.forEach(function (f) {
+            var parts = f.split("/");
+            var folder = parts.length > 1 ? parts.slice(0, -1).join("/") : "";
+            if (!grouped[folder]) grouped[folder] = [];
+            grouped[folder].push(f);
+          });
+
+          var sorted = Object.keys(grouped).sort(function (a, b) {
+            return folderSortKey(a) - folderSortKey(b);
+          });
+
+          var container = document.getElementById("links");
+          container.innerHTML = "";
+
+          sorted.forEach(function (folder) {
+            var section = document.createElement("div");
+            section.className = "folderSection";
+
+            var lbl = FOLDER_LABELS[folder] || [folder, ""];
+            var h2 = document.createElement("h2");
+            h2.className = "folderLabel";
+            h2.innerHTML = lbl[0] + " <span>" + lbl[1] + "</span>";
+            section.appendChild(h2);
+
+            var grid = document.createElement("div");
+            grid.className = "linkGrid";
+
+            grouped[folder].sort().forEach(function (filePath) {
+              var fname = filePath.split("/").pop();
+              var a = document.createElement("a");
+              a.className = "linkCard";
+              a.href = BASE + filePath;
+              a.target = "_blank";
+              a.rel = "noopener";
+
+              var name = document.createElement("span");
+              name.className = "lcName";
+              name.textContent = fname;
+              a.appendChild(name);
+
+              var file = document.createElement("span");
+              file.className = "lcFile";
+              file.textContent = filePath;
+              a.appendChild(file);
+
+              var desc = DESC[fname];
+              if (!desc && folder === "breakthrough/protocols") {
+                var m = fname.match(/^(\d{4})-(\d{2})-(\d{2})\.html$/);
+                if (m) {
+                  var d = new Date(+m[1], +m[2] - 1, +m[3]);
+                  desc = d.toLocaleDateString("en-GB", { day: "numeric", month: "long", year: "numeric" });
+                }
+              }
+              if (!desc) desc = filenameToName(fname);
+
+              var descEl = document.createElement("span");
+              descEl.className = "lcDesc";
+              descEl.textContent = desc;
+              a.appendChild(descEl);
+
+              grid.appendChild(a);
+            });
+
+            section.appendChild(grid);
+            container.appendChild(section);
+          });
+
+          var totalFiles = files.length;
+          var totalFolders = sorted.length;
+          var legend = document.getElementById("legend");
+          legend.textContent = totalFiles + " HTML files \u00B7 " + totalFolders + " folders \u00B7 Orange = changed today \u00B7 All pages open in new tab";
+        }
+
+        function buildTree(files) {
+          var tree = document.getElementById("treeView");
+          var structure = {};
+          files.forEach(function (f) {
+            var parts = f.split("/");
+            var node = structure;
+            parts.forEach(function (p, i) {
+              if (i === parts.length - 1) {
+                node[p] = null;
+              } else {
+                if (!node[p]) node[p] = {};
+                node = node[p];
+              }
+            });
+          });
+
+          var lines = [];
+          lines.push('<span class="dir">EnglishExplorer/</span>');
+
+          function walk(obj, prefix, isLast) {
+            var keys = Object.keys(obj).sort();
+            keys.forEach(function (key, i) {
+              var last = i === keys.length - 1;
+              var connector = last ? "\u2514\u2500\u2500 " : "\u251C\u2500\u2500 ";
+              var extension = last ? "    " : "\u2502   ";
+
+              if (obj[key] !== null) {
+                lines.push(prefix + connector + '<span class="dir">' + key + "/</span>");
+                walk(obj[key], prefix + extension, last);
+              } else {
+                var fname = key;
+                var descText = "";
+                if (DESC[fname]) descText = "    <span class=\"note\"><!-- " + DESC[fname] + " --></span>";
+                lines.push(prefix + connector + '<span class="file">' + fname + "</span>" + descText);
+              }
+            });
+          }
+
+          walk(structure, "", true);
+          tree.innerHTML = lines.join("\n");
+        }
+
+        function markTodayFiles() {
+          var today = new Date();
+          var todayStr = today.getFullYear() + "-" +
+            String(today.getMonth() + 1).padStart(2, "0") + "-" +
+            String(today.getDate()).padStart(2, "0");
+          var since = todayStr + "T00:00:00Z";
+          var COMMITS_API = "https://api.github.com/repos/" + REPO + "/commits?since=" + since + "&per_page=100";
+          fetch(COMMITS_API)
+            .then(function (r) { return r.json(); })
+            .then(function (commits) {
+              if (!Array.isArray(commits)) return;
+              var todayFiles = {};
+              commits.forEach(function (c) {
+                if (!c.files) return;
+                c.files.forEach(function (f) {
+                  todayFiles[f.filename] = true;
+                });
+              });
+              document.querySelectorAll(".linkCard").forEach(function (card) {
+                var filePath = card.querySelector(".lcFile");
+                if (filePath && todayFiles[filePath.textContent]) {
+                  card.classList.add("today");
+                }
+              });
+            })
+            .catch(function () {});
+        }
+
+        fetch(TREE_API)
+          .then(function (r) { return r.json(); })
+          .then(function (data) {
+            if (!data.tree) throw new Error("No tree data");
+            var htmlFiles = data.tree
+              .filter(function (item) {
+                return item.type === "blob" && item.path.endsWith(".html") && !item.path.includes("node_modules");
+              })
+              .map(function (item) { return item.path; });
+
+            htmlFiles.sort();
+            buildLinks(htmlFiles);
+            buildTree(htmlFiles);
+            markTodayFiles();
+          })
+          .catch(function () {
+            document.getElementById("links").innerHTML =
+              '<p class="loading">Could not load file tree from GitHub. <a href="https://github.com/' + REPO + '" target="_blank" rel="noopener">View repository</a></p>';
+          });
+      })();
     </script>
   </body>
 </html>

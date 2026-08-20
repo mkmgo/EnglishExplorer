@@ -82,6 +82,14 @@
         color: var(--accent2);
         text-transform: uppercase;
       }
+      .topbarDate {
+        font-size: 0.55em;
+        font-weight: 400;
+        letter-spacing: 0.04em;
+        opacity: 0.75;
+        margin-left: 0.5em;
+        text-transform: none;
+      }
       #themeBtn {
         position: absolute;
         right: 2vw;
@@ -471,7 +479,11 @@
             var yyyy = d.getFullYear();
             var hh = String(d.getHours()).padStart(2, "0");
             var mi = String(d.getMinutes()).padStart(2, "0");
-            el.textContent = "Updates \u2014 " + dd + "/" + mm + "/" + yyyy + " " + hh + ":" + mi;
+            el.textContent = "Updates";
+            var span = document.createElement("span");
+            span.className = "topbarDate";
+            span.textContent = dd + "/" + mm + "/" + yyyy + " " + hh + ":" + mi;
+            el.appendChild(span);
           })
           .catch(function () {});
       })();
