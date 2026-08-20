@@ -1,0 +1,1145 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Unlock Mystery - 1:1 English Game</title>
+    <style>
+      :root,
+      html.light {
+        color-scheme: light;
+        --bg-color: #f0f4f8;
+        --card-bg: #ffffff;
+        --primary: #3b82f6;
+        --accent: #f59e0b;
+        --text: #1f2937;
+        --heading: #1e3a8a;
+        --muted: #475569;
+        --border: #cbd5e1;
+        --border-strong: #94a3b8;
+        --instructions-bg: #e0f2fe;
+        --dropzone-bg: #f8fafc;
+        --dropzone-hover: #dbeafe;
+        --item-bg: #e5e7eb;
+        --item-border: #6b7280;
+        --img-bg: #ffffff;
+        --good: #10b981;
+        --goal-bg: #d1fae5;
+        --mystery-bg: #fef3c7;
+        --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+      }
+
+      @media (prefers-color-scheme: dark) {
+        :root {
+          color-scheme: dark;
+          --bg-color: #0f172a;
+          --card-bg: #1e293b;
+          --primary: #60a5fa;
+          --accent: #fbbf24;
+          --text: #e2e8f0;
+          --heading: #93c5fd;
+          --muted: #94a3b8;
+          --border: #334155;
+          --border-strong: #475569;
+          --instructions-bg: #172a44;
+          --dropzone-bg: #16233a;
+          --dropzone-hover: #1d3a5f;
+          --item-bg: #1e293b;
+          --item-border: #64748b;
+          --img-bg: #f8fafc;
+          --good: #34d399;
+          --goal-bg: #064e3b;
+          --mystery-bg: #78350f;
+          --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.45);
+        }
+      }
+
+      html.dark {
+        color-scheme: dark;
+        --bg-color: #0f172a;
+        --card-bg: #1e293b;
+        --primary: #60a5fa;
+        --accent: #fbbf24;
+        --text: #e2e8f0;
+        --heading: #93c5fd;
+        --muted: #94a3b8;
+        --border: #334155;
+        --border-strong: #475569;
+        --instructions-bg: #172a44;
+        --dropzone-bg: #16233a;
+        --dropzone-hover: #1d3a5f;
+        --item-bg: #1e293b;
+        --item-border: #64748b;
+        --img-bg: #f8fafc;
+        --good: #34d399;
+        --goal-bg: #064e3b;
+        --mystery-bg: #78350f;
+        --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.45);
+      }
+
+      #themeToggle {
+        position: fixed;
+        top: 12px;
+        right: 12px;
+        z-index: 10;
+        width: 46px;
+        height: 46px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.3rem;
+        line-height: 1;
+        background: var(--card-bg);
+        color: var(--text);
+        border: 2px solid var(--border);
+        border-radius: 999px;
+        box-shadow: var(--shadow);
+        cursor: pointer;
+        -webkit-tap-highlight-color: transparent;
+      }
+
+      body {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        background-color: var(--bg-color);
+        color: var(--text);
+        margin: 0;
+        padding: 20px;
+        min-height: 100vh;
+        overflow-x: hidden;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+
+      h1 {
+        margin-bottom: 5px;
+        color: var(--heading);
+        font-size: clamp(1.5rem, 4vw, 2.2rem);
+        text-align: center;
+      }
+
+      .instructions {
+        margin-bottom: 20px;
+        max-width: 800px;
+        font-size: clamp(0.95rem, 0.5vw + 0.8rem, 1.1rem);
+        background: var(--instructions-bg);
+        color: var(--text);
+        padding: 10px 20px;
+        border-radius: 8px;
+        border-left: 5px solid var(--primary);
+        text-align: center;
+      }
+
+      /* Grid Layout */
+      .grid-container {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 20px;
+        width: 100%;
+        max-width: 800px;
+        margin-bottom: 20px;
+      }
+
+      .spot-card {
+        background: var(--card-bg);
+        border: 3px solid var(--border);
+        border-radius: 12px;
+        min-height: 260px;
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: space-between;
+        padding: 15px;
+        box-shadow: var(--shadow);
+        user-select: none;
+        transition:
+          background-color 0.3s,
+          border-color 0.3s;
+      }
+
+      .spot-card.mystery-active {
+        background-color: var(--mystery-bg);
+        border-color: var(--accent);
+      }
+
+      .spot-card.goal-reached {
+        background-color: var(--goal-bg);
+        border-color: var(--good);
+      }
+
+      .spot-title {
+        font-weight: bold;
+        font-size: clamp(1rem, 1vw + 0.5rem, 1.2rem);
+        color: var(--muted);
+        text-align: center;
+      }
+
+          .drop-zone {
+            width: 236px;
+            height: 212px;
+            box-sizing: border-box;
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            grid-template-rows: repeat(2, 1fr);
+            gap: 12px;
+            padding: 12px;
+            border: 2px dashed var(--border-strong);
+            border-radius: 8px;
+            background-color: var(--dropzone-bg);
+            transition: background-color 0.2s;
+          }
+
+      .drop-zone.drag-over {
+        background-color: var(--dropzone-hover);
+        border-color: var(--primary);
+      }
+
+          .slot {
+            box-sizing: border-box;
+            border: 2px dashed var(--border-strong);
+            border-radius: 8px;
+            background-color: var(--item-bg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 0;
+            min-height: 0;
+          }
+
+      .slot.drag-over {
+        background-color: var(--dropzone-hover);
+        border-color: var(--primary);
+      }
+
+      .lock-icon {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--border-strong);
+        transition:
+          opacity 0.4s ease,
+          transform 0.4s ease;
+      }
+
+      .lock-icon svg {
+        width: 26px;
+        height: 26px;
+      }
+
+      .lock-icon.unlocked-pop {
+        animation: unlockPop 0.45s ease;
+      }
+
+      .lock-icon.disappear {
+        opacity: 0;
+        transform: scale(1.25);
+      }
+
+      @keyframes unlockPop {
+        0% {
+          transform: scale(0.4);
+        }
+        60% {
+          transform: scale(1.2);
+        }
+        100% {
+          transform: scale(1);
+        }
+      }
+
+      /* Moveable Items Palette */
+      .palette {
+        background: var(--card-bg);
+        border-radius: 12px;
+        padding: 15px;
+        width: 100%;
+        max-width: 800px;
+        box-shadow: var(--shadow);
+        margin-bottom: 20px;
+      }
+
+      .palette.dissolving {
+        animation: paletteDissolve 0.6s ease forwards;
+        pointer-events: none;
+      }
+
+      @keyframes paletteDissolve {
+        0% {
+          opacity: 1;
+          transform: scale(1);
+        }
+        100% {
+          opacity: 0;
+          transform: scale(0.7);
+        }
+      }
+
+      .palette-title {
+        font-weight: bold;
+        margin-bottom: 12px;
+        color: var(--muted);
+        text-align: center;
+        width: 100%;
+        max-width: 800px;
+      }
+
+      .item-container {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        align-content: center;
+        gap: 12px;
+        height: 300px;
+      }
+
+          .draggable-item {
+            padding: 8px 14px;
+            border-radius: 5px;
+            font-weight: bold;
+            cursor: grab;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.95rem;
+            box-sizing: border-box;
+        -webkit-tap-highlight-color: transparent;
+        -webkit-touch-callout: none;
+        -webkit-user-select: none;
+        user-select: none;
+        touch-action: none;
+      }
+
+      .draggable-item.dragging-original {
+        opacity: 0.35;
+      }
+
+      .draggable-item.ghost {
+        position: fixed;
+        z-index: 1000;
+        pointer-events: none;
+        margin: 0;
+        transform: scale(1.05);
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.25);
+      }
+
+      .draggable-item:active {
+        cursor: grabbing;
+      }
+
+      img {
+        -webkit-user-drag: none;
+        pointer-events: none;
+      }
+
+      /* Specific Item Styling */
+      .animal {
+        background-color: var(--item-bg);
+        color: var(--text);
+        border: 1px solid var(--item-border);
+        width: 96px;
+        height: 84px;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        gap: 3px;
+        text-align: center;
+        padding: 5px;
+      }
+
+      .animal img {
+        width: 48px;
+        height: 48px;
+        object-fit: cover;
+        border-radius: 50%;
+        background-color: var(--img-bg);
+        border: 1px solid var(--item-border);
+        flex-shrink: 0;
+      }
+
+      .animal .animal-name {
+        color: var(--text);
+        font-weight: bold;
+        font-size: 0.85rem;
+        line-height: 1;
+      }
+      .brick {
+        width: 96px;
+        height: 84px;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+        font-size: 0.85rem;
+        padding: 5px;
+        gap: 3px;
+      }
+
+      .brick::before {
+        content: "";
+        width: 48px;
+        height: 48px;
+        border-radius: 50%;
+        background-color: var(--brick-main);
+        border: 1px solid var(--brick-dark);
+        flex-shrink: 0;
+        box-sizing: border-box;
+      }
+      .brick-red {
+        --brick-main: #ef4444;
+        --brick-dark: #b91c1c;
+        background-color: #ef4444;
+        color: white;
+        border: 1px solid var(--brick-dark);
+      }
+      .brick-yellow {
+        --brick-main: #eab308;
+        --brick-dark: #a16207;
+        background-color: #eab308;
+        color: black;
+        border: 1px solid var(--brick-dark);
+      }
+      .brick-green {
+        --brick-main: #22c55e;
+        --brick-dark: #15803d;
+        background-color: #22c55e;
+        color: white;
+        border: 1px solid var(--brick-dark);
+      }
+      .brick-blue {
+        --brick-main: #3b82f6;
+        --brick-dark: #1d4ed8;
+        background-color: #3b82f6;
+        color: white;
+        border: 1px solid var(--brick-dark);
+      }
+
+      /* Combined mystery items (e.g. Red Car = car + red brick) */
+      .combined::before {
+        content: none;
+      }
+      .combined img {
+        width: 48px;
+        height: 48px;
+        object-fit: cover;
+        border-radius: 50%;
+        background-color: var(--img-bg);
+        border: 1px solid var(--brick-dark);
+        flex-shrink: 0;
+      }
+      .combined span {
+        line-height: 1;
+        font-weight: bold;
+      }
+
+      /* Responsive: small screens */
+      @media (max-width: 640px) {
+        html,
+        body {
+          -webkit-touch-callout: none;
+          -webkit-user-select: none;
+          user-select: none;
+        }
+
+        body {
+          padding: 12px;
+        }
+        .instructions {
+          padding: 10px 14px;
+        }
+        .grid-container {
+          grid-template-columns: 1fr;
+          gap: 14px;
+        }
+        .spot-card {
+          min-height: 250px;
+        }
+            .drop-zone {
+              width: 212px;
+              height: 196px;
+            }
+        .item-container {
+          height: 340px;
+        }
+        .animal,
+        .brick {
+          width: 84px;
+          height: 76px;
+        }
+        .animal img {
+          width: 40px;
+          height: 40px;
+        }
+        .brick::before {
+          width: 40px;
+          height: 40px;
+        }
+        .palette {
+          padding: 12px;
+        }
+      }
+
+      /* Win overlay */
+      .win-overlay {
+        position: fixed;
+        inset: 0;
+        z-index: 2000;
+        display: none;
+        align-items: center;
+        justify-content: center;
+        background: rgba(0, 0, 0, 0.6);
+        padding: 20px;
+      }
+      .win-overlay.show {
+        display: flex;
+      }
+      .win-box {
+        background: var(--card-bg);
+        color: var(--text);
+        padding: 30px 40px;
+        border-radius: 16px;
+        text-align: center;
+        box-shadow: var(--shadow);
+        border: 3px solid var(--good);
+        max-width: 400px;
+      }
+      .win-box h2 {
+        margin: 0 0 15px;
+        color: var(--heading);
+      }
+      .win-box button {
+        background: var(--good);
+        color: #052e16;
+        border: none;
+        padding: 10px 24px;
+        border-radius: 8px;
+        font-size: 1rem;
+        font-weight: bold;
+        cursor: pointer;
+        -webkit-tap-highlight-color: transparent;
+      }
+    </style>
+  </head>
+  <body>
+    <button
+      id="themeToggle"
+      aria-label="Toggle dark mode"
+      title="Toggle dark mode"
+    >
+      🌙
+    </button>
+    <h1>Unlock Mystery</h1>
+    <div class="instructions" id="goalText">
+      Move <b>Colour Bricks</b> to <b>Colours</b>
+    </div>
+
+    <!-- Classroom Spots Grid: Row 1 (Colours + Animals) -->
+    <div class="grid-container">
+      <div class="spot-card">
+        <div class="spot-title">Colours</div>
+        <div class="drop-zone" id="spot-1">
+          <div class="slot"></div>
+          <div class="slot"></div>
+          <div class="slot"></div>
+          <div class="slot"></div>
+        </div>
+      </div>
+
+      <div class="spot-card">
+        <div class="spot-title">Animals</div>
+        <div class="drop-zone" id="spot-2">
+          <div class="slot"><span class="lock-icon"><i data-lucide="lock"></i></span></div>
+          <div class="slot"><span class="lock-icon"><i data-lucide="lock"></i></span></div>
+          <div class="slot"><span class="lock-icon"><i data-lucide="lock"></i></span></div>
+          <div class="slot"><span class="lock-icon"><i data-lucide="lock"></i></span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Draggable Items Palette -->
+    <div class="palette">
+      <div class="palette-title">Somewhere</div>
+      <div class="item-container" id="inventory">
+        <!-- Animals -->
+        <div class="draggable-item animal" id="bee">
+          <img
+            src="https://res.cloudinary.com/dp455m4rk/image/upload/c_crop,w_469,h_384,x_469,y_0/v1786050302/A-F_yhrs9s.png"
+            alt="Bee"
+          /><span class="animal-name">Bee</span>
+        </div>
+        <div class="draggable-item animal" id="rabbit">
+          <img
+            src="https://res.cloudinary.com/dp455m4rk/image/upload/c_crop,w_421,h_424,x_842,y_424/r_max/v1786346044/lesson6_ywgsxn.png"
+            alt="Rabbit"
+          /><span class="animal-name">Rabbit</span>
+        </div>
+        <div class="draggable-item animal" id="dog">
+          <img
+            src="https://res.cloudinary.com/dp455m4rk/image/upload/c_crop,w_469,h_384,x_0,y_384/r_max/v1786050302/A-F_yhrs9s.png"
+            alt="Dog"
+          /><span class="animal-name">Dog</span>
+        </div>
+        <div class="draggable-item animal" id="elephant">
+          <img
+            src="https://res.cloudinary.com/dp455m4rk/image/upload/c_crop,w_469,h_384,x_469,y_384/r_max/v1786050302/A-F_yhrs9s.png"
+            alt="Elephant"
+          /><span class="animal-name">Elephant</span>
+        </div>
+
+        <!-- Toys -->
+        <div class="draggable-item animal" id="car">
+          <img
+            src="https://res.cloudinary.com/dqwm4pdbz/image/upload/c_crop,w_421,h_424,x_0,y_0/r_max/bo_5px_solid_white/v1786599929/260813_toys_01_txjh3y.png"
+            alt="Car"
+          /><span class="animal-name">Car</span>
+        </div>
+        <div class="draggable-item animal" id="bike">
+          <img
+            src="https://res.cloudinary.com/dqwm4pdbz/image/upload/c_crop,w_421,h_424,x_421,y_424/r_max/bo_5px_solid_white/v1786599929/260813_toys_01_txjh3y.png"
+            alt="Bike"
+          /><span class="animal-name">Bike</span>
+        </div>
+        <div class="draggable-item animal" id="robot">
+          <img
+            src="https://res.cloudinary.com/dqwm4pdbz/image/upload/c_crop,w_421,h_424,x_0,y_424/r_max/bo_5px_solid_white/v1786599929/260813_toys_01_txjh3y.png"
+            alt="Robot"
+          /><span class="animal-name">Robot</span>
+        </div>
+        <div class="draggable-item animal" id="kite">
+          <img
+            src="https://res.cloudinary.com/dqwm4pdbz/image/upload/c_crop,w_421,h_424,x_842,y_424/r_max/bo_5px_solid_white/v1786599929/260813_toys_01_txjh3y.png"
+            alt="Kite"
+          /><span class="animal-name">Kite</span>
+        </div>
+
+        <!-- LEGO Duplo Bricks -->
+        <div class="draggable-item animal" id="turtle">
+          <img
+            src="https://res.cloudinary.com/dqwm4pdbz/image/upload/c_crop,w_189,h_188,x_386,y_760/v1786861646/260811_lesson7ee_01_jzlmlp.png"
+            alt="Turtle"
+          /><span class="animal-name">Turtle</span>
+        </div>
+        <div class="draggable-item animal" id="dinosaur">
+          <img
+            src="https://res.cloudinary.com/dqwm4pdbz/image/upload/c_crop,w_189,h_188,x_386,y_376/v1786861646/260811_lesson7ee_01_jzlmlp.png"
+            alt="Dinosaur"
+          /><span class="animal-name">Dinosaur</span>
+        </div>
+        <div class="draggable-item animal" id="dragon">
+          <img
+            src="https://res.cloudinary.com/dp455m4rk/image/upload/c_crop,w_189,h_188,x_567,y_752/v1786434491/260811_lesson7ee_01_dhuvvm.png"
+            alt="Dragon"
+          /><span class="animal-name">Dragon</span>
+        </div>
+        <div class="draggable-item animal" id="whale">
+          <img
+            src="https://res.cloudinary.com/dqwm4pdbz/image/upload/c_crop,w_189,h_188,x_205,y_564/v1786861646/260811_lesson7ee_01_jzlmlp.png"
+            alt="Whale"
+          /><span class="animal-name">Whale</span>
+        </div>
+        <div class="draggable-item brick brick-red" id="brick-red">Red</div>
+        <div class="draggable-item brick brick-yellow" id="brick-yellow">
+          Yellow
+        </div>
+        <div class="draggable-item brick brick-green" id="brick-green">
+          Green
+        </div>
+        <div class="draggable-item brick brick-blue" id="brick-blue">Blue</div>
+      </div>
+    </div>
+
+    <!-- Classroom Spots Grid: Row 2 (Toys + Mystery) -->
+    <div class="grid-container">
+      <div class="spot-card">
+        <div class="spot-title">Toys</div>
+        <div class="drop-zone" id="spot-3">
+          <div class="slot"><span class="lock-icon"><i data-lucide="lock"></i></span></div>
+          <div class="slot"><span class="lock-icon"><i data-lucide="lock"></i></span></div>
+          <div class="slot"><span class="lock-icon"><i data-lucide="lock"></i></span></div>
+          <div class="slot"><span class="lock-icon"><i data-lucide="lock"></i></span></div>
+        </div>
+      </div>
+
+      <div class="spot-card">
+        <div class="spot-title">Mystery</div>
+        <div class="drop-zone" id="spot-4">
+          <div class="slot"><span class="lock-icon"><i data-lucide="lock"></i></span></div>
+          <div class="slot"><span class="lock-icon"><i data-lucide="lock"></i></span></div>
+          <div class="slot"><span class="lock-icon"><i data-lucide="lock"></i></span></div>
+          <div class="slot"><span class="lock-icon"><i data-lucide="lock"></i></span></div>
+        </div>
+      </div>
+    </div>
+
+    <div id="winOverlay" class="win-overlay">
+      <div class="win-box">
+        <h2>You made it!</h2>
+        <button id="restartBtn" type="button">Play Again</button>
+      </div>
+    </div>
+
+    <script>
+      // Theme toggle (dark mode). Defaults to system preference.
+      (function () {
+        var root = document.documentElement;
+        var btn = document.getElementById("themeToggle");
+        var theme = "system";
+        try {
+          var saved = localStorage.getItem("miniGameTheme");
+          if (saved === "dark" || saved === "light") theme = saved;
+        } catch (e) {}
+        var darkMq = window.matchMedia("(prefers-color-scheme: dark)");
+
+        function apply() {
+          var dark = theme === "dark" || (theme === "system" && darkMq.matches);
+          root.classList.toggle("dark", dark);
+          root.classList.toggle("light", !dark);
+          btn.textContent = dark ? "☀️" : "🌙";
+        }
+
+        apply();
+        if (darkMq.addEventListener) darkMq.addEventListener("change", apply);
+        else if (darkMq.addListener) darkMq.addListener(apply);
+        btn.addEventListener("click", function () {
+          theme = theme === "dark" ? "light" : "dark";
+          try {
+            localStorage.setItem("miniGameTheme", theme);
+          } catch (e) {}
+          apply();
+        });
+      })();
+
+      // Pointer-based Drag & Drop (works with mouse AND touch; suppresses
+      // native iOS menus / image previews).
+      const draggables = document.querySelectorAll(".draggable-item");
+      const dropZones = document.querySelectorAll(
+        ".drop-zone, .item-container",
+      );
+
+      // Goals: all items of a group placed in its matching spot.
+      var goals = [
+        {
+          spotId: "spot-1",
+          ids: ["brick-red", "brick-yellow", "brick-green", "brick-blue"],
+        },
+        { spotId: "spot-2", ids: ["bee", "rabbit", "dog", "elephant"] },
+        { spotId: "spot-3", ids: ["car", "bike", "robot", "kite"] },
+        { spotId: "spot-4", ids: ["red-car", "yellow-bee", "blue-rabbit", "green-bike"] },
+      ];
+
+      // Randomize the order of items in Somewhere (Fisher-Yates on DOM children).
+      function shuffleItems() {
+        var container = document.getElementById("inventory");
+        if (!container) return;
+        for (var i = container.children.length - 1; i > 0; i--) {
+          var j = Math.floor(Math.random() * (i + 1));
+          container.appendChild(container.children[j]);
+        }
+      }
+
+      // Locked-in progress: once a spot is completed it stays coloured,
+      // even if an item is dragged away afterwards.
+      var reached = {
+        "spot-1": false,
+        "spot-2": false,
+        "spot-3": false,
+        "spot-4": false,
+      };
+
+      // Progressive unlock state. spot-1 (Colours) is open from the start;
+      // Animals, Toys and Mystery start locked.
+      var unlocked = {
+        "spot-1": true,
+        "spot-2": false,
+        "spot-3": false,
+        "spot-4": false,
+      };
+
+      var goalTexts = [
+        'Move <b>Colour Bricks</b> to <b>Colours</b>',
+        'Move <b>Animal Bricks</b> to <b>Animals</b>',
+        'Solve the <b>Mystery</b>',
+        '<b>Yellow Bee</b> &ndash; <b>Blue Rabbit</b> &ndash; <b>Red Car</b> &ndash; <b>Green Bike</b>',
+      ];
+
+      function renderIcons() {
+        if (typeof lucide === "undefined") return;
+        lucide.createIcons({ lock: lucide.lock, lockOpen: lucide.lockOpen });
+      }
+
+      // Invalidates pending unlock animations after a restart.
+      var gameVersion = 0;
+
+      function unlockSpot(spotId) {
+        unlocked[spotId] = true;
+        var version = gameVersion;
+        var zone = document.getElementById(spotId);
+        if (!zone) return;
+        zone.querySelectorAll(".slot").forEach(function (slot) {
+          slot.innerHTML =
+            '<span class="lock-icon unlocked-pop"><i data-lucide="lockOpen"></i></span>';
+        });
+        renderIcons();
+        setTimeout(function () {
+          if (version !== gameVersion) return;
+          zone.querySelectorAll(".lock-icon").forEach(function (ic) {
+            ic.classList.add("disappear");
+          });
+        }, 700);
+        setTimeout(function () {
+          if (version !== gameVersion) return;
+          zone.querySelectorAll(".slot").forEach(function (slot) {
+            if (slot.querySelector(".lock-icon")) slot.innerHTML = "";
+          });
+        }, 1150);
+      }
+
+      function dissolvePalette() {
+        var palette = document.querySelector(".palette");
+        if (!palette || palette.classList.contains("dissolving")) return;
+        var version = gameVersion;
+        palette.classList.add("dissolving");
+        setTimeout(function () {
+          if (version !== gameVersion) return;
+          palette.style.display = "none";
+        }, 650);
+      }
+
+      function updateGoals() {
+        var goalEl = document.getElementById("goalText");
+        var phase = 0;
+        if (reached["spot-1"]) phase = 1;
+        if (reached["spot-2"]) phase = 2;
+        if (reached["spot-3"]) phase = 3;
+        if (goalEl) goalEl.innerHTML = goalTexts[phase];
+        if (reached["spot-1"] && !unlocked["spot-2"]) unlockSpot("spot-2");
+        if (reached["spot-2"] && !unlocked["spot-3"]) unlockSpot("spot-3");
+        if (reached["spot-3"] && !unlocked["spot-4"]) unlockSpot("spot-4");
+        if (reached["spot-3"]) dissolvePalette();
+      }
+
+      function checkGoal() {
+        var allActive = true;
+        goals.forEach(function (goal) {
+          if (goal.spotId === "spot-4") return;
+          var spot = document.getElementById(goal.spotId);
+          var card = spot && spot.closest(".spot-card");
+          var allPlaced = spot
+            ? goal.ids.every(function (id) {
+                var el = document.getElementById(id);
+                return el && spot.contains(el);
+              })
+            : false;
+          if (allPlaced) reached[goal.spotId] = true;
+          if (card) card.classList.toggle("goal-reached", reached[goal.spotId]);
+          if (!reached[goal.spotId]) allActive = false;
+        });
+        var mystery = document.getElementById("spot-4");
+        if (mystery) {
+          var mCard = mystery.closest(".spot-card");
+          var baseComplete =
+            reached["spot-1"] && reached["spot-2"] && reached["spot-3"];
+          var mysteryDone = ["red-car", "yellow-bee", "blue-rabbit", "green-bike"]
+            .every(function (id) {
+              var el = document.getElementById(id);
+              return el && mystery.contains(el);
+            });
+          if (mysteryDone) reached["spot-4"] = true;
+          if (mCard) {
+            mCard.classList.toggle(
+              "mystery-active",
+              baseComplete && !reached["spot-4"],
+            );
+            mCard.classList.toggle("goal-reached", reached["spot-4"]);
+          }
+          if (!reached["spot-4"]) allActive = false;
+        }
+        var winOverlay = document.getElementById("winOverlay");
+        if (winOverlay) winOverlay.classList.toggle("show", allActive);
+        updateGoals();
+      }
+      shuffleItems();
+      checkGoal();
+
+      var activeItem = null;
+      var activeGhost = null;
+      var grabOffsetX = 0;
+      var grabOffsetY = 0;
+      var overZone = null;
+
+      function clearOverZone() {
+        if (overZone) {
+          overZone.classList.remove("drag-over");
+          overZone = null;
+        }
+      }
+
+      document.addEventListener("pointerdown", function (e) {
+        if (activeItem) return;
+        if (e.pointerType === "mouse" && e.button !== 0) return;
+        var item = e.target.closest(".draggable-item");
+        if (!item) return;
+        e.preventDefault();
+        activeItem = item;
+        var rect = item.getBoundingClientRect();
+        grabOffsetX = e.clientX - rect.left;
+        grabOffsetY = e.clientY - rect.top;
+        activeGhost = item.cloneNode(true);
+        activeGhost.classList.remove("dragging-original");
+        activeGhost.classList.add("ghost");
+        activeGhost.style.width = rect.width + "px";
+        activeGhost.style.left = e.clientX - grabOffsetX + "px";
+        activeGhost.style.top = e.clientY - grabOffsetY + "px";
+        document.body.appendChild(activeGhost);
+        item.classList.add("dragging-original");
+        if (item.setPointerCapture) {
+          try {
+            item.setPointerCapture(e.pointerId);
+          } catch (err) {}
+        }
+      });
+
+      document.addEventListener("pointermove", function (e) {
+        if (!activeItem) return;
+        e.preventDefault();
+        if (activeGhost) {
+          activeGhost.style.left = e.clientX - grabOffsetX + "px";
+          activeGhost.style.top = e.clientY - grabOffsetY + "px";
+        }
+        var under = document.elementFromPoint(e.clientX, e.clientY);
+        var zone = under ? under.closest(".slot, .item-container") : null;
+        if (zone && zone.classList.contains("slot")) {
+          var zoneDrop = zone.closest(".drop-zone");
+          if (zoneDrop && !unlocked[zoneDrop.id]) zone = null;
+        }
+        if (zone !== overZone) {
+          clearOverZone();
+          overZone = zone;
+          if (overZone) overZone.classList.add("drag-over");
+        }
+      });
+
+      function endDrag(e) {
+        if (!activeItem) return;
+        e.preventDefault();
+        if (activeGhost) {
+          activeGhost.remove();
+          activeGhost = null;
+        }
+        activeItem.classList.remove("dragging-original");
+        if (overZone) {
+          if (overZone.classList.contains("slot")) {
+            var dropZone = overZone.closest(".drop-zone");
+            var zoneLocked = dropZone && !unlocked[dropZone.id];
+            if (!zoneLocked) {
+              var occupant = overZone.querySelector(".draggable-item");
+              var mysterySpot = dropZone && dropZone.id === "spot-4";
+              var canCombine =
+                mysterySpot && occupant && combos[activeItem.id] === occupant.id;
+              if (!occupant) {
+                overZone.appendChild(activeItem);
+                checkMystery();
+                checkGoal();
+              } else if (canCombine) {
+                overZone.appendChild(activeItem);
+                checkMystery();
+                checkGoal();
+              }
+            }
+          } else if (overZone.classList.contains("item-container")) {
+            overZone.appendChild(activeItem);
+            checkGoal();
+          }
+        }
+        clearOverZone();
+        activeItem = null;
+      }
+
+      document.addEventListener("pointerup", endDrag);
+      document.addEventListener("pointercancel", endDrag);
+
+      // Mystery combining: car + red brick, bee + yellow brick,
+      // rabbit + blue brick, bike + green brick. Combined bricks keep the
+      // short item label (fits on small screens, unlike "Red Car" etc.).
+      var combinedNames = {
+        "red-car": "Red Car",
+        "yellow-bee": "Yellow Bee",
+        "blue-rabbit": "Blue Rabbit",
+        "green-bike": "Green Bike",
+      };
+      var combinedLabels = {
+        "red-car": "Car",
+        "yellow-bee": "Bee",
+        "blue-rabbit": "Rabbit",
+        "green-bike": "Bike",
+      };
+      var combinedColors = {
+        "red-car": "brick-red",
+        "yellow-bee": "brick-yellow",
+        "blue-rabbit": "brick-blue",
+        "green-bike": "brick-green",
+      };
+      // Which two items combine (in either order).
+      var combos = {
+        "brick-red": "car",
+        car: "brick-red",
+        "brick-yellow": "bee",
+        bee: "brick-yellow",
+        "brick-blue": "rabbit",
+        rabbit: "brick-blue",
+        "brick-green": "bike",
+        bike: "brick-green",
+      };
+      var stashed = [];
+
+      function makeCombined(id, imgSrc) {
+        var el = document.createElement("div");
+        el.className =
+          "draggable-item brick combined " + combinedColors[id];
+        el.id = id;
+        var img = document.createElement("img");
+        img.src = imgSrc;
+        img.alt = combinedNames[id];
+        el.appendChild(img);
+        var span = document.createElement("span");
+        span.textContent = combinedLabels[id];
+        el.appendChild(span);
+        return el;
+      }
+
+      function firstEmptySlot(spot) {
+        for (var i = 0; i < spot.children.length; i++) {
+          var slot = spot.children[i];
+          if (
+            slot.classList.contains("slot") &&
+            !slot.querySelector(".draggable-item")
+          ) {
+            return slot;
+          }
+        }
+        return null;
+      }
+
+      function checkMystery() {
+        var spot = document.getElementById("spot-4");
+        if (!spot) return;
+        var byId = {};
+        spot.querySelectorAll(".draggable-item").forEach(function (el) {
+          byId[el.id] = el;
+        });
+        var car = byId["car"];
+        var red = byId["brick-red"];
+        if (car && red && !byId["red-car"]) {
+          stashed.push(car, red);
+          car.remove();
+          red.remove();
+          var slot = firstEmptySlot(spot);
+          if (slot) {
+            slot.appendChild(
+              makeCombined("red-car", car.querySelector("img").src),
+            );
+          }
+        }
+        var bee = byId["bee"];
+        var yellow = byId["brick-yellow"];
+        if (bee && yellow && !byId["yellow-bee"]) {
+          stashed.push(bee, yellow);
+          bee.remove();
+          yellow.remove();
+          var slot2 = firstEmptySlot(spot);
+          if (slot2) {
+            slot2.appendChild(
+              makeCombined("yellow-bee", bee.querySelector("img").src),
+            );
+          }
+        }
+        var rabbit = byId["rabbit"];
+        var blue = byId["brick-blue"];
+        if (rabbit && blue && !byId["blue-rabbit"]) {
+          stashed.push(rabbit, blue);
+          rabbit.remove();
+          blue.remove();
+          var slot3 = firstEmptySlot(spot);
+          if (slot3) {
+            slot3.appendChild(
+              makeCombined("blue-rabbit", rabbit.querySelector("img").src),
+            );
+          }
+        }
+        var bike = byId["bike"];
+        var green = byId["brick-green"];
+        if (bike && green && !byId["green-bike"]) {
+          stashed.push(bike, green);
+          bike.remove();
+          green.remove();
+          var slot4 = firstEmptySlot(spot);
+          if (slot4) {
+            slot4.appendChild(
+              makeCombined("green-bike", bike.querySelector("img").src),
+            );
+          }
+        }
+      }
+
+      function resetGame() {
+        var inventory = document.getElementById("inventory");
+        document
+          .querySelectorAll(".drop-zone .draggable-item")
+          .forEach(function (el) {
+            if (el.classList.contains("combined")) {
+              el.remove();
+            } else {
+              inventory.appendChild(el);
+            }
+          });
+        document
+          .querySelectorAll(".item-container .draggable-item")
+          .forEach(function (el) {
+            if (el.classList.contains("combined")) {
+              el.remove();
+            }
+          });
+        stashed.forEach(function (el) {
+          inventory.appendChild(el);
+        });
+        stashed = [];
+        reached["spot-1"] = false;
+        reached["spot-2"] = false;
+        reached["spot-3"] = false;
+        reached["spot-4"] = false;
+        unlocked["spot-1"] = true;
+        unlocked["spot-2"] = false;
+        unlocked["spot-3"] = false;
+        unlocked["spot-4"] = false;
+        gameVersion++;
+        ["spot-2", "spot-3", "spot-4"].forEach(function (id) {
+          var zone = document.getElementById(id);
+          if (!zone) return;
+          zone.querySelectorAll(".slot").forEach(function (slot) {
+            slot.innerHTML =
+              '<span class="lock-icon"><i data-lucide="lock"></i></span>';
+          });
+        });
+        renderIcons();
+        var goalEl = document.getElementById("goalText");
+        if (goalEl) goalEl.innerHTML = goalTexts[0];
+        var paletteEl = document.querySelector(".palette");
+        if (paletteEl) {
+          paletteEl.classList.remove("dissolving");
+          paletteEl.style.display = "";
+        }
+        shuffleItems();
+        checkGoal();
+      }
+
+      var restartBtn = document.getElementById("restartBtn");
+      if (restartBtn) restartBtn.addEventListener("click", resetGame);
+    </script>
+
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script>
+      renderIcons();
+    </script>
+  </body>
+</html>
