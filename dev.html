@@ -149,6 +149,11 @@
       .tree .dir { color: var(--accent); font-weight: 700; }
       .tree .file { color: var(--muted); }
       .tree .note { opacity: 0.5; }
+      #links {
+        display: flex;
+        flex-direction: column;
+        gap: 1.6em;
+      }
       .folderSection {
         display: flex;
         flex-direction: column;
@@ -159,7 +164,7 @@
         font-size: clamp(0.95rem, 1.5vw, 1.15rem);
         color: var(--ink);
         margin: 0;
-        padding-bottom: 0.25em;
+        padding-bottom: 0.45em;
         border-bottom: 2px solid var(--accent2);
       }
       .folderLabel span { color: var(--muted); font-weight: 400; }
