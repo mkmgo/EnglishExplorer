@@ -213,6 +213,11 @@
         border-color: var(--good);
       }
 
+      .spot-card.age-reached {
+        background-color: var(--mystery-bg);
+        border-color: var(--accent);
+      }
+
       .spot-title {
         font-weight: bold;
         font-size: clamp(1rem, 1vw + 0.5rem, 1.2rem);
@@ -335,7 +340,8 @@
         justify-content: center;
         align-content: center;
         gap: 12px;
-        height: 300px;
+        min-height: 60px;
+        padding: 4px 0;
       }
 
           .draggable-item {
@@ -421,6 +427,22 @@
         gap: 3px;
       }
 
+      .phrase {
+        background-color: var(--item-bg);
+        color: var(--text);
+        border: 1px solid var(--item-border);
+        width: 180px;
+        height: 84px;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+        font-size: 0.85rem;
+        padding: 5px 10px;
+        gap: 3px;
+        line-height: 1.15;
+      }
+
       .brick::before {
         content: "";
         width: 48px;
@@ -478,6 +500,34 @@
         font-weight: bold;
       }
 
+      /* Imprint (duotone hint, non-draggable) */
+      .imprint {
+        opacity: 0.35;
+        pointer-events: none;
+        filter: grayscale(100%);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 3px;
+        text-align: center;
+      }
+      .imprint img {
+        width: 48px;
+        height: 48px;
+        object-fit: cover;
+        border-radius: 50%;
+        background-color: var(--img-bg);
+        border: 1px solid var(--item-border);
+        flex-shrink: 0;
+      }
+      .imprint .animal-name {
+        font-weight: bold;
+        font-size: 0.85rem;
+        line-height: 1;
+        color: var(--text);
+      }
+
       /* Responsive: small screens */
       @media (max-width: 640px) {
         html,
@@ -505,12 +555,17 @@
               height: 196px;
             }
         .item-container {
-          height: 340px;
+          min-height: 50px;
         }
         .animal,
         .brick {
           width: 84px;
           height: 76px;
+        }
+        .phrase {
+          width: 160px;
+          height: 76px;
+          font-size: 0.8rem;
         }
         .animal img {
           width: 40px;
@@ -589,32 +644,9 @@
       </div>
     </div>
 
-    <!-- Classroom Spots Grid: Row 1 (Colours + Animals) -->
-    <div class="grid-container">
-      <div class="spot-card">
-        <div class="spot-title">Colours</div>
-        <div class="drop-zone" id="spot-1">
-          <div class="slot"></div>
-          <div class="slot"></div>
-          <div class="slot"></div>
-          <div class="slot"></div>
-        </div>
-      </div>
-
-      <div class="spot-card">
-        <div class="spot-title">Animals</div>
-        <div class="drop-zone" id="spot-2">
-          <div class="slot"><span class="lock-icon"><i data-lucide="lock"></i></span></div>
-          <div class="slot"><span class="lock-icon"><i data-lucide="lock"></i></span></div>
-          <div class="slot"><span class="lock-icon"><i data-lucide="lock"></i></span></div>
-          <div class="slot"><span class="lock-icon"><i data-lucide="lock"></i></span></div>
-        </div>
-      </div>
-    </div>
-
     <!-- Draggable Items Palette -->
     <div class="palette">
-      <div class="palette-title">Somewhere</div>
+      <div class="palette-title">Items</div>
       <div class="item-container" id="inventory">
         <!-- Animals -->
         <div class="draggable-item animal" id="bee">
@@ -701,6 +733,84 @@
           Green
         </div>
         <div class="draggable-item brick brick-blue" id="brick-blue">Blue</div>
+        <!-- Avatars -->
+        <div class="draggable-item animal" id="onza-avatar" data-type="avatar">
+          <img
+            src="https://res.cloudinary.com/dqwm4pdbz/image/upload/v1786623812/onza_3avface_gyyay8.png"
+            alt="Onza"
+          /><span class="animal-name">Onza</span>
+        </div>
+        <div class="draggable-item animal" id="sam-avatar" data-type="avatar">
+          <img
+            src="https://res.cloudinary.com/dp455m4rk/image/upload/q_auto/f_auto/e_bgremoval/v1786537188/sam_3davface_a8uy3g.png"
+            alt="Sam"
+          /><span class="animal-name">Sam</span>
+        </div>
+        <!-- Numbers -->
+        <div class="draggable-item animal" id="num-seven" data-type="number">
+          <img
+            src="https://res.cloudinary.com/dp455m4rk/image/upload/c_crop,w_234,h_153,x_0,y_153/v1786434492/260811_lesson7ee_03_epzw4v.png"
+            alt="Seven"
+          /><span class="animal-name">Seven</span>
+        </div>
+        <div class="draggable-item animal" id="num-eight" data-type="number">
+          <img
+            src="https://res.cloudinary.com/dp455m4rk/image/upload/c_crop,w_234,h_153,x_229,y_153/v1786434492/260811_lesson7ee_03_epzw4v.png"
+            alt="Eight"
+          /><span class="animal-name">Eight</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Draggable Phrases Palette -->
+    <div class="palette">
+      <div class="palette-title">Phrases</div>
+      <div class="item-container" id="phrases-inventory">
+        <div class="draggable-item phrase" id="phrase-whats-your-name">What is your name?</div>
+        <div class="draggable-item phrase" id="phrase-my-name-is">My name is ...</div>
+        <div class="draggable-item phrase" id="phrase-how-old">How old are you?</div>
+        <div class="draggable-item phrase" id="phrase-i-am-old">I am ... years old.</div>
+        <div class="draggable-item phrase" id="phrase-look">Look!</div>
+        <div class="draggable-item phrase" id="phrase-listen">Listen!</div>
+        <div class="draggable-item phrase" id="phrase-stand-up">Stand up.</div>
+        <div class="draggable-item phrase" id="phrase-sit-down">Sit down.</div>
+        <div class="draggable-item phrase" id="phrase-come-here">Come here.</div>
+      </div>
+    </div>
+
+    <!-- Classroom Spots Grid: Row 0 (Age) -->
+    <div class="grid-container">
+      <div class="spot-card">
+        <div class="spot-title">Age</div>
+        <div class="drop-zone" id="spot-age">
+          <div class="slot" data-accept="onza-avatar"><div class="imprint"><img src="https://res.cloudinary.com/dqwm4pdbz/image/upload/v1786623812/onza_3avface_gyyay8.png" alt="Onza" /><span class="animal-name">Onza</span></div></div>
+          <div class="slot" data-accept="num-seven"><div class="imprint"><img src="https://res.cloudinary.com/dp455m4rk/image/upload/c_crop,w_234,h_153,x_0,y_153/v1786434492/260811_lesson7ee_03_epzw4v.png" alt="Seven" /><span class="animal-name">Seven</span></div></div>
+          <div class="slot" data-accept="sam-avatar"><div class="imprint"><img src="https://res.cloudinary.com/dp455m4rk/image/upload/q_auto/f_auto/e_bgremoval/v1786537188/sam_3davface_a8uy3g.png" alt="Sam" /><span class="animal-name">Sam</span></div></div>
+          <div class="slot" data-accept="num-eight"><div class="imprint"><img src="https://res.cloudinary.com/dp455m4rk/image/upload/c_crop,w_234,h_153,x_229,y_153/v1786434492/260811_lesson7ee_03_epzw4v.png" alt="Eight" /><span class="animal-name">Eight</span></div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Classroom Spots Grid: Row 1 (Colours + Animals) -->
+    <div class="grid-container">
+      <div class="spot-card">
+        <div class="spot-title">Colours</div>
+        <div class="drop-zone" id="spot-1">
+          <div class="slot"></div>
+          <div class="slot"></div>
+          <div class="slot"></div>
+          <div class="slot"></div>
+        </div>
+      </div>
+
+      <div class="spot-card">
+        <div class="spot-title">Animals</div>
+        <div class="drop-zone" id="spot-2">
+          <div class="slot"><span class="lock-icon"><i data-lucide="lock"></i></span></div>
+          <div class="slot"><span class="lock-icon"><i data-lucide="lock"></i></span></div>
+          <div class="slot"><span class="lock-icon"><i data-lucide="lock"></i></span></div>
+          <div class="slot"><span class="lock-icon"><i data-lucide="lock"></i></span></div>
+        </div>
       </div>
     </div>
 
@@ -783,7 +893,7 @@
         { spotId: "spot-4", ids: ["red-car", "yellow-bee", "blue-rabbit", "green-bike"] },
       ];
 
-      // Randomize the order of items in Somewhere (Fisher-Yates on DOM children).
+      // Randomize the order of items in Items (Fisher-Yates on DOM children).
       function shuffleItems() {
         var container = document.getElementById("inventory");
         if (!container) return;
@@ -796,6 +906,7 @@
       // Locked-in progress: once a spot is completed it stays coloured,
       // even if an item is dragged away afterwards.
       var reached = {
+        "spot-age": false,
         "spot-1": false,
         "spot-2": false,
         "spot-3": false,
@@ -805,6 +916,7 @@
       // Progressive unlock state. spot-1 (Colours) is open from the start;
       // Animals, Toys and Mystery start locked.
       var unlocked = {
+        "spot-age": true,
         "spot-1": true,
         "spot-2": false,
         "spot-3": false,
@@ -890,6 +1002,18 @@
           if (card) card.classList.toggle("goal-reached", reached[goal.spotId]);
           if (!reached[goal.spotId]) allActive = false;
         });
+        var ageSpot = document.getElementById("spot-age");
+        if (ageSpot) {
+          var ageCard = ageSpot.closest(".spot-card");
+          var ageDone = ["onza-avatar", "num-seven", "sam-avatar", "num-eight"]
+            .every(function (id) {
+              var el = document.getElementById(id);
+              return el && ageSpot.contains(el);
+            });
+          if (ageDone) reached["spot-age"] = true;
+          if (ageCard) ageCard.classList.toggle("age-reached", reached["spot-age"]);
+          if (!reached["spot-age"]) allActive = false;
+        }
         var mystery = document.getElementById("spot-4");
         if (mystery) {
           var mCard = mystery.closest(".spot-card");
@@ -989,11 +1113,17 @@
             var zoneLocked = dropZone && !unlocked[dropZone.id];
             if (!zoneLocked) {
               var occupant = overZone.querySelector(".draggable-item");
+              var ageSpot = dropZone && dropZone.id === "spot-age";
+              var ageMatch = ageSpot && overZone.dataset.accept === activeItem.id;
               var mysterySpot = dropZone && dropZone.id === "spot-4";
               var canCombine =
                 mysterySpot && occupant && combos[activeItem.id] === occupant.id;
-              if (!occupant) {
+              if (ageSpot && !ageMatch) {
+                /* wrong slot – do nothing */
+              } else if (!occupant) {
                 overZone.appendChild(activeItem);
+                var imp = overZone.querySelector(".imprint");
+                if (imp) imp.style.display = "none";
                 checkMystery();
                 checkGoal();
               } else if (canCombine) {
@@ -1003,7 +1133,15 @@
               }
             }
           } else if (overZone.classList.contains("item-container")) {
+            var prevAgeSlot = activeItem.closest(".drop-zone#spot-age");
             overZone.appendChild(activeItem);
+            if (prevAgeSlot) {
+              var oldSlot = prevAgeSlot.querySelector('[data-accept="' + activeItem.id + '"]');
+              if (oldSlot) {
+                var imp = oldSlot.querySelector(".imprint");
+                if (imp) imp.style.display = "";
+              }
+            }
             checkGoal();
           }
         }
@@ -1159,6 +1297,7 @@
           inventory.appendChild(el);
         });
         stashed = [];
+        reached["spot-age"] = false;
         reached["spot-1"] = false;
         reached["spot-2"] = false;
         reached["spot-3"] = false;
