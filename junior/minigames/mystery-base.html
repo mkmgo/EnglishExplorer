@@ -218,6 +218,10 @@
         border-color: var(--accent);
       }
 
+      [data-retired] {
+        display: none !important;
+      }
+
       .spot-title {
         font-weight: bold;
         font-size: clamp(1rem, 1vw + 0.5rem, 1.2rem);
@@ -762,6 +766,29 @@
       </div>
     </div>
 
+    <!-- Classroom Spots Grid: Row 0 (Age + Dialogue) -->
+    <div class="grid-container">
+      <div class="spot-card">
+        <div class="spot-title">Age</div>
+        <div class="drop-zone" id="spot-age">
+          <div class="slot" data-accept="onza-avatar"><div class="imprint"><img src="https://res.cloudinary.com/dqwm4pdbz/image/upload/v1786623812/onza_3avface_gyyay8.png" alt="Onza" /><span class="animal-name">Onza</span></div></div>
+          <div class="slot" data-accept="num-seven"><div class="imprint"><img src="https://res.cloudinary.com/dp455m4rk/image/upload/c_crop,w_234,h_153,x_0,y_153/v1786434492/260811_lesson7ee_03_epzw4v.png" alt="Seven" /><span class="animal-name">Seven</span></div></div>
+          <div class="slot" data-accept="sam-avatar"><div class="imprint"><img src="https://res.cloudinary.com/dp455m4rk/image/upload/q_auto/f_auto/e_bgremoval/v1786537188/sam_3davface_a8uy3g.png" alt="Sam" /><span class="animal-name">Sam</span></div></div>
+          <div class="slot" data-accept="num-eight"><div class="imprint"><img src="https://res.cloudinary.com/dp455m4rk/image/upload/c_crop,w_234,h_153,x_229,y_153/v1786434492/260811_lesson7ee_03_epzw4v.png" alt="Eight" /><span class="animal-name">Eight</span></div></div>
+        </div>
+      </div>
+
+      <div class="spot-card">
+        <div class="spot-title">Dialogue</div>
+        <div class="drop-zone" id="spot-dialogue">
+          <div class="slot"></div>
+          <div class="slot"></div>
+          <div class="slot"></div>
+          <div class="slot"></div>
+        </div>
+      </div>
+    </div>
+
     <!-- Draggable Phrases Palette -->
     <div class="palette">
       <div class="palette-title">Phrases</div>
@@ -778,22 +805,9 @@
       </div>
     </div>
 
-    <!-- Classroom Spots Grid: Row 0 (Age) -->
-    <div class="grid-container">
-      <div class="spot-card">
-        <div class="spot-title">Age</div>
-        <div class="drop-zone" id="spot-age">
-          <div class="slot" data-accept="onza-avatar"><div class="imprint"><img src="https://res.cloudinary.com/dqwm4pdbz/image/upload/v1786623812/onza_3avface_gyyay8.png" alt="Onza" /><span class="animal-name">Onza</span></div></div>
-          <div class="slot" data-accept="num-seven"><div class="imprint"><img src="https://res.cloudinary.com/dp455m4rk/image/upload/c_crop,w_234,h_153,x_0,y_153/v1786434492/260811_lesson7ee_03_epzw4v.png" alt="Seven" /><span class="animal-name">Seven</span></div></div>
-          <div class="slot" data-accept="sam-avatar"><div class="imprint"><img src="https://res.cloudinary.com/dp455m4rk/image/upload/q_auto/f_auto/e_bgremoval/v1786537188/sam_3davface_a8uy3g.png" alt="Sam" /><span class="animal-name">Sam</span></div></div>
-          <div class="slot" data-accept="num-eight"><div class="imprint"><img src="https://res.cloudinary.com/dp455m4rk/image/upload/c_crop,w_234,h_153,x_229,y_153/v1786434492/260811_lesson7ee_03_epzw4v.png" alt="Eight" /><span class="animal-name">Eight</span></div></div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Classroom Spots Grid: Row 1 (Colours + Animals) -->
-    <div class="grid-container">
-      <div class="spot-card">
+    <!-- Classroom Spots Grid: Row 1 (Colours + Animals) [RETIRED] -->
+    <div class="grid-container" data-retired>
+      <div class="spot-card" data-retired>
         <div class="spot-title">Colours</div>
         <div class="drop-zone" id="spot-1">
           <div class="slot"></div>
@@ -803,7 +817,7 @@
         </div>
       </div>
 
-      <div class="spot-card">
+      <div class="spot-card" data-retired>
         <div class="spot-title">Animals</div>
         <div class="drop-zone" id="spot-2">
           <div class="slot"><span class="lock-icon"><i data-lucide="lock"></i></span></div>
@@ -814,9 +828,9 @@
       </div>
     </div>
 
-    <!-- Classroom Spots Grid: Row 2 (Toys + Mystery) -->
-    <div class="grid-container">
-      <div class="spot-card">
+    <!-- Classroom Spots Grid: Row 2 (Toys + Mystery) [RETIRED] -->
+    <div class="grid-container" data-retired>
+      <div class="spot-card" data-retired>
         <div class="spot-title">Toys</div>
         <div class="drop-zone" id="spot-3">
           <div class="slot"><span class="lock-icon"><i data-lucide="lock"></i></span></div>
@@ -826,7 +840,7 @@
         </div>
       </div>
 
-      <div class="spot-card">
+      <div class="spot-card" data-retired>
         <div class="spot-title">Mystery</div>
         <div class="drop-zone" id="spot-4">
           <div class="slot"><span class="lock-icon"><i data-lucide="lock"></i></span></div>
