@@ -8,16 +8,25 @@ Follow this layout (all paths relative to repo root):
 EnglishExplorer/
 ├── index.html                  <-- Stable, production-ready release
 ├── advanced.html               <-- Active sandbox / current development version
+├── dev.html                    <-- Dev Hub (developer entry point)
+├── updates.html                <-- Updates / changelog page
 ├── README.md                   <-- Project overview for humans & visitors
 ├── AGENTS.md                   <-- This file
 ├── .gitignore                  <-- Ignores system metadata files (e.g. Desktop.ini)
 ├── junior/                     <-- Ages 6-9 ecosystem
 │   ├── thematic/               <-- Thematic lesson decks
 │   │   ├── animals.html
-│   │   └── toys-things.html
+│   │   ├── toys-things.html
+│   │   └── my-family-my-classroom.html
 │   └── minigames/              <-- Highly gamified mini-games (formerly /Features)
-│       └── unlock-mystery.html
+│       ├── abc-world.html
+│       ├── mystery-base.html
+│       ├── mystery-phrases.html
+│       ├── new-words-wizard.html
+│       ├── unlock-mystery.html
+│       └── unlock-mystery-plus.html
 ├── breakthrough/               <-- Older pupils (EEBT - Advanced / Breakthrough)
+│   ├── protocols/              <-- Daily Protocols (YYYY-MM-DD.html)
 │   └── tools/                  <-- Standalone utility collection (formerly EEBTools/)
 │       ├── eebt-tools.html
 │       └── eebt-translator.html
@@ -36,6 +45,7 @@ put in them (see "Self-contained files" below).
 - New Breakthrough tool/utility → `breakthrough/tools/`.
 - Superseded/old versions → `archive/` (keep them; do not delete without asking).
 - Keep `index.html` as the stable release; do new development in `advanced.html` and promote when stable.
+- **Keep the structure listing above in sync**: whenever a new file is released (moved out of development into its final folder), add it to the tree under the correct folder.
 
 ### Self-contained files — no cross-file dependencies
 
