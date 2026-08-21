@@ -738,6 +738,22 @@
         white-space: nowrap;
         min-width: 0;
       }
+      .clip .clipBody {
+        display: flex;
+        flex-direction: column;
+        gap: 0.15em;
+        min-width: 0;
+        flex: 1 1 auto;
+        text-align: left;
+      }
+      .clip .clipZh {
+        font-size: 0.78em;
+        font-weight: 400;
+        opacity: 0.75;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
       .color-btn {
         color: white;
         text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
@@ -1517,7 +1533,7 @@
             onclick="next()"
           ></button>
         </div>
-        <span class="versionText">EEBTools V1.1</span>
+        <span class="versionText">EEBTools V1.2</span>
       </div>
 
       <!-- 1: Media clipper (paste Cloudinary asset link) -->
@@ -1933,6 +1949,7 @@
         var a = document.getElementById("srcLangBox");
         var b = document.getElementById("zhLangBox");
         if (!a || !b) return;
+        if (!a.scrollHeight && !b.scrollHeight) return;
         a.style.height = "";
         b.style.height = "";
         var h = Math.max(a.scrollHeight, b.scrollHeight);
@@ -1959,8 +1976,11 @@
         return s;
       }
 
+      var translateSeq = 0;
+
       function doTranslate(text) {
         text = cleanEn(text);
+        var seq = ++translateSeq;
         lastSrcText = text;
         var srcBox = document.getElementById("srcLangBox");
         var zhBox = document.getElementById("zhLangBox");
@@ -1995,12 +2015,14 @@
               }
             } catch (e) {}
             if (!translated) translated = text;
+            addClip(text, translated);
+            if (seq !== translateSeq) return;
             lastZhText = translated;
             if (zhBox) zhBox.textContent = translated;
             equalizeBoxes();
-            addClip(text, translated);
           })
           .catch(function () {
+            if (seq !== translateSeq) return;
             if (zhBox) zhBox.textContent = "Translation failed";
             equalizeBoxes();
           });
@@ -2025,11 +2047,20 @@
         b.innerHTML = ICON_CLIPBOARD_TYPE;
         var tm = document.createElement("time");
         tm.textContent = time;
+        var body = document.createElement("span");
+        body.className = "clipBody";
         var txt = document.createElement("span");
         txt.className = "clipText";
         txt.textContent = preview;
+        body.appendChild(txt);
+        if (zh) {
+          var zhSpan = document.createElement("span");
+          zhSpan.className = "clipZh";
+          zhSpan.textContent = zh;
+          body.appendChild(zhSpan);
+        }
         b.appendChild(tm);
-        b.appendChild(txt);
+        b.appendChild(body);
         b.onclick = function () {
           restoreClip(en, zh);
         };
@@ -2175,6 +2206,7 @@
           var rows = parseCsv(text);
           var count = 0;
           var garbled = 0;
+          var skipped = 0;
           for (var i = 0; i < rows.length; i++) {
             var cells = rows[i];
             while (cells.length < 3) cells.push("");
@@ -2184,24 +2216,33 @@
             if (t.toLowerCase() === "time" && en.toLowerCase() === "english")
               continue;
             if (!en && !zh) continue;
+            var dup = false;
+            for (var j = 0; j < clipHistory.length; j++) {
+              if (clipHistory[j].en === en && clipHistory[j].zh === zh) {
+                dup = true;
+                break;
+              }
+            }
+            if (dup) {
+              skipped++;
+              continue;
+            }
             if (en.indexOf("\uFFFD") >= 0 || zh.indexOf("\uFFFD") >= 0)
               garbled++;
             clipHistory.push({ time: t, en: en, zh: zh });
             appendClipRow(t, en, zh);
             count++;
           }
+          var msg = count ? "Loaded " + count + " clip(s)" : "No new clips";
+          if (skipped) msg += ", " + skipped + " duplicate(s) skipped";
           if (garbled)
-            toast(
-              count +
-                " loaded, " +
-                garbled +
-                " garbled \u2014 re-save CSV as UTF-8",
-            );
-          else toast(count ? "Loaded " + count + " clip(s)" : "No clips found");
+            msg += " \u2014 " + garbled + " garbled, re-save CSV as UTF-8";
+          toast(msg);
         });
       }
 
       function restoreClip(en, zh) {
+        translateSeq++;
         en = cleanEn(en);
         lastSrcText = en;
         lastZhText = zh;
