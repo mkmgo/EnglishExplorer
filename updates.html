@@ -230,6 +230,9 @@
       .updateTable .nima-col .colNote {
         color: #7c3aed;
       }
+      .updateTable tr.done .colFile a {
+        color: var(--good);
+      }
       .emptyNote {
         font-style: italic;
         opacity: 0.4;
@@ -393,22 +396,20 @@
               </thead>
               <tbody>
                 <tr>
-                  <td class="colDate">20/08/2026</td>
+                  <td class="colDate">21/08/2026</td>
                   <td class="colFile">
                     <a
                       class="onza-col"
-                      href="https://mkmgo.github.io/EnglishExplorer/junior/thematic/my-family-my-classroom.html"
+                      href="https://mkmgo.github.io/EnglishExplorer/junior/minigames/mystery-phrases.html"
                       target="_blank"
                       rel="noopener"
-                      >My Family &amp; My Classroom</a
+                      >Mystery Phrases</a
                     >
                   </td>
-                  <td class="colNote">
-                    Repeat until all words are well known.
-                  </td>
+                  <td class="colNote">For Monday: Solve 3x.</td>
                 </tr>
                 <tr>
-                  <td class="colDate">20/08/2026</td>
+                  <td class="colDate">21/08/2026</td>
                   <td class="colFile">
                     <a
                       class="onza-col"
@@ -419,8 +420,22 @@
                     >
                   </td>
                   <td class="colNote">
-                    Fold page in exercise book and write each word at least 5x.
+                    For Monday: Fold page in exercise book and write each word
+                    at least 5x.
                   </td>
+                </tr>
+                <tr>
+                  <td class="colDate">20/08/2026</td>
+                  <td class="colFile">
+                    <a
+                      class="onza-col"
+                      href="https://mkmgo.github.io/EnglishExplorer/junior/thematic/my-family-my-classroom.html"
+                      target="_blank"
+                      rel="noopener"
+                      >My Family &amp; My Classroom</a
+                    >
+                  </td>
+                  <td class="colNote">Well done</td>
                 </tr>
                 <tr>
                   <td class="colDate">18/08/2026</td>
@@ -485,6 +500,19 @@
           } catch (e) {}
         };
       }
+
+      // Green file links for rows whose Note says "Well done".
+      (function () {
+        document
+          .querySelectorAll(".updateTable tbody tr")
+          .forEach(function (tr) {
+            var note = tr.querySelector(".colNote");
+            var link = tr.querySelector(".colFile a");
+            if (note && link && /well done/i.test(note.textContent)) {
+              tr.classList.add("done");
+            }
+          });
+      })();
 
       (function () {
         var el = document.getElementById("topbarTitle");
