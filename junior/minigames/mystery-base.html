@@ -214,8 +214,8 @@
       }
 
       .spot-card.age-reached {
-        background-color: var(--mystery-bg);
-        border-color: var(--accent);
+        background-color: var(--goal-bg);
+        border-color: var(--good);
       }
 
       [data-retired] {
@@ -247,6 +247,11 @@
       .drop-zone.drag-over {
         background-color: var(--dropzone-hover);
         border-color: var(--primary);
+      }
+
+      /* Dialogue: phrases stacked in the left column, avatars on the right */
+      #spot-dialogue {
+        grid-auto-flow: column;
       }
 
           .slot {
@@ -435,14 +440,14 @@
         background-color: var(--item-bg);
         color: var(--text);
         border: 1px solid var(--item-border);
-        width: 180px;
+        width: 96px;
         height: 84px;
         flex-direction: column;
         justify-content: center;
         align-items: center;
         text-align: center;
-        font-size: 0.85rem;
-        padding: 5px 10px;
+        font-size: 0.8rem;
+        padding: 4px 6px;
         gap: 3px;
         line-height: 1.15;
       }
@@ -515,6 +520,14 @@
         justify-content: center;
         gap: 3px;
         text-align: center;
+        transition:
+          opacity 0.3s,
+          filter 0.3s;
+      }
+
+      .imprint.taken {
+        opacity: 0.5;
+        filter: none;
       }
       .imprint img {
         width: 48px;
@@ -567,9 +580,9 @@
           height: 76px;
         }
         .phrase {
-          width: 160px;
+          width: 84px;
           height: 76px;
-          font-size: 0.8rem;
+          font-size: 0.72rem;
         }
         .animal img {
           width: 40px;
@@ -634,7 +647,11 @@
       🌙
     </button>
     <h1>Onza's Mystery Base</h1>
-    <div class="instructions herocard" id="goalText">
+    <div
+      class="instructions herocard"
+      id="goalText"
+      data-retired
+    >
       <img class="owner-img" src="https://res.cloudinary.com/dp455m4rk/image/upload/q_auto/f_auto/e_bgremoval/v1786537188/onza_3avface_mkjt5x.png" alt="Onza" />
       <div class="owner-info">
         <div class="owner-name">Onza</div>
@@ -780,12 +797,12 @@
       </div>
 
       <div class="spot-card">
-        <div class="spot-title">Dialogue</div>
+        <div class="spot-title">What is your Name?</div>
         <div class="drop-zone" id="spot-dialogue">
-          <div class="slot"></div>
-          <div class="slot"></div>
-          <div class="slot"></div>
-          <div class="slot"></div>
+          <div class="slot" data-accept="phrase-whats-your-name"><div class="imprint"><span class="animal-name">What is your name?</span></div></div>
+          <div class="slot" data-accept="phrase-my-name-is"><div class="imprint"><span class="animal-name">My name is ...</span></div></div>
+          <div class="slot" data-accept="onza-avatar"><div class="imprint"><img src="https://res.cloudinary.com/dqwm4pdbz/image/upload/v1786623812/onza_3avface_gyyay8.png" alt="Onza" /><span class="animal-name">Onza</span></div></div>
+          <div class="slot" data-accept="sam-avatar"><div class="imprint"><img src="https://res.cloudinary.com/dp455m4rk/image/upload/q_auto/f_auto/e_bgremoval/v1786537188/sam_3davface_a8uy3g.png" alt="Sam" /><span class="animal-name">Sam</span></div></div>
         </div>
       </div>
     </div>
@@ -922,6 +939,7 @@
       // even if an item is dragged away afterwards.
       var reached = {
         "spot-age": false,
+        "spot-dialogue": false,
         "spot-1": false,
         "spot-2": false,
         "spot-3": false,
@@ -932,6 +950,7 @@
       // Animals, Toys and Mystery start locked.
       var unlocked = {
         "spot-age": true,
+        "spot-dialogue": true,
         "spot-1": true,
         "spot-2": false,
         "spot-3": false,
@@ -1029,6 +1048,23 @@
           if (ageCard) ageCard.classList.toggle("age-reached", reached["spot-age"]);
           if (!reached["spot-age"]) allActive = false;
         }
+        var dlgSpot = document.getElementById("spot-dialogue");
+        if (dlgSpot) {
+          var dlgCard = dlgSpot.closest(".spot-card");
+          var dlgDone = [
+            "phrase-whats-your-name",
+            "phrase-my-name-is",
+            "onza-avatar",
+            "sam-avatar",
+          ].every(function (id) {
+            var el = document.getElementById(id);
+            return el && dlgSpot.contains(el);
+          });
+          if (dlgDone) reached["spot-dialogue"] = true;
+          if (dlgCard)
+            dlgCard.classList.toggle("goal-reached", reached["spot-dialogue"]);
+          if (!reached["spot-dialogue"]) allActive = false;
+        }
         var mystery = document.getElementById("spot-4");
         if (mystery) {
           var mCard = mystery.closest(".spot-card");
@@ -1122,23 +1158,35 @@
           activeGhost = null;
         }
         activeItem.classList.remove("dragging-original");
+        var srcZone = activeItem.closest(".drop-zone");
+        var ageLocked =
+          srcZone && srcZone.id === "spot-age" && !reached["spot-age"];
         if (overZone) {
           if (overZone.classList.contains("slot")) {
             var dropZone = overZone.closest(".drop-zone");
             var zoneLocked = dropZone && !unlocked[dropZone.id];
-            if (!zoneLocked) {
+            var fromLockedAge =
+              ageLocked && (!dropZone || dropZone.id !== "spot-age");
+            if (!zoneLocked && !fromLockedAge) {
               var occupant = overZone.querySelector(".draggable-item");
-              var ageSpot = dropZone && dropZone.id === "spot-age";
-              var ageMatch = ageSpot && overZone.dataset.accept === activeItem.id;
+              var requiredId = overZone.dataset.accept;
               var mysterySpot = dropZone && dropZone.id === "spot-4";
               var canCombine =
                 mysterySpot && occupant && combos[activeItem.id] === occupant.id;
-              if (ageSpot && !ageMatch) {
+              if (requiredId && requiredId !== activeItem.id) {
                 /* wrong slot – do nothing */
               } else if (!occupant) {
+                var srcSlot = activeItem.closest(".slot[data-accept]");
                 overZone.appendChild(activeItem);
                 var imp = overZone.querySelector(".imprint");
                 if (imp) imp.style.display = "none";
+                if (srcSlot && srcSlot !== overZone) {
+                  var srcImp = srcSlot.querySelector(".imprint");
+                  if (srcImp) {
+                    srcImp.style.display = "";
+                    srcImp.classList.add("taken");
+                  }
+                }
                 checkMystery();
                 checkGoal();
               } else if (canCombine) {
@@ -1148,16 +1196,18 @@
               }
             }
           } else if (overZone.classList.contains("item-container")) {
-            var prevAgeSlot = activeItem.closest(".drop-zone#spot-age");
-            overZone.appendChild(activeItem);
-            if (prevAgeSlot) {
-              var oldSlot = prevAgeSlot.querySelector('[data-accept="' + activeItem.id + '"]');
-              if (oldSlot) {
-                var imp = oldSlot.querySelector(".imprint");
-                if (imp) imp.style.display = "";
+            if (!ageLocked) {
+              var prevSlot = activeItem.closest(".slot[data-accept]");
+              overZone.appendChild(activeItem);
+              if (prevSlot) {
+                var oldImp = prevSlot.querySelector(".imprint");
+                if (oldImp) {
+                  oldImp.style.display = "";
+                  oldImp.classList.add("taken");
+                }
               }
+              checkGoal();
             }
-            checkGoal();
           }
         }
         clearOverZone();
@@ -1312,7 +1362,14 @@
           inventory.appendChild(el);
         });
         stashed = [];
+        document
+          .querySelectorAll(".drop-zone .imprint")
+          .forEach(function (imp) {
+            imp.style.display = "";
+            imp.classList.remove("taken");
+          });
         reached["spot-age"] = false;
+        reached["spot-dialogue"] = false;
         reached["spot-1"] = false;
         reached["spot-2"] = false;
         reached["spot-3"] = false;
