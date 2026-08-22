@@ -60,6 +60,15 @@ put in them (see "Self-contained files" below).
 - No spaces, underscores, or uppercase letters in file names.
 - Existing product display names are unaffected — only file names are constrained (e.g. the tools stay "EEBTools" on screen while the files are `eebt-tools.html` / `eebt-translator.html`).
 
+## Global visitor tracking (Airtable)
+
+- **Approved exception to "self-contained files"**: `config.js` and `tracker.js` live in the repo root and are linked from **every** HTML page (including new ones) via `<script src>` right before `</body>`, with the correct relative prefix:
+  - Root pages (`index.html`, `advanced.html`, `dev.html`, `updates.html`): `src="config.js"`
+  - One level deep (`archive/`): `src="../config.js"`
+  - Two levels deep (`junior/...`, `breakthrough/...`): `src="../../config.js"` (and same for `tracker.js`)
+- `config.js` holds the Airtable Base ID, PAT, and table name (`SiteVisitorLogs`). It contains secrets and is **gitignored** — never commit it.
+- `tracker.js` exposes `logActivity(pupil, pagePath, section, actionType, details)` and auto-logs a `Page_View` on every page load. Reuse it for custom events instead of writing new fetch calls.
+
 ## Platforms
 
 - Must work on **Tizen** smart TVs and **mobile devices** (iOS/Android phones and tablets).
