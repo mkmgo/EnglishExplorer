@@ -360,198 +360,12 @@
         margin: 14px 0 10px;
       }
 
-      /* Tidy-up bags: tap a category bag to open it, then drop the
-         matching items inside. Completing all bags unlocks the base. */
-      .tidy-hint {
+      .inv-summary {
         text-align: center;
         font-weight: bold;
         color: var(--muted);
-        font-size: clamp(0.8rem, 0.6vw + 0.7rem, 0.95rem);
-        margin-bottom: 10px;
-      }
-
-      .bag-bar {
-        display: flex;
-        flex-wrap: wrap;
-        justify-content: center;
-        gap: 10px;
-      }
-
-      .bag-chip {
-        appearance: none;
-        display: flex;
-        align-items: center;
-        gap: 8px;
-        padding: 10px 14px;
-        border-radius: 999px;
-        border: 2px dashed var(--border-strong);
-        background: var(--dropzone-bg);
-        color: var(--text);
-        font-family: inherit;
-        font-weight: bold;
-        font-size: clamp(0.85rem, 0.5vw + 0.75rem, 1rem);
-        cursor: pointer;
-        box-shadow: var(--shadow);
-        transition:
-          background-color 0.2s,
-          border-color 0.2s,
-          transform 0.15s;
-        touch-action: manipulation;
-        -webkit-tap-highlight-color: transparent;
-      }
-
-      .bag-chip:active {
-        transform: scale(0.96);
-      }
-
-      .bag-chip .bag-icon {
-        display: inline-flex;
-        align-items: center;
-        font-size: 1.15em;
-      }
-
-      .bag-chip .bag-icon svg,
-      .bag-tray-head .bag-icon svg {
-        width: 20px;
-        height: 20px;
-      }
-
-      /* Handbag fills solid once the bag is fully packed */
-      .bag-chip.done .bag-icon svg,
-      .bag-tray.sealed .bag-tray-head .bag-icon svg {
-        fill: currentColor;
-      }
-
-      .bag-chip .bag-count {
-        background: var(--item-bg);
-        border: 1px solid var(--item-border);
-        border-radius: 999px;
-        padding: 2px 8px;
-        font-size: 0.85em;
-      }
-
-      .bag-chip.open {
-        border-style: solid;
-        border-color: var(--primary);
-        background: var(--dropzone-hover);
-      }
-
-      .bag-chip.done {
-        border-style: solid;
-        border-color: var(--good);
-        background: var(--goal-bg);
-      }
-
-      @keyframes bagAttract {
-        0%,
-        100% {
-          transform: scale(1);
-        }
-        50% {
-          transform: scale(1.06);
-          box-shadow: 0 0 0 6px rgba(59, 130, 246, 0.18);
-        }
-      }
-
-      .bag-bar.attract .bag-chip:not(.done):not(.open) {
-        animation: bagAttract 1.6s ease-in-out infinite;
-      }
-
-      .bag-tray {
-        display: none;
-        margin-top: 12px;
-      }
-
-      .bag-tray.open {
-        display: block;
-      }
-
-      .bag-tray-head {
-        font-weight: bold;
-        color: var(--muted);
-        text-align: center;
-        margin-bottom: 8px;
-      }
-
-      .bag-tray-head .bag-progress {
-        color: var(--text);
-      }
-
-      .bag-tray-inner {
-        display: flex;
-        flex-wrap: wrap;
-        justify-content: center;
-        align-content: flex-start;
-        gap: 10px;
-        min-height: 100px;
-        padding: 10px;
-        border: 2px dashed var(--border-strong);
-        border-radius: 10px;
-        background: var(--dropzone-bg);
-        transition:
-          background-color 0.2s,
-          border-color 0.2s;
-      }
-
-      .bag-tray-inner.drag-over {
-        background: var(--dropzone-hover);
-        border-color: var(--primary);
-      }
-
-      .bag-tray.sealed .bag-tray-inner {
-        background: var(--goal-bg);
-        border-color: var(--good);
-        pointer-events: none;
-      }
-
-      .bag-slot {
-        width: 96px;
-        height: 84px;
-        border: 2px dashed var(--border-strong);
-        border-radius: 8px;
-        opacity: 0.55;
-        box-sizing: border-box;
-      }
-
-      @keyframes packPop {
-        0% {
-          transform: scale(0.6);
-          opacity: 0.2;
-        }
-        60% {
-          transform: scale(1.12);
-        }
-        100% {
-          transform: scale(1);
-          opacity: 1;
-        }
-      }
-
-      .unpack-pop {
-        animation: packPop 0.45s ease;
-      }
-
-      .bag-area.dissolving {
-        animation: paletteDissolve 0.6s ease forwards;
-        pointer-events: none;
-      }
-
-      /* Once everything is packed, collapse the empty palette parts to
-         free up space; the bag bar stays as compact storage. */
-      .palette.bag-packed > .palette-title,
-      .palette.bag-packed > .item-container,
-      .palette.bag-packed > .inv-separator {
-        display: none;
-      }
-
-      @media (max-width: 640px) {
-        .bag-chip {
-          padding: 9px 11px;
-        }
-        .bag-slot {
-          width: 84px;
-          height: 76px;
-        }
+        font-size: clamp(0.8rem, 0.6vw + 0.7rem, 1rem);
+        letter-spacing: 0.02em;
       }
 
       .item-container {
@@ -1020,11 +834,7 @@
         </div>
       </div>
       <div class="inv-separator"></div>
-      <div class="tidy-hint" id="tidyHint">Tap a bag to open it</div>
-      <div class="bag-area" id="bagArea">
-        <div class="bag-bar attract" id="bagBar"></div>
-        <div class="bag-trays" id="bagTrays"></div>
-      </div>
+      <div class="inv-summary" id="invSummary"></div>
     </div>
 
     <!-- Classroom Spots Grid: Row 0 (Age + Dialogue) -->
@@ -1205,175 +1015,22 @@
         "Special",
       ];
 
-      // ---- Tidy-up bags ----
-      // First task: sort every item into its category bag. Tap a bag to
-      // open it, then drop matching items inside (e.g. 5x Colours). When
-      // all bags are packed they unpack and the base tasks begin.
-      var bagRefs = {};
-      var openCat = null;
-      var tidyDone = false;
-
-      function buildBags() {
-        var bar = document.getElementById("bagBar");
-        var trays = document.getElementById("bagTrays");
-        if (!bar || !trays) return;
-        var totals = {};
-        Object.keys(itemCategories).forEach(function (id) {
-          var cat = itemCategories[id];
-          totals[cat] = (totals[cat] || 0) + 1;
-        });
-        categoryOrder.forEach(function (cat) {
-          if (!totals[cat]) return;
-          var chip = document.createElement("button");
-          chip.type = "button";
-          chip.className = "bag-chip";
-          chip.dataset.cat = cat;
-          chip.innerHTML =
-            '<span class="bag-icon"><i data-lucide="handbag"></i></span><span class="bag-name">' +
-            cat +
-            '</span><span class="bag-count">0/' +
-            totals[cat] +
-            "</span>";
-          chip.addEventListener("click", function () {
-            toggleBag(cat);
-          });
-          bar.appendChild(chip);
-
-          var tray = document.createElement("div");
-          tray.className = "bag-tray";
-          tray.dataset.cat = cat;
-          tray.innerHTML =
-            '<div class="bag-tray-head"><span class="bag-icon"><i data-lucide="handbag"></i></span> ' +
-            cat +
-            " bag &middot; <span class=\"bag-progress\">0/" +
-            totals[cat] +
-            "</span></div>";
-          var inner = document.createElement("div");
-          inner.className = "bag-tray-inner";
-          tray.appendChild(inner);
-          trays.appendChild(tray);
-
-          bagRefs[cat] = {
-            chip: chip,
-            count: chip.querySelector(".bag-count"),
-            progress: tray.querySelector(".bag-progress"),
-            tray: tray,
-            inner: inner,
-            total: totals[cat],
-          };
-        });
-      }
-
-      function bagCount(cat) {
-        return bagRefs[cat].inner.querySelectorAll(".draggable-item").length;
-      }
-
-      function refreshBags() {
-        Object.keys(bagRefs).forEach(function (cat) {
-          var ref = bagRefs[cat];
-          var n = bagCount(cat);
-          ref.count.textContent = n + "/" + ref.total;
-          ref.progress.textContent = n + "/" + ref.total;
-          if (n < ref.total) ref.chip.classList.remove("done");
-          ref.inner.querySelectorAll(".bag-slot").forEach(function (s) {
-            s.remove();
-          });
-          for (var i = n; i < ref.total; i++) {
-            var slot = document.createElement("div");
-            slot.className = "bag-slot";
-            ref.inner.appendChild(slot);
-          }
-          if (n === ref.total && !ref.chip.classList.contains("done")) {
-            sealBag(cat);
-          }
-        });
-        if (
-          tidyDone &&
-          categoryOrder.some(function (c) {
-            return bagCount(c) < bagRefs[c].total;
-          })
-        ) {
-          tidyDone = false;
-          var pal = document.querySelector(".palette");
-          if (pal) pal.classList.remove("bag-packed");
-          setTidyHint("Tap a bag to open it");
-        }
-      }
-
-      function setTidyHint(text) {
-        var hint = document.getElementById("tidyHint");
-        if (hint) hint.textContent = text;
-      }
-
-      function toggleBag(cat) {
-        var bar = document.getElementById("bagBar");
-        if (bar) bar.classList.remove("attract");
-        if (openCat === cat) {
-          closeBag();
-          return;
-        }
-        closeBag(true);
-        openCat = cat;
-        bagRefs[cat].chip.classList.add("open");
-        bagRefs[cat].tray.classList.add("open");
-        setTidyHint(
-          tidyDone
-            ? "Take what you need from the " + cat.toLowerCase() + " bag"
-            : "Drop the matching items into the " + cat.toLowerCase() + " bag",
-        );
-      }
-
-      function closeBag(keepHint) {
-        if (!openCat) return;
-        var ref = bagRefs[openCat];
-        ref.chip.classList.remove("open");
-        ref.tray.classList.remove("open");
-        openCat = null;
-        if (!keepHint) {
-          setTidyHint(
-            tidyDone
-              ? "All bags packed! Open a bag when you need something"
-              : "Tap a bag to open it",
-          );
-        }
-      }
-
-      function sealBag(cat) {
-        var ref = bagRefs[cat];
-        ref.chip.classList.add("done");
-        ref.tray.classList.add("sealed");
-        var version = gameVersion;
-        setTimeout(function () {
-          if (version !== gameVersion) return;
-          ref.tray.classList.remove("sealed");
-          if (openCat === cat) {
-            ref.chip.classList.remove("open");
-            ref.tray.classList.remove("open");
-            openCat = null;
-          }
-          var allDone = categoryOrder.every(function (c) {
-            return bagCount(c) === bagRefs[c].total;
-          });
-          if (allDone) packComplete();
-          else setTidyHint("Nice! Pick the next bag");
-        }, 800);
-      }
-
-      // All bags packed: keep the bags visible as compact storage and
-      // collapse the empty palette parts to free up space.
-      function packComplete() {
-        tidyDone = true;
-        setTidyHint("All bags packed! Open a bag when you need something");
-        var version = gameVersion;
-        setTimeout(function () {
-          if (version !== gameVersion) return;
-          var pal = document.querySelector(".palette");
-          if (pal) pal.classList.add("bag-packed");
-        }, 900);
-      }
-
       function updateInventorySummary() {
-        refreshBags();
+        var el = document.getElementById("invSummary");
+        var inventory = document.getElementById("inventory");
+        if (!el || !inventory) return;
+        var counts = {};
+        inventory
+          .querySelectorAll(".draggable-item")
+          .forEach(function (item) {
+            var cat = itemCategories[item.id];
+            if (cat) counts[cat] = (counts[cat] || 0) + 1;
+          });
+        var parts = [];
+        categoryOrder.forEach(function (cat) {
+          if (counts[cat]) parts.push(counts[cat] + "x " + cat);
+        });
+        el.textContent = parts.join("  |  ");
       }
 
       // Randomize the order of items in Items (Fisher-Yates on DOM children).
@@ -1457,6 +1114,17 @@
         }, 1150);
       }
 
+      function dissolvePalette() {
+        var palette = document.querySelector(".palette");
+        if (!palette || palette.classList.contains("dissolving")) return;
+        var version = gameVersion;
+        palette.classList.add("dissolving");
+        setTimeout(function () {
+          if (version !== gameVersion) return;
+          palette.style.display = "none";
+        }, 650);
+      }
+
       function updateGoals() {
         var goalEl = document.getElementById("goalText");
         var phase = 0;
@@ -1467,6 +1135,7 @@
         if (reached["spot-1"] && !unlocked["spot-2"]) unlockSpot("spot-2");
         if (reached["spot-2"] && !unlocked["spot-3"]) unlockSpot("spot-3");
         if (reached["spot-3"] && !unlocked["spot-4"]) unlockSpot("spot-4");
+        if (reached["spot-3"]) dissolvePalette();
       }
 
       function checkGoal() {
@@ -1539,7 +1208,6 @@
         updateGoals();
         updateInventorySummary();
       }
-      buildBags();
       shuffleItems();
       checkGoal();
 
@@ -1589,9 +1257,7 @@
           activeGhost.style.top = e.clientY - grabOffsetY + "px";
         }
         var under = document.elementFromPoint(e.clientX, e.clientY);
-        var zone = under
-          ? under.closest(".slot, .item-container, .bag-tray-inner")
-          : null;
+        var zone = under ? under.closest(".slot, .item-container") : null;
         if (zone && zone.classList.contains("slot")) {
           var zoneDrop = zone.closest(".drop-zone");
           if (zoneDrop && !unlocked[zoneDrop.id]) zone = null;
@@ -1647,13 +1313,6 @@
                 checkMystery();
                 checkGoal();
               }
-            }
-          } else if (overZone.classList.contains("bag-tray-inner")) {
-            var trayEl = overZone.closest(".bag-tray");
-            var bagCat = trayEl ? trayEl.dataset.cat : null;
-            if (bagCat && itemCategories[activeItem.id] === bagCat) {
-              overZone.appendChild(activeItem);
-              checkGoal();
             }
           } else if (overZone.classList.contains("item-container")) {
             if (!ageLocked) {
@@ -1822,27 +1481,6 @@
           inventory.appendChild(el);
         });
         stashed = [];
-        document
-          .querySelectorAll(".bag-tray-inner .draggable-item")
-          .forEach(function (el) {
-            inventory.appendChild(el);
-          });
-        tidyDone = false;
-        openCat = null;
-        Object.keys(bagRefs).forEach(function (cat) {
-          bagRefs[cat].chip.classList.remove("done", "open");
-          bagRefs[cat].tray.classList.remove("open", "sealed");
-        });
-        var bagAreaEl = document.getElementById("bagArea");
-        if (bagAreaEl) {
-          bagAreaEl.classList.remove("dissolving");
-          bagAreaEl.style.display = "";
-        }
-        var palEl = document.querySelector(".palette");
-        if (palEl) palEl.classList.remove("bag-packed");
-        var barEl = document.getElementById("bagBar");
-        if (barEl) barEl.classList.add("attract");
-        setTidyHint("Tap a bag to open it");
         document
           .querySelectorAll(".drop-zone .imprint")
           .forEach(function (imp) {
