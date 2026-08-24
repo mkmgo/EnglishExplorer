@@ -27,6 +27,8 @@
         --goal-bg: #d1fae5;
         --mystery-bg: #fef3c7;
         --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        --question-icon: #2563eb;
+        --statement-icon: #c2410c;
       }
 
       @media (prefers-color-scheme: dark) {
@@ -51,6 +53,8 @@
           --goal-bg: #064e3b;
           --mystery-bg: #78350f;
           --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.45);
+          --question-icon: #60a5fa;
+          --statement-icon: #fb923c;
         }
       }
 
@@ -75,6 +79,8 @@
         --goal-bg: #064e3b;
         --mystery-bg: #78350f;
         --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.45);
+        --question-icon: #60a5fa;
+        --statement-icon: #fb923c;
       }
 
       #themeToggle {
@@ -377,6 +383,17 @@
         gap: 10px;
       }
 
+      .bag-bar.drag-over {
+        background: var(--dropzone-hover);
+        outline: 2px dashed var(--primary);
+        outline-offset: 2px;
+        border-radius: 12px;
+      }
+
+      .bag-bar:empty {
+        display: none;
+      }
+
       .bag-chip {
         appearance: none;
         display: flex;
@@ -390,18 +407,33 @@
         font-family: inherit;
         font-weight: bold;
         font-size: clamp(0.85rem, 0.5vw + 0.75rem, 1rem);
-        cursor: pointer;
+        cursor: grab;
         box-shadow: var(--shadow);
         transition:
           background-color 0.2s,
           border-color 0.2s,
           transform 0.15s;
-        touch-action: manipulation;
+        touch-action: none;
         -webkit-tap-highlight-color: transparent;
+        -webkit-touch-callout: none;
+        -webkit-user-select: none;
+        user-select: none;
       }
 
       .bag-chip:active {
         transform: scale(0.96);
+      }
+
+      .bag-chip.dragging-original {
+        opacity: 0.35;
+      }
+
+      .bag-chip.ghost {
+        position: fixed;
+        z-index: 1000;
+        pointer-events: none;
+        margin: 0;
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.25);
       }
 
       .bag-chip .bag-icon {
@@ -414,6 +446,30 @@
       .bag-tray-head .bag-icon svg {
         width: 20px;
         height: 20px;
+      }
+
+      /* Marker icon for phrase bags (question mark / alert circle) */
+      .bag-chip .bag-tag,
+      .bag-tray-head .bag-tag {
+        display: inline-flex;
+        align-items: center;
+      }
+
+      .bag-chip .bag-tag svg,
+      .bag-tray-head .bag-tag svg {
+        width: 18px;
+        height: 18px;
+      }
+
+      /* Question (blue) / statement (purple) marker colours apply alike
+         to phrase bricks, their slot imprints and the bag tags — lucide
+         keeps these icon classes on the rendered <svg>. */
+      .lucide-circle-question-mark {
+        color: var(--question-icon);
+      }
+
+      .lucide-circle-alert {
+        color: var(--statement-icon);
       }
 
       /* Handbag fills solid once the bag is fully packed */
@@ -536,14 +592,6 @@
         pointer-events: none;
       }
 
-      /* Once everything is packed, collapse the empty palette parts to
-         free up space; the bag bar stays as compact storage. */
-      .palette.bag-packed > .palette-title,
-      .palette.bag-packed > .item-container,
-      .palette.bag-packed > .inv-separator {
-        display: none;
-      }
-
       @media (max-width: 640px) {
         .bag-chip {
           padding: 9px 11px;
@@ -562,6 +610,13 @@
         gap: 12px;
         min-height: 60px;
         padding: 4px 0;
+        border-radius: 8px;
+      }
+
+      .item-container.drag-over {
+        background-color: var(--dropzone-hover);
+        outline: 2px dashed var(--primary);
+        outline-offset: -2px;
       }
 
           .draggable-item {
@@ -647,7 +702,11 @@
         gap: 3px;
       }
 
+      /* Phrase bricks use the exact typography of their slot imprints
+         (bold, 0.85rem, single line-height) so they always look and wrap
+         (break) identically wherever they are. */
       .phrase {
+        position: relative;
         background-color: var(--item-bg);
         color: var(--text);
         border: 1px solid var(--item-border);
@@ -657,10 +716,21 @@
         justify-content: center;
         align-items: center;
         text-align: center;
-        font-size: 0.8rem;
-        padding: 4px 6px;
+        font-weight: bold;
+        font-size: 0.85rem;
+        padding: 4px;
         gap: 3px;
-        line-height: 1.15;
+        line-height: 1;
+      }
+
+      /* Corner marker: question mark for questions, alert circle for
+         statements. Lucide keeps this class on the rendered <svg>. */
+      .phrase-tag {
+        position: absolute;
+        top: 2px;
+        left: 2px;
+        width: 17px;
+        height: 17px;
       }
 
       .brick::before {
@@ -729,22 +799,28 @@
 
       /* Imprint (duotone hint, non-draggable) */
       .imprint {
+        position: relative;
         opacity: 0.35;
         pointer-events: none;
-        filter: grayscale(100%);
         display: flex;
         flex-direction: column;
         align-items: center;
         justify-content: center;
         gap: 3px;
         text-align: center;
-        transition:
-          opacity 0.3s,
-          filter 0.3s;
+        transition: opacity 0.3s;
+      }
+
+      /* Grey out the imprint content but keep the corner tag coloured */
+      .imprint :not(.phrase-tag) {
+        filter: grayscale(100%);
       }
 
       .imprint.taken {
         opacity: 0.5;
+      }
+
+      .imprint.taken :not(.phrase-tag) {
         filter: none;
       }
       .imprint img {
@@ -800,7 +876,10 @@
         .phrase {
           width: 84px;
           height: 76px;
-          font-size: 0.72rem;
+        }
+        .phrase-tag {
+          width: 13px;
+          height: 13px;
         }
         .animal img {
           width: 40px;
@@ -882,9 +961,9 @@
       </div>
     </div>
 
-    <!-- Draggable Items Palette -->
+    <!-- Space One: items can live here or be stored back here -->
     <div class="palette">
-      <div class="palette-title">Unlocked Items</div>
+      <div class="palette-title">Space One</div>
       <div class="item-container" id="inventory">
         <!-- Animals -->
         <div class="draggable-item animal" id="bee">
@@ -1027,47 +1106,9 @@
       </div>
     </div>
 
-    <!-- Classroom Spots Grid: Row 0 (Age + Dialogue) -->
-    <div class="grid-container">
-      <div class="spot-card">
-        <div class="spot-title">Age</div>
-        <div class="drop-zone" id="spot-age">
-          <div class="slot" data-accept="onza-avatar"><div class="imprint"><img src="https://res.cloudinary.com/dqwm4pdbz/image/upload/v1786623812/onza_3avface_gyyay8.png" alt="Onza" /><span class="animal-name">Onza</span></div></div>
-          <div class="slot" data-accept="num-seven"><div class="imprint"><img src="https://res.cloudinary.com/dp455m4rk/image/upload/c_crop,w_234,h_153,x_0,y_153/v1786434492/260811_lesson7ee_03_epzw4v.png" alt="Seven" /><span class="animal-name">Seven</span></div></div>
-          <div class="slot" data-accept="sam-avatar"><div class="imprint"><img src="https://res.cloudinary.com/dp455m4rk/image/upload/q_auto/f_auto/e_bgremoval/v1786537188/sam_3davface_a8uy3g.png" alt="Sam" /><span class="animal-name">Sam</span></div></div>
-          <div class="slot" data-accept="num-eight"><div class="imprint"><img src="https://res.cloudinary.com/dp455m4rk/image/upload/c_crop,w_234,h_153,x_229,y_153/v1786434492/260811_lesson7ee_03_epzw4v.png" alt="Eight" /><span class="animal-name">Eight</span></div></div>
-        </div>
-      </div>
-
-      <div class="spot-card">
-        <div class="spot-title">What is your Name?</div>
-        <div class="drop-zone" id="spot-dialogue">
-          <div class="slot" data-accept="phrase-whats-your-name"><div class="imprint"><span class="animal-name">What is your name?</span></div></div>
-          <div class="slot" data-accept="phrase-my-name-is"><div class="imprint"><span class="animal-name">My name is ...</span></div></div>
-          <div class="slot" data-accept="onza-avatar"><div class="imprint"><img src="https://res.cloudinary.com/dqwm4pdbz/image/upload/v1786623812/onza_3avface_gyyay8.png" alt="Onza" /><span class="animal-name">Onza</span></div></div>
-          <div class="slot" data-accept="sam-avatar"><div class="imprint"><img src="https://res.cloudinary.com/dp455m4rk/image/upload/q_auto/f_auto/e_bgremoval/v1786537188/sam_3davface_a8uy3g.png" alt="Sam" /><span class="animal-name">Sam</span></div></div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Draggable Phrases Palette -->
-    <div class="palette">
-      <div class="palette-title">Phrases</div>
-      <div class="item-container" id="phrases-inventory">
-        <div class="draggable-item phrase" id="phrase-whats-your-name">What is your name?</div>
-        <div class="draggable-item phrase" id="phrase-my-name-is">My name is ...</div>
-        <div class="draggable-item phrase" id="phrase-how-old">How old are you?</div>
-        <div class="draggable-item phrase" id="phrase-i-am-old">I am ... years old.</div>
-        <div class="draggable-item phrase" id="phrase-look">Look!</div>
-        <div class="draggable-item phrase" id="phrase-listen">Listen!</div>
-        <div class="draggable-item phrase" id="phrase-stand-up">Stand up.</div>
-        <div class="draggable-item phrase" id="phrase-sit-down">Sit down.</div>
-        <div class="draggable-item phrase" id="phrase-come-here">Come here.</div>
-      </div>
-    </div>
-
-    <!-- Classroom Spots Grid: Row 1 (Colours + Animals). Colours is open
-         from the start; Animals stays locked until Colours is completed. -->
+    <!-- Classroom Spots Grid: Colours + Animals sit between the two
+         spaces. Colours is open from the start; Animals stays locked
+         until Colours is completed. -->
     <div class="grid-container">
       <div class="spot-card">
         <div class="spot-title">Colours</div>
@@ -1087,6 +1128,30 @@
           <div class="slot"><span class="lock-icon"><i data-lucide="lock"></i></span></div>
           <div class="slot"><span class="lock-icon"><i data-lucide="lock"></i></span></div>
         </div>
+      </div>
+    </div>
+
+    <!-- Space Two: phrases can live here or be stored back here -->
+    <div class="palette">
+      <div class="palette-title">Space Two</div>
+      <div class="item-container" id="phrases-inventory">
+        <div class="draggable-item phrase" id="phrase-whats-your-name"><i data-lucide="circle-question-mark" class="phrase-tag"></i>What is your name?</div>
+        <div class="draggable-item phrase" id="phrase-my-name-is"><i data-lucide="circle-alert" class="phrase-tag"></i>My name is ...</div>
+        <div class="draggable-item phrase" id="phrase-how-old"><i data-lucide="circle-question-mark" class="phrase-tag"></i>How old are you?</div>
+        <div class="draggable-item phrase" id="phrase-i-am-old"><i data-lucide="circle-alert" class="phrase-tag"></i>I am ... years old.</div>
+        <div class="draggable-item phrase" id="phrase-look"><i data-lucide="circle-alert" class="phrase-tag"></i>Look!</div>
+        <div class="draggable-item phrase" id="phrase-listen"><i data-lucide="circle-alert" class="phrase-tag"></i>Listen!</div>
+        <div class="draggable-item phrase" id="phrase-stand-up"><i data-lucide="circle-alert" class="phrase-tag"></i>Stand up.</div>
+        <div class="draggable-item phrase" id="phrase-sit-down"><i data-lucide="circle-alert" class="phrase-tag"></i>Sit down.</div>
+        <div class="draggable-item phrase" id="phrase-come-here"><i data-lucide="circle-alert" class="phrase-tag"></i>Come here.</div>
+        <div class="draggable-item phrase" id="phrase-do-you-like"><i data-lucide="circle-question-mark" class="phrase-tag"></i>Do you like ... ?</div>
+        <div class="draggable-item phrase" id="phrase-where-is"><i data-lucide="circle-question-mark" class="phrase-tag"></i>Where is ... ?</div>
+        <div class="draggable-item phrase" id="phrase-show-me"><i data-lucide="circle-alert" class="phrase-tag"></i>Show me ...</div>
+      </div>
+      <div class="inv-separator" id="invSep2" style="display: none"></div>
+      <div class="bag-area" id="bagArea2" style="display: none">
+        <div class="bag-bar" id="bagBar2"></div>
+        <div class="bag-trays" id="bagTrays2"></div>
       </div>
     </div>
 
@@ -1110,6 +1175,30 @@
           <div class="slot"><span class="lock-icon"><i data-lucide="lock"></i></span></div>
           <div class="slot"><span class="lock-icon"><i data-lucide="lock"></i></span></div>
           <div class="slot"><span class="lock-icon"><i data-lucide="lock"></i></span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Classroom Spots Grid: Age + Name dialogue live at the bottom of
+         the screen. Both are open from the start. -->
+    <div class="grid-container">
+      <div class="spot-card">
+        <div class="spot-title">Age</div>
+        <div class="drop-zone" id="spot-age">
+          <div class="slot" data-accept="onza-avatar"><div class="imprint"><img src="https://res.cloudinary.com/dqwm4pdbz/image/upload/v1786623812/onza_3avface_gyyay8.png" alt="Onza" /><span class="animal-name">Onza</span></div></div>
+          <div class="slot" data-accept="num-seven"><div class="imprint"><img src="https://res.cloudinary.com/dp455m4rk/image/upload/c_crop,w_234,h_153,x_0,y_153/v1786434492/260811_lesson7ee_03_epzw4v.png" alt="Seven" /><span class="animal-name">Seven</span></div></div>
+          <div class="slot" data-accept="sam-avatar"><div class="imprint"><img src="https://res.cloudinary.com/dp455m4rk/image/upload/q_auto/f_auto/e_bgremoval/v1786537188/sam_3davface_a8uy3g.png" alt="Sam" /><span class="animal-name">Sam</span></div></div>
+          <div class="slot" data-accept="num-eight"><div class="imprint"><img src="https://res.cloudinary.com/dp455m4rk/image/upload/c_crop,w_234,h_153,x_229,y_153/v1786434492/260811_lesson7ee_03_epzw4v.png" alt="Eight" /><span class="animal-name">Eight</span></div></div>
+        </div>
+      </div>
+
+      <div class="spot-card">
+        <div class="spot-title">What is your Name?</div>
+        <div class="drop-zone" id="spot-dialogue">
+          <div class="slot" data-accept="phrase-whats-your-name"><div class="imprint"><i data-lucide="circle-question-mark" class="phrase-tag"></i><span class="animal-name">What is your name?</span></div></div>
+          <div class="slot" data-accept="phrase-my-name-is"><div class="imprint"><i data-lucide="circle-alert" class="phrase-tag"></i><span class="animal-name">My name is ...</span></div></div>
+          <div class="slot" data-accept="onza-avatar"><div class="imprint"><img src="https://res.cloudinary.com/dqwm4pdbz/image/upload/v1786623812/onza_3avface_gyyay8.png" alt="Onza" /><span class="animal-name">Onza</span></div></div>
+          <div class="slot" data-accept="sam-avatar"><div class="imprint"><img src="https://res.cloudinary.com/dp455m4rk/image/upload/q_auto/f_auto/e_bgremoval/v1786537188/sam_3davface_a8uy3g.png" alt="Sam" /><span class="animal-name">Sam</span></div></div>
         </div>
       </div>
     </div>
@@ -1195,6 +1284,18 @@
         whale: "Animals",
         dragon: "Special",
         dinosaur: "Special",
+        "phrase-whats-your-name": "Questions",
+        "phrase-how-old": "Questions",
+        "phrase-do-you-like": "Questions",
+        "phrase-where-is": "Questions",
+        "phrase-my-name-is": "Phrases",
+        "phrase-i-am-old": "Phrases",
+        "phrase-look": "Phrases",
+        "phrase-listen": "Phrases",
+        "phrase-stand-up": "Phrases",
+        "phrase-sit-down": "Phrases",
+        "phrase-come-here": "Phrases",
+        "phrase-show-me": "Phrases",
       };
       var categoryOrder = [
         "Colours",
@@ -1203,7 +1304,15 @@
         "Toys",
         "Animals",
         "Special",
+        "Questions",
+        "Phrases",
       ];
+      // Extra marker icon shown on each phrase bag (next to the handbag):
+      // question phrases get a question mark, the rest an alert circle.
+      var bagTagIcons = {
+        Questions: "circle-question-mark",
+        Phrases: "circle-alert",
+      };
 
       // ---- Tidy-up bags ----
       // First task: sort every item into its category bag. Tap a bag to
@@ -1212,6 +1321,9 @@
       var bagRefs = {};
       var openCat = null;
       var tidyDone = false;
+      // Set while a real (moved) bag drag is in flight so the click that
+      // follows pointerup does not also toggle the bag open.
+      var suppressBagClick = false;
 
       function buildBags() {
         var bar = document.getElementById("bagBar");
@@ -1224,17 +1336,29 @@
         });
         categoryOrder.forEach(function (cat) {
           if (!totals[cat]) return;
+          var tagIcon = bagTagIcons[cat];
+          var tagHtml = tagIcon
+            ? '<span class="bag-tag"><i data-lucide="' +
+              tagIcon +
+              '"></i></span>'
+            : "";
           var chip = document.createElement("button");
           chip.type = "button";
           chip.className = "bag-chip";
           chip.dataset.cat = cat;
           chip.innerHTML =
-            '<span class="bag-icon"><i data-lucide="handbag"></i></span><span class="bag-name">' +
+            '<span class="bag-icon"><i data-lucide="handbag"></i></span>' +
+            tagHtml +
+            '<span class="bag-name">' +
             cat +
             '</span><span class="bag-count">0/' +
             totals[cat] +
             "</span>";
           chip.addEventListener("click", function () {
+            if (suppressBagClick) {
+              suppressBagClick = false;
+              return;
+            }
             toggleBag(cat);
           });
           bar.appendChild(chip);
@@ -1243,7 +1367,9 @@
           tray.className = "bag-tray";
           tray.dataset.cat = cat;
           tray.innerHTML =
-            '<div class="bag-tray-head"><span class="bag-icon"><i data-lucide="handbag"></i></span> ' +
+            '<div class="bag-tray-head"><span class="bag-icon"><i data-lucide="handbag"></i></span>' +
+            tagHtml +
+            " " +
             cat +
             " bag &middot; <span class=\"bag-progress\">0/" +
             totals[cat] +
@@ -1294,8 +1420,6 @@
           })
         ) {
           tidyDone = false;
-          var pal = document.querySelector(".palette");
-          if (pal) pal.classList.remove("bag-packed");
           setTidyHint("Tap a bag to open it");
         }
       }
@@ -1306,8 +1430,9 @@
       }
 
       function toggleBag(cat) {
-        var bar = document.getElementById("bagBar");
-        if (bar) bar.classList.remove("attract");
+        var ref = bagRefs[cat];
+        var homeBar = ref && ref.chip.closest(".bag-bar");
+        if (homeBar) homeBar.classList.remove("attract");
         if (openCat === cat) {
           closeBag();
           return;
@@ -1359,31 +1484,145 @@
         }, 800);
       }
 
-      // All bags packed: keep the bags visible as compact storage and
-      // collapse the empty palette parts to free up space.
+      // All bags packed: the bags stay visible as compact storage in
+      // whichever space they are parked at.
       function packComplete() {
         tidyDone = true;
         setTidyHint("All bags packed! Open a bag when you need something");
-        var version = gameVersion;
-        setTimeout(function () {
-          if (version !== gameVersion) return;
-          var pal = document.querySelector(".palette");
-          if (pal) pal.classList.add("bag-packed");
-        }, 900);
       }
 
       function updateInventorySummary() {
         refreshBags();
       }
 
-      // Randomize the order of items in Items (Fisher-Yates on DOM children).
+      // ---- Draggable bags ----
+      // Bags can be carried between the two spaces and stored (parked) at
+      // either one: dropping a bag over a space moves the chip into that
+      // space's bag bar and its tray follows. A short tap still opens the
+      // bag; only movement beyond a small threshold starts a real drag.
+      var bagChip = null;
+      var bagGhost = null;
+      var bagDragging = false;
+      var bagStartX = 0;
+      var bagStartY = 0;
+      var bagOffX = 0;
+      var bagOffY = 0;
+      var bagOverZone = null;
+
+      function storeBagAt(chip, palette) {
+        if (!chip || !palette) return;
+        var ref = bagRefs[chip.dataset.cat];
+        var bar = palette.querySelector(".bag-bar");
+        var trays = palette.querySelector(".bag-trays");
+        if (!ref || !bar || !trays) return;
+        if (chip.parentElement === bar) return;
+        if (openCat === chip.dataset.cat) closeBag();
+        bar.appendChild(chip);
+        trays.appendChild(ref.tray);
+        // Space Two keeps its bag shelf hidden until a bag is parked there.
+        var sep2 = document.getElementById("invSep2");
+        var area2 = document.getElementById("bagArea2");
+        var shelfPal = sep2 ? sep2.closest(".palette") : null;
+        if (shelfPal === palette && area2) {
+          sep2.style.display = "";
+          area2.style.display = "";
+        }
+      }
+
+      document.addEventListener("pointerdown", function (e) {
+        if (bagChip) return;
+        if (e.pointerType === "mouse" && e.button !== 0) return;
+        var chip = e.target.closest(".bag-chip");
+        if (!chip) return;
+        suppressBagClick = false;
+        bagChip = chip;
+        bagDragging = false;
+        bagStartX = e.clientX;
+        bagStartY = e.clientY;
+      });
+
+      document.addEventListener("pointermove", function (e) {
+        if (!bagChip) return;
+        if (!bagDragging) {
+          var dx = e.clientX - bagStartX;
+          var dy = e.clientY - bagStartY;
+          if (dx * dx + dy * dy < 64) return;
+          bagDragging = true;
+          suppressBagClick = true;
+          if (openCat === bagChip.dataset.cat) closeBag();
+          var homeBar = bagChip.closest(".bag-bar");
+          if (homeBar) homeBar.classList.remove("attract");
+          var rect = bagChip.getBoundingClientRect();
+          bagOffX = bagStartX - rect.left;
+          bagOffY = bagStartY - rect.top;
+          bagGhost = bagChip.cloneNode(true);
+          bagGhost.classList.remove("dragging-original");
+          bagGhost.classList.add("ghost");
+          var rawIcon = bagGhost.querySelector(".bag-icon i[data-lucide]");
+          var svgIcon = bagChip.querySelector(".bag-icon svg");
+          if (rawIcon && svgIcon) rawIcon.replaceWith(svgIcon.cloneNode(true));
+          bagGhost.style.width = rect.width + "px";
+          bagGhost.style.left = e.clientX - bagOffX + "px";
+          bagGhost.style.top = e.clientY - bagOffY + "px";
+          document.body.appendChild(bagGhost);
+          bagChip.classList.add("dragging-original");
+        }
+        e.preventDefault();
+        if (bagGhost) {
+          bagGhost.style.left = e.clientX - bagOffX + "px";
+          bagGhost.style.top = e.clientY - bagOffY + "px";
+        }
+        var under = document.elementFromPoint(e.clientX, e.clientY);
+        var zone = under
+          ? under.closest(".item-container, .bag-bar")
+          : null;
+        if (zone !== bagOverZone) {
+          if (bagOverZone) bagOverZone.classList.remove("drag-over");
+          bagOverZone = zone;
+          if (bagOverZone) bagOverZone.classList.add("drag-over");
+        }
+      });
+
+      function endBagDrag() {
+        if (!bagChip) return;
+        var wasDragging = bagDragging;
+        if (bagGhost) {
+          bagGhost.remove();
+          bagGhost = null;
+        }
+        bagChip.classList.remove("dragging-original");
+        if (bagOverZone) {
+          bagOverZone.classList.remove("drag-over");
+          if (wasDragging) storeBagAt(bagChip, bagOverZone.closest(".palette"));
+          bagOverZone = null;
+        }
+        bagChip = null;
+        bagDragging = false;
+      }
+
+      document.addEventListener("pointerup", endBagDrag);
+      document.addEventListener("pointercancel", endBagDrag);
+
+      // Randomize the order of items in Space One (Fisher-Yates on the
+      // item children only; stored bag chips keep their place).
       function shuffleItems() {
         var container = document.getElementById("inventory");
         if (!container) return;
-        for (var i = container.children.length - 1; i > 0; i--) {
-          var j = Math.floor(Math.random() * (i + 1));
-          container.appendChild(container.children[j]);
+        var items = [];
+        for (var i = 0; i < container.children.length; i++) {
+          var el = container.children[i];
+          if (el.classList && el.classList.contains("draggable-item"))
+            items.push(el);
         }
+        for (i = items.length - 1; i > 0; i--) {
+          var j = Math.floor(Math.random() * (i + 1));
+          var tmp = items[i];
+          items[i] = items[j];
+          items[j] = tmp;
+        }
+        items.forEach(function (el) {
+          container.appendChild(el);
+        });
       }
 
       // Locked-in progress: once a spot is completed it stays coloured,
@@ -1802,13 +2041,20 @@
 
       function resetGame() {
         var inventory = document.getElementById("inventory");
+        var phraseBin = document.getElementById("phrases-inventory");
+        // Phrase bricks belong back at Space Two, everything else Space One.
+        function parkItem(el) {
+          if (el.classList.contains("phrase") && phraseBin)
+            phraseBin.appendChild(el);
+          else inventory.appendChild(el);
+        }
         document
           .querySelectorAll(".drop-zone .draggable-item")
           .forEach(function (el) {
             if (el.classList.contains("combined")) {
               el.remove();
             } else {
-              inventory.appendChild(el);
+              parkItem(el);
             }
           });
         document
@@ -1816,6 +2062,8 @@
           .forEach(function (el) {
             if (el.classList.contains("combined")) {
               el.remove();
+            } else {
+              inventory.appendChild(el);
             }
           });
         stashed.forEach(function (el) {
@@ -1824,22 +2072,31 @@
         stashed = [];
         document
           .querySelectorAll(".bag-tray-inner .draggable-item")
-          .forEach(function (el) {
-            inventory.appendChild(el);
-          });
+          .forEach(parkItem);
         tidyDone = false;
         openCat = null;
+        // Park all bags back at Space One.
+        var homeBar = document.getElementById("bagBar");
+        var homeTrays = document.getElementById("bagTrays");
         Object.keys(bagRefs).forEach(function (cat) {
-          bagRefs[cat].chip.classList.remove("done", "open");
-          bagRefs[cat].tray.classList.remove("open", "sealed");
+          var ref = bagRefs[cat];
+          if (homeBar && ref.chip.parentElement !== homeBar)
+            homeBar.appendChild(ref.chip);
+          if (homeTrays && ref.tray.parentElement !== homeTrays)
+            homeTrays.appendChild(ref.tray);
+          ref.chip.classList.remove("done", "open");
+          ref.tray.classList.remove("open", "sealed");
         });
+        suppressBagClick = false;
+        var sep2 = document.getElementById("invSep2");
+        if (sep2) sep2.style.display = "none";
+        var area2El = document.getElementById("bagArea2");
+        if (area2El) area2El.style.display = "none";
         var bagAreaEl = document.getElementById("bagArea");
         if (bagAreaEl) {
           bagAreaEl.classList.remove("dissolving");
           bagAreaEl.style.display = "";
         }
-        var palEl = document.querySelector(".palette");
-        if (palEl) palEl.classList.remove("bag-packed");
         var barEl = document.getElementById("bagBar");
         if (barEl) barEl.classList.add("attract");
         setTidyHint("Tap a bag to open it");
