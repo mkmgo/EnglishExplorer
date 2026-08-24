@@ -1,0 +1,1326 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no"
+    />
+    <title>EnglishExplorer — Food &amp; Drinks</title>
+    <meta
+      name="description"
+      content="EnglishExplorer — Food &amp; Drinks"
+    />
+    <meta name="theme-color" content="#B8860B" />
+    <meta property="og:title" content="English Tasks" />
+    <meta property="og:description" content="Food &amp; Drinks" />
+    <meta property="og:image" content="https://res.cloudinary.com/dqwm4pdbz/image/upload/v1766700880/my-express-uploads/vii2nhjxitkmcoet6jbg.png" />
+    <meta name="twitter:title" content="English Tasks" />
+    <meta name="twitter:description" content="Food &amp; Drinks" />
+    <meta name="twitter:image" content="https://res.cloudinary.com/dqwm4pdbz/image/upload/v1766700880/my-express-uploads/vii2nhjxitkmcoet6jbg.png" />
+    <link
+      rel="icon"
+      type="image/png"
+      href="https://res.cloudinary.com/dqwm4pdbz/image/upload/v1766700880/my-express-uploads/vii2nhjxitkmcoet6jbg.png"
+    />
+    <link
+      rel="apple-touch-icon"
+      href="https://res.cloudinary.com/dqwm4pdbz/image/upload/v1766700880/my-express-uploads/vii2nhjxitkmcoet6jbg.png"
+    />
+    <style>
+      :root {
+        --bg: #faf7f2;
+        --ink: #14213d;
+        --muted: #60708d;
+        --accent: #b8860b;
+        --accent2: #ffd54f;
+        --good: #19a974;
+        --bad: #e05252;
+        --mediocre: #f39c12;
+        --panel: #fcfcfc;
+        --shadow: 0 18px 50px rgba(20, 33, 61, 0.14);
+      }
+      * {
+        box-sizing: border-box;
+      }
+      html,
+      body {
+        margin: 0;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+        background: var(--bg);
+        font-family: Arial, Helvetica, sans-serif;
+        color: var(--ink);
+        touch-action: manipulation;
+      }
+      button {
+        font: inherit;
+        border: 0;
+        cursor: pointer;
+        transition: transform 0.3s ease, filter 0.3s ease;
+      }
+      #app {
+        width: 100%;
+        height: 100vh;
+        height: 100dvh;
+        position: relative;
+        overflow: hidden;
+      }
+      .screen {
+        position: absolute;
+        inset: 0;
+        background: var(--bg);
+        display: none;
+        align-items: flex-start;
+        justify-content: center;
+        padding: clamp(60px, 8.5vh, 80px) clamp(10px, 2vw, 24px)
+          clamp(10px, 2vh, 24px);
+      }
+      .screen.active {
+        display: flex;
+      }
+      .content {
+        width: min(1400px, 100%);
+        max-height: 100%;
+        position: relative;
+        text-align: center;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: flex-start;
+        gap: 1.4em;
+        padding-bottom: clamp(60px, 8vh, 80px);
+        overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
+        overscroll-behavior: contain;
+        scrollbar-width: none;
+      }
+      .content::-webkit-scrollbar {
+        display: none;
+      }
+      .ribbon {
+        font-size: clamp(1.4rem, 2.8vw, 2.2rem);
+        font-weight: 800;
+        color: var(--accent);
+        margin: 0 0 0.4em 0;
+        position: relative;
+        display: inline-block;
+        padding: 0 0.3em;
+      }
+      .ribbon::after {
+        content: "";
+        position: absolute;
+        bottom: -4px;
+        left: 10%;
+        right: 10%;
+        height: 3px;
+        background: var(--accent2);
+        border-radius: 2px;
+      }
+      .banner {
+        display: inline-block;
+        background: var(--accent);
+        color: #fff;
+        padding: 0.15em 0.8em;
+        border-radius: 8px;
+        font-size: clamp(0.9rem, 1.6vw, 1.3rem);
+        font-weight: 700;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        margin-bottom: 0.1em;
+      }
+      .stage {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 1.4em;
+        width: 100%;
+      }
+      .panel {
+        position: relative;
+        background: var(--accent2);
+        border: 3px solid var(--accent2);
+        border-radius: 22px;
+        padding: clamp(1.2rem, 2.2vw, 2.6rem);
+        box-shadow: var(--shadow);
+        width: 100%;
+        max-width: 900px;
+      }
+      .toyGrid {
+        --cols: 3;
+        display: grid;
+        grid-template-columns: repeat(var(--cols), minmax(0, 1fr));
+        gap: clamp(10px, 1.5vw, 20px);
+        width: 100%;
+        max-width: 760px;
+        margin: 0 auto;
+      }
+      .toyBtn {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 0.4em;
+        min-height: 120px;
+        padding: 0.7em;
+        border-radius: 26px;
+        border: 3px solid var(--accent2);
+        background: var(--panel);
+        box-shadow: var(--shadow);
+        transition: transform 0.3s ease, filter 0.3s ease;
+      }
+      .toyBtn:active {
+        transform: scale(0.95);
+      }
+      .toyBtn .toyName {
+        font-size: clamp(0.95rem, 1.6vw, 1.5rem);
+        font-weight: 900;
+        letter-spacing: 0.02em;
+        color: var(--ink);
+      }
+      .toyImg {
+        width: clamp(74px, 10vw, 140px);
+        height: clamp(74px, 10vw, 140px);
+        object-fit: contain;
+        background: #fff;
+        border-radius: 18px;
+      }
+      .choice {
+        min-width: 160px;
+        min-height: 80px;
+        border-radius: 20px;
+        background: var(--panel);
+        box-shadow: var(--shadow);
+        font-size: clamp(1.2rem, 2.2vw, 2.2rem);
+        font-weight: 900;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: 0.5em 1em;
+        transition: transform 0.3s ease, filter 0.3s ease;
+      }
+      .choice:active {
+        transform: scale(0.95);
+      }
+      .yes {
+        background: #dff7ec;
+        color: #087443;
+      }
+      .gameArea {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 1.2em;
+        width: 100%;
+      }
+      .gameVisual {
+        width: min(300px, 60vw);
+        height: min(240px, 46vh);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: var(--panel);
+        border-radius: 20px;
+        box-shadow: var(--shadow);
+        overflow: hidden;
+      }
+      .gameVisual img {
+        width: 62%;
+        height: auto;
+        object-fit: contain;
+        transition: width 0.25s ease;
+      }
+      .gameVisual img.big {
+        width: 76%;
+        height: auto;
+      }
+      .gameVisual img.small {
+        width: 38%;
+        height: auto;
+      }
+      .roundPips {
+        display: flex;
+        gap: 0.5em;
+        justify-content: center;
+        margin-bottom: clamp(1.4em, 4vh, 2.4em);
+      }
+      .pip {
+        width: 22px;
+        height: 22px;
+        border-radius: 50%;
+        background: #eef1f7;
+        box-shadow: inset 0 0 0 2px rgba(20, 33, 61, 0.15);
+      }
+      .pip.pip-good {
+        background: var(--good);
+        box-shadow: 0 0 0 2px #fff, inset 0 0 0 2px #0f8a60;
+      }
+      .pip.pip-med {
+        background: var(--mediocre);
+        box-shadow: 0 0 0 2px #fff, inset 0 0 0 2px #c07800;
+      }
+      .pip.pip-bad {
+        background: var(--bad);
+        box-shadow: 0 0 0 2px #fff, inset 0 0 0 2px #b03a3a;
+      }
+      .pip.pip-current {
+        box-shadow: 0 0 0 3px var(--accent2),
+          inset 0 0 0 2px rgba(20, 33, 61, 0.25);
+      }
+      .slotPanel {
+        width: 100%;
+        max-width: 380px;
+        margin: 0 auto;
+        padding: 0.9em;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 0.6em;
+        background: var(--panel);
+        border-radius: 18px;
+        box-shadow: var(--shadow);
+      }
+      .slotWindow {
+        position: relative;
+        width: min(210px, 46vw);
+        height: min(210px, 32vh);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: #fff;
+        border-radius: 18px;
+        overflow: hidden;
+      }
+      .slotImg {
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+      }
+      .slotVoiceIcon {
+        position: absolute;
+        top: 8px;
+        right: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 32px;
+        height: 32px;
+        background: rgba(255, 255, 255, 0.7);
+        border-radius: 50%;
+        color: var(--muted);
+        pointer-events: none;
+        opacity: 0.5;
+      }
+      .slotRepeatHint {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.45em;
+        margin: 0.1em 0 0;
+        color: var(--ink);
+        font-size: clamp(0.8rem, 1.4vw, 1rem);
+        font-weight: 800;
+      }
+      .slotRepeatHint svg {
+        flex: 0 0 auto;
+        color: var(--accent);
+      }
+      .slotAnswers {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: clamp(8px, 1.2vw, 14px);
+        width: 100%;
+        max-width: 480px;
+        margin: 0.5em auto 0;
+      }
+      .slotAnswers .choice {
+        min-width: 0;
+        min-height: 52px;
+        padding: 0.35em 0.6em;
+        font-size: clamp(0.85rem, 1.6vw, 1.35rem);
+        border-radius: 18px;
+      }
+      .slotYes {
+        background: var(--good);
+        color: #fff;
+      }
+      .slotNo {
+        background: var(--bad);
+        color: #fff;
+      }
+      .slotNot {
+        background: var(--mediocre);
+        color: #fff;
+      }
+      #foodIntroScreen .slotPanel {
+        background: var(--panel);
+        border: 2px solid var(--accent2);
+        border-radius: 14px;
+        padding: clamp(0.8em, 2vw, 1.2em);
+      }
+      #foodIntroScreen .slotWindow {
+        width: min(210px, 42vw);
+        height: min(210px, 42vw);
+        background: #fff;
+        border: 3px solid #666;
+        border-radius: 12px;
+        box-shadow: inset 0 0 0 3px rgba(20, 33, 61, 0.08),
+          0 5px 0 rgba(20, 33, 61, 0.15);
+      }
+      #foodIntroScreen .slotImg {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        background: #fff;
+        padding: 0;
+        transform: scale(1.08);
+      }
+      #foodIntroScreen .foodSlotReplay {
+        top: 50%;
+        right: -3.75rem;
+        width: 3rem;
+        height: 3.4rem;
+        transform: translateY(-50%);
+        background: #fff;
+        border: 2px solid #666;
+        border-radius: 8px;
+        color: var(--ink);
+        opacity: 1;
+        pointer-events: auto;
+        box-shadow: 0 3px 0 rgba(20, 33, 61, 0.15);
+        flex-direction: column;
+      }
+      #foodIntroScreen .foodSlotReplay:active {
+        transform: translateY(calc(-50% + 2px));
+        box-shadow: 0 1px 0 rgba(20, 33, 61, 0.15);
+      }
+      #foodIntroScreen .slotRepeatHint {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.45em;
+        margin: 0.1em 0 0;
+        color: var(--ink);
+        font-size: clamp(0.8rem, 1.4vw, 1rem);
+        font-weight: 800;
+      }
+      #foodIntroScreen .slotRepeatHint svg {
+        flex: 0 0 auto;
+        color: var(--accent);
+      }
+      #foodIntroScreen .slotNot {
+        background: #f1c40f;
+        color: var(--ink);
+      }
+      #food1Screen .whereStart {
+        transition: background 0.35s ease, color 0.35s ease;
+      }
+      #food1Screen .whereStart.whereStateRed {
+        background: var(--bad);
+        color: #fff;
+      }
+      #food1Screen .foodGameArea {
+        gap: 0;
+      }
+      #food1Screen .foodGrid {
+        max-width: 620px;
+        background: var(--panel);
+        border: 2px solid var(--accent2);
+        border-radius: 14px;
+        padding: clamp(0.8em, 2vw, 1.2em);
+      }
+      #food1Screen .foodGrid .toyBtn {
+        min-height: 0;
+        aspect-ratio: 1;
+        padding: clamp(0.35em, 1vw, 0.7em);
+        border-radius: 12px;
+        background: #fff;
+        border-color: #666;
+        box-shadow: 0 4px 0 rgba(20, 33, 61, 0.14);
+        overflow: hidden;
+      }
+      #food1Screen .foodGrid .toyImg {
+        width: 100%;
+        height: 100%;
+        aspect-ratio: 1;
+        border-radius: 8px;
+        background: #fff;
+        object-fit: cover;
+        transform: scale(1.1);
+      }
+      #food1Screen #food1StartBtn {
+        min-width: 150px;
+        min-height: 58px;
+        align-self: center;
+        margin-top: 1em;
+        border-radius: 14px;
+        font-size: clamp(1rem, 1.8vw, 1.4rem);
+      }
+      #toast {
+        position: absolute;
+        left: 50%;
+        top: 12%;
+        transform: translateX(-50%);
+        z-index: 100;
+        background: #000;
+        color: #fff;
+        padding: 0.8em 1.5em;
+        border-radius: 8px;
+        font-size: 1.4rem;
+        font-weight: 900;
+        box-shadow: 0 8px 22px rgba(0, 0, 0, 0.38);
+        opacity: 0;
+        pointer-events: none;
+        transition: 0.25s;
+      }
+      #toast.show {
+        opacity: 1;
+      }
+      #reward {
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+        overflow: hidden;
+        z-index: 50;
+      }
+      .confetti {
+        position: absolute;
+        font-size: 2rem;
+        animation: fall 2.2s linear forwards;
+      }
+      @keyframes fall {
+        0% {
+          transform: translateY(-10vh) rotate(0);
+          opacity: 1;
+        }
+        100% {
+          transform: translateY(110vh) rotate(720deg);
+          opacity: 0;
+        }
+      }
+      .burst {
+        position: absolute;
+        font-size: 1.7rem;
+        pointer-events: none;
+        z-index: 60;
+        animation: burstFly 1.1s ease-out forwards;
+      }
+      @keyframes burstFly {
+        0% {
+          transform: translate(0, 0) scale(1);
+          opacity: 1;
+        }
+        100% {
+          transform: translate(var(--bx), var(--by)) scale(0.25);
+          opacity: 0;
+        }
+      }
+      button:focus-visible {
+        outline: 3px solid var(--accent2);
+        outline-offset: 3px;
+      }
+      @media (hover: hover) {
+        button:hover {
+          transform: translateY(-2px);
+        }
+      }
+      .topbar {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        height: clamp(48px, 7vh, 56px);
+        padding: 0 clamp(12px, 3vw, 28px);
+        background: var(--accent);
+        z-index: 20;
+        overflow: hidden;
+      }
+      .topbarTitle {
+        font-size: clamp(0.85rem, 2vw, 1.2rem);
+        font-weight: 800;
+        color: #fff;
+        letter-spacing: 0.04em;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+      .topbarRight {
+        display: flex;
+        align-items: center;
+        gap: 4px;
+      }
+      .ctrl {
+        min-width: 44px;
+        min-height: 44px;
+        padding: 0 4px;
+        background: transparent;
+        border: 0;
+        font-size: 0.95rem;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        line-height: 1;
+        -webkit-tap-highlight-color: transparent;
+      }
+      .tag {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        height: 30px;
+        min-width: 34px;
+        padding: 0 8px;
+        background: var(--accent2);
+        color: var(--accent);
+        border-radius: 8px;
+        filter: drop-shadow(0 3px 4px rgba(0, 0, 0, 0.22));
+        transition: transform 0.3s ease, filter 0.3s ease;
+      }
+      .ctrl:active .tag {
+        transform: scale(0.94);
+        filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.22));
+      }
+      .ctrl:hover .tag {
+        transform: scale(1.06);
+        filter: brightness(1.15) drop-shadow(0 4px 6px rgba(0, 0, 0, 0.3));
+      }
+      @media (max-width: 480px) {
+        .topbar {
+          padding: 0 8px;
+        }
+        .tag {
+          height: 28px;
+          min-width: 30px;
+          padding: 0 8px;
+        }
+        .topbarTitle {
+          font-size: 0.78rem;
+        }
+      }
+      @media (max-aspect-ratio: 1/1) {
+        .toyGrid {
+          --cols: 3;
+        }
+        .toyBtn .toyName {
+          font-size: clamp(0.75rem, 3vw, 1rem);
+        }
+        .toyImg {
+          width: clamp(60px, 18vw, 96px);
+          height: clamp(60px, 18vw, 96px);
+        }
+        .gameVisual.ynVisual {
+          width: min(260px, 52vw);
+          height: min(210px, 40vh);
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div id="app">
+      <div id="toast"></div>
+      <div id="reward"></div>
+
+      <div class="topbar">
+        <span class="topbarTitle">Food &amp; Drinks</span>
+        <div class="topbarRight">
+          <button class="ctrl" id="soundBtn" aria-label="Sound">
+            <span class="tag">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="1.2em"
+                height="1.2em"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                style="vertical-align: -0.2em"
+              >
+                <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" />
+                <path d="M15.54 8.46a5 5 0 0 1 0 7.07" />
+                <path d="M19.07 4.93a10 10 0 0 1 0 14.14" />
+              </svg>
+            </span>
+          </button>
+        </div>
+      </div>
+
+      <!-- FOOD: Where Is It? -->
+      <section class="screen active" id="food1Screen">
+        <div class="content">
+          <span class="banner">Food &amp; Drinks</span>
+          <h1 class="ribbon" id="foodWhereTitle">Where Is...?</h1>
+          <div class="stage">
+            <div class="panel">
+              <div class="roundPips" id="foodWherePips"></div>
+              <div class="gameArea foodGameArea">
+                <div
+                  class="toyGrid foodGrid"
+                  id="foodWhereGrid"
+                  style="display: none"
+                ></div>
+              </div>
+              <button
+                class="choice yes whereStart whereStateRed"
+                id="food1StartBtn"
+                onclick="food1Start()"
+              >
+                &#9654; START
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- FOOD: vocabulary check -->
+      <section class="screen" id="foodIntroScreen">
+        <div class="content">
+          <span class="banner">Food &amp; Drinks</span>
+          <h1 class="ribbon">Look And Listen Well.</h1>
+          <div class="stage">
+            <div class="panel">
+              <div class="roundPips" id="foodSlotPips"></div>
+              <div class="slotPanel">
+                <div
+                  class="slotWindow"
+                  onclick="foodSlotSpeakAgain()"
+                  style="cursor: pointer"
+                >
+                  <img class="slotImg" id="foodSlotImg" alt="" />
+                  <button
+                    class="slotVoiceIcon foodSlotReplay"
+                    type="button"
+                    aria-label="Hear the word again"
+                    onclick="event.stopPropagation(); foodSlotSpeakAgain();"
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="1.4em"
+                      height="1.4em"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    >
+                      <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" />
+                      <path d="M15.54 8.46a5 5 0 0 1 0 7.07" />
+                    </svg>
+                  </button>
+                </div>
+                <div class="slotRepeatHint">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="1.1em"
+                    height="1.1em"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    aria-hidden="true"
+                  >
+                    <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" />
+                    <path d="M15.54 8.46a5 5 0 0 1 0 7.07" />
+                  </svg>
+                  <span>Tap the picture to hear it again</span>
+                </div>
+              </div>
+              <div class="slotAnswers">
+                <button
+                  class="choice slotAnswer slotYes"
+                  onclick="foodSlotAnswer('yes')"
+                >
+                  YES
+                </button>
+                <button
+                  class="choice slotAnswer slotNot"
+                  onclick="foodSlotAnswer('not-food')"
+                >
+                  NOT FOOD OR DRINK
+                </button>
+                <button
+                  class="choice slotAnswer slotNo"
+                  onclick="foodSlotAnswer('no')"
+                >
+                  NO
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+    </div>
+
+    <script>
+      var screens = Array.prototype.slice.call(
+        document.querySelectorAll(".screen"),
+      );
+      var idx = 0;
+      var soundOn = true;
+
+      var synth =
+        window.speechSynthesis ||
+        window.webkitSpeechSynthesis ||
+        window.mozSpeechSynthesis ||
+        null;
+      var altVoice = null;
+      var altVoice2 = null;
+
+      function setVoice() {
+        if (!synth) return;
+        var voices = synth.getVoices();
+        if (!voices || voices.length === 0) return;
+        var preferred = null;
+        var fallback = null;
+        for (var i = 0; i < voices.length; i++) {
+          var v = voices[i];
+          if (!v || !v.lang) continue;
+          if (v.lang.toLowerCase().indexOf("en") !== 0) continue;
+          if (!fallback) fallback = v;
+          if (v.lang.toLowerCase().indexOf("en-gb") === 0) {
+            preferred = v;
+            break;
+          }
+          if (v.name && v.name.indexOf("Zira") >= 0) preferred = v;
+        }
+        altVoice = preferred || fallback;
+        altVoice2 = null;
+        for (var j = 0; j < voices.length; j++) {
+          var w = voices[j];
+          if (!w || !w.lang) continue;
+          if (w.lang.toLowerCase().indexOf("en") !== 0) continue;
+          if (w === altVoice) continue;
+          altVoice2 = w;
+          break;
+        }
+        if (!altVoice2) altVoice2 = altVoice;
+      }
+      if (synth) {
+        setVoice();
+        if (typeof synth.addEventListener === "function") {
+          synth.addEventListener("voiceschanged", setVoice);
+        }
+        var voiceTimer = window.setInterval(function () {
+          if (altVoice) window.clearInterval(voiceTimer);
+          setVoice();
+        }, 500);
+        window.setTimeout(function () {
+          window.clearInterval(voiceTimer);
+        }, 4000);
+      }
+
+      var ICON_VOLUME_ON =
+        '<svg xmlns="http://www.w3.org/2000/svg" width="1.2em" height="1.2em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: -0.2em"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/></svg>';
+      var ICON_VOLUME_OFF =
+        '<svg xmlns="http://www.w3.org/2000/svg" width="1.2em" height="1.2em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: -0.2em"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><line x1="22" x2="16" y1="9" y2="15"/><line x1="16" x2="22" y1="9" y2="15"/></svg>';
+
+      function show(i) {
+        idx = Math.max(0, Math.min(screens.length - 1, i));
+        for (var j = 0; j < screens.length; j++) {
+          screens[j].classList.toggle("active", j === idx);
+        }
+        cancelSpeech();
+        if (typeof foodSlotTimer !== "undefined" && foodSlotTimer) {
+          clearTimeout(foodSlotTimer);
+          foodSlotTimer = null;
+        }
+        if (screens[idx].id === "food1Screen") foodWhereReset();
+        else if (screens[idx].id === "foodIntroScreen") foodSlotReset();
+      }
+
+      function cancelSpeech() {
+        if (synth && typeof synth.cancel === "function") {
+          try {
+            synth.cancel();
+          } catch (e) {}
+        }
+      }
+
+      function say(text, voice) {
+        if (!soundOn) return;
+        if (window.tizen && window.tizen.tts) {
+          try {
+            tizen.tts.speak(
+              String(text),
+              {
+                locale: "en-US",
+                rate: 0.85,
+                pitch: 1.0,
+                type: "TTS_TYPE_SCREEN_READER",
+              },
+              { onfinish: function () {} },
+            );
+            return;
+          } catch (e) {}
+        }
+        if (synth && typeof SpeechSynthesisUtterance !== "undefined") {
+          cancelSpeech();
+          var u = new SpeechSynthesisUtterance(text);
+          u.lang = "en-US";
+          u.rate = 0.82;
+          u.pitch = 1.08;
+          if (voice) u.voice = voice;
+          else if (altVoice) u.voice = altVoice;
+          synth.speak(u);
+        }
+      }
+
+      function sayOther(text) {
+        say(text, altVoice2);
+      }
+
+      function toast(t) {
+        var el = document.getElementById("toast");
+        el.textContent = t;
+        el.classList.add("show");
+        setTimeout(function () {
+          el.classList.remove("show");
+        }, 1100);
+      }
+
+      function confettiBurst() {
+        var r = document.getElementById("reward");
+        r.innerHTML = "";
+        for (var i = 0; i < 24; i++) {
+          var s = document.createElement("span");
+          s.className = "confetti";
+          s.textContent = ["⭐", "✨", "🎉", "👏"][i % 4];
+          s.style.left = Math.random() * 100 + "%";
+          s.style.top = -5 - Math.random() * 20 + "%";
+          s.style.animationDelay = Math.random() * 0.4 + "s";
+          r.appendChild(s);
+        }
+        setTimeout(function () {
+          r.innerHTML = "";
+        }, 2500);
+      }
+
+      function celebrate(t) {
+        toast(t);
+        confettiBurst();
+      }
+
+      function burst(el) {
+        var r = document.getElementById("reward");
+        var rect = el.getBoundingClientRect();
+        var cx = rect.left + rect.width / 2;
+        var cy = rect.top + rect.height / 2;
+        var frag = document.createDocumentFragment();
+        for (var i = 0; i < 18; i++) {
+          var s = document.createElement("span");
+          s.className = "burst";
+          s.textContent = ["⭐", "✨", "🎉", "👏"][i % 4];
+          var ang = Math.random() * Math.PI * 2;
+          var dist = 40 + Math.random() * 80;
+          s.style.setProperty("--bx", Math.cos(ang) * dist + "px");
+          s.style.setProperty("--by", Math.sin(ang) * dist + "px");
+          s.style.left = cx + "px";
+          s.style.top = cy + "px";
+          frag.appendChild(s);
+        }
+        r.appendChild(frag);
+        setTimeout(function () {
+          var list = r.querySelectorAll(".burst");
+          for (var j = 0; j < list.length; j++) {
+            if (list[j].parentNode) list[j].parentNode.removeChild(list[j]);
+          }
+        }, 1300);
+      }
+
+      function buildPips(id, n) {
+        var el = document.getElementById(id);
+        if (!el) return;
+        el.innerHTML = "";
+        for (var i = 0; i < n; i++) {
+          var s = document.createElement("span");
+          s.className = "pip";
+          el.appendChild(s);
+        }
+      }
+
+      function setPips(id, results, current) {
+        var el = document.getElementById(id);
+        if (!el) return;
+        for (var i = 0; i < el.children.length; i++) {
+          var p = el.children[i];
+          p.className = "pip";
+          if (i < results.length) {
+            p.classList.add(
+              results[i] === "good"
+                ? "pip-good"
+                : results[i] === "mediocre"
+                  ? "pip-med"
+                  : "pip-bad",
+            );
+          } else if (i === current) {
+            p.classList.add("pip-current");
+          }
+        }
+      }
+
+      function qualifies(results) {
+        var greens = 0;
+        var bad = 0;
+        for (var i = 0; i < results.length; i++) {
+          if (results[i] === "good") greens++;
+          else if (results[i] === "bad") bad++;
+        }
+        return bad === 0 && greens >= results.length - 1;
+      }
+
+      /* ── FOOD & DRINKS ── */
+      var FOOD = [
+        {
+          name: "apple",
+          img: "https://res.cloudinary.com/dqwm4pdbz/image/upload/c_crop,w_341,h_336,x_0,y_0/v1787505965/food_qy4kc5.jpg",
+        },
+        {
+          name: "banana",
+          img: "https://res.cloudinary.com/dqwm4pdbz/image/upload/c_crop,w_341,h_336,x_341,y_0/v1787505965/food_qy4kc5.jpg",
+        },
+        {
+          name: "bread",
+          img: "https://res.cloudinary.com/dqwm4pdbz/image/upload/c_crop,w_341,h_336,x_682,y_0/v1787505965/food_qy4kc5.jpg",
+        },
+        {
+          name: "cheese",
+          img: "https://res.cloudinary.com/dqwm4pdbz/image/upload/c_crop,w_341,h_336,x_0,y_336/v1787505965/food_qy4kc5.jpg",
+        },
+        {
+          name: "egg",
+          img: "https://res.cloudinary.com/dqwm4pdbz/image/upload/c_crop,w_341,h_336,x_341,y_336/v1787505965/food_qy4kc5.jpg",
+        },
+        {
+          name: "rice",
+          img: "https://res.cloudinary.com/dqwm4pdbz/image/upload/c_crop,w_341,h_336,x_682,y_336/v1787505965/food_qy4kc5.jpg",
+        },
+        {
+          name: "chicken",
+          img: "https://res.cloudinary.com/dqwm4pdbz/image/upload/c_crop,w_421,h_424,x_0,y_0/v1787505965/foods_drinks_jujsi1.jpg",
+        },
+        {
+          name: "cake",
+          img: "https://res.cloudinary.com/dqwm4pdbz/image/upload/c_crop,w_421,h_424,x_421,y_0/v1787505965/foods_drinks_jujsi1.jpg",
+        },
+        {
+          name: "water",
+          img: "https://res.cloudinary.com/dqwm4pdbz/image/upload/c_crop,w_421,h_424,x_842,y_0/v1787505965/foods_drinks_jujsi1.jpg",
+        },
+        {
+          name: "milk",
+          img: "https://res.cloudinary.com/dqwm4pdbz/image/upload/c_crop,w_421,h_424,x_0,y_424/v1787505965/foods_drinks_jujsi1.jpg",
+        },
+        {
+          name: "juice",
+          img: "https://res.cloudinary.com/dqwm4pdbz/image/upload/c_crop,w_421,h_424,x_421,y_424/v1787505965/foods_drinks_jujsi1.jpg",
+        },
+        {
+          name: "coca cola",
+          img: "https://res.cloudinary.com/dqwm4pdbz/image/upload/c_crop,w_421,h_424,x_842,y_424/v1787505965/foods_drinks_jujsi1.jpg",
+        },
+      ];
+      var FOOD_NON_ITEMS = [
+        {
+          name: "ball",
+          img: "https://res.cloudinary.com/dqwm4pdbz/image/upload/c_crop,w_421,h_424,x_0,y_0/v1787144151/260819_more_objects_02_lk3hul.png",
+        },
+        {
+          name: "shoe",
+          img: "https://res.cloudinary.com/dqwm4pdbz/image/upload/c_crop,w_421,h_424,x_421,y_0/v1787144151/260819_more_objects_02_lk3hul.png",
+        },
+        {
+          name: "clock",
+          img: "https://res.cloudinary.com/dqwm4pdbz/image/upload/c_crop,w_421,h_424,x_842,y_0/v1787144151/260819_more_objects_02_lk3hul.png",
+        },
+      ];
+
+      var foodWhereOrder = [];
+      var foodWhereIdx = 0;
+      var foodWhereResults = [];
+      var foodWhereTries = 0;
+      var foodWhereRewarded = false;
+      function foodCap(name) {
+        return name.replace(/\b\w/g, function (letter) {
+          return letter.toUpperCase();
+        });
+      }
+      function foodWherePrompt(name) {
+        return "Where Is The " + foodCap(name) + "?";
+      }
+      function foodWhereReset() {
+        foodWhereOrder = FOOD.slice();
+        while (foodWhereOrder.length < 8) {
+          foodWhereOrder.push(
+            FOOD[Math.floor(Math.random() * FOOD.length)],
+          );
+        }
+        for (var i = foodWhereOrder.length - 1; i > 0; i--) {
+          var j = Math.floor(Math.random() * (i + 1));
+          var temp = foodWhereOrder[i];
+          foodWhereOrder[i] = foodWhereOrder[j];
+          foodWhereOrder[j] = temp;
+        }
+        foodWhereIdx = 0;
+        foodWhereResults = [];
+        foodWhereTries = 0;
+        buildPips("foodWherePips", foodWhereOrder.length);
+        var grid = document.getElementById("foodWhereGrid");
+        var startBtn = document.getElementById("food1StartBtn");
+        var title = document.getElementById("foodWhereTitle");
+        if (grid) {
+          grid.innerHTML = "";
+          grid.style.display = "none";
+        }
+        if (startBtn) startBtn.style.display = "inline-flex";
+        if (title) title.textContent = "Where Is...?";
+      }
+      function food1Start() {
+        var grid = document.getElementById("foodWhereGrid");
+        if (grid && grid.style.display !== "none") return;
+        if (grid) grid.style.display = "";
+        foodWhereRender();
+      }
+      function foodWhereRender() {
+        var grid = document.getElementById("foodWhereGrid");
+        var title = document.getElementById("foodWhereTitle");
+        if (!grid || !title) return;
+        if (foodWhereIdx >= foodWhereOrder.length) {
+          foodWhereDone();
+          return;
+        }
+        var target = foodWhereOrder[foodWhereIdx];
+        foodWhereTries = 0;
+        title.textContent = foodWherePrompt(target.name);
+        setPips("foodWherePips", foodWhereResults, foodWhereIdx);
+        var shuffled = FOOD.slice();
+        for (var i = shuffled.length - 1; i > 0; i--) {
+          var j = Math.floor(Math.random() * (i + 1));
+          var temp = shuffled[i];
+          shuffled[i] = shuffled[j];
+          shuffled[j] = temp;
+        }
+        grid.innerHTML = "";
+        shuffled.forEach(function (item, itemIdx) {
+          var button = document.createElement("button");
+          button.className = "toyBtn";
+          var img = document.createElement("img");
+          img.className = "toyImg";
+          img.src = item.img;
+          img.alt = foodCap(item.name);
+          button.appendChild(img);
+          button.onclick = function () {
+            (itemIdx % 2 === 0 ? say : sayOther)(item.name);
+            if (item.name === target.name) {
+              foodWhereResults.push(
+                foodWhereTries === 0 ? "good" : "mediocre",
+              );
+              toast(foodCap(target.name) + " — WELL DONE!");
+              foodWhereIdx++;
+              setTimeout(foodWhereRender, 1000);
+            } else {
+              foodWhereTries++;
+              toast(foodCap(target.name) + " — NO");
+              button.style.opacity = "0.4";
+              button.style.pointerEvents = "none";
+            }
+          };
+          grid.appendChild(button);
+        });
+        (foodWhereIdx % 2 === 0 ? say : sayOther)(
+          foodWherePrompt(target.name),
+        );
+      }
+      function foodWhereDone() {
+        var grid = document.getElementById("foodWhereGrid");
+        var title = document.getElementById("foodWhereTitle");
+        var pips = document.getElementById("foodWherePips");
+        var startBtn = document.getElementById("food1StartBtn");
+        if (title) title.textContent = "";
+        if (pips) pips.innerHTML = "";
+        if (startBtn) startBtn.style.display = "none";
+        if (grid) {
+          grid.removeAttribute("style");
+          grid.innerHTML =
+            '<div style="grid-column:1/-1;text-align:center;">' +
+            '<p style="font-size:clamp(1.4rem,2.6vw,2.6rem);font-weight:900;margin:0.6em 0;">Well Done!</p>' +
+            "</div>";
+        }
+        if (!foodWhereRewarded && qualifies(foodWhereResults)) {
+          foodWhereRewarded = true;
+          celebrate("FOOD & DRINKS! +1 \u2b50");
+        }
+        setTimeout(function () {
+          show(screenIndexById("foodIntroScreen"));
+        }, 1500);
+      }
+
+      function screenIndexById(id) {
+        for (var s = 0; s < screens.length; s++) {
+          if (screens[s].id === id) return s;
+        }
+        return -1;
+      }
+
+      /* ── Food Slot Machine ── */
+      var foodSlotPool = [];
+      var foodSlotTimer = null;
+      var foodSlotCurrent = null;
+      var foodSlotIsNonItem = false;
+      var foodSlotWord = "";
+      var foodSlotResults = [];
+      var foodSlotIdx = 0;
+      var foodSlotTotal = 10;
+      var foodSlotRewarded = false;
+      function foodSlotBuildPool() {
+        var pool = FOOD.slice();
+        var nonMember =
+          FOOD_NON_ITEMS[
+            Math.floor(Math.random() * FOOD_NON_ITEMS.length)
+          ];
+        pool.push({
+          name: nonMember.name,
+          img: nonMember.img,
+          isNonItem: true,
+        });
+        return pool;
+      }
+      function foodSlotAllNames() {
+        var names = [];
+        for (var i = 0; i < FOOD.length; i++) names.push(FOOD[i].name);
+        for (var j = 0; j < FOOD_NON_ITEMS.length; j++)
+          names.push(FOOD_NON_ITEMS[j].name);
+        return names;
+      }
+      function foodSlotPickWrong(name) {
+        var names = foodSlotAllNames().filter(function (candidate) {
+          return candidate !== name;
+        });
+        return names[Math.floor(Math.random() * names.length)];
+      }
+      function foodSlotPickOtherFood(name) {
+        var names = [];
+        for (var i = 0; i < FOOD.length; i++) {
+          if (FOOD[i].name !== name) names.push(FOOD[i].name);
+        }
+        return names[Math.floor(Math.random() * names.length)];
+      }
+      function foodSlotSpeak(name) {
+        (foodSlotIdx % 2 === 0 ? say : sayOther)(name);
+      }
+      function foodSlotSpin() {
+        if (foodSlotTimer || foodSlotIdx >= foodSlotTotal) return;
+        foodSlotPool = foodSlotBuildPool();
+        foodSlotCurrent = null;
+        foodSlotIsNonItem = false;
+        var img = document.getElementById("foodSlotImg");
+        if (!img) return;
+        var target =
+          foodSlotPool[Math.floor(Math.random() * foodSlotPool.length)];
+        var spinIdx = Math.floor(Math.random() * foodSlotPool.length);
+        var start = Date.now();
+        var duration = 2400 + Math.random() * 800;
+        function tick() {
+          var elapsed = Date.now() - start;
+          if (elapsed >= duration) {
+            foodSlotTimer = null;
+            img.src = target.img;
+            img.alt = target.name;
+            foodSlotCurrent = target;
+            foodSlotIsNonItem = !!target.isNonItem;
+            foodSlotWord = foodSlotIsNonItem
+              ? foodSlotPickWrong(target.name)
+              : Math.random() < 0.5
+                ? target.name
+                : foodSlotPickOtherFood(target.name);
+            setTimeout(function () {
+              foodSlotSpeak(foodSlotWord);
+            }, 300);
+            return;
+          }
+          img.src = foodSlotPool[spinIdx].img;
+          img.alt = foodSlotPool[spinIdx].name;
+          var remain = duration - elapsed;
+          var delay = 40 + (1 - remain / duration) * 260;
+          spinIdx = (spinIdx + 1) % foodSlotPool.length;
+          foodSlotTimer = window.setTimeout(tick, Math.max(30, delay));
+        }
+        foodSlotTimer = window.setTimeout(tick, 60);
+      }
+      function foodSlotSpeakAgain() {
+        if (foodSlotTimer || !foodSlotCurrent) return;
+        foodSlotSpeak(foodSlotWord);
+      }
+      function foodSlotReset() {
+        foodSlotResults = [];
+        foodSlotIdx = 0;
+        buildPips("foodSlotPips", foodSlotTotal);
+        setPips("foodSlotPips", foodSlotResults, foodSlotIdx);
+        foodSlotSpin();
+      }
+      function foodSlotAnswer(answer) {
+        if (
+          foodSlotTimer ||
+          !foodSlotCurrent ||
+          foodSlotIdx >= foodSlotTotal
+        )
+          return;
+        var truth = foodSlotIsNonItem
+          ? "not-food"
+          : foodSlotWord === foodSlotCurrent.name
+            ? "yes"
+            : "no";
+        var won = answer === truth;
+        foodSlotResults.push(won ? "good" : "bad");
+        setPips("foodSlotPips", foodSlotResults, foodSlotIdx);
+        toast(won ? "WELL DONE!" : "Try again!");
+        foodSlotIdx++;
+        if (foodSlotIdx >= foodSlotTotal) {
+          var greens = foodSlotResults.filter(function (result) {
+            return result === "good";
+          }).length;
+          if (greens >= 8 && !foodSlotRewarded) {
+            foodSlotRewarded = true;
+            celebrate("FOOD & DRINKS! +1 \u2b50");
+          }
+          setTimeout(function () {
+            show(screenIndexById("food1Screen"));
+          }, 1500);
+          return;
+        }
+        setTimeout(foodSlotSpin, 1200);
+      }
+
+      /* ── Sound toggle ── */
+      var soundTag = document.getElementById("soundBtn").querySelector(".tag");
+      document.getElementById("soundBtn").onclick = function () {
+        soundOn = !soundOn;
+        soundTag.innerHTML = soundOn ? ICON_VOLUME_ON : ICON_VOLUME_OFF;
+        cancelSpeech();
+      };
+
+      /* ── Keyboard: Enter clicks active button only (no arrows) ── */
+      document.addEventListener("keydown", function (e) {
+        var k = e.key || "";
+        var kc = e.keyCode || e.which || 0;
+        if (kc === 13 || kc === 29443 || k === "Enter") {
+          var el = document.activeElement;
+          if (el && el.tagName === "BUTTON" && !el.disabled) el.click();
+        }
+      });
+
+      /* ── Start: show first screen ── */
+      show(0);
+    </script>
+  <script src="../../config.js"></script>
+  <script src="../../tracker.js"></script>
+  </body>
+</html>
