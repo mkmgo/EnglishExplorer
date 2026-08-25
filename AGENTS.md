@@ -17,7 +17,8 @@ EnglishExplorer/
 │   ├── thematic/               <-- Thematic lesson decks
 │   │   ├── animals.html
 │   │   ├── toys-things.html
-│   │   └── my-family-my-classroom.html
+│   │   ├── my-family-my-classroom.html
+│   │   └── new-numbers.html
 │   └── minigames/              <-- Highly gamified mini-games (formerly /Features)
 │       ├── abc-world.html
 │       ├── mystery-base.html
