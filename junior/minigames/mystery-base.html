@@ -233,6 +233,22 @@
         border-color: var(--good);
       }
 
+      .spot-card.lab-bg {
+        position: relative;
+        overflow: hidden;
+      }
+
+      .spot-card.lab-bg::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background-image: url("https://res.cloudinary.com/dqwm4pdbz/image/upload/q_auto/f_auto/v1787654682/lab_backgr_j1ywo3.jpg");
+        background-size: cover;
+        background-position: center;
+        opacity: 0.15;
+        pointer-events: none;
+      }
+
       [data-retired] {
         display: none !important;
       }
@@ -757,13 +773,6 @@
         color: black;
         border: 1px solid var(--brick-dark);
       }
-      .brick-green {
-        --brick-main: #22c55e;
-        --brick-dark: #15803d;
-        background-color: #22c55e;
-        color: white;
-        border: 1px solid var(--brick-dark);
-      }
       .brick-blue {
         --brick-main: #3b82f6;
         --brick-dark: #1d4ed8;
@@ -771,12 +780,56 @@
         color: white;
         border: 1px solid var(--brick-dark);
       }
-      .brick-purple {
-        --brick-main: #9333ea;
-        --brick-dark: #6b21a8;
-        background-color: #9333ea;
-        color: white;
-        border: 1px solid var(--brick-dark);
+
+      .lab-token {
+        width: 44px;
+        height: 44px;
+        border-radius: 50%;
+        background: transparent;
+        border: 2px dashed var(--border-strong);
+        color: #ef4444;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: grab;
+      }
+
+      .lab-token i[data-lucide] {
+        width: 38px;
+        height: 38px;
+      }
+
+      .lab-tokens-row {
+        display: flex;
+        justify-content: center;
+        gap: 12px;
+        margin-top: 16px;
+      }
+
+      .token-slot {
+        position: absolute;
+        top: 10px;
+        left: 10px;
+        width: 44px;
+        height: 44px;
+        border-radius: 50%;
+        border: 2px dashed var(--border-strong);
+        background: rgba(0, 0, 0, 0.04);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 5;
+      }
+
+      .token-slot.drag-over {
+        border-color: var(--primary);
+        background: rgba(0, 0, 0, 0.1);
+      }
+
+      .token-slot .lab-token {
+        width: 36px;
+        height: 36px;
+        cursor: default;
       }
 
       /* Combined mystery items (e.g. Red Car = car + red brick) */
@@ -1046,13 +1099,7 @@
         <div class="draggable-item brick brick-yellow" id="brick-yellow">
           Yellow
         </div>
-        <div class="draggable-item brick brick-green" id="brick-green">
-          Green
-        </div>
         <div class="draggable-item brick brick-blue" id="brick-blue">Blue</div>
-        <div class="draggable-item brick brick-purple" id="brick-purple">
-          Purple
-        </div>
         <!-- Avatars -->
         <div class="draggable-item animal" id="onza-avatar" data-type="avatar">
           <img
@@ -1104,16 +1151,29 @@
         <div class="bag-bar attract" id="bagBar"></div>
         <div class="bag-trays" id="bagTrays"></div>
       </div>
+      <!-- Lab Tokens -->
+      <div class="lab-tokens-row">
+        <div class="draggable-item lab-token" id="lab-token-1">
+          <i data-lucide="circle-fading-plus"></i>
+        </div>
+        <div class="draggable-item lab-token" id="lab-token-2">
+          <i data-lucide="circle-fading-plus"></i>
+        </div>
+        <div class="draggable-item lab-token" id="lab-token-3">
+          <i data-lucide="circle-fading-plus"></i>
+        </div>
+      </div>
     </div>
 
     <!-- Classroom Spots Grid: Colours + Animals sit between the two
          spaces. Colours is open from the start; Animals stays locked
          until Colours is completed. -->
     <div class="grid-container">
-      <div class="spot-card">
-        <div class="spot-title">Colours</div>
+      <div class="spot-card lab-bg">
+        <div class="spot-title">Colour Lab</div>
+        <div class="token-slot" id="token-slot">
+        </div>
         <div class="drop-zone" id="spot-1">
-          <div class="slot"></div>
           <div class="slot"></div>
           <div class="slot"></div>
           <div class="slot"></div>
@@ -1252,19 +1312,17 @@
       var goals = [
         {
           spotId: "spot-1",
-          ids: ["brick-red", "brick-yellow", "brick-green", "brick-blue"],
+          ids: ["brick-red", "brick-yellow", "brick-blue"],
         },
         { spotId: "spot-2", ids: ["bee", "rabbit", "dog", "elephant"] },
         { spotId: "spot-3", ids: ["car", "bike", "robot", "kite"] },
-        { spotId: "spot-4", ids: ["red-car", "yellow-bee", "blue-rabbit", "green-bike"] },
+        { spotId: "spot-4", ids: ["red-car", "yellow-bee", "blue-rabbit"] },
       ];
 
       var itemCategories = {
         "brick-red": "Colours",
         "brick-yellow": "Colours",
-        "brick-green": "Colours",
         "brick-blue": "Colours",
-        "brick-purple": "Colours",
         "num-five": "Numbers",
         "num-six": "Numbers",
         "num-seven": "Numbers",
@@ -1758,7 +1816,7 @@
           var mCard = mystery.closest(".spot-card");
           var baseComplete =
             reached["spot-1"] && reached["spot-2"] && reached["spot-3"];
-          var mysteryDone = ["red-car", "yellow-bee", "blue-rabbit", "green-bike"]
+          var mysteryDone = ["red-car", "yellow-bee", "blue-rabbit"]
             .every(function (id) {
               var el = document.getElementById(id);
               return el && mystery.contains(el);
@@ -1917,25 +1975,22 @@
       document.addEventListener("pointercancel", endDrag);
 
       // Mystery combining: car + red brick, bee + yellow brick,
-      // rabbit + blue brick, bike + green brick. Combined bricks keep the
+      // rabbit + blue brick. Combined bricks keep the
       // short item label (fits on small screens, unlike "Red Car" etc.).
       var combinedNames = {
         "red-car": "Red Car",
         "yellow-bee": "Yellow Bee",
         "blue-rabbit": "Blue Rabbit",
-        "green-bike": "Green Bike",
       };
       var combinedLabels = {
         "red-car": "Car",
         "yellow-bee": "Bee",
         "blue-rabbit": "Rabbit",
-        "green-bike": "Bike",
       };
       var combinedColors = {
         "red-car": "brick-red",
         "yellow-bee": "brick-yellow",
         "blue-rabbit": "brick-blue",
-        "green-bike": "brick-green",
       };
       // Which two items combine (in either order).
       var combos = {
@@ -1945,8 +2000,6 @@
         bee: "brick-yellow",
         "brick-blue": "rabbit",
         rabbit: "brick-blue",
-        "brick-green": "bike",
-        bike: "brick-green",
       };
       var stashed = [];
 
@@ -2021,19 +2074,6 @@
           if (slot3) {
             slot3.appendChild(
               makeCombined("blue-rabbit", rabbit.querySelector("img").src),
-            );
-          }
-        }
-        var bike = byId["bike"];
-        var green = byId["brick-green"];
-        if (bike && green && !byId["green-bike"]) {
-          stashed.push(bike, green);
-          bike.remove();
-          green.remove();
-          var slot4 = firstEmptySlot(spot);
-          if (slot4) {
-            slot4.appendChild(
-              makeCombined("green-bike", bike.querySelector("img").src),
             );
           }
         }

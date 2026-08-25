@@ -1,0 +1,257 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no"
+    />
+    <title>Protocol 25/08/2026</title>
+    <meta name="description" content="English Explorer — Protocol 25/08/2026" />
+    <meta property="og:image" content="https://res.cloudinary.com/dmkhsyfzf/image/upload/q_auto/f_auto/v1781698464/protocol_r392x1.png" />
+    <link rel="icon" type="image/png" href="https://res.cloudinary.com/dmkhsyfzf/image/upload/q_auto/f_auto/v1781698464/protocol_r392x1.png" />
+    <link rel="apple-touch-icon" href="https://res.cloudinary.com/dmkhsyfzf/image/upload/q_auto/f_auto/v1781698464/protocol_r392x1.png" />
+    <style>
+      :root {
+        --bg: #FAF7F2;
+        --ink: #14213d;
+        --muted: #60708d;
+        --accent: #e43703;
+        --accent2: #ffb866;
+        --good: #19a974;
+        --panel: #fcfcfc;
+        --shadow: 0 18px 50px rgba(20, 33, 61, 0.14);
+      }
+      .container[data-weekday="mon"] { --accent: #2563eb; }
+      .container[data-weekday="tue"] { --accent: #e43703; }
+      .container[data-weekday="wed"] { --accent: #0d9488; }
+      .container[data-weekday="thu"] { --accent: #7c3aed; }
+      .container[data-weekday="fri"] { --accent: #dc2626; }
+      .container[data-weekday="sat"] { --accent: #d97706; }
+      .container[data-weekday="sun"] { --accent: #475569; }
+      * {
+        box-sizing: border-box;
+      }
+      html, body {
+        margin: 0;
+        width: 100%;
+        min-height: 100%;
+        background: var(--bg);
+        font-family: Arial, Helvetica, sans-serif;
+        color: var(--ink);
+        touch-action: manipulation;
+        line-height: 1.6;
+      }
+      .container {
+        max-width: 900px;
+        margin: 0 auto;
+        padding: clamp(16px, 4vw, 40px) clamp(12px, 3vw, 24px);
+      }
+      h1 {
+        font-size: clamp(1.8rem, 5vw, 3rem);
+        margin: 0 0 0.2em;
+        font-weight: 900;
+        letter-spacing: -0.03em;
+        color: var(--accent);
+      }
+      .date-sub {
+        font-size: clamp(0.9rem, 1.6vw, 1.2rem);
+        color: var(--muted);
+        font-weight: 700;
+        letter-spacing: 0.1em;
+        margin: 0 0 2em;
+      }
+      .intro {
+        background: var(--panel);
+        border-radius: 24px;
+        padding: clamp(1rem, 2.5vw, 1.8em);
+        box-shadow: var(--shadow);
+        margin-bottom: 2em;
+        font-size: clamp(1rem, 1.8vw, 1.2rem);
+        line-height: 1.7;
+      }
+      .intro .zh {
+        display: block;
+        margin-top: 0.5em;
+        color: var(--muted);
+        font-size: 0.95em;
+      }
+      h2 {
+        font-size: clamp(1.3rem, 3.2vw, 2rem);
+        margin: 2em 0 0.6em;
+        font-weight: 900;
+        color: var(--ink);
+        letter-spacing: -0.02em;
+      }
+      h3 {
+        font-size: clamp(1.1rem, 2.2vw, 1.5rem);
+        margin: 1.6em 0 0.4em;
+        font-weight: 800;
+        color: var(--accent);
+      }
+      p {
+        font-size: clamp(1rem, 1.8vw, 1.15rem);
+        margin: 0.4em 0;
+      }
+      .story-section {
+        background: var(--panel);
+        border-radius: 24px;
+        padding: clamp(1rem, 2.5vw, 1.6em);
+        box-shadow: var(--shadow);
+        margin-bottom: 1.4em;
+      }
+      .story-section h3 {
+        margin-top: 0;
+      }
+      .story-section p {
+        margin: 0.3em 0;
+      }
+
+      .vocab-list {
+        background: var(--panel);
+        border-radius: 24px;
+        padding: clamp(1rem, 2.5vw, 1.6em);
+        box-shadow: var(--shadow);
+        margin-bottom: 1.4em;
+      }
+      .vocab-list h3 {
+        margin-top: 0;
+      }
+      .vocab-list ul {
+        margin: 0.4em 0;
+        padding-left: 1.4em;
+      }
+      .vocab-list li {
+        font-size: clamp(1rem, 1.8vw, 1.15rem);
+        margin: 0.25em 0;
+      }
+
+      /* Vocabulary table */
+      .vocab-table {
+        width: 100%;
+        border-collapse: separate;
+        border-spacing: 0;
+        margin: 1.6em 0 2em;
+        background: var(--panel);
+        border-radius: 16px;
+        box-shadow: var(--shadow);
+        overflow: hidden;
+      }
+      .vocab-table th {
+        background: var(--ink);
+        color: var(--accent2);
+        font-size: clamp(0.85rem, 1.5vw, 1rem);
+        font-weight: 800;
+        letter-spacing: 0.06em;
+        padding: 0.8em 1em;
+        text-align: left;
+        white-space: nowrap;
+      }
+      .vocab-table td {
+        padding: 0.7em 1em;
+        font-size: clamp(0.9rem, 1.6vw, 1.05rem);
+        border-top: 1px solid #eae5db;
+        vertical-align: top;
+        word-break: break-word;
+      }
+      .vocab-table tr:nth-child(even) td {
+        background: #fdf9f3;
+      }
+      .vocab-table td:last-child {
+        color: var(--muted);
+        font-weight: 600;
+      }
+
+      @media (max-width: 600px) {
+        .vocab-table {
+          display: block;
+          overflow-x: auto;
+          -webkit-overflow-scrolling: touch;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container" data-weekday="tue">
+      <h1>Protocol 25/08/2026</h1>
+      <p class="date-sub">English Explorer | Breakthrough</p>
+
+      <div class="intro">
+        Please copy these sentences into your exercise book. Below the vocabulary list. All words and expressions must be fully understood and memorised.
+        <span class="zh">请将这些句子抄到练习本的词汇表下方。所有单词和表达方式都必须完全理解和记忆。</span>
+      </div>
+
+      <h2>Daily Routine</h2>
+      <div class="story-section">
+        <p>1. I wake up at seven o'clock.</p>
+        <p>2. I have breakfast before school.</p>
+        <p>3. I usually go to school by bus.</p>
+        <p>4. After school, I do my homework.</p>
+        <p>5. I like playing games in the afternoon.</p>
+        <p>6. I don't like waking up early.</p>
+        <p>7. I have dinner with my family.</p>
+        <p>8. My favourite part of the day is after dinner.</p>
+        <p>9. I go to bed at ten o'clock.</p>
+        <p>10. What time do you wake up?</p>
+      </div>
+
+      <h2>Meeting People at School</h2>
+      <div class="story-section">
+        <p>1. Hi, I'm Nimza. What's your name?</p>
+        <p>2. Nice to meet you.</p>
+        <p>3. Can I sit here?</p>
+        <p>4. Do you want to be partners?</p>
+        <p>5. Where are you from?</p>
+        <p>6. I like working in a group.</p>
+        <p>7. I don't like talking in front of the class.</p>
+        <p>8. Let's find page five together.</p>
+        <p>9. I like sitting near the window.</p>
+        <p>10. Can you repeat that, please?</p>
+      </div>
+
+      <h2>Clothes</h2>
+      <div class="vocab-list">
+        <ul>
+          <li>Shoes</li>
+          <li>Trousers / Jeans</li>
+          <li>T-shirt</li>
+          <li>Jacket</li>
+          <li>Skirt</li>
+          <li>Socks</li>
+          <li>Dress</li>
+        </ul>
+      </div>
+
+      <h2>Accessories</h2>
+      <div class="vocab-list">
+        <ul>
+          <li>Belt</li>
+          <li>Cap</li>
+          <li>Watch</li>
+          <li>Ring</li>
+          <li>Necklace</li>
+        </ul>
+      </div>
+
+      <h2>Vocabulary — 25/08/2026</h2>
+      <table class="vocab-table">
+        <thead>
+          <tr><th>English</th><th>Chinese</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Daily Routine</td><td>日常工作</td></tr>
+          <tr><td>I wake up at seven o'clock.</td><td>我七点钟起床。</td></tr>
+          <tr><td>After school, I do my homework.</td><td>放学后，我做作业。</td></tr>
+          <tr><td>I don't like waking up early.</td><td>我不喜欢早起。</td></tr>
+          <tr><td>My favourite part of the day is after dinner.</td><td>一天中我最喜欢的部分是晚餐后。</td></tr>
+          <tr><td>I like working in a group.</td><td>我喜欢在团队中工作。</td></tr>
+          <tr><td>I don't like talking in front of the class.</td><td>我不喜欢在全班同学面前说话。</td></tr>
+          <tr><td>Let's find page five together.</td><td>我们一起找出第五页。</td></tr>
+        </tbody>
+      </table>
+
+    </div>
+  <script src="../../config.js"></script>
+  <script src="../../tracker.js"></script>
+  </body>
+</html>
