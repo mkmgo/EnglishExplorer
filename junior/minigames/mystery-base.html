@@ -372,6 +372,42 @@
         text-align: center;
         width: 100%;
         max-width: 800px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+      }
+
+      .save-load-btns {
+        display: inline-flex;
+        gap: 4px;
+      }
+
+      .sl-btn {
+        appearance: none;
+        border: 1px solid var(--border);
+        background: var(--card-bg);
+        color: var(--text);
+        border-radius: 6px;
+        padding: 3px 7px;
+        font-size: 0.9rem;
+        cursor: pointer;
+        line-height: 1;
+        -webkit-tap-highlight-color: transparent;
+        transition: background-color 0.2s, transform 0.15s;
+      }
+
+      .sl-btn:active {
+        transform: scale(0.92);
+      }
+
+      .sl-btn.flash {
+        animation: saveFlash 0.5s ease;
+      }
+
+      @keyframes saveFlash {
+        0%, 100% { background: var(--card-bg); }
+        50% { background: var(--good); }
       }
 
       .inv-separator {
@@ -390,6 +426,11 @@
         color: var(--muted);
         font-size: clamp(0.8rem, 0.6vw + 0.7rem, 0.95rem);
         margin-bottom: 10px;
+      }
+
+      .bag-area {
+        display: flex;
+        flex-direction: column-reverse;
       }
 
       .bag-bar {
@@ -488,11 +529,7 @@
         color: var(--statement-icon);
       }
 
-      /* Handbag fills solid once the bag is fully packed */
-      .bag-chip.done .bag-icon svg,
-      .bag-tray.sealed .bag-tray-head .bag-icon svg {
-        fill: currentColor;
-      }
+      /* Handbag stays unfilled when bag is packed — border/bg change is enough */
 
       .bag-chip .bag-count {
         background: var(--item-bg);
@@ -536,6 +573,7 @@
 
       .bag-tray.open {
         display: block;
+        margin-bottom: 12px;
       }
 
       .bag-tray-head {
@@ -543,6 +581,14 @@
         color: var(--muted);
         text-align: center;
         margin-bottom: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 4px;
+      }
+
+      .bag-tray-head .bag-icon {
+        margin-top: 2px;
       }
 
       .bag-tray-head .bag-progress {
@@ -555,10 +601,10 @@
         justify-content: center;
         align-content: flex-start;
         gap: 10px;
-        min-height: 100px;
-        padding: 10px;
+        min-height: 72px;
+        padding: 10px 10px 8px;
         border: 2px dashed var(--border-strong);
-        border-radius: 10px;
+        border-radius: 28px;
         background: var(--dropzone-bg);
         transition:
           background-color 0.2s,
@@ -782,9 +828,9 @@
       }
 
       .lab-token {
-        width: 44px;
-        height: 44px;
-        border-radius: 50%;
+        width: 36px;
+        height: 36px;
+        border-radius: 10px;
         background: transparent;
         border: 2px dashed var(--border-strong);
         color: #ef4444;
@@ -795,8 +841,8 @@
       }
 
       .lab-token i[data-lucide] {
-        width: 38px;
-        height: 38px;
+        width: 34px;
+        height: 34px;
       }
 
       .lab-tokens-row {
@@ -810,9 +856,9 @@
         position: absolute;
         top: 10px;
         left: 10px;
-        width: 44px;
-        height: 44px;
-        border-radius: 50%;
+        width: 36px;
+        height: 36px;
+        border-radius: 10px;
         border: 2px dashed var(--border-strong);
         background: rgba(0, 0, 0, 0.04);
         display: flex;
@@ -827,8 +873,8 @@
       }
 
       .token-slot .lab-token {
-        width: 36px;
-        height: 36px;
+        width: 46px;
+        height: 30px;
         cursor: default;
       }
 
@@ -1016,7 +1062,13 @@
 
     <!-- Space One: items can live here or be stored back here -->
     <div class="palette">
-      <div class="palette-title">Space One</div>
+      <div class="palette-title">
+        Space One
+        <span class="save-load-btns">
+          <button class="sl-btn" id="save-s1" title="Save Space One">&#x1F4BE;</button>
+          <button class="sl-btn" id="load-s1" title="Load Space One">&#x1F4C2;</button>
+        </span>
+      </div>
       <div class="item-container" id="inventory">
         <!-- Animals -->
         <div class="draggable-item animal" id="bee">
@@ -1145,8 +1197,7 @@
           /><span class="animal-name">Nine</span>
         </div>
       </div>
-      <div class="inv-separator"></div>
-      <div class="tidy-hint" id="tidyHint">Tap a bag to open it</div>
+      <div class="tidy-hint" id="tidyHint"></div>
       <div class="bag-area" id="bagArea">
         <div class="bag-bar attract" id="bagBar"></div>
         <div class="bag-trays" id="bagTrays"></div>
@@ -1193,7 +1244,13 @@
 
     <!-- Space Two: phrases can live here or be stored back here -->
     <div class="palette">
-      <div class="palette-title">Space Two</div>
+      <div class="palette-title">
+        Space Two
+        <span class="save-load-btns">
+          <button class="sl-btn" id="save-s2" title="Save Space Two">&#x1F4BE;</button>
+          <button class="sl-btn" id="load-s2" title="Load Space Two">&#x1F4C2;</button>
+        </span>
+      </div>
       <div class="item-container" id="phrases-inventory">
         <div class="draggable-item phrase" id="phrase-whats-your-name"><i data-lucide="circle-question-mark" class="phrase-tag"></i>What is your name?</div>
         <div class="draggable-item phrase" id="phrase-my-name-is"><i data-lucide="circle-alert" class="phrase-tag"></i>My name is ...</div>
@@ -1424,14 +1481,17 @@
           var tray = document.createElement("div");
           tray.className = "bag-tray";
           tray.dataset.cat = cat;
-          tray.innerHTML =
-            '<div class="bag-tray-head"><span class="bag-icon"><i data-lucide="handbag"></i></span>' +
+          var head = document.createElement("div");
+          head.className = "bag-tray-head";
+          head.innerHTML =
+            '<span class="bag-icon"><i data-lucide="handbag"></i></span>' +
             tagHtml +
             " " +
             cat +
-            " bag &middot; <span class=\"bag-progress\">0/" +
+            ' bag &middot; <span class="bag-progress">0/' +
             totals[cat] +
-            "</span></div>";
+            "</span>";
+          tray.appendChild(head);
           var inner = document.createElement("div");
           inner.className = "bag-tray-inner";
           tray.appendChild(inner);
@@ -1440,7 +1500,8 @@
           bagRefs[cat] = {
             chip: chip,
             count: chip.querySelector(".bag-count"),
-            progress: tray.querySelector(".bag-progress"),
+            head: head,
+            progress: head.querySelector(".bag-progress"),
             tray: tray,
             inner: inner,
             total: totals[cat],
@@ -1478,7 +1539,7 @@
           })
         ) {
           tidyDone = false;
-          setTidyHint("Tap a bag to open it");
+          setTidyHint("");
         }
       }
 
@@ -1499,11 +1560,7 @@
         openCat = cat;
         bagRefs[cat].chip.classList.add("open");
         bagRefs[cat].tray.classList.add("open");
-        setTidyHint(
-          tidyDone
-            ? "Take what you need from the " + cat.toLowerCase() + " bag"
-            : "Drop the matching items into the " + cat.toLowerCase() + " bag",
-        );
+        setTidyHint("");
       }
 
       function closeBag(keepHint) {
@@ -1513,11 +1570,7 @@
         ref.tray.classList.remove("open");
         openCat = null;
         if (!keepHint) {
-          setTidyHint(
-            tidyDone
-              ? "All bags packed! Open a bag when you need something"
-              : "Tap a bag to open it",
-          );
+          setTidyHint("");
         }
       }
 
@@ -1538,7 +1591,7 @@
             return bagCount(c) === bagRefs[c].total;
           });
           if (allDone) packComplete();
-          else setTidyHint("Nice! Pick the next bag");
+          else setTidyHint("");
         }, 800);
       }
 
@@ -1546,7 +1599,7 @@
       // whichever space they are parked at.
       function packComplete() {
         tidyDone = true;
-        setTidyHint("All bags packed! Open a bag when you need something");
+        setTidyHint("");
       }
 
       function updateInventorySummary() {
@@ -2139,7 +2192,7 @@
         }
         var barEl = document.getElementById("bagBar");
         if (barEl) barEl.classList.add("attract");
-        setTidyHint("Tap a bag to open it");
+        setTidyHint("");
         document
           .querySelectorAll(".drop-zone .imprint")
           .forEach(function (imp) {
