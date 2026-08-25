@@ -2230,6 +2230,165 @@
         checkGoal();
       }
 
+      // ---- Save / Load per space ----
+      var space1Items = [
+        "bee","rabbit","dog","elephant","turtle","dinosaur","dragon","whale",
+        "car","bike","robot","kite",
+        "brick-red","brick-yellow","brick-blue",
+        "onza-avatar","sam-avatar",
+        "num-five","num-six","num-seven","num-eight","num-nine",
+        "lab-token-1","lab-token-2","lab-token-3",
+      ];
+      var space2Items = [
+        "phrase-whats-your-name","phrase-my-name-is",
+        "phrase-how-old","phrase-i-am-old",
+        "phrase-look","phrase-listen",
+        "phrase-stand-up","phrase-sit-down","phrase-come-here",
+        "phrase-do-you-like","phrase-where-is","phrase-show-me",
+      ];
+
+      function flashBtn(btn) {
+        btn.classList.remove("flash");
+        void btn.offsetWidth;
+        btn.classList.add("flash");
+      }
+
+      function getItemLocation(el) {
+        if (!el) return null;
+        var inv = el.closest(".item-container");
+        if (inv) return "inventory";
+        var bagInner = el.closest(".bag-tray-inner");
+        if (bagInner) {
+          var tray = bagInner.closest(".bag-tray");
+          return tray ? "bag:" + tray.dataset.cat : null;
+        }
+        var slot = el.closest(".slot");
+        if (slot) {
+          var dz = slot.closest(".drop-zone");
+          if (dz) {
+            var idx = Array.prototype.indexOf.call(dz.children, slot);
+            return "slot:" + dz.id + ":" + idx;
+          }
+        }
+        return "inventory";
+      }
+
+      function saveSpace(key, itemIds) {
+        var data = { items: {}, stashed: [], unlocked: {} };
+        itemIds.forEach(function (id) {
+          var el = document.getElementById(id);
+          if (el) data.items[id] = getItemLocation(el);
+        });
+        // Track mystery combined items
+        ["red-car","yellow-bee","blue-rabbit"].forEach(function (cid) {
+          var el = document.getElementById(cid);
+          if (el) data.items[cid] = getItemLocation(el);
+        });
+        // Track stashed originals
+        stashed.forEach(function (el) {
+          if (el && el.id) data.stashed.push(el.id);
+        });
+        // Track unlocked spots
+        Object.keys(unlocked).forEach(function (sid) {
+          data.unlocked[sid] = unlocked[sid];
+        });
+        try { localStorage.setItem(key, JSON.stringify(data)); } catch (e) {}
+      }
+
+      function loadSpace(key, itemIds, inventoryId) {
+        var raw;
+        try { raw = localStorage.getItem(key); } catch (e) { return; }
+        if (!raw) return;
+        var data;
+        try { data = JSON.parse(raw); } catch (e) { return; }
+        if (!data || !data.items) return;
+        var inv = document.getElementById(inventoryId);
+        if (!inv) return;
+
+        // Close any open bag
+        if (openCat) closeBag();
+
+        // Restore stashed items to inventory
+        if (data.stashed) {
+          data.stashed.forEach(function (sid) {
+            var el = document.getElementById(sid);
+            if (el && !inv.contains(el)) inv.appendChild(el);
+          });
+        }
+
+        // Remove any mystery combined items from DOM
+        ["red-car","yellow-bee","blue-rabbit"].forEach(function (cid) {
+          var el = document.getElementById(cid);
+          if (el) el.remove();
+        });
+
+        // Place each item at its saved location
+        var allIds = itemIds.concat(["red-car","yellow-bee","blue-rabbit"]);
+        allIds.forEach(function (id) {
+          var loc = data.items[id];
+          if (!loc) return;
+          var el = document.getElementById(id);
+          if (!el) return;
+
+          if (loc === "inventory") {
+            if (!inv.contains(el)) inv.appendChild(el);
+          } else if (loc.indexOf("bag:") === 0) {
+            var cat = loc.substring(4);
+            var ref = bagRefs[cat];
+            if (ref && !ref.inner.contains(el)) ref.inner.appendChild(el);
+          } else if (loc.indexOf("slot:") === 0) {
+            var parts = loc.split(":");
+            var dzId = parts[1];
+            var slotIdx = parseInt(parts[2], 10);
+            var dz = document.getElementById(dzId);
+            if (dz) {
+              var slot = dz.children[slotIdx];
+              if (slot && slot.classList.contains("slot")) {
+                if (!slot.contains(el)) slot.appendChild(el);
+                var imp = slot.querySelector(".imprint");
+                if (imp) imp.style.display = "none";
+              }
+            }
+          }
+        });
+
+        // Restore unlock state
+        if (data.unlocked) {
+          Object.keys(data.unlocked).forEach(function (sid) {
+            if (data.unlocked[sid] && !unlocked[sid]) {
+              unlocked[sid] = true;
+              var zone = document.getElementById(sid);
+              if (zone) {
+                zone.querySelectorAll(".slot").forEach(function (sl) {
+                  if (sl.querySelector(".lock-icon")) sl.innerHTML = "";
+                });
+              }
+            }
+          });
+        }
+
+        refreshBags();
+        checkGoal();
+        renderIcons();
+      }
+
+      document.getElementById("save-s1").addEventListener("click", function () {
+        saveSpace("mysteryBase_space1", space1Items);
+        flashBtn(this);
+      });
+      document.getElementById("load-s1").addEventListener("click", function () {
+        loadSpace("mysteryBase_space1", space1Items, "inventory");
+        flashBtn(this);
+      });
+      document.getElementById("save-s2").addEventListener("click", function () {
+        saveSpace("mysteryBase_space2", space2Items);
+        flashBtn(this);
+      });
+      document.getElementById("load-s2").addEventListener("click", function () {
+        loadSpace("mysteryBase_space2", space2Items, "phrases-inventory");
+        flashBtn(this);
+      });
+
       var restartBtn = document.getElementById("restartBtn");
       if (restartBtn) restartBtn.addEventListener("click", resetGame);
     </script>
