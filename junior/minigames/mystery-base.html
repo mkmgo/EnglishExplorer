@@ -828,9 +828,9 @@
       }
 
       .lab-token {
-        width: 36px;
-        height: 36px;
-        border-radius: 10px;
+        width: 56px;
+        height: 56px;
+        border-radius: 12px;
         background: transparent;
         border: 2px dashed var(--border-strong);
         color: #ef4444;
@@ -838,11 +838,16 @@
         align-items: center;
         justify-content: center;
         cursor: grab;
+        overflow: hidden;
+        box-sizing: border-box;
+        padding: 0;
+        position: relative;
       }
 
-      .lab-token i[data-lucide] {
-        width: 34px;
-        height: 34px;
+      .lab-token img {
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
       }
 
       .lab-tokens-row {
@@ -856,9 +861,9 @@
         position: absolute;
         top: 10px;
         left: 10px;
-        width: 36px;
-        height: 36px;
-        border-radius: 10px;
+        width: 56px;
+        height: 56px;
+        border-radius: 12px;
         border: 2px dashed var(--border-strong);
         background: rgba(0, 0, 0, 0.04);
         display: flex;
@@ -873,8 +878,8 @@
       }
 
       .token-slot .lab-token {
-        width: 46px;
-        height: 30px;
+        width: 48px;
+        height: 48px;
         cursor: default;
       }
 
@@ -1205,13 +1210,13 @@
       <!-- Lab Tokens -->
       <div class="lab-tokens-row">
         <div class="draggable-item lab-token" id="lab-token-1">
-          <i data-lucide="circle-fading-plus"></i>
+          <img src="https://res.cloudinary.com/dqwm4pdbz/image/upload/q_auto/f_auto/e_bgremoval/c_crop,w_341,h_341,x_21,y_21/v1787663276/lab-token_eoed14.jpg" alt="Lab Token" />
         </div>
         <div class="draggable-item lab-token" id="lab-token-2">
-          <i data-lucide="circle-fading-plus"></i>
+          <img src="https://res.cloudinary.com/dqwm4pdbz/image/upload/q_auto/f_auto/e_bgremoval/c_crop,w_341,h_341,x_21,y_21/v1787663276/lab-token_eoed14.jpg" alt="Lab Token" />
         </div>
         <div class="draggable-item lab-token" id="lab-token-3">
-          <i data-lucide="circle-fading-plus"></i>
+          <img src="https://res.cloudinary.com/dqwm4pdbz/image/upload/q_auto/f_auto/e_bgremoval/c_crop,w_341,h_341,x_21,y_21/v1787663276/lab-token_eoed14.jpg" alt="Lab Token" />
         </div>
       </div>
     </div>
