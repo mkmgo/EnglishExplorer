@@ -526,7 +526,7 @@
       .collectionViewGrid {
         display: grid;
         grid-template-columns: repeat(4, 1fr);
-        grid-auto-rows: minmax(80px, auto);
+        grid-auto-rows: auto;
         grid-auto-flow: dense;
         gap: clamp(3px, 0.5vw, 6px);
         width: 100%;
@@ -536,20 +536,18 @@
         overflow: hidden;
         box-shadow: 0 3px 10px rgba(0, 0, 0, 0.12);
         background: #f0f0f0;
+        min-width: 0;
       }
       .collectionViewCell:nth-child(5n+1) {
         grid-column: span 2;
-        grid-row: span 2;
       }
-      .collectionViewCell:nth-child(7n+3) {
+      .collectionViewCell:nth-child(7n+4) {
         grid-column: span 2;
-      }
-      .collectionViewCell:nth-child(11n+5) {
-        grid-row: span 2;
       }
       .collectionViewCell img {
         width: 100%;
-        height: 100%;
+        height: auto;
+        max-height: 260px;
         display: block;
         border-radius: 12px;
         object-fit: cover;
@@ -560,9 +558,9 @@
       }
       .collectionViewCell video {
         width: 100%;
-        height: 100%;
         display: block;
         border-radius: 12px;
+        max-height: 260px;
         object-fit: cover;
         background: #000;
       }
@@ -1505,20 +1503,15 @@
         }
         .collectionViewGrid {
           grid-template-columns: repeat(2, 1fr);
-          grid-auto-rows: minmax(60px, auto);
+          grid-auto-rows: auto;
         }
-        .collectionViewCell:nth-child(5n+1) {
+        .collectionViewCell:nth-child(5n+1),
+        .collectionViewCell:nth-child(7n+4) {
           grid-column: span 2;
-          grid-row: span 2;
-        }
-        .collectionViewCell:nth-child(7n+3) {
-          grid-column: span 2;
-        }
-        .collectionViewCell:nth-child(11n+5) {
-          grid-row: span 2;
         }
         .collectionViewCell img,
         .collectionViewCell video {
+          max-height: 200px;
           object-fit: contain;
         }
       }
