@@ -2656,7 +2656,7 @@
           el.style.cursor = "pointer";
           el.addEventListener("click", function (e) {
             if (e.target !== el) return;
-            openMediaOverlay();
+            shrinkMedia();
           });
         } else if (entry.type === "audio") {
           el = document.createElement("audio");
@@ -2669,7 +2669,7 @@
           el.alt = "media";
           el.style.cursor = "pointer";
           el.addEventListener("click", function () {
-            openMediaOverlay();
+            shrinkMedia();
           });
         }
         wrap.appendChild(el);
@@ -2725,7 +2725,7 @@
               img.loading = "lazy";
               img.style.cursor = "pointer";
               img.addEventListener("click", function () {
-                openMediaOverlay(item.url);
+                shrinkMedia();
               });
               cell.appendChild(img);
             } else if (item.type === "video") {
