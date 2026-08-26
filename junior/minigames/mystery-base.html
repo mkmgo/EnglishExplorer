@@ -904,6 +904,60 @@
         font-weight: bold;
       }
 
+      /* Colour Lab drama animation */
+      .spot-card.lab-drama {
+        animation: labGlow 2.5s ease forwards;
+        z-index: 10;
+      }
+
+      @keyframes labGlow {
+        0%, 100% { box-shadow: var(--shadow); }
+        15%, 85% { box-shadow: 0 0 20px 4px rgba(251, 191, 36, 0.5); border-color: var(--accent); }
+        50% { box-shadow: 0 0 35px 8px rgba(251, 191, 36, 0.7); }
+      }
+
+      .lab-drama .draggable-item.fade-out {
+        animation: labItemFade 0.5s ease forwards;
+      }
+
+      @keyframes labItemFade {
+        to { opacity: 0; transform: scale(0.5); }
+      }
+
+      .slot.lab-new-slot {
+        animation: slotPop 0.5s ease forwards;
+      }
+
+      @keyframes slotPop {
+        0% { transform: scale(0); opacity: 0; }
+        60% { transform: scale(1.1); }
+        100% { transform: scale(1); opacity: 1; }
+      }
+
+      .brick-green {
+        --brick-main: #22c55e;
+        --brick-dark: #15803d;
+        background-color: #22c55e;
+        color: white;
+        border: 1px solid #15803d;
+      }
+
+      .brick-purple {
+        --brick-main: #a855f7;
+        --brick-dark: #7e22ce;
+        background-color: #a855f7;
+        color: white;
+        border: 1px solid #7e22ce;
+      }
+
+      .brick-orange {
+        --brick-main: #f97316;
+        --brick-dark: #c2410c;
+        background-color: #f97316;
+        color: white;
+        border: 1px solid #c2410c;
+      }
+
       /* Imprint (duotone hint, non-draggable) */
       .imprint {
         position: relative;
@@ -1230,7 +1284,6 @@
         <div class="drop-zone" id="spot-1">
           <div class="slot"></div>
           <div class="slot"></div>
-          <div class="slot"></div>
         </div>
       </div>
     </div>
@@ -1373,10 +1426,6 @@
 
       // Goals: all items of a group placed in its matching spot.
       var goals = [
-        {
-          spotId: "spot-1",
-          ids: ["brick-red", "brick-yellow", "brick-blue"],
-        },
         { spotId: "spot-2", ids: ["bee", "rabbit", "dog", "elephant"] },
         { spotId: "spot-3", ids: ["car", "bike", "robot", "kite"] },
         { spotId: "spot-4", ids: ["red-car", "yellow-bee", "blue-rabbit"] },
@@ -1386,6 +1435,9 @@
         "brick-red": "Colours",
         "brick-yellow": "Colours",
         "brick-blue": "Colours",
+        "brick-green": "Colours",
+        "brick-purple": "Colours",
+        "brick-orange": "Colours",
         "num-five": "Numbers",
         "num-six": "Numbers",
         "num-seven": "Numbers",
@@ -1827,6 +1879,14 @@
 
       function checkGoal() {
         var allActive = true;
+
+        // Check Colour Lab completion (based on combinations done)
+        var spot1 = document.getElementById("spot-1");
+        var s1Card = spot1 && spot1.closest(".spot-card");
+        if (labCombosDone >= 3) reached["spot-1"] = true;
+        if (s1Card) s1Card.classList.toggle("goal-reached", reached["spot-1"]);
+        if (!reached["spot-1"]) allActive = false;
+
         goals.forEach(function (goal) {
           if (goal.spotId === "spot-4") return;
           var spot = document.getElementById(goal.spotId);
@@ -1962,6 +2022,7 @@
       function endDrag(e) {
         if (!activeItem) return;
         e.preventDefault();
+        var prevLabSlot = activeItem.closest(".slot.lab-new-slot");
         if (activeGhost) {
           activeGhost.remove();
           activeGhost = null;
@@ -1996,9 +2057,10 @@
                     srcImp.classList.add("taken");
                   }
                 }
-                checkMystery();
-                checkGoal();
-              } else if (canCombine) {
+          checkLabCombine();
+          checkMystery();
+          checkGoal();
+        } else if (canCombine) {
                 overZone.appendChild(activeItem);
                 checkMystery();
                 checkGoal();
@@ -2007,6 +2069,7 @@
           } else if (overZone.classList.contains("token-slot")) {
             if (activeItem.classList.contains("lab-token") && !overZone.querySelector(".draggable-item")) {
               overZone.appendChild(activeItem);
+              checkLabCombine();
             }
           } else if (overZone.classList.contains("bag-tray-inner")) {
             var trayEl = overZone.closest(".bag-tray");
@@ -2029,6 +2092,9 @@
               checkGoal();
             }
           }
+        }
+        if (prevLabSlot && !prevLabSlot.contains(activeItem)) {
+          prevLabSlot.remove();
         }
         clearOverZone();
         activeItem = null;
@@ -2065,6 +2131,84 @@
         rabbit: "brick-blue",
       };
       var stashed = [];
+
+      // Colour Lab combining — lab token + two colour bricks → new colour
+      var labCombosDone = 0;
+      var labCombining = false;
+      var labComboResults = {
+        "brick-blue+brick-yellow": "brick-green",
+        "brick-blue+brick-red": "brick-purple",
+        "brick-red+brick-yellow": "brick-orange",
+      };
+      var labCombinedLabels = {
+        "brick-green": "Green",
+        "brick-purple": "Purple",
+        "brick-orange": "Orange",
+      };
+
+      function getLabComboResult(id1, id2) {
+        var key = [id1, id2].sort().join("+");
+        return labComboResults[key] || null;
+      }
+
+      function checkLabCombine() {
+        if (labCombining) return;
+        var tokenSlot = document.getElementById("token-slot");
+        if (!tokenSlot) return;
+        var token = tokenSlot.querySelector(".draggable-item");
+        if (!token || !token.classList.contains("lab-token")) return;
+
+        var spot = document.getElementById("spot-1");
+        if (!spot) return;
+
+        var bricks = [];
+        spot.querySelectorAll(".slot > .draggable-item").forEach(function (el) {
+          if (el.classList.contains("brick") && !el.hasAttribute("data-lab-combined")) {
+            bricks.push(el);
+          }
+        });
+
+        if (bricks.length !== 2) return;
+
+        var result = getLabComboResult(bricks[0].id, bricks[1].id);
+        if (!result) return;
+
+        performLabCombine(token, bricks[0], bricks[1], result);
+      }
+
+      function performLabCombine(token, brick1, brick2, resultId) {
+        labCombining = true;
+        var spot = document.getElementById("spot-1");
+        var spotCard = spot ? spot.closest(".spot-card") : null;
+
+        if (spotCard) spotCard.classList.add("lab-drama");
+
+        setTimeout(function () {
+          token.classList.add("fade-out");
+        }, 800);
+
+        setTimeout(function () {
+          token.remove();
+
+          if (spotCard) spotCard.classList.remove("lab-drama");
+
+          var newSlot = document.createElement("div");
+          newSlot.className = "slot lab-new-slot";
+
+          var newBrick = document.createElement("div");
+          newBrick.className = "draggable-item brick " + resultId;
+          newBrick.id = resultId;
+          newBrick.setAttribute("data-lab-combined", "true");
+          newBrick.textContent = labCombinedLabels[resultId] || resultId;
+
+          newSlot.appendChild(newBrick);
+          spot.appendChild(newSlot);
+
+          labCombosDone++;
+          labCombining = false;
+          checkGoal();
+        }, 2000);
+      }
 
       function makeCombined(id, imgSrc) {
         var el = document.createElement("div");
@@ -2178,6 +2322,21 @@
           .forEach(parkItem);
         tidyDone = false;
         openCat = null;
+        labCombosDone = 0;
+        labCombining = false;
+        ["brick-green", "brick-purple", "brick-orange"].forEach(function (id) {
+          var el = document.getElementById(id);
+          if (el) el.remove();
+        });
+        var spot1Reset = document.getElementById("spot-1");
+        if (spot1Reset) {
+          spot1Reset.querySelectorAll(".slot").forEach(function (s) { s.remove(); });
+          for (var i = 0; i < 2; i++) {
+            var slot = document.createElement("div");
+            slot.className = "slot";
+            spot1Reset.appendChild(slot);
+          }
+        }
         // Park all bags back at Space One.
         var homeBar = document.getElementById("bagBar");
         var homeTrays = document.getElementById("bagTrays");
@@ -2245,6 +2404,7 @@
         "bee","rabbit","dog","elephant","turtle","dinosaur","dragon","whale",
         "car","bike","robot","kite",
         "brick-red","brick-yellow","brick-blue",
+        "brick-green","brick-purple","brick-orange",
         "onza-avatar","sam-avatar",
         "num-five","num-six","num-seven","num-eight","num-nine",
         "lab-token-1","lab-token-2","lab-token-3",
