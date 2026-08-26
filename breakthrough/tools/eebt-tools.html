@@ -500,13 +500,9 @@
       .mediaWrap.collectionView {
         flex-direction: column;
         gap: 0;
-        overflow-y: auto;
-        scrollbar-width: none;
+        overflow: visible;
         align-items: stretch;
         padding: 0 clamp(4px, 0.8vw, 10px);
-      }
-      .mediaWrap.collectionView::-webkit-scrollbar {
-        display: none;
       }
       .collectionViewTitle {
         font-size: clamp(0.8rem, 1.4vw, 1.1rem);
@@ -517,8 +513,6 @@
         text-align: center;
         width: 100%;
         flex: 0 0 auto;
-        position: sticky;
-        top: 0;
         z-index: 2;
         background: var(--bg);
         padding: 0.3em 0 0.2em;
