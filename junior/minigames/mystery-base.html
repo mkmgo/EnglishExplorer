@@ -233,20 +233,29 @@
         border-color: var(--good);
       }
 
-      .spot-card.lab-bg {
-        position: relative;
-        overflow: hidden;
+      .spot-card.colour-lab {
+        flex-direction: row;
+        flex-wrap: nowrap;
+        justify-content: center;
+        align-items: center;
+        gap: 12px;
+        min-height: auto;
+        padding: 12px 16px;
       }
 
-      .spot-card.lab-bg::before {
-        content: "";
-        position: absolute;
-        inset: 0;
-        background-image: url("https://res.cloudinary.com/dqwm4pdbz/image/upload/q_auto/f_auto/v1787654682/lab_backgr_j1ywo3.jpg");
-        background-size: cover;
-        background-position: center;
-        opacity: 0.15;
-        pointer-events: none;
+      .colour-lab .spot-title {
+        margin-bottom: 0;
+        white-space: nowrap;
+      }
+
+      .colour-lab > .drop-zone {
+        display: grid;
+        grid-template-columns: repeat(3, 108px);
+        grid-template-rows: 96px;
+        gap: 10px;
+        width: auto;
+        height: auto;
+        padding: 8px;
       }
 
       [data-retired] {
@@ -828,10 +837,10 @@
       }
 
       .lab-token {
-        width: 56px;
-        height: 56px;
-        border-radius: 12px;
-        background: transparent;
+        width: 44px;
+        height: 44px;
+        border-radius: 8px;
+        background: linear-gradient(135deg, #fef9c3, #fde68a, #fef9c3);
         border: 2px dashed var(--border-strong);
         color: #ef4444;
         display: flex;
@@ -850,36 +859,30 @@
         object-fit: contain;
       }
 
-      .lab-tokens-row {
-        display: flex;
-        justify-content: center;
-        gap: 12px;
-        margin-top: 16px;
-      }
-
       .token-slot {
         position: absolute;
-        top: 10px;
-        left: 10px;
-        width: 56px;
-        height: 56px;
-        border-radius: 12px;
+        top: 8px;
+        left: 8px;
+        width: 44px;
+        height: 44px;
+        border-radius: 8px;
         border: 2px dashed var(--border-strong);
-        background: rgba(0, 0, 0, 0.04);
+        background: var(--dropzone-bg);
         display: flex;
         align-items: center;
         justify-content: center;
-        z-index: 5;
+        z-index: 2;
+        box-sizing: border-box;
       }
 
       .token-slot.drag-over {
         border-color: var(--primary);
-        background: rgba(0, 0, 0, 0.1);
+        background: var(--dropzone-hover);
       }
 
       .token-slot .lab-token {
-        width: 48px;
-        height: 48px;
+        width: 44px;
+        height: 44px;
         cursor: default;
       }
 
@@ -1157,6 +1160,16 @@
           Yellow
         </div>
         <div class="draggable-item brick brick-blue" id="brick-blue">Blue</div>
+        <!-- Lab Tokens -->
+        <div class="draggable-item lab-token" id="lab-token-1">
+          <img src="https://res.cloudinary.com/dqwm4pdbz/image/upload/q_auto/f_auto/e_bgremoval/c_crop,w_341,h_341,x_21,y_21/v1787663276/lab-token_eoed14.jpg" alt="Lab Token" />
+        </div>
+        <div class="draggable-item lab-token" id="lab-token-2">
+          <img src="https://res.cloudinary.com/dqwm4pdbz/image/upload/q_auto/f_auto/e_bgremoval/c_crop,w_341,h_341,x_21,y_21/v1787663276/lab-token_eoed14.jpg" alt="Lab Token" />
+        </div>
+        <div class="draggable-item lab-token" id="lab-token-3">
+          <img src="https://res.cloudinary.com/dqwm4pdbz/image/upload/q_auto/f_auto/e_bgremoval/c_crop,w_341,h_341,x_21,y_21/v1787663276/lab-token_eoed14.jpg" alt="Lab Token" />
+        </div>
         <!-- Avatars -->
         <div class="draggable-item animal" id="onza-avatar" data-type="avatar">
           <img
@@ -1207,35 +1220,23 @@
         <div class="bag-bar attract" id="bagBar"></div>
         <div class="bag-trays" id="bagTrays"></div>
       </div>
-      <!-- Lab Tokens -->
-      <div class="lab-tokens-row">
-        <div class="draggable-item lab-token" id="lab-token-1">
-          <img src="https://res.cloudinary.com/dqwm4pdbz/image/upload/q_auto/f_auto/e_bgremoval/c_crop,w_341,h_341,x_21,y_21/v1787663276/lab-token_eoed14.jpg" alt="Lab Token" />
-        </div>
-        <div class="draggable-item lab-token" id="lab-token-2">
-          <img src="https://res.cloudinary.com/dqwm4pdbz/image/upload/q_auto/f_auto/e_bgremoval/c_crop,w_341,h_341,x_21,y_21/v1787663276/lab-token_eoed14.jpg" alt="Lab Token" />
-        </div>
-        <div class="draggable-item lab-token" id="lab-token-3">
-          <img src="https://res.cloudinary.com/dqwm4pdbz/image/upload/q_auto/f_auto/e_bgremoval/c_crop,w_341,h_341,x_21,y_21/v1787663276/lab-token_eoed14.jpg" alt="Lab Token" />
-        </div>
-      </div>
     </div>
 
-    <!-- Classroom Spots Grid: Colours + Animals sit between the two
-         spaces. Colours is open from the start; Animals stays locked
-         until Colours is completed. -->
-    <div class="grid-container">
-      <div class="spot-card lab-bg">
+    <!-- Colour Lab: full-width, token-slot + colour bricks -->
+    <div class="grid-container" style="grid-template-columns: 1fr;">
+      <div class="spot-card colour-lab">
+        <div class="token-slot" id="token-slot"></div>
         <div class="spot-title">Colour Lab</div>
-        <div class="token-slot" id="token-slot">
-        </div>
         <div class="drop-zone" id="spot-1">
           <div class="slot"></div>
           <div class="slot"></div>
           <div class="slot"></div>
         </div>
       </div>
+    </div>
 
+    <!-- Animals -->
+    <div class="grid-container" style="grid-template-columns: 1fr; max-width: 320px;">
       <div class="spot-card">
         <div class="spot-title">Animals</div>
         <div class="drop-zone" id="spot-2">
@@ -1945,7 +1946,7 @@
         }
         var under = document.elementFromPoint(e.clientX, e.clientY);
         var zone = under
-          ? under.closest(".slot, .item-container, .bag-tray-inner")
+          ? under.closest(".slot, .token-slot, .item-container, .bag-tray-inner")
           : null;
         if (zone && zone.classList.contains("slot")) {
           var zoneDrop = zone.closest(".drop-zone");
@@ -2002,6 +2003,10 @@
                 checkMystery();
                 checkGoal();
               }
+            }
+          } else if (overZone.classList.contains("token-slot")) {
+            if (activeItem.classList.contains("lab-token") && !overZone.querySelector(".draggable-item")) {
+              overZone.appendChild(activeItem);
             }
           } else if (overZone.classList.contains("bag-tray-inner")) {
             var trayEl = overZone.closest(".bag-tray");
@@ -2275,6 +2280,7 @@
             return "slot:" + dz.id + ":" + idx;
           }
         }
+        if (el.closest(".token-slot")) return "token-slot";
         return "inventory";
       }
 
@@ -2354,6 +2360,9 @@
                 if (imp) imp.style.display = "none";
               }
             }
+          } else if (loc === "token-slot") {
+            var ts = document.getElementById("token-slot");
+            if (ts && !ts.contains(el)) ts.appendChild(el);
           }
         });
 
