@@ -3467,23 +3467,21 @@
         });
         lbl.appendChild(xBtn);
 
-        if (isOverlay) {
-          lbl.addEventListener("click", function (e) {
-            e.stopPropagation();
-            selectTextLabel(textEntry.id);
-          });
-          lbl.addEventListener("dblclick", function (e) {
-            e.stopPropagation();
-            e.preventDefault();
-            editTextLabel(textEntry.id);
-          });
-          setupLabelDrag(lbl, textEntry, wrap);
-        }
+        lbl.addEventListener("click", function (e) {
+          e.stopPropagation();
+          selectTextLabel(textEntry.id);
+        });
+        lbl.addEventListener("dblclick", function (e) {
+          e.stopPropagation();
+          e.preventDefault();
+          editTextLabel(textEntry.id);
+        });
+        setupLabelDrag(lbl, textEntry, wrap);
 
         layer.appendChild(lbl);
         wrap.appendChild(layer);
 
-        if (isOverlay && selectedTextLabelId === textEntry.id) {
+        if (selectedTextLabelId === textEntry.id) {
           lbl.classList.add("selected");
           var bar = document.createElement("div");
           bar.className = "textSizeBar show";
