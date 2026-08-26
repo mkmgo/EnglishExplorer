@@ -465,6 +465,38 @@
       .mediaThumbs .thumb.dragOver .thumbClip {
         box-shadow: 0 0 0 3px var(--accent2), 0 2px 8px rgba(0, 0, 0, 0.15);
       }
+      .mediaThumbs .collectionTitle {
+        width: 100%;
+        font-size: clamp(0.85rem, 1.3vw, 1.1rem);
+        font-weight: 900;
+        color: var(--accent);
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+        padding: 0.35em 0.8em;
+        background: var(--accent2);
+        border-radius: 999px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: 0.15s transform;
+        flex: 0 0 100%;
+        height: auto;
+        min-height: 0;
+        min-width: 0;
+        box-shadow: none;
+      }
+      .mediaThumbs .collectionTitle:active {
+        transform: scale(0.95);
+      }
+      #collectionLabel {
+        font-size: clamp(1.1rem, 2vw, 1.8rem);
+        font-weight: 900;
+        color: var(--accent);
+        letter-spacing: 0.03em;
+        text-align: center;
+        margin-bottom: -0.3em;
+      }
       .mediaThumbs .thumb img,
       .mediaThumbs .thumb video {
         width: 100%;
@@ -1458,6 +1490,13 @@
         background: #2a3240;
         border-color: var(--accent);
       }
+      :root[data-theme="dark"] .mediaThumbs .collectionTitle {
+        background: #2a3240;
+        color: var(--accent2);
+      }
+      :root[data-theme="dark"] #collectionLabel {
+        color: var(--accent2);
+      }
       :root[data-theme="dark"] .mediaWrap {
         background: #232a36;
       }
@@ -1565,6 +1604,7 @@
               Media
             </button>
             <div id="mediaThumbs" class="mediaThumbs"></div>
+            <div id="collectionLabel" style="display:none"></div>
             <div id="mediaWrap" class="mediaWrap empty">
               <span class="mediaPlaceholder">🎬</span>
             </div>
@@ -2331,7 +2371,7 @@
           }
         }
         var type = detectMediaType(url);
-        mediaHistory.push({ url: url, type: type });
+        mediaHistory.push({ url: url, type: type, collection: null });
         activeMediaIdx = mediaHistory.length - 1;
         renderMedia();
         renderMediaThumbs();
@@ -2390,6 +2430,23 @@
         }
         wrap.appendChild(el);
         renderMediaThumbs();
+        renderCollectionLabel();
+      }
+
+      function renderCollectionLabel() {
+        var label = document.getElementById("collectionLabel");
+        if (!label) return;
+        if (activeMediaIdx < 0 || !mediaHistory[activeMediaIdx]) {
+          label.style.display = "none";
+          return;
+        }
+        var col = mediaHistory[activeMediaIdx].collection;
+        if (col) {
+          label.textContent = col;
+          label.style.display = "";
+        } else {
+          label.style.display = "none";
+        }
       }
 
       var dragFromIdx = -1;
@@ -2409,21 +2466,176 @@
         toast("Removed");
       }
 
-      function swapMedia(fromIdx, toIdx) {
+      function handleMediaDrop(fromIdx, toIdx) {
         if (fromIdx === toIdx) return;
         if (fromIdx < 0 || fromIdx >= mediaHistory.length) return;
         if (toIdx < 0 || toIdx >= mediaHistory.length) return;
-        var item = mediaHistory.splice(fromIdx, 1)[0];
-        mediaHistory.splice(toIdx, 0, item);
-        if (activeMediaIdx === fromIdx) {
-          activeMediaIdx = toIdx;
-        } else if (
-          activeMediaIdx >= Math.min(fromIdx, toIdx) &&
-          activeMediaIdx <= Math.max(fromIdx, toIdx)
-        ) {
-          activeMediaIdx += fromIdx < toIdx ? -1 : 1;
+        var fromItem = mediaHistory[fromIdx];
+        var toItem = mediaHistory[toIdx];
+        if (fromItem.collection && fromItem.collection === toItem.collection) {
+          toast("Same collection");
+          return;
+        }
+        var prefill = toItem.collection || fromItem.collection || "";
+        var promptText = prefill
+          ? 'Add to collection "' + prefill + '" or enter new title:'
+          : "Enter Collection Title:";
+        openInputModal(promptText, function (title) {
+          if (!title) return;
+          assignCollection(fromIdx, toIdx, title);
+        });
+        var field = document.getElementById("inputField");
+        if (field && prefill) {
+          field.value = prefill;
+          field.select();
+        }
+      }
+
+      function assignCollection(fromIdx, toIdx, title) {
+        var fromCol = mediaHistory[fromIdx].collection;
+        var toCol = mediaHistory[toIdx].collection;
+        for (var i = 0; i < mediaHistory.length; i++) {
+          if (i === fromIdx || i === toIdx) {
+            mediaHistory[i].collection = title;
+          } else if (
+            (fromCol && mediaHistory[i].collection === fromCol) ||
+            (toCol && mediaHistory[i].collection === toCol)
+          ) {
+            mediaHistory[i].collection = title;
+          }
         }
         renderMediaThumbs();
+        renderCollectionLabel();
+        toast('Collection: "' + title + '"');
+      }
+
+      function createThumbButton(idx) {
+        var entry = mediaHistory[idx];
+        var btn = document.createElement("button");
+        btn.className = "thumb";
+        btn.type = "button";
+        btn.draggable = true;
+        btn.setAttribute("data-media-idx", String(idx));
+
+        var clip = document.createElement("div");
+        clip.className = "thumbClip";
+        if (entry.type === "image") {
+          var img = document.createElement("img");
+          img.src = entry.url;
+          img.alt = "thumb";
+          img.loading = "lazy";
+          clip.appendChild(img);
+        } else if (entry.type === "video") {
+          var vid = document.createElement("video");
+          vid.muted = true;
+          vid.preload = "metadata";
+          vid.src = entry.url;
+          clip.appendChild(vid);
+        } else {
+          clip.textContent = "\uD3C3";
+        }
+        btn.appendChild(clip);
+
+        var closeBtn = document.createElement("button");
+        closeBtn.className = "thumbClose";
+        closeBtn.type = "button";
+        closeBtn.innerHTML = "\u00D7";
+        closeBtn.addEventListener("click", function (e) {
+          e.stopPropagation();
+          e.preventDefault();
+          removeMedia(idx);
+        });
+        btn.appendChild(closeBtn);
+
+        var didDrag = false;
+        var touchStartPos = null;
+
+        btn.addEventListener("dragstart", function (e) {
+          dragFromIdx = idx;
+          btn.classList.add("dragging");
+          e.dataTransfer.effectAllowed = "move";
+          e.dataTransfer.setData("text/plain", String(idx));
+        });
+        btn.addEventListener("dragend", function () {
+          btn.classList.remove("dragging");
+          dragFromIdx = -1;
+          var c = document.getElementById("mediaThumbs");
+          if (c) {
+            var overs = c.querySelectorAll(".dragOver");
+            for (var k = 0; k < overs.length; k++) overs[k].classList.remove("dragOver");
+          }
+        });
+        btn.addEventListener("dragover", function (e) {
+          e.preventDefault();
+          e.dataTransfer.dropEffect = "move";
+          btn.classList.add("dragOver");
+        });
+        btn.addEventListener("dragleave", function () {
+          btn.classList.remove("dragOver");
+        });
+        btn.addEventListener("drop", function (e) {
+          e.preventDefault();
+          btn.classList.remove("dragOver");
+          if (dragFromIdx >= 0 && dragFromIdx !== idx) {
+            handleMediaDrop(dragFromIdx, idx);
+          }
+          dragFromIdx = -1;
+        });
+
+        btn.addEventListener("touchstart", function (e) {
+          var t = e.touches[0];
+          if (t) touchStartPos = { x: t.clientX, y: t.clientY };
+          dragFromIdx = idx;
+          didDrag = false;
+        }, { passive: true });
+        btn.addEventListener("touchmove", function (e) {
+          if (dragFromIdx < 0) return;
+          e.preventDefault();
+          var t = e.touches[0];
+          if (!t) return;
+          if (touchStartPos) {
+            var dx = Math.abs(t.clientX - touchStartPos.x);
+            var dy = Math.abs(t.clientY - touchStartPos.y);
+            if (dx > 10 || dy > 10) didDrag = true;
+          }
+          var el = document.elementFromPoint(t.clientX, t.clientY);
+          var over = el ? el.closest(".thumb") : null;
+          var c = document.getElementById("mediaThumbs");
+          if (c) {
+            var overs = c.querySelectorAll(".dragOver");
+            for (var k = 0; k < overs.length; k++) overs[k].classList.remove("dragOver");
+          }
+          if (over && over !== btn) {
+            over.classList.add("dragOver");
+            dragOverIdx = parseInt(over.getAttribute("data-media-idx"), 10);
+          } else {
+            dragOverIdx = -1;
+          }
+        }, { passive: false });
+        btn.addEventListener("touchend", function () {
+          if (dragFromIdx >= 0 && dragOverIdx >= 0 && dragFromIdx !== dragOverIdx) {
+            handleMediaDrop(dragFromIdx, dragOverIdx);
+          }
+          dragFromIdx = -1;
+          dragOverIdx = -1;
+          touchStartPos = null;
+          var c = document.getElementById("mediaThumbs");
+          if (c) {
+            var overs = c.querySelectorAll(".dragOver");
+            for (var k = 0; k < overs.length; k++) overs[k].classList.remove("dragOver");
+          }
+        });
+
+        btn.addEventListener("click", function (e) {
+          if (didDrag) {
+            didDrag = false;
+            e.preventDefault();
+            return;
+          }
+          selectMedia(idx);
+        });
+
+        return btn;
       }
 
       function renderMediaThumbs() {
@@ -2437,125 +2649,47 @@
         }
         container.classList.add("hasItems");
 
+        var uncollected = [];
+        var collections = {};
+        var collectionOrder = [];
         for (var i = 0; i < mediaHistory.length; i++) {
-          (function (idx) {
-            var entry = mediaHistory[idx];
-            var btn = document.createElement("button");
-            btn.className = "thumb";
-            btn.type = "button";
-            btn.draggable = true;
-
-            var clip = document.createElement("div");
-            clip.className = "thumbClip";
-            if (entry.type === "image") {
-              var img = document.createElement("img");
-              img.src = entry.url;
-              img.alt = "thumb";
-              img.loading = "lazy";
-              clip.appendChild(img);
-            } else if (entry.type === "video") {
-              var vid = document.createElement("video");
-              vid.muted = true;
-              vid.preload = "metadata";
-              vid.src = entry.url;
-              clip.appendChild(vid);
-            } else {
-              clip.textContent = "🎵";
+          var col = mediaHistory[i].collection;
+          if (!col) {
+            uncollected.push(i);
+          } else {
+            if (!collections[col]) {
+              collections[col] = [];
+              collectionOrder.push(col);
             }
-            btn.appendChild(clip);
+            collections[col].push(i);
+          }
+        }
 
-            var closeBtn = document.createElement("button");
-            closeBtn.className = "thumbClose";
-            closeBtn.type = "button";
-            closeBtn.innerHTML = "×";
-            closeBtn.addEventListener("click", function (e) {
-              e.stopPropagation();
-              e.preventDefault();
-              removeMedia(idx);
-            });
-            btn.appendChild(closeBtn);
+        for (var u = 0; u < uncollected.length; u++) {
+          container.appendChild(createThumbButton(uncollected[u]));
+        }
 
-            var didDrag = false;
-            var touchStartPos = null;
-
-            btn.addEventListener("dragstart", function (e) {
-              dragFromIdx = idx;
-              btn.classList.add("dragging");
-              e.dataTransfer.effectAllowed = "move";
-              e.dataTransfer.setData("text/plain", String(idx));
-            });
-            btn.addEventListener("dragend", function () {
-              btn.classList.remove("dragging");
-              dragFromIdx = -1;
-              var overs = container.querySelectorAll(".dragOver");
-              for (var k = 0; k < overs.length; k++) overs[k].classList.remove("dragOver");
-            });
-            btn.addEventListener("dragover", function (e) {
-              e.preventDefault();
-              e.dataTransfer.dropEffect = "move";
-              btn.classList.add("dragOver");
-            });
-            btn.addEventListener("dragleave", function () {
-              btn.classList.remove("dragOver");
-            });
-            btn.addEventListener("drop", function (e) {
-              e.preventDefault();
-              btn.classList.remove("dragOver");
-              if (dragFromIdx >= 0 && dragFromIdx !== idx) {
-                swapMedia(dragFromIdx, idx);
+        for (var c = 0; c < collectionOrder.length; c++) {
+          var title = collectionOrder[c];
+          var items = collections[title];
+          var titleBtn = document.createElement("button");
+          titleBtn.className = "collectionTitle";
+          titleBtn.type = "button";
+          titleBtn.textContent = title;
+          titleBtn.addEventListener("click", (function (t) {
+            return function () {
+              for (var j = 0; j < mediaHistory.length; j++) {
+                if (mediaHistory[j].collection === t) {
+                  selectMedia(j);
+                  return;
+                }
               }
-              dragFromIdx = -1;
-            });
-
-            btn.addEventListener("touchstart", function (e) {
-              var t = e.touches[0];
-              if (t) touchStartPos = { x: t.clientX, y: t.clientY };
-              dragFromIdx = idx;
-              didDrag = false;
-            }, { passive: true });
-            btn.addEventListener("touchmove", function (e) {
-              if (dragFromIdx < 0) return;
-              e.preventDefault();
-              var t = e.touches[0];
-              if (!t) return;
-              if (touchStartPos) {
-                var dx = Math.abs(t.clientX - touchStartPos.x);
-                var dy = Math.abs(t.clientY - touchStartPos.y);
-                if (dx > 10 || dy > 10) didDrag = true;
-              }
-              var el = document.elementFromPoint(t.clientX, t.clientY);
-              var over = el ? el.closest(".thumb") : null;
-              var overs = container.querySelectorAll(".dragOver");
-              for (var k = 0; k < overs.length; k++) overs[k].classList.remove("dragOver");
-              if (over && over !== btn) {
-                over.classList.add("dragOver");
-                dragOverIdx = Array.prototype.indexOf.call(container.children, over);
-              } else {
-                dragOverIdx = -1;
-              }
-            }, { passive: false });
-            btn.addEventListener("touchend", function () {
-              if (dragFromIdx >= 0 && dragOverIdx >= 0 && dragFromIdx !== dragOverIdx) {
-                swapMedia(dragFromIdx, dragOverIdx);
-              }
-              dragFromIdx = -1;
-              dragOverIdx = -1;
-              touchStartPos = null;
-              var overs = container.querySelectorAll(".dragOver");
-              for (var k = 0; k < overs.length; k++) overs[k].classList.remove("dragOver");
-            });
-
-            btn.addEventListener("click", function (e) {
-              if (didDrag) {
-                didDrag = false;
-                e.preventDefault();
-                return;
-              }
-              selectMedia(idx);
-            });
-
-            container.appendChild(btn);
-          })(i);
+            };
+          })(title));
+          container.appendChild(titleBtn);
+          for (var j = 0; j < items.length; j++) {
+            container.appendChild(createThumbButton(items[j]));
+          }
         }
 
         if (mediaHistory.length > 0) {
@@ -2596,9 +2730,31 @@
           toast("No media to download");
           return;
         }
-        var lines = [];
+        var uncollected = [];
+        var collections = {};
+        var collectionOrder = [];
         for (var i = 0; i < mediaHistory.length; i++) {
-          lines.push(mediaHistory[i].url);
+          var item = mediaHistory[i];
+          if (!item.collection) {
+            uncollected.push(item.url);
+          } else {
+            if (!collections[item.collection]) {
+              collections[item.collection] = [];
+              collectionOrder.push(item.collection);
+            }
+            collections[item.collection].push(item.url);
+          }
+        }
+        var lines = [];
+        for (var u = 0; u < uncollected.length; u++) {
+          lines.push(uncollected[u]);
+        }
+        for (var c = 0; c < collectionOrder.length; c++) {
+          lines.push("#Collection: " + collectionOrder[c]);
+          var items = collections[collectionOrder[c]];
+          for (var j = 0; j < items.length; j++) {
+            lines.push(items[j]);
+          }
         }
         var content = lines.join("\r\n");
         var blob = new Blob([content], { type: "text/plain;charset=utf-8" });
@@ -2632,8 +2788,15 @@
         reader.onload = function () {
           var lines = String(reader.result || "").split(/\r\n|\n|\r/);
           var count = 0;
+          var currentCollection = null;
           for (var i = 0; i < lines.length; i++) {
-            var u = extractUrl(lines[i]);
+            var line = lines[i].trim();
+            if (!line) continue;
+            if (line.indexOf("#Collection: ") === 0) {
+              currentCollection = line.substring("#Collection: ".length).trim() || null;
+              continue;
+            }
+            var u = extractUrl(line);
             if (!u) continue;
             var dup = false;
             for (var j = 0; j < mediaHistory.length; j++) {
@@ -2643,7 +2806,7 @@
               }
             }
             if (dup) continue;
-            mediaHistory.push({ url: u, type: detectMediaType(u) });
+            mediaHistory.push({ url: u, type: detectMediaType(u), collection: currentCollection });
             count++;
           }
           renderMediaThumbs();
