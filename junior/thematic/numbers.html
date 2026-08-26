@@ -392,6 +392,14 @@
         .actionBtn.primary { background: var(--accent); color: var(--accent2); box-shadow: 0 6px 20px rgba(26,58,107,0.3); }
       .actionBtn.secondary { background: var(--panel); color: var(--ink); border: 2px solid #e0e5ed; }
 
+      @media (max-width: 420px) {
+        .placeExample { gap: 4px; flex-wrap: nowrap; }
+        .placeSlot { min-width: 0; flex: 1 1 0; padding: 0.4em 0.3em; }
+        .placeSlot .lbl { font-size: 0.55rem; }
+        .placeSlot .digit { font-size: 1.2rem; }
+        .placeSlot .val { font-size: 0.55rem; }
+        .placeLabel { font-size: clamp(0.65rem, 2.5vw, 0.85rem); padding: 0.35em 0.7em; }
+      }
       @media (max-aspect-ratio: 1/1) {
         .pvDigitGrid { max-width: 340px; }
         .matchGrid { max-width: 95%; }
