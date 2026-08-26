@@ -212,6 +212,13 @@
         color: var(--muted);
         margin-top: 4px;
       }
+      .linkCard .lcDate {
+        font-size: 0.68em;
+        color: var(--muted);
+        opacity: 0.65;
+        margin-top: 2px;
+        font-style: italic;
+      }
       .legend {
         font-size: clamp(0.8rem, 1vw, 0.9rem);
         color: var(--muted);
@@ -534,6 +541,31 @@
             .catch(function () {});
         }
 
+        function fetchLastCommitDates() {
+          document.querySelectorAll(".linkCard").forEach(function (card) {
+            var fp = card.querySelector(".lcFile");
+            if (!fp) return;
+            var filePath = fp.textContent;
+            var API = "https://api.github.com/repos/" + REPO + "/commits?path=" + encodeURIComponent(filePath) + "&per_page=1";
+            fetch(API)
+              .then(function (r) { return r.json(); })
+              .then(function (data) {
+                if (!Array.isArray(data) || !data.length || !data[0].commit || !data[0].commit.committer) return;
+                var date = new Date(data[0].commit.committer.date);
+                var dd = String(date.getDate()).padStart(2, "0");
+                var mm = String(date.getMonth() + 1).padStart(2, "0");
+                var yyyy = date.getFullYear();
+                var hh = String(date.getHours()).padStart(2, "0");
+                var mi = String(date.getMinutes()).padStart(2, "0");
+                var span = document.createElement("span");
+                span.className = "lcDate";
+                span.textContent = "last commit " + dd + "/" + mm + "/" + yyyy + " " + hh + ":" + mi;
+                card.appendChild(span);
+              })
+              .catch(function () {});
+          });
+        }
+
         fetch(TREE_API)
           .then(function (r) { return r.json(); })
           .then(function (data) {
@@ -548,6 +580,7 @@
             buildLinks(htmlFiles);
             buildTree(htmlFiles);
             markTodayFiles();
+            fetchLastCommitDates();
           })
           .catch(function () {
             document.getElementById("links").innerHTML =
