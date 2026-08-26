@@ -497,6 +497,60 @@
         text-align: center;
         margin-bottom: -0.3em;
       }
+      .mediaWrap.collectionView {
+        flex-direction: column;
+        gap: 0.8em;
+        overflow-y: auto;
+        scrollbar-width: none;
+        align-items: center;
+      }
+      .mediaWrap.collectionView::-webkit-scrollbar {
+        display: none;
+      }
+      .collectionViewTitle {
+        font-size: clamp(1.6rem, 3.5vw, 3rem);
+        font-weight: 900;
+        color: var(--accent);
+        letter-spacing: 0.02em;
+        text-align: center;
+        width: 100%;
+        flex: 0 0 auto;
+      }
+      .collectionViewGrid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(clamp(160px, 20vw, 260px), 1fr));
+        gap: clamp(8px, 1.2vw, 14px);
+        width: 100%;
+      }
+      .collectionViewCell {
+        background: #fff;
+        border-radius: 16px;
+        overflow: hidden;
+        box-shadow: 0 4px 14px rgba(0, 0, 0, 0.12);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        aspect-ratio: 1;
+      }
+      .collectionViewCell img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        border-radius: 16px;
+        transition: transform 0.2s ease;
+      }
+      .collectionViewCell img:hover {
+        transform: scale(1.03);
+      }
+      .collectionViewCell video {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        border-radius: 16px;
+      }
+      .collectionViewCell audio {
+        width: 80%;
+      }
       .mediaThumbs .thumb img,
       .mediaThumbs .thumb video {
         width: 100%;
@@ -1429,6 +1483,13 @@
         .lessonVideo {
           max-height: 42vh;
         }
+        .collectionViewGrid {
+          grid-template-columns: repeat(2, 1fr);
+        }
+        .collectionViewCell img,
+        .collectionViewCell video {
+          object-fit: contain;
+        }
       }
       :root[data-theme="dark"] {
         --bg: #161a24;
@@ -1502,6 +1563,12 @@
       }
       :root[data-theme="dark"] .mediaWrap.empty {
         border: 2px solid var(--accent2);
+      }
+      :root[data-theme="dark"] .collectionViewTitle {
+        color: var(--accent2);
+      }
+      :root[data-theme="dark"] .collectionViewCell {
+        background: #232a36;
       }
     </style>
   </head>
@@ -1769,6 +1836,7 @@
       var soundOn = true;
       var mediaHistory = [];
       var activeMediaIdx = -1;
+      var viewingCollection = null;
       var synth =
         window.speechSynthesis ||
         window.webkitSpeechSynthesis ||
@@ -2398,6 +2466,14 @@
           return;
         }
         wrap.classList.remove("empty");
+
+        if (viewingCollection) {
+          renderCollectionView(wrap, viewingCollection);
+          renderMediaThumbs();
+          renderCollectionLabel();
+          return;
+        }
+
         var entry = mediaHistory[activeMediaIdx];
         var el;
         if (entry.type === "video") {
@@ -2436,7 +2512,7 @@
       function renderCollectionLabel() {
         var label = document.getElementById("collectionLabel");
         if (!label) return;
-        if (activeMediaIdx < 0 || !mediaHistory[activeMediaIdx]) {
+        if (viewingCollection || activeMediaIdx < 0 || !mediaHistory[activeMediaIdx]) {
           label.style.display = "none";
           return;
         }
@@ -2447,6 +2523,55 @@
         } else {
           label.style.display = "none";
         }
+      }
+
+      function renderCollectionView(wrap, title) {
+        wrap.classList.add("withArt", "collectionView");
+
+        var h = document.createElement("div");
+        h.className = "collectionViewTitle";
+        h.textContent = title;
+        wrap.appendChild(h);
+
+        var grid = document.createElement("div");
+        grid.className = "collectionViewGrid";
+
+        for (var i = 0; i < mediaHistory.length; i++) {
+          if (mediaHistory[i].collection !== title) continue;
+          (function (itemIdx) {
+            var item = mediaHistory[itemIdx];
+            var cell = document.createElement("div");
+            cell.className = "collectionViewCell";
+
+            if (item.type === "image") {
+              var img = document.createElement("img");
+              img.src = item.url;
+              img.alt = "media";
+              img.loading = "lazy";
+              img.style.cursor = "pointer";
+              img.addEventListener("click", function () {
+                shrinkMedia();
+              });
+              cell.appendChild(img);
+            } else if (item.type === "video") {
+              var vid = document.createElement("video");
+              vid.controls = true;
+              vid.preload = "metadata";
+              vid.src = item.url;
+              cell.appendChild(vid);
+            } else {
+              var aud = document.createElement("audio");
+              aud.controls = true;
+              aud.preload = "metadata";
+              aud.src = item.url;
+              cell.appendChild(aud);
+            }
+
+            grid.appendChild(cell);
+          })(i);
+        }
+
+        wrap.appendChild(grid);
       }
 
       var dragFromIdx = -1;
@@ -2819,6 +2944,8 @@
         if (idx === activeMediaIdx) return;
         pauseActiveMedia();
         activeMediaIdx = idx;
+        var col = mediaHistory[idx] ? mediaHistory[idx].collection : null;
+        viewingCollection = col || null;
         renderMedia();
         renderMediaThumbs();
       }
@@ -2826,6 +2953,7 @@
       function shrinkMedia() {
         pauseActiveMedia();
         activeMediaIdx = -1;
+        viewingCollection = null;
         renderMedia();
         renderMediaThumbs();
       }
