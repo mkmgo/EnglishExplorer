@@ -509,10 +509,11 @@
         display: none;
       }
       .collectionViewTitle {
-        font-size: clamp(1.6rem, 3.5vw, 3rem);
+        font-size: clamp(0.8rem, 1.4vw, 1.1rem);
         font-weight: 900;
         color: var(--accent);
-        letter-spacing: 0.02em;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
         text-align: center;
         width: 100%;
         flex: 0 0 auto;
@@ -520,38 +521,48 @@
         top: 0;
         z-index: 2;
         background: var(--bg);
-        padding: 0.5em 0 0.6em;
+        padding: 0.3em 0 0.2em;
       }
       .collectionViewGrid {
-        column-count: 4;
-        column-gap: clamp(6px, 1vw, 12px);
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        grid-auto-rows: minmax(80px, auto);
+        grid-auto-flow: dense;
+        gap: clamp(3px, 0.5vw, 6px);
         width: 100%;
       }
       .collectionViewCell {
-        break-inside: avoid;
-        margin-bottom: clamp(6px, 1vw, 12px);
-        border-radius: 16px;
+        border-radius: 12px;
         overflow: hidden;
-        box-shadow: 0 4px 14px rgba(0, 0, 0, 0.12);
-        display: inline-block;
-        width: 100%;
+        box-shadow: 0 3px 10px rgba(0, 0, 0, 0.12);
         background: #f0f0f0;
+      }
+      .collectionViewCell:nth-child(5n+1) {
+        grid-column: span 2;
+        grid-row: span 2;
+      }
+      .collectionViewCell:nth-child(7n+3) {
+        grid-column: span 2;
+      }
+      .collectionViewCell:nth-child(11n+5) {
+        grid-row: span 2;
       }
       .collectionViewCell img {
         width: 100%;
-        height: auto;
+        height: 100%;
         display: block;
-        border-radius: 16px;
+        border-radius: 12px;
+        object-fit: cover;
         transition: transform 0.25s ease;
       }
       .collectionViewCell img:hover {
-        transform: scale(1.02);
+        transform: scale(1.03);
       }
       .collectionViewCell video {
         width: 100%;
+        height: 100%;
         display: block;
-        border-radius: 16px;
-        aspect-ratio: 16/9;
+        border-radius: 12px;
         object-fit: cover;
         background: #000;
       }
@@ -1493,7 +1504,18 @@
           max-height: 42vh;
         }
         .collectionViewGrid {
-          column-count: 2;
+          grid-template-columns: repeat(2, 1fr);
+          grid-auto-rows: minmax(60px, auto);
+        }
+        .collectionViewCell:nth-child(5n+1) {
+          grid-column: span 2;
+          grid-row: span 2;
+        }
+        .collectionViewCell:nth-child(7n+3) {
+          grid-column: span 2;
+        }
+        .collectionViewCell:nth-child(11n+5) {
+          grid-row: span 2;
         }
         .collectionViewCell img,
         .collectionViewCell video {
@@ -2383,8 +2405,14 @@
       }
 
       function pasteMedia() {
-        var run = function (u) {
-          if (u) injectMedia(u);
+        var run = function (txt) {
+          if (!txt) return;
+          var urls = extractAllUrls(txt);
+          if (urls.length > 1) {
+            injectMediaBatch(urls);
+          } else if (urls.length === 1) {
+            injectMedia(urls[0]);
+          }
         };
         if (
           navigator.clipboard &&
@@ -2393,32 +2421,26 @@
           navigator.clipboard
             .readText()
             .then(function (txt) {
-              var u = extractUrl(String(txt || ""));
-              if (!u) {
+              var urls = extractAllUrls(String(txt || ""));
+              if (urls.length === 0) {
                 openInputModal(
-                  "Clipboard is empty. Type or paste the Cloudinary asset link:",
-                  function (v) {
-                    run(extractUrl(v));
-                  },
+                  "Clipboard is empty. Paste one or more Cloudinary asset links (one per line):",
+                  run,
                 );
                 return;
               }
-              run(u);
+              run(txt);
             })
             .catch(function () {
               openInputModal(
-                "Clipboard is empty. Type or paste the Cloudinary asset link:",
-                function (v) {
-                  run(extractUrl(v));
-                },
+                "Clipboard is empty. Paste one or more Cloudinary asset links (one per line):",
+                run,
               );
             });
         } else {
           openInputModal(
-            "Clipboard is empty. Type or paste the Cloudinary asset link:",
-            function (v) {
-              run(extractUrl(v));
-            },
+            "Paste one or more Cloudinary asset links (one per line):",
+            run,
           );
         }
       }
@@ -2436,6 +2458,16 @@
         )
           return "audio";
         return "image";
+      }
+
+      function extractAllUrls(text) {
+        var lines = String(text || "").split(/\r?\n/);
+        var urls = [];
+        for (var i = 0; i < lines.length; i++) {
+          var u = extractUrl(lines[i]);
+          if (u) urls.push(u);
+        }
+        return urls;
       }
 
       function injectMedia(url) {
@@ -2456,6 +2488,38 @@
         if (type === "audio") {
           requestArtwork();
         }
+      }
+
+      function injectMediaBatch(urls) {
+        var added = 0;
+        var startIdx = mediaHistory.length;
+        for (var i = 0; i < urls.length; i++) {
+          var dup = false;
+          for (var j = 0; j < mediaHistory.length; j++) {
+            if (mediaHistory[j].url === urls[i]) { dup = true; break; }
+          }
+          if (dup) continue;
+          var type = detectMediaType(urls[i]);
+          mediaHistory.push({ url: urls[i], type: type, collection: null });
+          added++;
+        }
+        if (added === 0) {
+          toast("All already in session");
+          return;
+        }
+        activeMediaIdx = mediaHistory.length - 1;
+        viewingCollection = null;
+        renderMedia();
+        renderMediaThumbs();
+        openInputModal("Name this collection (" + added + " items):", function (title) {
+          if (!title) return;
+          for (var k = startIdx; k < mediaHistory.length; k++) {
+            mediaHistory[k].collection = title;
+          }
+          renderMediaThumbs();
+          renderCollectionLabel();
+          toast('Collection: "' + title + '"');
+        });
       }
 
       function renderMedia() {
