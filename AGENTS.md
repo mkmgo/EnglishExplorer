@@ -18,7 +18,7 @@ EnglishExplorer/
 │   │   ├── animals.html
 │   │   ├── toys-things.html
 │   │   ├── my-family-my-classroom.html
-│   │   └── new-numbers.html
+│   │   └── numbers.html
 │   └── minigames/              <-- Highly gamified mini-games (formerly /Features)
 │       ├── abc-world.html
 │       ├── mystery-base.html

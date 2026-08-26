@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no" />
     <title>EnglishExplorer — Numbers 1–1000</title>
     <meta name="description" content="EnglishExplorer — Learn numbers 1 to 1000 with place value and word forms" />
-    <meta name="theme-color" content="#0d6b4e" />
+    <meta name="theme-color" content="#1a3a6b" />
     <link rel="icon" type="image/png" href="https://res.cloudinary.com/dqwm4pdbz/image/upload/c_crop,w_469,h_384,x_0,y_0/r_max/v1787674763/num06_cmul3x.jpg" />
     <link rel="apple-touch-icon" href="https://res.cloudinary.com/dqwm4pdbz/image/upload/c_crop,w_469,h_384,x_0,y_0/r_max/v1787674763/num06_cmul3x.jpg" />
     <meta property="og:type" content="website" />
@@ -21,8 +21,8 @@
         --bg: #faf7f2;
         --ink: #14213d;
         --muted: #60708d;
-        --accent: #0d6b4e;
-        --accent2: #a7f3d0;
+        --accent: #1a3a6b;
+        --accent2: #bfdbfe;
         --good: #19a974;
         --bad: #e05252;
         --mediocre: #f39c12;
@@ -55,14 +55,42 @@
         scrollbar-width: none;
       }
       .content::-webkit-scrollbar { display: none; }
-      h1 { font-size: clamp(3rem,7vw,7rem); margin: 0.1em 0; font-weight: 900; letter-spacing: -0.03em; }
-      .pageTitle {
-        font-size: clamp(1.8rem,3.5vw,2.8rem); font-weight: 900;
-        letter-spacing: -0.02em; margin: 0.15em 0;
+      h1 {
+        font-size: clamp(3rem, 7vw, 7rem);
+        margin: 0.1em 0;
+        font-weight: 900;
+        letter-spacing: -0.03em;
       }
-      .small {
-        font-size: clamp(0.9rem,1.4vw,1.4rem); color: var(--muted);
-        font-weight: 700; letter-spacing: 0.18em;
+      .banner {
+        display: inline-block;
+        background: var(--accent);
+        color: #fff;
+        padding: 0.15em 0.8em;
+        border-radius: 8px;
+        font-size: clamp(0.9rem, 1.6vw, 1.3rem);
+        font-weight: 700;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        margin-bottom: 0.1em;
+      }
+      .ribbon {
+        font-size: clamp(1.4rem, 2.8vw, 2.2rem);
+        font-weight: 800;
+        color: var(--accent);
+        margin: 0 0 0.4em 0;
+        position: relative;
+        display: inline-block;
+        padding: 0 0.3em;
+      }
+      .ribbon::after {
+        content: "";
+        position: absolute;
+        bottom: -4px;
+        left: 10%;
+        right: 10%;
+        height: 3px;
+        background: var(--accent2);
+        border-radius: 2px;
       }
       .stage {
         display: flex; flex-direction: column; align-items: center;
@@ -74,36 +102,47 @@
         width: 100%; max-width: 900px;
       }
       .topbar {
-        position: absolute; top: 0; left: 0; right: 0;
-        display: grid; grid-template-columns: 1fr auto 1fr;
-        align-items: center; padding: 1vh 2vw;
-        background: var(--accent); z-index: 20;
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        align-items: center;
+        padding: 1vh 2vw;
+        background: var(--accent);
+        z-index: 20;
       }
-      .barLeft, .barRight { display: flex; align-items: center; }
-      .barLeft { gap: 0.6em; }
-      .barRight { justify-content: flex-end; }
-      .barCenter { display: flex; align-items: center; gap: 0.6em; }
-      .statusCapsule {
-        display: inline-flex; align-items: center; gap: 0.6em;
-        height: 1.9rem; padding: 0 0.8em;
-        background: var(--accent2); border: 2px solid var(--accent);
-        border-radius: 999px;
+      .barLeft,
+      .barRight {
+        display: flex;
+        align-items: center;
       }
-      .progress {
-        font-size: 0.9rem; color: var(--accent); font-weight: bold;
-        line-height: 1; white-space: nowrap;
+      .barLeft {
+        gap: 0.6em;
+      }
+      .barRight {
+        justify-content: flex-end;
       }
       .ctrl {
-        height: 1.9rem; padding: 0 0.6em; border-radius: 999px;
-        background: var(--panel); box-shadow: 0 5px 18px rgba(0,0,0,0.12);
-        font-size: 0.95rem; display: inline-flex; align-items: center;
-        justify-content: center; line-height: 1;
-        border: 1px solid rgba(96,112,141,0.5);
+        height: 1.9rem;
+        padding: 0 0.6em;
+        border-radius: 999px;
+        background: var(--panel);
+        box-shadow: 0 5px 18px rgba(0, 0, 0, 0.12);
+        font-size: 0.95rem;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        line-height: 1;
+        border: 1px solid rgba(96, 112, 141, 0.5);
       }
       .navCtrl {
-        width: 1.9rem; padding: 0; background: var(--accent2); color: var(--accent);
+        width: 1.9rem;
+        padding: 0;
+        background: var(--accent);
+        color: var(--accent2);
       }
-      .navCtrl.primary { background: var(--accent); color: var(--accent2); }
       #toast {
         position: absolute; left: 50%; top: 12%; transform: translateX(-50%);
         z-index: 100; background: var(--ink); color: white;
@@ -154,10 +193,11 @@
         font-size: clamp(0.65rem,1vw,0.9rem); color: var(--muted); font-weight: 600;
       }
       .placeLabel {
-        display: inline-flex; align-items: center; gap: 0.4em;
+        display: inline-block; text-align: center;
         background: var(--accent2); color: var(--accent); font-weight: 800;
-        border-radius: 999px; padding: 0.3em 0.8em;
+        border-radius: 16px; padding: 0.4em 1em;
         font-size: clamp(0.8rem,1.3vw,1.2rem);
+        line-height: 1.5;
       }
       .placeExample {
         display: flex; gap: clamp(6px,1vw,12px); justify-content: center;
@@ -260,6 +300,7 @@
       .matchGrid {
         display: grid; grid-template-columns: 1fr 1fr;
         gap: clamp(8px,1.5vw,16px); width: 100%; max-width: 600px;
+        margin: 0 auto;
       }
       .matchBtn {
         min-height: clamp(60px,10vh,90px); border-radius: 22px;
@@ -310,13 +351,13 @@
         margin-top: 1em; padding: 0.8em 2em; border-radius: 999px;
         background: var(--accent); color: var(--accent2); font-weight: 900;
         font-size: clamp(1.1rem,2vw,1.8rem); letter-spacing: 0.03em;
-        box-shadow: 0 8px 24px rgba(13,107,78,0.3);
+        box-shadow: 0 8px 24px rgba(26,58,107,0.3);
         transition: 0.15s transform;
       }
       .playAgainBtn:active { transform: scale(0.95); }
 
       /* ===== ROUND PIPS ===== */
-      .roundPips { display: flex; gap: 0.5em; justify-content: center; }
+      .roundPips { display: flex; gap: 0.5em; justify-content: center; margin-bottom: 0.8em; }
       .pip {
         width: 22px; height: 22px; border-radius: 50%; background: #eef1f7;
         box-shadow: inset 0 0 0 2px rgba(20,33,61,0.15);
@@ -348,7 +389,7 @@
         letter-spacing: 0.02em;
       }
       .actionBtn:active { transform: scale(0.95); }
-      .actionBtn.primary { background: var(--accent); color: var(--accent2); box-shadow: 0 6px 20px rgba(13,107,78,0.3); }
+        .actionBtn.primary { background: var(--accent); color: var(--accent2); box-shadow: 0 6px 20px rgba(26,58,107,0.3); }
       .actionBtn.secondary { background: var(--panel); color: var(--ink); border: 2px solid #e0e5ed; }
 
       @media (max-aspect-ratio: 1/1) {
@@ -372,11 +413,6 @@
             <span class="tag"></span>
           </button>
         </div>
-        <div class="barCenter">
-          <div class="statusCapsule">
-            <span class="progress" id="progress">1 / 4</span>
-          </div>
-        </div>
         <div class="barRight">
           <button class="ctrl navCtrl primary" id="nextBtn" aria-label="Next" onclick="next()">
             <span class="tag"></span>
@@ -387,8 +423,8 @@
       <!-- ===== SCREEN 1: INTRO ===== -->
       <section class="screen active" id="introScreen">
         <div class="content">
-          <p class="small">NUMBERS</p>
-          <h1 class="pageTitle">Numbers 1 – 1000</h1>
+          <span class="banner">NUMBERS</span>
+          <h1 class="ribbon">Numbers 1 – 1000</h1>
           <div class="stage">
             <div class="panel">
               <p style="font-size:clamp(1rem,1.7vw,1.5rem);margin:0 0 0.6em;font-weight:700;color:var(--muted);">
@@ -417,7 +453,8 @@
                 </div>
               </div>
               <div class="placeLabel" style="margin-bottom:1em;">
-                1000 + 300 + 40 + 5 = <strong style="font-size:1.2em;">1345</strong> → "One thousand, three hundred and forty-five"
+                1000 + 300 + 40 + 5 = <strong style="font-size:1.2em;">1345</strong><br>
+                → "One thousand, three hundred and forty-five"
               </div>
               <p style="font-size:clamp(0.9rem,1.4vw,1.3rem);margin:0;color:var(--muted);font-weight:700;">
                 Let's learn how numbers are built!
@@ -430,10 +467,11 @@
       <!-- ===== SCREEN 2: PLACE VALUE BUILDER ===== -->
       <section class="screen" id="pvScreen">
         <div class="content">
-          <p class="small">GAME 1</p>
-          <h2 class="pageTitle" id="pvTitle">Build the Number</h2>
+          <span class="banner">GAME 1</span>
+          <h2 class="ribbon" id="pvTitle">Build the Number</h2>
           <div class="stage">
             <div class="panel">
+              <div class="roundPips" id="pvPips"></div>
               <div class="pvTarget">
                 <div class="pvTargetWord" id="pvTargetWord"></div>
                 <div class="pvTargetHint" id="pvTargetHint"></div>
@@ -441,7 +479,6 @@
               <div class="pvMachine" id="pvMachine"></div>
               <div class="pvDigitGrid" id="pvDigitGrid"></div>
             </div>
-            <div class="roundPips" id="pvPips"></div>
           </div>
         </div>
       </section>
@@ -449,14 +486,14 @@
       <!-- ===== SCREEN 3: NUMBER MATCHER ===== -->
       <section class="screen" id="matchScreen">
         <div class="content">
-          <p class="small">GAME 2</p>
-          <h2 class="pageTitle" id="matchTitle">Which word is it?</h2>
+          <span class="banner">GAME 2</span>
+          <h2 class="ribbon" id="matchTitle">Which word is it?</h2>
           <div class="stage">
             <div class="panel">
+              <div class="roundPips" id="matchPips"></div>
               <div class="matchNumber" id="matchNumber"></div>
               <div class="matchGrid" id="matchGrid"></div>
             </div>
-            <div class="roundPips" id="matchPips"></div>
           </div>
         </div>
       </section>
@@ -698,7 +735,7 @@
       setPvDigitEnabled(true);
       var hint=document.getElementById("pvTargetHint");
       hint.textContent="Pick the digit for "+step.word.toLowerCase()+" (left to right) — "+pvCurrentStep+"/"+pvSteps.length;
-      say("What digit goes in the "+step.word.toLowerCase()+" place?");
+      if(pvCurrentStep===0 || step.pos>=3) say("What digit goes in the "+step.word.toLowerCase()+" place?");
     }
 
     function pvAnswer(digit){
@@ -709,7 +746,7 @@
         pvBusy=true;
         setPvDigitEnabled(false);
         revealPvDigit(step,step.digit);
-        say(numWord(step.digit)+"! "+step.word);
+        say("Okay!");
         var gen=++pvGen;
         setTimeout(function(){
           if(gen!==pvGen) return;
@@ -727,7 +764,7 @@
           setPvDigitEnabled(false);
           revealPvDigit(step,step.digit);
           pvResults.push("bad");
-          say("It was "+step.digit+". "+numWord(step.digit)+"!");
+          say("It was "+step.digit+".");
           var gen2=++pvGen;
           setTimeout(function(){
             if(gen2!==pvGen) return;
@@ -812,11 +849,13 @@
         finishMatchGame();
         return;
       }
+      cancelSpeech();
       var n=matchRounds[matchIdx];
+      var opts=getMatchOptions(n);
+      say(n+"?");
       document.getElementById("matchNumber").textContent=n;
       document.getElementById("matchTitle").textContent="Which word is it?";
       setPips("matchPips",matchResults,matchIdx,MATCH_ROUNDS);
-      var opts=getMatchOptions(n);
       var grid=document.getElementById("matchGrid");
       grid.innerHTML="";
       for(var i=0;i<opts.length;i++){
@@ -828,7 +867,6 @@
           grid.appendChild(btn);
         })(opts[i]);
       }
-      say(n+"?");
     }
 
     function matchAnswer(chosen,target,btn){
@@ -840,7 +878,6 @@
         btn.classList.add("correct");
         matchResults.push("good");
         toast("CORRECT!");
-        say("Yes! "+numWord(target)+"! "+target+"!");
         if(typeof logActivity==="function"){
           logActivity("Student_Default",window.location.pathname,"NumberMatcher","Correct",target+"");
         }
@@ -858,9 +895,10 @@
         }
       }
       setTimeout(function(){
+        cancelSpeech();
         matchBusy=false;
         matchIdx++;
-        matchStart();
+        setTimeout(function(){ matchStart(); },150);
       },2000);
     }
 
@@ -993,7 +1031,6 @@
     }
     var idx=0;
     var soundOn=true;
-    var progress=document.getElementById("progress");
     var synth=window.speechSynthesis||window.webkitSpeechSynthesis||window.mozSpeechSynthesis||null;
     var altVoice=null;
     var altVoice2=null;
@@ -1067,6 +1104,7 @@
         var u=new SpeechSynthesisUtterance(text);
         u.lang="en-US"; u.rate=0.82; u.pitch=1.08;
         if(voice) u.voice=voice;
+        else if(altVoice2) u.voice=altVoice2;
         else if(altVoice) u.voice=altVoice;
         currentUtterance=u;
         u.onend=function(){};
@@ -1081,9 +1119,8 @@
       }
       var shown=activeIdx.indexOf(idx)+1;
       if(shown<1) shown=countTotal;
-      progress.textContent=shown+" / "+countTotal;
       document.getElementById("prevBtn").innerHTML='<span class="tag">'+ICON_ARROW_LEFT+'</span>';
-      document.getElementById("prevBtn").style.visibility=idx===0?"hidden":"visible";
+      document.getElementById("prevBtn").style.visibility="visible";
       document.getElementById("nextBtn").innerHTML='<span class="tag">'+(idx===lastCounted?ICON_RESTART:ICON_ARROW_RIGHT)+'</span>';
       document.getElementById("nextBtn").style.visibility="visible";
       cancelSpeech();
