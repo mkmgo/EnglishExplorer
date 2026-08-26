@@ -427,8 +427,8 @@
         margin: 14px 0 10px;
       }
 
-      /* Tidy-up bags: tap a category bag to open it, then drop the
-         matching items inside. Completing all bags unlocks the base. */
+      /* Tidy-up boxes: tap a category box to open it, then drop the
+         matching items inside. Completing all boxes unlocks the base. */
       .tidy-hint {
         text-align: center;
         font-weight: bold;
@@ -437,36 +437,37 @@
         margin-bottom: 10px;
       }
 
-      .bag-area {
+      .box-area {
         display: flex;
         flex-direction: column-reverse;
+        margin-top: 12px;
       }
 
-      .bag-bar {
+      .box-bar {
         display: flex;
         flex-wrap: wrap;
         justify-content: center;
         gap: 10px;
       }
 
-      .bag-bar.drag-over {
+      .box-bar.drag-over {
         background: var(--dropzone-hover);
         outline: 2px dashed var(--primary);
         outline-offset: 2px;
         border-radius: 12px;
       }
 
-      .bag-bar:empty {
+      .box-bar:empty {
         display: none;
       }
 
-      .bag-chip {
+      .box-chip {
         appearance: none;
         display: flex;
         align-items: center;
         gap: 8px;
         padding: 10px 14px;
-        border-radius: 999px;
+        border-radius: 12px;
         border: 2px dashed var(--border-strong);
         background: var(--dropzone-bg);
         color: var(--text);
@@ -486,15 +487,15 @@
         user-select: none;
       }
 
-      .bag-chip:active {
+      .box-chip:active {
         transform: scale(0.96);
       }
 
-      .bag-chip.dragging-original {
+      .box-chip.dragging-original {
         opacity: 0.35;
       }
 
-      .bag-chip.ghost {
+      .box-chip.ghost {
         position: fixed;
         z-index: 1000;
         pointer-events: none;
@@ -502,33 +503,33 @@
         box-shadow: 0 10px 20px rgba(0, 0, 0, 0.25);
       }
 
-      .bag-chip .bag-icon {
+      .box-chip .box-icon {
         display: inline-flex;
         align-items: center;
         font-size: 1.15em;
       }
 
-      .bag-chip .bag-icon svg,
-      .bag-tray-head .bag-icon svg {
+      .box-chip .box-icon svg,
+      .box-tray-head .box-icon svg {
         width: 20px;
         height: 20px;
       }
 
-      /* Marker icon for phrase bags (question mark / alert circle) */
-      .bag-chip .bag-tag,
-      .bag-tray-head .bag-tag {
+      /* Marker icon for phrase boxes (question mark / alert circle) */
+      .box-chip .box-tag,
+      .box-tray-head .box-tag {
         display: inline-flex;
         align-items: center;
       }
 
-      .bag-chip .bag-tag svg,
-      .bag-tray-head .bag-tag svg {
+      .box-chip .box-tag svg,
+      .box-tray-head .box-tag svg {
         width: 18px;
         height: 18px;
       }
 
       /* Question (blue) / statement (purple) marker colours apply alike
-         to phrase bricks, their slot imprints and the bag tags — lucide
+         to phrase bricks, their slot imprints and the box tags — lucide
          keeps these icon classes on the rendered <svg>. */
       .lucide-circle-question-mark {
         color: var(--question-icon);
@@ -538,9 +539,9 @@
         color: var(--statement-icon);
       }
 
-      /* Handbag stays unfilled when bag is packed — border/bg change is enough */
+      /* Box icon stays unfilled when box is packed — border/bg change is enough */
 
-      .bag-chip .bag-count {
+      .box-chip .box-count {
         background: var(--item-bg);
         border: 1px solid var(--item-border);
         border-radius: 999px;
@@ -548,19 +549,19 @@
         font-size: 0.85em;
       }
 
-      .bag-chip.open {
+      .box-chip.open {
         border-style: solid;
         border-color: var(--primary);
         background: var(--dropzone-hover);
       }
 
-      .bag-chip.done {
+      .box-chip.done {
         border-style: solid;
         border-color: var(--good);
         background: var(--goal-bg);
       }
 
-      @keyframes bagAttract {
+      @keyframes boxAttract {
         0%,
         100% {
           transform: scale(1);
@@ -571,21 +572,21 @@
         }
       }
 
-      .bag-bar.attract .bag-chip:not(.done):not(.open) {
-        animation: bagAttract 1.6s ease-in-out infinite;
+      .box-bar.attract .box-chip:not(.done):not(.open) {
+        animation: boxAttract 1.6s ease-in-out infinite;
       }
 
-      .bag-tray {
+      .box-tray {
         display: none;
         margin-top: 12px;
       }
 
-      .bag-tray.open {
+      .box-tray.open {
         display: block;
         margin-bottom: 12px;
       }
 
-      .bag-tray-head {
+      .box-tray-head {
         font-weight: bold;
         color: var(--muted);
         text-align: center;
@@ -596,15 +597,15 @@
         gap: 4px;
       }
 
-      .bag-tray-head .bag-icon {
+      .box-tray-head .box-icon {
         margin-top: 2px;
       }
 
-      .bag-tray-head .bag-progress {
+      .box-tray-head .box-progress {
         color: var(--text);
       }
 
-      .bag-tray-inner {
+      .box-tray-inner {
         display: flex;
         flex-wrap: wrap;
         justify-content: center;
@@ -613,25 +614,25 @@
         min-height: 72px;
         padding: 10px 10px 8px;
         border: 2px dashed var(--border-strong);
-        border-radius: 28px;
+        border-radius: 12px;
         background: var(--dropzone-bg);
         transition:
           background-color 0.2s,
           border-color 0.2s;
       }
 
-      .bag-tray-inner.drag-over {
+      .box-tray-inner.drag-over {
         background: var(--dropzone-hover);
         border-color: var(--primary);
       }
 
-      .bag-tray.sealed .bag-tray-inner {
+      .box-tray.sealed .box-tray-inner {
         background: var(--goal-bg);
         border-color: var(--good);
         pointer-events: none;
       }
 
-      .bag-slot {
+      .box-slot {
         width: 96px;
         height: 84px;
         border: 2px dashed var(--border-strong);
@@ -658,16 +659,16 @@
         animation: packPop 0.45s ease;
       }
 
-      .bag-area.dissolving {
+      .box-area.dissolving {
         animation: paletteDissolve 0.6s ease forwards;
         pointer-events: none;
       }
 
       @media (max-width: 640px) {
-        .bag-chip {
+        .box-chip {
           padding: 9px 11px;
         }
-        .bag-slot {
+        .box-slot {
           width: 84px;
           height: 76px;
         }
@@ -859,6 +860,29 @@
         object-fit: contain;
       }
 
+      .mod-token {
+        width: 44px;
+        height: 44px;
+        border-radius: 8px;
+        background: linear-gradient(135deg, #dcfce7, #86efac, #dcfce7);
+        border: 2px dashed var(--border-strong);
+        color: #15803d;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: grab;
+        overflow: hidden;
+        box-sizing: border-box;
+        padding: 0;
+        position: relative;
+      }
+
+      .mod-token img {
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+      }
+
       .token-slot {
         position: absolute;
         top: 8px;
@@ -880,10 +904,136 @@
         background: var(--dropzone-hover);
       }
 
-      .token-slot .lab-token {
+      .token-slot .lab-token,
+      .token-slot .mod-token {
         width: 44px;
         height: 44px;
         cursor: default;
+      }
+
+      .mod-slot {
+        flex-direction: column;
+        gap: 6px;
+      }
+
+      .mod-chip {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 5px;
+        padding: 4px 10px;
+        border-radius: 10px;
+        font-size: 0.8rem;
+        font-weight: bold;
+        line-height: 1;
+        white-space: nowrap;
+        align-self: stretch;
+        display: none;
+      }
+
+      .mod-active .mod-chip {
+        display: flex;
+      }
+
+      .mod-icon {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 18px;
+        height: 18px;
+        border-radius: 50%;
+        font-size: 15px;
+        font-weight: 900;
+        flex-shrink: 0;
+      }
+
+      .mod-minus {
+        background: #fee2e2;
+        color: #991b1b;
+        border: 1px solid #fca5a5;
+      }
+
+      .mod-minus .mod-icon {
+        background: #ef4444;
+        color: white;
+      }
+
+      .mod-plus {
+        background: #dcfce7;
+        color: #166534;
+        border: 1px solid #86efac;
+      }
+
+      .mod-plus .mod-icon {
+        background: #22c55e;
+        color: white;
+      }
+
+      .dark .mod-minus,
+      html.dark .mod-minus {
+        background: #450a0a;
+        color: #fca5a5;
+        border-color: #7f1d1d;
+      }
+      .dark .mod-minus .mod-icon,
+      html.dark .mod-minus .mod-icon {
+        background: #dc2626;
+        color: #fef2f2;
+      }
+      .dark .mod-plus,
+      html.dark .mod-plus {
+        background: #052e16;
+        color: #86efac;
+        border-color: #14532d;
+      }
+      .dark .mod-plus .mod-icon,
+      html.dark .mod-plus .mod-icon {
+        background: #16a34a;
+        color: #f0fdf4;
+      }
+
+      .mod-animal-slot {
+        justify-content: center;
+        align-items: center;
+      }
+
+      .mod-animal {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 4px;
+      }
+
+      .mod-animal-ring {
+        width: 52px;
+        height: 52px;
+        border-radius: 50%;
+        border: 3px solid #22c55e;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        overflow: hidden;
+        background: var(--img-bg);
+      }
+
+      .mod-animal-ring img {
+        width: 40px;
+        height: 40px;
+        object-fit: cover;
+        border-radius: 50%;
+      }
+
+      .draggable-item.animal .mod-animal-ring img {
+        width: 40px;
+        height: 40px;
+        border: none;
+        background: none;
+      }
+
+      .mod-animal .animal-name {
+        font-size: 0.75rem;
+        font-weight: bold;
+        color: var(--text);
       }
 
       /* Combined mystery items (e.g. Red Car = car + red brick) */
@@ -1224,6 +1374,13 @@
         <div class="draggable-item lab-token" id="lab-token-3">
           <img src="https://res.cloudinary.com/dqwm4pdbz/image/upload/q_auto/f_auto/e_bgremoval/c_crop,w_341,h_341,x_21,y_21/v1787663276/lab-token_eoed14.jpg" alt="Lab Token" />
         </div>
+        <!-- Mod Tokens -->
+        <div class="draggable-item mod-token" id="mod-token-1">
+          <img src="https://res.cloudinary.com/dqwm4pdbz/image/upload/q_auto/f_auto/e_bgremoval/c_crop,w_341,h_341,x_14,y_661/v1787663276/lab-token_eoed14.jpg" alt="Mod Token" />
+        </div>
+        <div class="draggable-item mod-token" id="mod-token-2">
+          <img src="https://res.cloudinary.com/dqwm4pdbz/image/upload/q_auto/f_auto/e_bgremoval/c_crop,w_341,h_341,x_14,y_661/v1787663276/lab-token_eoed14.jpg" alt="Mod Token" />
+        </div>
         <!-- Avatars -->
         <div class="draggable-item animal" id="onza-avatar" data-type="avatar">
           <img
@@ -1270,9 +1427,9 @@
         </div>
       </div>
       <div class="tidy-hint" id="tidyHint"></div>
-      <div class="bag-area" id="bagArea">
-        <div class="bag-bar attract" id="bagBar"></div>
-        <div class="bag-trays" id="bagTrays"></div>
+      <div class="box-area" id="boxArea">
+        <div class="box-bar attract" id="boxBar"></div>
+        <div class="box-trays" id="boxTrays"></div>
       </div>
     </div>
 
@@ -1288,15 +1445,17 @@
       </div>
     </div>
 
-    <!-- Animals -->
-    <div class="grid-container" style="grid-template-columns: 1fr; max-width: 320px;">
-      <div class="spot-card">
-        <div class="spot-title">Animals</div>
-        <div class="drop-zone" id="spot-2">
-          <div class="slot"><span class="lock-icon"><i data-lucide="lock"></i></span></div>
-          <div class="slot"><span class="lock-icon"><i data-lucide="lock"></i></span></div>
-          <div class="slot"><span class="lock-icon"><i data-lucide="lock"></i></span></div>
-          <div class="slot"><span class="lock-icon"><i data-lucide="lock"></i></span></div>
+    <!-- Animal Mod: full-width, token-slot + mod slots -->
+    <div class="grid-container" style="grid-template-columns: 1fr;">
+      <div class="spot-card colour-lab">
+        <div class="token-slot" id="token-slot-shapes"></div>
+        <div class="spot-title">Animal Mod</div>
+        <div class="drop-zone" id="spot-5">
+          <div class="slot mod-slot">
+            <div class="mod-chip mod-minus"><span class="mod-icon">−</span> slow</div>
+            <div class="mod-chip mod-plus"><span class="mod-icon">+</span> hits</div>
+          </div>
+          <div class="slot"></div>
         </div>
       </div>
     </div>
@@ -1324,10 +1483,22 @@
         <div class="draggable-item phrase" id="phrase-where-is"><i data-lucide="circle-question-mark" class="phrase-tag"></i>Where is ... ?</div>
         <div class="draggable-item phrase" id="phrase-show-me"><i data-lucide="circle-alert" class="phrase-tag"></i>Show me ...</div>
       </div>
-      <div class="inv-separator" id="invSep2" style="display: none"></div>
-      <div class="bag-area" id="bagArea2" style="display: none">
-        <div class="bag-bar" id="bagBar2"></div>
-        <div class="bag-trays" id="bagTrays2"></div>
+      <div class="box-area" id="boxArea2">
+        <div class="box-bar" id="boxBar2"></div>
+        <div class="box-trays" id="boxTrays2"></div>
+      </div>
+    </div>
+
+    <!-- Animals -->
+    <div class="grid-container" style="grid-template-columns: 1fr; max-width: 320px;">
+      <div class="spot-card">
+        <div class="spot-title">Animals</div>
+        <div class="drop-zone" id="spot-2">
+          <div class="slot"><span class="lock-icon"><i data-lucide="lock"></i></span></div>
+          <div class="slot"><span class="lock-icon"><i data-lucide="lock"></i></span></div>
+          <div class="slot"><span class="lock-icon"><i data-lucide="lock"></i></span></div>
+          <div class="slot"><span class="lock-icon"><i data-lucide="lock"></i></span></div>
+        </div>
       </div>
     </div>
 
@@ -1480,28 +1651,31 @@
         "Questions",
         "Phrases",
       ];
-      // Extra marker icon shown on each phrase bag (next to the handbag):
+      // Extra marker icon shown on each phrase box (next to the box):
       // question phrases get a question mark, the rest an alert circle.
-      var bagTagIcons = {
+      var boxTagIcons = {
         Questions: "circle-question-mark",
         Phrases: "circle-alert",
       };
 
-      // ---- Tidy-up bags ----
-      // First task: sort every item into its category bag. Tap a bag to
+      // ---- Tidy-up boxes ----
+      // First task: sort every item into its category box. Tap a box to
       // open it, then drop matching items inside (e.g. 5x Colours). When
-      // all bags are packed they unpack and the base tasks begin.
-      var bagRefs = {};
+      // all boxes are packed they unpack and the base tasks begin.
+      var boxRefs = {};
       var openCat = null;
       var tidyDone = false;
-      // Set while a real (moved) bag drag is in flight so the click that
-      // follows pointerup does not also toggle the bag open.
-      var suppressBagClick = false;
+      // Set while a real (moved) box drag is in flight so the click that
+      // follows pointerup does not also toggle the box open.
+      var suppressBoxClick = false;
 
-      function buildBags() {
-        var bar = document.getElementById("bagBar");
-        var trays = document.getElementById("bagTrays");
+      function buildBoxes() {
+        var bar = document.getElementById("boxBar");
+        var trays = document.getElementById("boxTrays");
+        var bar2 = document.getElementById("boxBar2");
+        var trays2 = document.getElementById("boxTrays2");
         if (!bar || !trays) return;
+        var spaceTwoCats = ["Questions", "Phrases"];
         var totals = {};
         Object.keys(itemCategories).forEach(function (id) {
           var cat = itemCategories[id];
@@ -1509,57 +1683,60 @@
         });
         categoryOrder.forEach(function (cat) {
           if (!totals[cat]) return;
-          var tagIcon = bagTagIcons[cat];
+          var tagIcon = boxTagIcons[cat];
           var tagHtml = tagIcon
-            ? '<span class="bag-tag"><i data-lucide="' +
+            ? '<span class="box-tag"><i data-lucide="' +
               tagIcon +
               '"></i></span>'
             : "";
           var chip = document.createElement("button");
           chip.type = "button";
-          chip.className = "bag-chip";
+          chip.className = "box-chip";
           chip.dataset.cat = cat;
           chip.innerHTML =
-            '<span class="bag-icon"><i data-lucide="handbag"></i></span>' +
+            '<span class="box-icon"><i data-lucide="box"></i></span>' +
             tagHtml +
-            '<span class="bag-name">' +
+            '<span class="box-name">' +
             cat +
-            '</span><span class="bag-count">0/' +
+            '</span><span class="box-count">0/' +
             totals[cat] +
             "</span>";
           chip.addEventListener("click", function () {
-            if (suppressBagClick) {
-              suppressBagClick = false;
+            if (suppressBoxClick) {
+              suppressBoxClick = false;
               return;
             }
-            toggleBag(cat);
+            toggleBox(cat);
           });
-          bar.appendChild(chip);
+          var isSpaceTwo = spaceTwoCats.indexOf(cat) !== -1;
+          if (isSpaceTwo && bar2) bar2.appendChild(chip);
+          else bar.appendChild(chip);
 
           var tray = document.createElement("div");
-          tray.className = "bag-tray";
+          tray.className = "box-tray";
           tray.dataset.cat = cat;
           var head = document.createElement("div");
-          head.className = "bag-tray-head";
+          head.className = "box-tray-head";
           head.innerHTML =
-            '<span class="bag-icon"><i data-lucide="handbag"></i></span>' +
+            '<span class="box-icon"><i data-lucide="box"></i></span>' +
             tagHtml +
             " " +
             cat +
-            ' bag &middot; <span class="bag-progress">0/' +
+            ' Box &middot; <span class="box-progress">0/' +
             totals[cat] +
             "</span>";
           tray.appendChild(head);
           var inner = document.createElement("div");
-          inner.className = "bag-tray-inner";
+          inner.className = "box-tray-inner";
           tray.appendChild(inner);
-          trays.appendChild(tray);
+          if (isSpaceTwo && trays2) trays2.appendChild(tray);
+          else trays.appendChild(tray);
 
-          bagRefs[cat] = {
+          boxRefs[cat] = {
             chip: chip,
-            count: chip.querySelector(".bag-count"),
+            count: chip.querySelector(".box-count"),
             head: head,
-            progress: head.querySelector(".bag-progress"),
+            progress: head.querySelector(".box-progress"),
             tray: tray,
             inner: inner,
             total: totals[cat],
@@ -1567,33 +1744,33 @@
         });
       }
 
-      function bagCount(cat) {
-        return bagRefs[cat].inner.querySelectorAll(".draggable-item").length;
+      function boxCount(cat) {
+        return boxRefs[cat].inner.querySelectorAll(".draggable-item").length;
       }
 
-      function refreshBags() {
-        Object.keys(bagRefs).forEach(function (cat) {
-          var ref = bagRefs[cat];
-          var n = bagCount(cat);
+      function refreshBoxes() {
+        Object.keys(boxRefs).forEach(function (cat) {
+          var ref = boxRefs[cat];
+          var n = boxCount(cat);
           ref.count.textContent = n + "/" + ref.total;
           ref.progress.textContent = n + "/" + ref.total;
           if (n < ref.total) ref.chip.classList.remove("done");
-          ref.inner.querySelectorAll(".bag-slot").forEach(function (s) {
+          ref.inner.querySelectorAll(".box-slot").forEach(function (s) {
             s.remove();
           });
           for (var i = n; i < ref.total; i++) {
             var slot = document.createElement("div");
-            slot.className = "bag-slot";
+            slot.className = "box-slot";
             ref.inner.appendChild(slot);
           }
           if (n === ref.total && !ref.chip.classList.contains("done")) {
-            sealBag(cat);
+            sealBox(cat);
           }
         });
         if (
           tidyDone &&
           categoryOrder.some(function (c) {
-            return bagCount(c) < bagRefs[c].total;
+            return boxCount(c) < boxRefs[c].total;
           })
         ) {
           tidyDone = false;
@@ -1606,24 +1783,24 @@
         if (hint) hint.textContent = text;
       }
 
-      function toggleBag(cat) {
-        var ref = bagRefs[cat];
-        var homeBar = ref && ref.chip.closest(".bag-bar");
+      function toggleBox(cat) {
+        var ref = boxRefs[cat];
+        var homeBar = ref && ref.chip.closest(".box-bar");
         if (homeBar) homeBar.classList.remove("attract");
         if (openCat === cat) {
-          closeBag();
+          closeBox();
           return;
         }
-        closeBag(true);
+        closeBox(true);
         openCat = cat;
-        bagRefs[cat].chip.classList.add("open");
-        bagRefs[cat].tray.classList.add("open");
+        boxRefs[cat].chip.classList.add("open");
+        boxRefs[cat].tray.classList.add("open");
         setTidyHint("");
       }
 
-      function closeBag(keepHint) {
+      function closeBox(keepHint) {
         if (!openCat) return;
-        var ref = bagRefs[openCat];
+        var ref = boxRefs[openCat];
         ref.chip.classList.remove("open");
         ref.tray.classList.remove("open");
         openCat = null;
@@ -1632,8 +1809,8 @@
         }
       }
 
-      function sealBag(cat) {
-        var ref = bagRefs[cat];
+      function sealBox(cat) {
+        var ref = boxRefs[cat];
         ref.chip.classList.add("done");
         ref.tray.classList.add("sealed");
         var version = gameVersion;
@@ -1646,14 +1823,14 @@
             openCat = null;
           }
           var allDone = categoryOrder.every(function (c) {
-            return bagCount(c) === bagRefs[c].total;
+            return boxCount(c) === boxRefs[c].total;
           });
           if (allDone) packComplete();
           else setTidyHint("");
         }, 800);
       }
 
-      // All bags packed: the bags stay visible as compact storage in
+      // All boxes packed: the boxes stay visible as compact storage in
       // whichever space they are parked at.
       function packComplete() {
         tidyDone = true;
@@ -1661,119 +1838,111 @@
       }
 
       function updateInventorySummary() {
-        refreshBags();
+        refreshBoxes();
       }
 
-      // ---- Draggable bags ----
-      // Bags can be carried between the two spaces and stored (parked) at
-      // either one: dropping a bag over a space moves the chip into that
-      // space's bag bar and its tray follows. A short tap still opens the
-      // bag; only movement beyond a small threshold starts a real drag.
-      var bagChip = null;
-      var bagGhost = null;
-      var bagDragging = false;
-      var bagStartX = 0;
-      var bagStartY = 0;
-      var bagOffX = 0;
-      var bagOffY = 0;
-      var bagOverZone = null;
+      // ---- Draggable boxes ----
+      // Boxes can be carried between the two spaces and stored (parked) at
+      // either one: dropping a box over a space moves the chip into that
+      // space's box bar and its tray follows. A short tap still opens the
+      // box; only movement beyond a small threshold starts a real drag.
+      var boxChip = null;
+      var boxGhost = null;
+      var boxDragging = false;
+      var boxStartX = 0;
+      var boxStartY = 0;
+      var boxOffX = 0;
+      var boxOffY = 0;
+      var boxOverZone = null;
 
-      function storeBagAt(chip, palette) {
+      function storeBoxAt(chip, palette) {
         if (!chip || !palette) return;
-        var ref = bagRefs[chip.dataset.cat];
-        var bar = palette.querySelector(".bag-bar");
-        var trays = palette.querySelector(".bag-trays");
+        var ref = boxRefs[chip.dataset.cat];
+        var bar = palette.querySelector(".box-bar");
+        var trays = palette.querySelector(".box-trays");
         if (!ref || !bar || !trays) return;
         if (chip.parentElement === bar) return;
-        if (openCat === chip.dataset.cat) closeBag();
+        if (openCat === chip.dataset.cat) closeBox();
         bar.appendChild(chip);
         trays.appendChild(ref.tray);
-        // Space Two keeps its bag shelf hidden until a bag is parked there.
-        var sep2 = document.getElementById("invSep2");
-        var area2 = document.getElementById("bagArea2");
-        var shelfPal = sep2 ? sep2.closest(".palette") : null;
-        if (shelfPal === palette && area2) {
-          sep2.style.display = "";
-          area2.style.display = "";
-        }
       }
 
       document.addEventListener("pointerdown", function (e) {
-        if (bagChip) return;
+        if (boxChip) return;
         if (e.pointerType === "mouse" && e.button !== 0) return;
-        var chip = e.target.closest(".bag-chip");
+        var chip = e.target.closest(".box-chip");
         if (!chip) return;
-        suppressBagClick = false;
-        bagChip = chip;
-        bagDragging = false;
-        bagStartX = e.clientX;
-        bagStartY = e.clientY;
+        suppressBoxClick = false;
+        boxChip = chip;
+        boxDragging = false;
+        boxStartX = e.clientX;
+        boxStartY = e.clientY;
       });
 
       document.addEventListener("pointermove", function (e) {
-        if (!bagChip) return;
-        if (!bagDragging) {
-          var dx = e.clientX - bagStartX;
-          var dy = e.clientY - bagStartY;
+        if (!boxChip) return;
+        if (!boxDragging) {
+          var dx = e.clientX - boxStartX;
+          var dy = e.clientY - boxStartY;
           if (dx * dx + dy * dy < 64) return;
-          bagDragging = true;
-          suppressBagClick = true;
-          if (openCat === bagChip.dataset.cat) closeBag();
-          var homeBar = bagChip.closest(".bag-bar");
+          boxDragging = true;
+          suppressBoxClick = true;
+          if (openCat === boxChip.dataset.cat) closeBox();
+          var homeBar = boxChip.closest(".box-bar");
           if (homeBar) homeBar.classList.remove("attract");
-          var rect = bagChip.getBoundingClientRect();
-          bagOffX = bagStartX - rect.left;
-          bagOffY = bagStartY - rect.top;
-          bagGhost = bagChip.cloneNode(true);
-          bagGhost.classList.remove("dragging-original");
-          bagGhost.classList.add("ghost");
-          var rawIcon = bagGhost.querySelector(".bag-icon i[data-lucide]");
-          var svgIcon = bagChip.querySelector(".bag-icon svg");
+          var rect = boxChip.getBoundingClientRect();
+          boxOffX = boxStartX - rect.left;
+          boxOffY = boxStartY - rect.top;
+          boxGhost = boxChip.cloneNode(true);
+          boxGhost.classList.remove("dragging-original");
+          boxGhost.classList.add("ghost");
+          var rawIcon = boxGhost.querySelector(".box-icon i[data-lucide]");
+          var svgIcon = boxChip.querySelector(".box-icon svg");
           if (rawIcon && svgIcon) rawIcon.replaceWith(svgIcon.cloneNode(true));
-          bagGhost.style.width = rect.width + "px";
-          bagGhost.style.left = e.clientX - bagOffX + "px";
-          bagGhost.style.top = e.clientY - bagOffY + "px";
-          document.body.appendChild(bagGhost);
-          bagChip.classList.add("dragging-original");
+          boxGhost.style.width = rect.width + "px";
+          boxGhost.style.left = e.clientX - boxOffX + "px";
+          boxGhost.style.top = e.clientY - boxOffY + "px";
+          document.body.appendChild(boxGhost);
+          boxChip.classList.add("dragging-original");
         }
         e.preventDefault();
-        if (bagGhost) {
-          bagGhost.style.left = e.clientX - bagOffX + "px";
-          bagGhost.style.top = e.clientY - bagOffY + "px";
+        if (boxGhost) {
+          boxGhost.style.left = e.clientX - boxOffX + "px";
+          boxGhost.style.top = e.clientY - boxOffY + "px";
         }
         var under = document.elementFromPoint(e.clientX, e.clientY);
         var zone = under
-          ? under.closest(".item-container, .bag-bar")
+          ? under.closest(".item-container, .box-bar")
           : null;
-        if (zone !== bagOverZone) {
-          if (bagOverZone) bagOverZone.classList.remove("drag-over");
-          bagOverZone = zone;
-          if (bagOverZone) bagOverZone.classList.add("drag-over");
+        if (zone !== boxOverZone) {
+          if (boxOverZone) boxOverZone.classList.remove("drag-over");
+          boxOverZone = zone;
+          if (boxOverZone) boxOverZone.classList.add("drag-over");
         }
       });
 
-      function endBagDrag() {
-        if (!bagChip) return;
-        var wasDragging = bagDragging;
-        if (bagGhost) {
-          bagGhost.remove();
-          bagGhost = null;
+      function endBoxDrag() {
+        if (!boxChip) return;
+        var wasDragging = boxDragging;
+        if (boxGhost) {
+          boxGhost.remove();
+          boxGhost = null;
         }
-        bagChip.classList.remove("dragging-original");
-        if (bagOverZone) {
-          bagOverZone.classList.remove("drag-over");
-          if (wasDragging) storeBagAt(bagChip, bagOverZone.closest(".palette"));
-          bagOverZone = null;
+        boxChip.classList.remove("dragging-original");
+        if (boxOverZone) {
+          boxOverZone.classList.remove("drag-over");
+          if (wasDragging) storeBoxAt(boxChip, boxOverZone.closest(".palette"));
+          boxOverZone = null;
         }
-        bagChip = null;
-        bagDragging = false;
+        boxChip = null;
+        boxDragging = false;
       }
 
-      document.addEventListener("pointerup", endBagDrag);
-      document.addEventListener("pointercancel", endBagDrag);
+      document.addEventListener("pointerup", endBoxDrag);
+      document.addEventListener("pointercancel", endBoxDrag);
 
       // Randomize the order of items in Space One (Fisher-Yates on the
-      // item children only; stored bag chips keep their place).
+      // item children only; stored box chips keep their place).
       function shuffleItems() {
         var container = document.getElementById("inventory");
         if (!container) return;
@@ -1803,6 +1972,7 @@
         "spot-2": false,
         "spot-3": false,
         "spot-4": false,
+        "spot-5": true,
       };
 
       // Progressive unlock state. spot-1 (Colours) is open from the start;
@@ -1814,6 +1984,7 @@
         "spot-2": false,
         "spot-3": false,
         "spot-4": false,
+        "spot-5": true,
       };
 
       var goalTexts = [
@@ -1955,7 +2126,7 @@
         updateGoals();
         updateInventorySummary();
       }
-      buildBags();
+      buildBoxes();
       shuffleItems();
       checkGoal();
 
@@ -2006,7 +2177,7 @@
         }
         var under = document.elementFromPoint(e.clientX, e.clientY);
         var zone = under
-          ? under.closest(".slot, .token-slot, .item-container, .bag-tray-inner")
+          ? under.closest(".slot, .token-slot, .item-container, .box-tray-inner")
           : null;
         if (zone && zone.classList.contains("slot")) {
           var zoneDrop = zone.closest(".drop-zone");
@@ -2058,6 +2229,7 @@
                   }
                 }
           checkLabCombine();
+          checkModCombine();
           checkMystery();
           checkGoal();
         } else if (canCombine) {
@@ -2067,14 +2239,22 @@
               }
             }
           } else if (overZone.classList.contains("token-slot")) {
-            if (activeItem.classList.contains("lab-token") && !overZone.querySelector(".draggable-item")) {
+            var isLabTok = activeItem.classList.contains("lab-token");
+            var isModTok = activeItem.classList.contains("mod-token");
+            if ((isLabTok || isModTok) && !overZone.querySelector(".draggable-item")) {
               overZone.appendChild(activeItem);
-              checkLabCombine();
+              if (isModTok && overZone.id === "token-slot-shapes") {
+                updateModChips();
+                checkModCombine();
+                toggleModChips(true);
+              } else {
+                checkLabCombine();
+              }
             }
-          } else if (overZone.classList.contains("bag-tray-inner")) {
-            var trayEl = overZone.closest(".bag-tray");
-            var bagCat = trayEl ? trayEl.dataset.cat : null;
-            if (bagCat && itemCategories[activeItem.id] === bagCat) {
+          } else if (overZone.classList.contains("box-tray-inner")) {
+            var trayEl = overZone.closest(".box-tray");
+            var boxCat = trayEl ? trayEl.dataset.cat : null;
+            if (boxCat && itemCategories[activeItem.id] === boxCat) {
               overZone.appendChild(activeItem);
               checkGoal();
             }
@@ -2096,8 +2276,18 @@
         if (prevLabSlot && !prevLabSlot.contains(activeItem)) {
           prevLabSlot.remove();
         }
+        var tokSlot = document.getElementById("token-slot-shapes");
+        if (tokSlot) toggleModChips(!!tokSlot.querySelector(".draggable-item"));
         clearOverZone();
         activeItem = null;
+      }
+
+      function toggleModChips(show) {
+        var card = document.getElementById("spot-5");
+        if (card) {
+          var parent = card.closest(".spot-card");
+          if (parent) parent.classList.toggle("mod-active", show);
+        }
       }
 
       document.addEventListener("pointerup", endDrag);
@@ -2210,6 +2400,94 @@
         }, 2000);
       }
 
+      // Mod Token combining — mod token + turtle/rabbit in Animal Mod
+      var modCombining = false;
+      var modCombosDone = 0;
+      var modStages = [
+        { chip1: "\u2212 slow", chip2: "+ hits", animalId: "turtle", animalSrc: "https://res.cloudinary.com/dqwm4pdbz/image/upload/c_crop,w_189,h_188,x_386,y_760/v1786861646/260811_lesson7ee_01_jzlmlp.png", animalName: "Turtle" },
+        { chip1: "\u2212 weak", chip2: "+ fast", animalId: "rabbit", animalSrc: "https://res.cloudinary.com/dp455m4rk/image/upload/c_crop,w_421,h_424,x_842,y_424/v1786346044/lesson6_ywgsxn.png", animalName: "Rabbit" },
+      ];
+
+      function updateModChips() {
+        var stage = modStages[modCombosDone] || modStages[modStages.length - 1];
+        var slot = document.querySelector("#spot-5 .mod-slot");
+        if (!slot) return;
+        var chips = slot.querySelectorAll(".mod-chip");
+        if (chips.length >= 2) {
+          chips[0].innerHTML = '<span class="mod-icon">\u2212</span> ' + stage.chip1.replace(/^\u2212\s*/, '');
+          chips[1].innerHTML = '<span class="mod-icon">+</span> ' + stage.chip2.replace(/^\+\s*/, '');
+        }
+      }
+
+      function checkModCombine() {
+        if (modCombining) return;
+        var tokenSlot = document.getElementById("token-slot-shapes");
+        if (!tokenSlot) return;
+        var token = tokenSlot.querySelector(".draggable-item");
+        if (!token || !token.classList.contains("mod-token")) return;
+
+        var spot = document.getElementById("spot-5");
+        if (!spot) return;
+
+        var stage = modStages[modCombosDone];
+        if (!stage) return;
+
+        var animal = document.getElementById(stage.animalId);
+        if (!animal || !spot.contains(animal)) return;
+
+        var animalSlot = animal.closest(".slot");
+        if (!animalSlot) return;
+
+        performModCombine(token, animal, animalSlot, stage);
+      }
+
+      function performModCombine(token, animal, animalSlot, stage) {
+        modCombining = true;
+        var spot = document.getElementById("spot-5");
+        var spotCard = spot ? spot.closest(".spot-card") : null;
+
+        if (spotCard) spotCard.classList.add("lab-drama");
+
+        setTimeout(function () {
+          token.classList.add("fade-out");
+        }, 800);
+
+        setTimeout(function () {
+          token.remove();
+          stashed.push(animal);
+          animal.remove();
+          if (spotCard) spotCard.classList.remove("lab-drama");
+
+          var newSlot = document.createElement("div");
+          newSlot.className = "slot lab-new-slot";
+
+          var newAnimal = document.createElement("div");
+          newAnimal.className = "draggable-item animal";
+          newAnimal.id = stage.animalId + "-mod";
+          newAnimal.setAttribute("data-mod-combined", "true");
+
+          var ring = document.createElement("div");
+          ring.className = "mod-animal-ring";
+          var img = document.createElement("img");
+          img.src = stage.animalSrc;
+          img.alt = stage.animalName;
+          ring.appendChild(img);
+
+          var name = document.createElement("span");
+          name.className = "animal-name";
+          name.textContent = stage.animalName;
+
+          newAnimal.appendChild(ring);
+          newAnimal.appendChild(name);
+          newSlot.appendChild(newAnimal);
+          spot.appendChild(newSlot);
+
+          modCombosDone++;
+          modCombining = false;
+          checkGoal();
+        }, 2000);
+      }
+
       function makeCombined(id, imgSrc) {
         var el = document.createElement("div");
         el.className =
@@ -2298,7 +2576,7 @@
         document
           .querySelectorAll(".drop-zone .draggable-item")
           .forEach(function (el) {
-            if (el.classList.contains("combined")) {
+            if (el.classList.contains("combined") || el.hasAttribute("data-mod-combined")) {
               el.remove();
             } else {
               parkItem(el);
@@ -2307,7 +2585,7 @@
         document
           .querySelectorAll(".item-container .draggable-item")
           .forEach(function (el) {
-            if (el.classList.contains("combined")) {
+            if (el.classList.contains("combined") || el.hasAttribute("data-mod-combined")) {
               el.remove();
             } else {
               inventory.appendChild(el);
@@ -2318,12 +2596,15 @@
         });
         stashed = [];
         document
-          .querySelectorAll(".bag-tray-inner .draggable-item")
+          .querySelectorAll(".box-tray-inner .draggable-item")
           .forEach(parkItem);
         tidyDone = false;
         openCat = null;
         labCombosDone = 0;
         labCombining = false;
+        modCombining = false;
+        modCombosDone = 0;
+        toggleModChips(false);
         ["brick-green", "brick-purple", "brick-orange"].forEach(function (id) {
           var el = document.getElementById(id);
           if (el) el.remove();
@@ -2337,11 +2618,35 @@
             spot1Reset.appendChild(slot);
           }
         }
-        // Park all bags back at Space One.
-        var homeBar = document.getElementById("bagBar");
-        var homeTrays = document.getElementById("bagTrays");
-        Object.keys(bagRefs).forEach(function (cat) {
-          var ref = bagRefs[cat];
+        var spot5Reset = document.getElementById("spot-5");
+        if (spot5Reset) {
+          spot5Reset.querySelectorAll(".slot").forEach(function (s) { s.remove(); });
+          var modSlot = document.createElement("div");
+          modSlot.className = "slot mod-slot";
+          var chip1 = document.createElement("div");
+          chip1.className = "mod-chip mod-minus";
+          chip1.innerHTML = '<span class="mod-icon">\u2212</span> slow';
+          var chip2 = document.createElement("div");
+          chip2.className = "mod-chip mod-plus";
+          chip2.innerHTML = '<span class="mod-icon">+</span> hits';
+          modSlot.appendChild(chip1);
+          modSlot.appendChild(chip2);
+          spot5Reset.appendChild(modSlot);
+          var emptySlot = document.createElement("div");
+          emptySlot.className = "slot";
+          spot5Reset.appendChild(emptySlot);
+        }
+        var tokenSlotShapes = document.getElementById("token-slot-shapes");
+        if (tokenSlotShapes) {
+          tokenSlotShapes.querySelectorAll(".draggable-item").forEach(function (el) {
+            document.getElementById("inventory").appendChild(el);
+          });
+        }
+        // Park all boxes back at Space One.
+        var homeBar = document.getElementById("boxBar");
+        var homeTrays = document.getElementById("boxTrays");
+        Object.keys(boxRefs).forEach(function (cat) {
+          var ref = boxRefs[cat];
           if (homeBar && ref.chip.parentElement !== homeBar)
             homeBar.appendChild(ref.chip);
           if (homeTrays && ref.tray.parentElement !== homeTrays)
@@ -2349,17 +2654,13 @@
           ref.chip.classList.remove("done", "open");
           ref.tray.classList.remove("open", "sealed");
         });
-        suppressBagClick = false;
-        var sep2 = document.getElementById("invSep2");
-        if (sep2) sep2.style.display = "none";
-        var area2El = document.getElementById("bagArea2");
-        if (area2El) area2El.style.display = "none";
-        var bagAreaEl = document.getElementById("bagArea");
-        if (bagAreaEl) {
-          bagAreaEl.classList.remove("dissolving");
-          bagAreaEl.style.display = "";
+        suppressBoxClick = false;
+        var boxAreaEl = document.getElementById("boxArea");
+        if (boxAreaEl) {
+          boxAreaEl.classList.remove("dissolving");
+          boxAreaEl.style.display = "";
         }
-        var barEl = document.getElementById("bagBar");
+        var barEl = document.getElementById("boxBar");
         if (barEl) barEl.classList.add("attract");
         setTidyHint("");
         document
@@ -2374,10 +2675,12 @@
         reached["spot-2"] = false;
         reached["spot-3"] = false;
         reached["spot-4"] = false;
+        reached["spot-5"] = true;
         unlocked["spot-1"] = true;
         unlocked["spot-2"] = false;
         unlocked["spot-3"] = false;
         unlocked["spot-4"] = false;
+        unlocked["spot-5"] = true;
         gameVersion++;
         ["spot-2", "spot-3", "spot-4"].forEach(function (id) {
           var zone = document.getElementById(id);
@@ -2408,6 +2711,7 @@
         "onza-avatar","sam-avatar",
         "num-five","num-six","num-seven","num-eight","num-nine",
         "lab-token-1","lab-token-2","lab-token-3",
+        "mod-token-1","mod-token-2",
       ];
       var space2Items = [
         "phrase-whats-your-name","phrase-my-name-is",
@@ -2427,10 +2731,10 @@
         if (!el) return null;
         var inv = el.closest(".item-container");
         if (inv) return "inventory";
-        var bagInner = el.closest(".bag-tray-inner");
-        if (bagInner) {
-          var tray = bagInner.closest(".bag-tray");
-          return tray ? "bag:" + tray.dataset.cat : null;
+        var boxInner = el.closest(".box-tray-inner");
+        if (boxInner) {
+          var tray = boxInner.closest(".box-tray");
+          return tray ? "box:" + tray.dataset.cat : null;
         }
         var slot = el.closest(".slot");
         if (slot) {
@@ -2476,8 +2780,8 @@
         var inv = document.getElementById(inventoryId);
         if (!inv) return;
 
-        // Close any open bag
-        if (openCat) closeBag();
+        // Close any open box
+        if (openCat) closeBox();
 
         // Restore stashed items to inventory
         if (data.stashed) {
@@ -2503,9 +2807,9 @@
 
           if (loc === "inventory") {
             if (!inv.contains(el)) inv.appendChild(el);
-          } else if (loc.indexOf("bag:") === 0) {
+          } else if (loc.indexOf("box:") === 0) {
             var cat = loc.substring(4);
-            var ref = bagRefs[cat];
+            var ref = boxRefs[cat];
             if (ref && !ref.inner.contains(el)) ref.inner.appendChild(el);
           } else if (loc.indexOf("slot:") === 0) {
             var parts = loc.split(":");
@@ -2541,7 +2845,7 @@
           });
         }
 
-        refreshBags();
+        refreshBoxes();
         checkGoal();
         renderIcons();
       }
