@@ -1,4 +1,4 @@
-<!doctype html>
+﻿<!doctype html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
@@ -529,7 +529,7 @@
       }
 
       /* Question (blue) / statement (purple) marker colours apply alike
-         to phrase bricks, their slot imprints and the box tags — lucide
+         to phrase bricks, their slot imprints and the box tags â€” lucide
          keeps these icon classes on the rendered <svg>. */
       .lucide-circle-question-mark {
         color: var(--question-icon);
@@ -539,7 +539,7 @@
         color: var(--statement-icon);
       }
 
-      /* Box icon stays unfilled when box is packed — border/bg change is enough */
+      /* Box icon stays unfilled when box is packed â€” border/bg change is enough */
 
       .box-chip .box-count {
         background: var(--item-bg);
@@ -1252,7 +1252,7 @@
       aria-label="Toggle dark mode"
       title="Toggle dark mode"
     >
-      🌙
+      ðŸŒ™
     </button>
     <h1>Onza's Mystery Base</h1>
     <div class="instructions herocard" id="goalText">
@@ -1291,7 +1291,7 @@
         </div>
         <div class="draggable-item animal" id="rabbit">
           <img
-            src="https://res.cloudinary.com/dmkhsyfzf/image/upload/c_crop,w_421,h_424,x_842,y_424/v1787862718/lesson6_vcljz7.png"
+            src="https://res.cloudinary.com/dmkhsyfzf/image/upload/c_crop,w_421,h_424,x_842,y_424/v1787862718/lesson6_vclj7z.png"
             alt="Rabbit"
           /><span class="animal-name">Rabbit</span>
         </div>
@@ -1452,7 +1452,7 @@
         <div class="spot-title">Animal Mod</div>
         <div class="drop-zone" id="spot-5">
           <div class="slot mod-slot">
-            <div class="mod-chip mod-minus"><span class="mod-icon">−</span> slow</div>
+            <div class="mod-chip mod-minus"><span class="mod-icon">âˆ’</span> slow</div>
             <div class="mod-chip mod-plus"><span class="mod-icon">+</span> hits</div>
           </div>
           <div class="slot"></div>
@@ -1573,7 +1573,7 @@
           var dark = theme === "dark" || (theme === "system" && darkMq.matches);
           root.classList.toggle("dark", dark);
           root.classList.toggle("light", !dark);
-          btn.textContent = dark ? "☀️" : "🌙";
+          btn.textContent = dark ? "â˜€ï¸" : "ðŸŒ™";
         }
 
         apply();
@@ -2132,6 +2132,17 @@
         updateGoals();
         updateInventorySummary();
       }
+      // Mod Token combining â€” mod token + turtle/rabbit in Animal Mod.
+      // Each mod stone upgrades exactly one animal (that animal's mod is then
+      // locked), and every stone is spent on a different animal.
+      var modCombining = false;
+      var modCombosDone = 0;
+      var modDoneAnimals = {};
+      var modStages = [
+        { chip1: "\u2212 slow", chip2: "+ hits", animalId: "turtle", animalSrc: "https://res.cloudinary.com/dqwm4pdbz/image/upload/c_crop,w_189,h_188,x_386,y_760/v1786861646/260811_lesson7ee_01_jzlmlp.png", animalName: "Turtle" },
+        { chip1: "\u2212 weak", chip2: "+ fast", animalId: "rabbit", animalSrc: "https://res.cloudinary.com/dmkhsyfzf/image/upload/c_crop,w_421,h_424,x_842,y_424/v1787862718/lesson6_vclj7z.png", animalName: "Rabbit" },
+      ];
+
       buildBoxes();
       shuffleItems();
       checkGoal();
@@ -2221,7 +2232,7 @@
               var canCombine =
                 mysterySpot && occupant && combos[activeItem.id] === occupant.id;
               if (requiredId && requiredId !== activeItem.id) {
-                /* wrong slot – do nothing */
+                /* wrong slot â€“ do nothing */
               } else if (!occupant) {
                 var srcSlot = activeItem.closest(".slot[data-accept]");
                 overZone.appendChild(activeItem);
@@ -2328,7 +2339,7 @@
       };
       var stashed = [];
 
-      // Colour Lab combining — lab token + two colour bricks → new colour
+      // Colour Lab combining â€” lab token + two colour bricks â†’ new colour
       var labCombosDone = 0;
       var labCombining = false;
       // Track which new colours have already been created, so each lab token
@@ -2371,7 +2382,7 @@
 
         var result = getLabComboResult(bricks[0].id, bricks[1].id);
         if (!result) return;
-        // Each new colour may be created only once — block re-runs so a lab
+        // Each new colour may be created only once â€” block re-runs so a lab
         // token is always spent on a brand-new colour, never a duplicate.
         if (labDoneResults[result]) return;
 
@@ -2412,17 +2423,6 @@
           checkGoal();
         }, 2000);
       }
-
-      // Mod Token combining — mod token + turtle/rabbit in Animal Mod.
-      // Each mod stone upgrades exactly one animal (that animal's mod is then
-      // locked), and every stone is spent on a different animal.
-      var modCombining = false;
-      var modCombosDone = 0;
-      var modDoneAnimals = {};
-      var modStages = [
-        { chip1: "\u2212 slow", chip2: "+ hits", animalId: "turtle", animalSrc: "https://res.cloudinary.com/dqwm4pdbz/image/upload/c_crop,w_189,h_188,x_386,y_760/v1786861646/260811_lesson7ee_01_jzlmlp.png", animalName: "Turtle" },
-        { chip1: "\u2212 weak", chip2: "+ fast", animalId: "rabbit", animalSrc: "https://res.cloudinary.com/dmkhsyfzf/image/upload/c_crop,w_421,h_424,x_842,y_424/v1787862718/lesson6_vcljz7.png", animalName: "Rabbit" },
-      ];
 
       function updateModChips() {
         var stage = null;
