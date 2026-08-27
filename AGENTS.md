@@ -18,7 +18,8 @@ EnglishExplorer/
 │   │   ├── animals.html
 │   │   ├── toys-things.html
 │   │   ├── my-family-my-classroom.html
-│   │   └── numbers.html
+│   │   ├── numbers.html
+│   │   └── house-home.html             <-- House & Home lesson deck
 │   └── minigames/              <-- Highly gamified mini-games (formerly /Features)
 │       ├── abc-world.html
 │       ├── mystery-base.html
@@ -31,9 +32,17 @@ EnglishExplorer/
 │   └── tools/                  <-- Standalone utility collection (formerly EEBTools/)
 │       ├── eebt-tools.html
 │       └── eebt-translator.html
-└── archive/                    <-- Older versions and backups for mobile/Tizen testing
-    └── develop.html
+├── archive/                    <-- Older versions and backups for mobile/Tizen testing
+│   └── develop.html
+└── template/                   <-- Reusable layouts (see "template/" below)
+    └── thematic-layout.html    <-- Base thematic lesson deck scaffold
 ```
+
+### template/
+
+Reusable layouts for building lesson decks. `thematic-layout.html` is the base
+layout scaffold (topbar, banner, ribbon, panel) copied from `junior/thematic/` —
+`junior/thematic/house-home.html` is its live instance in development.
 
 The `assets/`, `presentations/` (both ecosystems) and `breakthrough/modules/` folders from the
 target template do **not** exist yet — only create them when there is real shared content to
