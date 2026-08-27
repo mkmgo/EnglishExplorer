@@ -1,0 +1,331 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no"
+    />
+    <title>Protocol 27/08/2026</title>
+    <meta name="description" content="English Explorer — Protocol 27/08/2026" />
+    <meta property="og:image" content="https://res.cloudinary.com/dmkhsyfzf/image/upload/q_auto/f_auto/v1781698464/protocol_r392x1.png" />
+    <link rel="icon" type="image/png" href="https://res.cloudinary.com/dmkhsyfzf/image/upload/q_auto/f_auto/v1781698464/protocol_r392x1.png" />
+    <link rel="apple-touch-icon" href="https://res.cloudinary.com/dmkhsyfzf/image/upload/q_auto/f_auto/v1781698464/protocol_r392x1.png" />
+    <style>
+      :root {
+        --bg: #FAF7F2;
+        --ink: #14213d;
+        --muted: #60708d;
+        --accent: #e43703;
+        --accent2: #ffb866;
+        --good: #19a974;
+        --panel: #fcfcfc;
+        --shadow: 0 18px 50px rgba(20, 33, 61, 0.14);
+      }
+      .container[data-weekday="mon"] { --accent: #2563eb; }
+      .container[data-weekday="tue"] { --accent: #e43703; }
+      .container[data-weekday="wed"] { --accent: #0d9488; }
+      .container[data-weekday="thu"] { --accent: #7c3aed; }
+      .container[data-weekday="fri"] { --accent: #dc2626; }
+      .container[data-weekday="sat"] { --accent: #d97706; }
+      .container[data-weekday="sun"] { --accent: #475569; }
+      * {
+        box-sizing: border-box;
+      }
+      html, body {
+        margin: 0;
+        width: 100%;
+        min-height: 100%;
+        background: var(--bg);
+        font-family: Arial, Helvetica, sans-serif;
+        color: var(--ink);
+        touch-action: manipulation;
+        line-height: 1.6;
+      }
+      .container {
+        max-width: 900px;
+        margin: 0 auto;
+        padding: clamp(16px, 4vw, 40px) clamp(12px, 3vw, 24px);
+      }
+      h1 {
+        font-size: clamp(1.8rem, 5vw, 3rem);
+        margin: 0 0 0.2em;
+        font-weight: 900;
+        letter-spacing: -0.03em;
+        color: var(--accent);
+      }
+      .date-sub {
+        font-size: clamp(0.9rem, 1.6vw, 1.2rem);
+        color: var(--muted);
+        font-weight: 700;
+        letter-spacing: 0.1em;
+        margin: 0 0 2em;
+      }
+      .intro {
+        background: var(--panel);
+        border-radius: 24px;
+        padding: clamp(1rem, 2.5vw, 1.8em);
+        box-shadow: var(--shadow);
+        margin-bottom: 2em;
+        font-size: clamp(1rem, 1.8vw, 1.2rem);
+        line-height: 1.7;
+      }
+      h2 {
+        font-size: clamp(1.3rem, 3.2vw, 2rem);
+        margin: 2em 0 0.6em;
+        font-weight: 900;
+        color: var(--ink);
+        letter-spacing: -0.02em;
+      }
+      h3 {
+        font-size: clamp(1.1rem, 2.2vw, 1.5rem);
+        margin: 1.6em 0 0.4em;
+        font-weight: 800;
+        color: var(--accent);
+      }
+      p {
+        font-size: clamp(1rem, 1.8vw, 1.15rem);
+        margin: 0.4em 0;
+      }
+      .story-section {
+        background: var(--panel);
+        border-radius: 24px;
+        padding: clamp(1rem, 2.5vw, 1.6em);
+        box-shadow: var(--shadow);
+        margin-bottom: 1.4em;
+      }
+      .story-section h3 {
+        margin-top: 0;
+      }
+      .story-section p {
+        margin: 0.3em 0;
+      }
+      .direction {
+        font-size: clamp(1rem, 1.8vw, 1.2rem);
+        border-top: 1px solid #eae5db;
+        padding-top: 0.6em;
+        margin-top: 0.8em !important;
+      }
+      .direction:first-child {
+        border-top: none;
+        padding-top: 0;
+        margin-top: 0.4em !important;
+      }
+      .direction strong {
+        color: var(--accent);
+      }
+
+      .vocab-list {
+        background: var(--panel);
+        border-radius: 24px;
+        padding: clamp(1rem, 2.5vw, 1.6em);
+        box-shadow: var(--shadow);
+        margin-bottom: 1.4em;
+      }
+      .vocab-list h3 {
+        margin-top: 0;
+      }
+      .vocab-list ul {
+        margin: 0.4em 0;
+        padding-left: 1.4em;
+      }
+      .vocab-list li {
+        font-size: clamp(1rem, 1.8vw, 1.15rem);
+        margin: 0.25em 0;
+      }
+
+      /* Vocabulary table */
+      .vocab-table {
+        width: 100%;
+        border-collapse: separate;
+        border-spacing: 0;
+        margin: 1.6em 0 2em;
+        background: var(--panel);
+        border-radius: 16px;
+        box-shadow: var(--shadow);
+        overflow: hidden;
+      }
+      .vocab-table th {
+        background: var(--ink);
+        color: var(--accent2);
+        font-size: clamp(0.85rem, 1.5vw, 1rem);
+        font-weight: 800;
+        letter-spacing: 0.06em;
+        padding: 0.8em 1em;
+        text-align: left;
+        white-space: nowrap;
+      }
+      .vocab-table td {
+        padding: 0.7em 1em;
+        font-size: clamp(0.9rem, 1.6vw, 1.05rem);
+        border-top: 1px solid #eae5db;
+        vertical-align: top;
+        word-break: break-word;
+      }
+      .vocab-table tr:nth-child(even) td {
+        background: #fdf9f3;
+      }
+      .vocab-table td:last-child {
+        color: var(--muted);
+        font-weight: 600;
+      }
+
+      @media (max-width: 600px) {
+        .vocab-table {
+          display: block;
+          overflow-x: auto;
+          -webkit-overflow-scrolling: touch;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container" data-weekday="thu">
+      <h1>Protocol 27/08/2026</h1>
+      <p class="date-sub">English Explorer | Breakthrough</p>
+
+      <div class="intro">
+        Please study the following structures and sentences well. Words and expressions must be fully understood and memorised. The last section shows today's new vocabulary as well as some repetitive words. Please carefully repeat these as well.
+      </div>
+
+      <h2>Daily Routine</h2>
+      <div class="story-section">
+        <p>
+          You need to understand and apply the difference between the
+          <strong>Present Simple</strong> tense and the
+          <strong>Present Continuous</strong> tense.
+        </p>
+        <p>
+          <strong>Present Simple:</strong> Used for things that happen
+          repeatedly. When you express routines, general occurrences, and
+          habits, you should use this tense. Do not forget to add an
+          <strong>-s</strong> for she, he, and it.
+        </p>
+        <p>
+          <strong>Present Continuous:</strong> Shows that an action is
+          happening now and is still ongoing.
+        </p>
+      </div>
+
+      <h2>Comparison of Tenses</h2>
+      <table class="vocab-table">
+        <thead>
+          <tr>
+            <th>Every Day / Usually / Routine (Present Simple)</th>
+            <th>At the Moment / Now / Still Ongoing (Present Continuous)</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>I wake up at seven o'clock.</td><td>I am waking up.</td></tr>
+          <tr><td>I have breakfast before school.</td><td>I am having breakfast.</td></tr>
+          <tr><td>I usually go to school by bus.</td><td>Today I am going by car.</td></tr>
+          <tr><td>After school, I do my homework.</td><td>I am doing my homework.</td></tr>
+          <tr><td>Normally I have dinner with my family.</td><td>I am having dinner with my best friend.</td></tr>
+          <tr><td>I go to bed at ten o'clock.</td><td>I am going to bed.</td></tr>
+        </tbody>
+      </table>
+
+      <h2>Asking for and Understanding Directions</h2>
+      <div class="story-section">
+        <p>
+          You need to be able to ask for directions, reply to direction
+          requests, and understand them. Therefore, you need to construct
+          sentences according to this scheme.
+        </p>
+        <p>
+          If in doubt, check the reading list for Sarah and Kate's London
+          Adventure, Image 2: Understanding directions.
+        </p>
+      </div>
+
+      <h3>Exercise</h3>
+      <div class="story-section">
+        <p>As an exercise, please build the following sentences in your exercise book, applying this structure:</p>
+        <p class="direction"><strong>Place:</strong> British Museum &nbsp;|&nbsp; <strong>Way:</strong> ↑ ← ↑ &nbsp;|&nbsp; <strong>Near:</strong> Park</p>
+        <p class="direction"><strong>Place:</strong> Tower Bridge &nbsp;|&nbsp; <strong>Way:</strong> → ↑ ← &nbsp;|&nbsp; <strong>Near:</strong> River</p>
+        <p class="direction"><strong>Place:</strong> Westminster Abbey &nbsp;|&nbsp; <strong>Way:</strong> ↑ ← ↑ &nbsp;|&nbsp; <strong>Near:</strong> Zoo</p>
+      </div>
+
+      <h2>Vocabulary — 27/08/2026</h2>
+
+      <h3>Clothes</h3>
+      <table class="vocab-table">
+        <thead>
+          <tr><th>English</th><th>Chinese</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Clothes</td><td>衣服</td></tr>
+          <tr><td>Shoes</td><td>鞋</td></tr>
+          <tr><td>Trousers</td><td>裤子</td></tr>
+          <tr><td>T-shirt</td><td>T恤</td></tr>
+          <tr><td>Jacket</td><td>夹克</td></tr>
+          <tr><td>Socks</td><td>袜子</td></tr>
+          <tr><td>Skirt</td><td>裙子</td></tr>
+          <tr><td>Dress</td><td>裙子</td></tr>
+          <tr><td>Coat</td><td>外套</td></tr>
+          <tr><td>Shirt</td><td>衬衫</td></tr>
+        </tbody>
+      </table>
+
+      <h3>Accessories</h3>
+      <table class="vocab-table">
+        <thead>
+          <tr><th>English</th><th>Chinese</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Accessories</td><td>配件</td></tr>
+          <tr><td>Belt</td><td>腰带</td></tr>
+          <tr><td>Cap</td><td>帽</td></tr>
+          <tr><td>Watch</td><td>手表</td></tr>
+          <tr><td>Ring</td><td>戒指</td></tr>
+          <tr><td>Necklace</td><td>项链</td></tr>
+        </tbody>
+      </table>
+
+      <h3>Verbs &amp; Daily Actions</h3>
+      <table class="vocab-table">
+        <thead>
+          <tr><th>English</th><th>Chinese</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>A Verb</td><td>动词</td></tr>
+          <tr><td>Get up</td><td>起床</td></tr>
+          <tr><td>To wash</td><td>洗</td></tr>
+          <tr><td>To brush your teeth</td><td>刷牙</td></tr>
+          <tr><td>One tooth</td><td>一颗牙齿</td></tr>
+          <tr><td>To read</td><td>阅读</td></tr>
+        </tbody>
+      </table>
+
+      <h3>Grammar</h3>
+      <table class="vocab-table">
+        <thead>
+          <tr><th>English</th><th>Chinese</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Simple Present</td><td>简单的礼物</td></tr>
+          <tr><td>Usually</td><td>通常</td></tr>
+          <tr><td>Normally</td><td>通常情况下</td></tr>
+          <tr><td>Present Continuous</td><td>现在进行时</td></tr>
+        </tbody>
+      </table>
+
+      <h3>Directions &amp; Landmarks</h3>
+      <table class="vocab-table">
+        <thead>
+          <tr><th>English</th><th>Chinese</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Landmark</td><td>地标</td></tr>
+          <tr><td>Understanding directions</td><td>了解方向。</td></tr>
+          <tr><td>How do I get to the British Museum?</td><td>如何前往大英博物馆？ （说话者自问。）</td></tr>
+          <tr><td>How do we get to the British Museum?</td><td>我们怎么去大英博物馆？ （说话者要求两者。）</td></tr>
+          <tr><td>How to get to the British Museum?</td><td>如何去大英博物馆？ （说话者一般性地提问。）</td></tr>
+        </tbody>
+      </table>
+
+    </div>
+  <script src="../../config.js"></script>
+  <script src="../../tracker.js"></script>
+  </body>
+</html>
