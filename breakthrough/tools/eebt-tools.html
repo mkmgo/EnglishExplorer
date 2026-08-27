@@ -565,6 +565,7 @@
         width: 100%;
       }
       .collectionViewCell {
+        position: relative;
         border-radius: 12px;
         overflow: hidden;
         box-shadow: 0 3px 10px rgba(0, 0, 0, 0.12);
@@ -604,6 +605,30 @@
         width: 80%;
         display: block;
         margin: 1.2em auto;
+      }
+      .collectionEnlargeBtn {
+        position: absolute;
+        top: 6px;
+        right: 6px;
+        width: clamp(26px, 4vw, 38px);
+        height: clamp(26px, 4vw, 38px);
+        border-radius: 50%;
+        background: rgba(0, 0, 0, 0.55);
+        color: #fff;
+        border: none;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        z-index: 5;
+        transition: 0.15s background, 0.15s transform;
+        padding: 0;
+      }
+      .collectionEnlargeBtn:hover {
+        background: rgba(0, 0, 0, 0.75);
+      }
+      .collectionEnlargeBtn:active {
+        transform: scale(0.9);
       }
       .mediaThumbs .thumb img,
       .mediaThumbs .thumb video {
@@ -831,6 +856,45 @@
       }
       .clipList::-webkit-scrollbar {
         display: none;
+      }
+      .clipRow {
+        display: flex;
+        align-items: stretch;
+        gap: 0.4em;
+        width: 100%;
+      }
+      .clipRow .clip {
+        flex: 1 1 auto;
+        min-width: 0;
+      }
+      .clipMoves {
+        display: flex;
+        flex-direction: column;
+        gap: 0.25em;
+        flex: 0 0 auto;
+      }
+      .clipMove {
+        width: clamp(30px, 5vw, 44px);
+        height: clamp(16px, 2.5vh, 22px);
+        border-radius: 8px;
+        background: #eef1f7;
+        color: var(--accent);
+        border: 1px solid rgba(96, 112, 141, 0.4);
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        line-height: 1;
+        padding: 0;
+        transition: 0.15s transform;
+      }
+      .clipMove:active {
+        transform: scale(0.9);
+      }
+      .clipMove:disabled {
+        opacity: 0.3;
+        cursor: default;
+        transform: none;
       }
       .downloadCsvBtn {
         display: flex;
@@ -1639,6 +1703,11 @@
         color: var(--accent2);
         border-color: var(--accent2);
       }
+      :root[data-theme="dark"] .clipMove {
+        background: #232a36;
+        color: var(--accent2);
+        border-color: var(--accent2);
+      }
       :root[data-theme="dark"] .clip time {
         color: var(--accent2);
         opacity: 0.6;
@@ -1702,6 +1771,12 @@
         background: rgba(255, 255, 255, 0.2);
       }
       :root[data-theme="dark"] .mediaEnlargeBtn:hover {
+        background: rgba(255, 255, 255, 0.35);
+      }
+      :root[data-theme="dark"] .collectionEnlargeBtn {
+        background: rgba(255, 255, 255, 0.2);
+      }
+      :root[data-theme="dark"] .collectionEnlargeBtn:hover {
         background: rgba(255, 255, 255, 0.35);
       }
     </style>
@@ -2039,6 +2114,10 @@
         '<svg xmlns="http://www.w3.org/2000/svg" width="1.2em" height="1.2em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: -0.2em"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><line x1="22" x2="16" y1="9" y2="15"/><line x1="16" x2="22" y1="9" y2="15"/></svg>';
       var ICON_CLIPBOARD_TYPE =
         '<svg xmlns="http://www.w3.org/2000/svg" width="1.1em" height="1.1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex:none"><rect width="8" height="4" x="8" y="2" rx="1" ry="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><path d="M9 12v-1h6v1"/><path d="M11 17h2"/><path d="M12 11v6"/></svg>';
+      var ICON_MOVE_UP =
+        '<svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="m18 15-6-9-6 9"/></svg>';
+      var ICON_MOVE_DOWN =
+        '<svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 9 6-9"/></svg>';
 
       function show(i) {
         idx = Math.max(0, Math.min(screens.length - 1, i));
@@ -2288,6 +2367,8 @@
         var words = String(en).trim().split(/\s+/);
         var preview = words.slice(0, 6).join(" ");
         if (preview.length > 60) preview = preview.slice(0, 60) + "…";
+        var row = document.createElement("div");
+        row.className = "clipRow";
         var b = document.createElement("button");
         b.className = "clip";
         b.type = "button";
@@ -2311,7 +2392,71 @@
         b.onclick = function () {
           restoreClip(en, zh);
         };
-        clipList.insertBefore(b, clipList.firstChild);
+        row.appendChild(b);
+
+        var moves = document.createElement("span");
+        moves.className = "clipMoves";
+        var upBtn = document.createElement("button");
+        upBtn.className = "clipMove up";
+        upBtn.type = "button";
+        upBtn.innerHTML = ICON_MOVE_UP;
+        upBtn.setAttribute("aria-label", "Move up");
+        upBtn.addEventListener("click", function (e) {
+          e.stopPropagation();
+          moveClipRow(row, -1);
+        });
+        var downBtn = document.createElement("button");
+        downBtn.className = "clipMove down";
+        downBtn.type = "button";
+        downBtn.innerHTML = ICON_MOVE_DOWN;
+        downBtn.setAttribute("aria-label", "Move down");
+        downBtn.addEventListener("click", function (e) {
+          e.stopPropagation();
+          moveClipRow(row, 1);
+        });
+        moves.appendChild(upBtn);
+        moves.appendChild(downBtn);
+        row.appendChild(moves);
+
+        clipList.appendChild(row);
+      }
+
+      function renderClipList() {
+        clipList.innerHTML = "";
+        for (var i = 0; i < clipHistory.length; i++) {
+          var c = clipHistory[i];
+          appendClipRow(c.time, c.en, c.zh);
+        }
+        updateClipMoveButtons();
+      }
+
+      function updateClipMoveButtons() {
+        var rows = clipList.children;
+        for (var i = 0; i < rows.length; i++) {
+          var up = rows[i].querySelector(".clipMove.up");
+          var down = rows[i].querySelector(".clipMove.down");
+          if (up) up.disabled = i === 0;
+          if (down) down.disabled = i === rows.length - 1;
+        }
+      }
+
+      function moveClipRow(row, dir) {
+        var rows = clipList.children;
+        var idx = -1;
+        for (var i = 0; i < rows.length; i++) {
+          if (rows[i] === row) {
+            idx = i;
+            break;
+          }
+        }
+        if (idx < 0) return;
+        var newIdx = idx + dir;
+        if (newIdx < 0 || newIdx >= rows.length) return;
+        var tmp = clipHistory[idx];
+        clipHistory[idx] = clipHistory[newIdx];
+        clipHistory[newIdx] = tmp;
+        renderClipList();
+        toast(dir < 0 ? "Moved up" : "Moved down");
       }
 
       function addClip(en, zh) {
@@ -2326,7 +2471,7 @@
           second: "2-digit",
         });
         clipHistory.push({ time: time, en: en, zh: zh });
-        appendClipRow(time, en, zh);
+        renderClipList();
       }
 
       function csvCell(v) {
@@ -2480,6 +2625,7 @@
             appendClipRow(t, en, zh);
             count++;
           }
+          updateClipMoveButtons();
           var msg = count ? "Loaded " + count + " clip(s)" : "No new clips";
           if (skipped) msg += ", " + skipped + " duplicate(s) skipped";
           if (garbled)
@@ -2754,6 +2900,16 @@
               aud.src = item.url;
               cell.appendChild(aud);
             }
+
+            var enl = document.createElement("button");
+            enl.className = "collectionEnlargeBtn";
+            enl.type = "button";
+            enl.setAttribute("aria-label", "Enlarge");
+            enl.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="1.2em" height="1.2em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/><path d="M11 8v6"/><path d="M8 11h6"/></svg>';
+            enl.addEventListener("click", function () {
+              openMediaOverlay(item.url);
+            });
+            cell.appendChild(enl);
 
             grid.appendChild(cell);
           })(i);
