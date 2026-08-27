@@ -2058,6 +2058,12 @@
         if (s1Card) s1Card.classList.toggle("goal-reached", reached["spot-1"]);
         if (!reached["spot-1"]) allActive = false;
 
+        // Check Animal Mod completion (both mod tokens used / both animals upgraded)
+        var spot5 = document.getElementById("spot-5");
+        var s5Card = spot5 && spot5.closest(".spot-card");
+        var modComplete = modCombosDone >= modStages.length;
+        if (s5Card) s5Card.classList.toggle("goal-reached", modComplete);
+
         goals.forEach(function (goal) {
           if (goal.spotId === "spot-4") return;
           var spot = document.getElementById(goal.spotId);
@@ -2325,6 +2331,9 @@
       // Colour Lab combining — lab token + two colour bricks → new colour
       var labCombosDone = 0;
       var labCombining = false;
+      // Track which new colours have already been created, so each lab token
+      // always produces exactly one brand-new colour and duplicates are blocked.
+      var labDoneResults = {};
       var labComboResults = {
         "brick-blue+brick-yellow": "brick-green",
         "brick-blue+brick-red": "brick-purple",
@@ -2362,6 +2371,9 @@
 
         var result = getLabComboResult(bricks[0].id, bricks[1].id);
         if (!result) return;
+        // Each new colour may be created only once — block re-runs so a lab
+        // token is always spent on a brand-new colour, never a duplicate.
+        if (labDoneResults[result]) return;
 
         performLabCombine(token, bricks[0], bricks[1], result);
       }
@@ -2395,21 +2407,32 @@
           spot.appendChild(newSlot);
 
           labCombosDone++;
+          labDoneResults[resultId] = true;
           labCombining = false;
           checkGoal();
         }, 2000);
       }
 
-      // Mod Token combining — mod token + turtle/rabbit in Animal Mod
+      // Mod Token combining — mod token + turtle/rabbit in Animal Mod.
+      // Each mod stone upgrades exactly one animal (that animal's mod is then
+      // locked), and every stone is spent on a different animal.
       var modCombining = false;
       var modCombosDone = 0;
+      var modDoneAnimals = {};
       var modStages = [
         { chip1: "\u2212 slow", chip2: "+ hits", animalId: "turtle", animalSrc: "https://res.cloudinary.com/dqwm4pdbz/image/upload/c_crop,w_189,h_188,x_386,y_760/v1786861646/260811_lesson7ee_01_jzlmlp.png", animalName: "Turtle" },
         { chip1: "\u2212 weak", chip2: "+ fast", animalId: "rabbit", animalSrc: "https://res.cloudinary.com/dp455m4rk/image/upload/c_crop,w_421,h_424,x_842,y_424/v1786346044/lesson6_ywgsxn.png", animalName: "Rabbit" },
       ];
 
       function updateModChips() {
-        var stage = modStages[modCombosDone] || modStages[modStages.length - 1];
+        var stage = null;
+        for (var s = 0; s < modStages.length; s++) {
+          if (!modDoneAnimals[modStages[s].animalId]) {
+            stage = modStages[s];
+            break;
+          }
+        }
+        if (!stage) stage = modStages[modStages.length - 1];
         var slot = document.querySelector("#spot-5 .mod-slot");
         if (!slot) return;
         var chips = slot.querySelectorAll(".mod-chip");
@@ -2429,7 +2452,13 @@
         var spot = document.getElementById("spot-5");
         if (!spot) return;
 
-        var stage = modStages[modCombosDone];
+        var stage = null;
+        for (var s = 0; s < modStages.length; s++) {
+          if (!modDoneAnimals[modStages[s].animalId]) {
+            stage = modStages[s];
+            break;
+          }
+        }
         if (!stage) return;
 
         var animal = document.getElementById(stage.animalId);
@@ -2483,6 +2512,7 @@
           spot.appendChild(newSlot);
 
           modCombosDone++;
+          modDoneAnimals[stage.animalId] = true;
           modCombining = false;
           checkGoal();
         }, 2000);
@@ -2602,9 +2632,10 @@
         openCat = null;
         labCombosDone = 0;
         labCombining = false;
+        labDoneResults = {};
         modCombining = false;
         modCombosDone = 0;
-        toggleModChips(false);
+        modDoneAnimals = {};        toggleModChips(false);
         ["brick-green", "brick-purple", "brick-orange"].forEach(function (id) {
           var el = document.getElementById(id);
           if (el) el.remove();
