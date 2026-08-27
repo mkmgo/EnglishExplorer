@@ -435,9 +435,9 @@
       }
       .textLabel {
         position: absolute;
-        background: rgba(0, 0, 0, 0.72);
+        background: rgba(0, 0, 0, 0.50);
         color: #fff;
-        border-radius: 999px;
+        border-radius: 10px;
         font-weight: 900;
         letter-spacing: 0.04em;
         text-transform: uppercase;
@@ -1851,7 +1851,7 @@
         background: rgba(255, 255, 255, 0.35);
       }
       :root[data-theme="dark"] .textLabel {
-        background: rgba(255, 255, 255, 0.82);
+        background: rgba(255, 255, 255, 0.60);
         color: #111;
       }
       :root[data-theme="dark"] .textSizeBar .szChip {
@@ -2825,6 +2825,11 @@
           wrap.style.position = "relative";
           wrap.style.overflow = "visible";
           renderLabels(wrap, entry, false);
+          var tEnlarge = document.createElement("button");
+          tEnlarge.className = "mediaEnlargeBtn";
+          tEnlarge.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="1.4em" height="1.4em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/><path d="M11 8v6"/><path d="M8 11h6"/></svg>';
+          tEnlarge.addEventListener("click", function () { openMediaOverlay(); });
+          wrap.appendChild(tEnlarge);
           renderMediaThumbs();
           renderCollectionLabel();
           return;
@@ -3592,13 +3597,6 @@
       function renderLabels(wrap, entry, isOverlay) {
         if (!entry || entry.type !== "text") return;
         var bgImg = findBackgroundImage(activeMediaIdx);
-        if (!bgImg && !isOverlay) {
-          var ph = document.createElement("div");
-          ph.style.cssText = "text-align:center;color:var(--muted);font-size:1.2rem;padding:2em;";
-          ph.textContent = "Place this label after an image to overlay it.";
-          wrap.appendChild(ph);
-          return;
-        }
         if (bgImg) {
           var imgFrame = document.createElement("div");
           imgFrame.style.cssText = "position:relative;display:inline-block;width:100%;line-height:0;";
@@ -3610,6 +3608,10 @@
           renderTextOverlay(imgFrame, bgImg, entry, isOverlay);
           wrap.insertBefore(imgFrame, wrap.firstChild);
         } else {
+          var ph = document.createElement("div");
+          ph.style.cssText = "text-align:center;color:var(--muted);font-size:clamp(1rem,1.8vw,1.5rem);padding:2em 1em;";
+          ph.textContent = "Add an image before this label to use it as an overlay.";
+          wrap.appendChild(ph);
           renderTextOverlay(wrap, null, entry, isOverlay);
         }
         var addBtn = document.createElement("button");
