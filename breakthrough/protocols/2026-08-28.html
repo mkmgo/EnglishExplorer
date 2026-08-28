@@ -1,0 +1,285 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no"
+    />
+    <title>Protocol 28/08/2026</title>
+    <meta name="description" content="English Explorer — Protocol 28/08/2026" />
+    <meta property="og:image" content="https://res.cloudinary.com/dmkhsyfzf/image/upload/q_auto/f_auto/v1781698464/protocol_r392x1.png" />
+    <link rel="icon" type="image/png" href="https://res.cloudinary.com/dmkhsyfzf/image/upload/q_auto/f_auto/v1781698464/protocol_r392x1.png" />
+    <link rel="apple-touch-icon" href="https://res.cloudinary.com/dmkhsyfzf/image/upload/q_auto/f_auto/v1781698464/protocol_r392x1.png" />
+    <style>
+      :root {
+        --bg: #FAF7F2;
+        --ink: #14213d;
+        --muted: #60708d;
+        --accent: #e43703;
+        --accent2: #ffb866;
+        --good: #19a974;
+        --panel: #fcfcfc;
+        --shadow: 0 18px 50px rgba(20, 33, 61, 0.14);
+      }
+      .container[data-weekday="mon"] { --accent: #2563eb; }
+      .container[data-weekday="tue"] { --accent: #e43703; }
+      .container[data-weekday="wed"] { --accent: #0d9488; }
+      .container[data-weekday="thu"] { --accent: #7c3aed; }
+      .container[data-weekday="fri"] { --accent: #dc2626; }
+      .container[data-weekday="sat"] { --accent: #d97706; }
+      .container[data-weekday="sun"] { --accent: #475569; }
+      * {
+        box-sizing: border-box;
+      }
+      html, body {
+        margin: 0;
+        width: 100%;
+        min-height: 100%;
+        background: var(--bg);
+        font-family: Arial, Helvetica, sans-serif;
+        color: var(--ink);
+        touch-action: manipulation;
+        line-height: 1.6;
+      }
+      .container {
+        max-width: 900px;
+        margin: 0 auto;
+        padding: clamp(16px, 4vw, 40px) clamp(12px, 3vw, 24px);
+      }
+      h1 {
+        font-size: clamp(1.8rem, 5vw, 3rem);
+        margin: 0 0 0.2em;
+        font-weight: 900;
+        letter-spacing: -0.03em;
+        color: var(--accent);
+      }
+      .date-sub {
+        font-size: clamp(0.9rem, 1.6vw, 1.2rem);
+        color: var(--muted);
+        font-weight: 700;
+        letter-spacing: 0.1em;
+        margin: 0 0 2em;
+      }
+      .intro {
+        background: var(--panel);
+        border-radius: 24px;
+        padding: clamp(1rem, 2.5vw, 1.8em);
+        box-shadow: var(--shadow);
+        margin-bottom: 2em;
+        font-size: clamp(1rem, 1.8vw, 1.2rem);
+        line-height: 1.7;
+      }
+      h2 {
+        font-size: clamp(1.3rem, 3.2vw, 2rem);
+        margin: 2em 0 0.6em;
+        font-weight: 900;
+        color: var(--ink);
+        letter-spacing: -0.02em;
+      }
+      h3 {
+        font-size: clamp(1.1rem, 2.2vw, 1.5rem);
+        margin: 1.6em 0 0.4em;
+        font-weight: 800;
+        color: var(--accent);
+      }
+      p {
+        font-size: clamp(1rem, 1.8vw, 1.15rem);
+        margin: 0.4em 0;
+      }
+      .story-section {
+        background: var(--panel);
+        border-radius: 24px;
+        padding: clamp(1rem, 2.5vw, 1.6em);
+        box-shadow: var(--shadow);
+        margin-bottom: 1.4em;
+      }
+      .story-section h3 {
+        margin-top: 0;
+      }
+      .story-section p {
+        margin: 0.3em 0;
+      }
+      .example {
+        background: #fdf3e7;
+        border-left: 5px solid var(--accent);
+        border-radius: 8px;
+        padding: 0.7em 1em;
+        margin: 0.8em 0 !important;
+        font-style: italic;
+      }
+      .exercise {
+        border-top: 1px dashed #eae5db;
+        padding-top: 0.8em;
+        margin-top: 1em !important;
+      }
+      .exercise strong {
+        color: var(--accent);
+      }
+
+      /* Vocabulary table */
+      .vocab-table {
+        width: 100%;
+        border-collapse: separate;
+        border-spacing: 0;
+        margin: 1.6em 0 2em;
+        background: var(--panel);
+        border-radius: 16px;
+        box-shadow: var(--shadow);
+        overflow: hidden;
+      }
+      .vocab-table th {
+        background: var(--ink);
+        color: var(--accent2);
+        font-size: clamp(0.85rem, 1.5vw, 1rem);
+        font-weight: 800;
+        letter-spacing: 0.06em;
+        padding: 0.8em 1em;
+        text-align: left;
+        white-space: nowrap;
+      }
+      .vocab-table td {
+        padding: 0.7em 1em;
+        font-size: clamp(0.9rem, 1.6vw, 1.05rem);
+        border-top: 1px solid #eae5db;
+        vertical-align: top;
+        word-break: break-word;
+      }
+      .vocab-table tr:nth-child(even) td {
+        background: #fdf9f3;
+      }
+      .vocab-table td:last-child {
+        color: var(--muted);
+        font-weight: 600;
+      }
+
+      @media (max-width: 600px) {
+        .vocab-table {
+          display: block;
+          overflow-x: auto;
+          -webkit-overflow-scrolling: touch;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container" data-weekday="fri">
+      <h1>Protocol 28/08/2026</h1>
+      <p class="date-sub">English Explorer | Breakthrough</p>
+
+      <div class="intro">
+        Please study the following structures and sentences well. Words and expressions must be fully understood and memorised. The last section shows today's new vocabulary as well as some repetitive words. Please carefully repeat these as well.
+      </div>
+
+      <h2>1. Simple Present and Present Continuous</h2>
+      <div class="story-section">
+        <p>
+          By using <em>usually</em> and <em>now</em>, it becomes very clear what
+          <strong>Simple Present</strong> and <strong>Present Continuous</strong>
+          mean.
+        </p>
+        <p class="example">
+          <em>Usually my brother goes to bed at 9 o'clock.</em> <br />
+          → <em>Now he is going to bed.</em>
+        </p>
+        <p class="exercise">
+          <strong>Exercise:</strong> Write three sentences in your exercise book
+          using these phrases: <em>to brush your teeth</em>, <em>to play</em>, and
+          <em>to go to school</em>.
+        </p>
+      </div>
+
+      <h2>2. Understanding Directions</h2>
+      <div class="story-section">
+        <p>Construct sentences according to this scheme.</p>
+        <table class="vocab-table">
+          <thead>
+            <tr><th>Example</th><th>Destination</th><th>Directions</th><th>Nearby</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>1</td><td>British Museum</td><td>↑↑→</td><td>Park</td></tr>
+            <tr><td>2</td><td>Old Bridge</td><td>→↑←</td><td>River</td></tr>
+            <tr><td>3</td><td>City Statue</td><td>↑←↑</td><td>Zoo</td></tr>
+          </tbody>
+        </table>
+        <p class="example">
+          To get to the British Museum, go straight on for two streets, then go
+          left. It's near the park.
+        </p>
+        <p class="exercise">
+          <strong>Exercise:</strong> Complete the other two examples in your
+          exercise book.
+        </p>
+      </div>
+
+      <h2>3. Expressing Options</h2>
+      <div class="story-section">
+        <p>There is more than one way to get to a place.</p>
+        <table class="vocab-table">
+          <thead>
+            <tr><th>Destination</th><th>Option 1</th><th>Option 2</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Italian restaurant</td><td>Walk</td><td>Subway</td></tr>
+            <tr><td>Zoo</td><td>Walk</td><td>Bus</td></tr>
+            <tr><td>Cinema Centre</td><td>Ferry</td><td>Subway</td></tr>
+          </tbody>
+        </table>
+        <p class="example">
+          To get to the Italian Restaurant, we could walk or take the subway.
+        </p>
+        <p class="exercise">
+          <strong>Exercise:</strong> Complete the other two examples in your
+          exercise book.
+        </p>
+      </div>
+
+      <h2>Vocabulary — 28/08/2026</h2>
+
+      <h3>Grammar</h3>
+      <table class="vocab-table">
+        <thead>
+          <tr><th>English</th><th>Chinese</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Singular</td><td>单数</td></tr>
+          <tr><td>Plural</td><td>复数</td></tr>
+          <tr><td>Once</td><td>一次</td></tr>
+          <tr><td>Twice</td><td>两次</td></tr>
+          <tr><td>The second movie I liked better than the first.</td><td>我比第一部电影更喜欢第二部电影。</td></tr>
+          <tr><td>But the third movie was the best.</td><td>但第三部电影是最好的。</td></tr>
+        </tbody>
+      </table>
+
+      <h3>Directions &amp; Landmarks</h3>
+      <table class="vocab-table">
+        <thead>
+          <tr><th>English</th><th>Chinese</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>River</td><td>河</td></tr>
+          <tr><td>Go straight for two streets.</td><td>直走两条街。</td></tr>
+          <tr><td>And at the next corner go left.</td><td>在下一个拐角处向左走。</td></tr>
+          <tr><td>You need to be able to ask for directions, reply to direction requests, and understand them.</td><td>您需要能够询问方向、回复方向请求并理解它们。</td></tr>
+          <tr><td>Therefore, you need to construct sentences according to this scheme.</td><td>因此，你需要根据这个方案来构造句子。</td></tr>
+          <tr><td>If in doubt, check the reading list for Sarah and Kate's London Adventure, Image 2: Understanding directions.</td><td>如果有疑问，请查看莎拉和凯特的伦敦冒险阅读清单，图 2：了解方向。</td></tr>
+        </tbody>
+      </table>
+
+      <h3>Expressing Options</h3>
+      <table class="vocab-table">
+        <thead>
+          <tr><th>English</th><th>Chinese</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Expressing options.</td><td>表达选项。</td></tr>
+          <tr><td>Good understanding of the language is impoortant to take part in conversations and express yourself.</td><td>对语言的良好理解对于参与对话和表达自己很重要。</td></tr>
+          <tr><td>A typo</td><td>一个错字</td></tr>
+        </tbody>
+      </table>
+
+    </div>
+  <script src="../../config.js"></script>
+  <script src="../../tracker.js"></script>
+  </body>
+</html>
