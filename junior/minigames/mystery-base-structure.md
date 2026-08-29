@@ -29,7 +29,7 @@ Source palette for object bricks, colour bricks, tokens, avatars, and numbers.
 | Yellow | `#brick-yellow` | `.brick.brick-yellow` | Coloured circle + label |
 | Blue | `#brick-blue` | `.brick.brick-blue` | Coloured circle + label |
 | Lab Token x3 | `#lab-token-1/2/3` | `.lab-token` | 44px image, yellow gradient bg |
-| Mod Token x2 | `#mod-token-1/2` | `.mod-token` | 44px image, green gradient bg |
+| Mod Token x3 | `#mod-token-1/2/3` | `.mod-token` | 44px image, green gradient bg |
 | Onza | `#onza-avatar` | `.animal` `data-type="avatar"` | 48px circular image + name |
 | Sam | `#sam-avatar` | `.animal` `data-type="avatar"` | 48px circular image + name |
 | Five | `#num-five` | `.animal` `data-type="number"` | 48px circular image + name |
@@ -100,7 +100,7 @@ Source palette for phrase bricks (questions + statements).
 - **Drop zone:** 1 mod-slot (with modifier chips) + 1 empty slot
 - **Mod chips:** `- slow` / `+ hits` (stage 1) → `- weak` / `+ fast` (stage 2)
 - **Unlock:** Open from start
-- **Goal:** Complete 2 animal modifications
+- **Goal:** Complete 3 animal modifications
 
 ### 6. Age (`#spot-age`)
 - **Layout:** 2-column grid (left side, with Name dialogue)
@@ -152,6 +152,7 @@ Requires 1 lab-token in `#token-slot`. Token is consumed. New brick gets `data-l
 |-------|--------|-----------|----------|----------|
 | 1 | Turtle | mod-token | `turtle-mod` | − slow, + hits |
 | 2 | Rabbit | mod-token | `rabbit-mod` | − weak, + fast |
+| 3 | Whale | mod-token | `whale-mod` | − fast, + big |
 
 Requires 1 mod-token in `#token-slot-shapes`. Token is consumed. Animal gets green ring + `data-mod-combined="true"`. Original animal is stashed for reset.
 
@@ -168,7 +169,7 @@ Requires 1 mod-token in `#token-slot-shapes`. Token is consumed. Animal gets gre
 | Avatars | `onza-avatar`, `sam-avatar` |
 | Toys | `car`, `bike`, `robot`, `kite` |
 | Animals | `bee`, `rabbit`, `dog`, `elephant`, `turtle`, `whale` |
-| Special | `dragon`, `dinosaur` |
+| Special | `dragon`, `dinosaur`, `turtle-mod`, `rabbit-mod`, `whale-mod` |
 
 ### Space Two Boxes (`#boxBar2` / `#boxTrays2`)
 

@@ -258,6 +258,126 @@
         padding: 8px;
       }
 
+      /* Collapse toggle (top-right corner), available from the start. */
+      .lab-toggle {
+        display: flex;
+        position: absolute;
+        top: 6px;
+        right: 6px;
+        z-index: 5;
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+        border: 2px solid var(--border);
+        background: var(--card-bg);
+        color: var(--text);
+        font-size: 1.05rem;
+        font-weight: bold;
+        line-height: 1;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        -webkit-tap-highlight-color: transparent;
+        transition: background-color 0.2s, transform 0.15s;
+      }
+
+      .lab-toggle:active {
+        transform: scale(0.9);
+      }
+
+      /* Labs collapse into a compact draggable chip once all their
+         tokens are used; the top-right button reopens the full card. */
+      .spot-card.colour-lab.lab-collapsed {
+        justify-self: center;
+        width: auto;
+        max-width: 220px;
+        border-radius: 999px;
+        padding: 9px 36px 9px 18px;
+        gap: 8px;
+        cursor: grab;
+        touch-action: none;
+        -webkit-tap-highlight-color: transparent;
+        -webkit-touch-callout: none;
+        -webkit-user-select: none;
+        user-select: none;
+      }
+
+      .spot-card.colour-lab.lab-collapsed .lab-toggle {
+        top: 3px;
+        right: 3px;
+        width: 24px;
+        height: 24px;
+        font-size: 0.95rem;
+      }
+
+      .spot-card.colour-lab.lab-collapsed:active {
+        cursor: grabbing;
+      }
+
+      .spot-card.colour-lab.lab-collapsed .token-slot,
+      .spot-card.colour-lab.lab-collapsed .drop-zone {
+        display: none;
+      }
+
+      .spot-card.colour-lab.lab-collapsed .spot-title {
+        font-size: 1rem;
+        margin: 0;
+      }
+
+      .spot-card.colour-lab.lab-collapsed.lab-open-pop {
+        animation: labCollapse 0.3s ease;
+      }
+
+      @keyframes labCollapse {
+        0% {
+          transform: scale(0.85);
+          opacity: 0.4;
+        }
+        100% {
+          transform: scale(1);
+          opacity: 1;
+        }
+      }
+
+      .spot-card.colour-lab.ghost {
+        position: fixed;
+        z-index: 1000;
+        pointer-events: none;
+        margin: 0;
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.25);
+      }
+
+      /* Lab parking zone: a flex row under each palette's boxes where the
+         collapsed Mixer / Mod Lab chips live side by side. */
+      .lab-zone {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        align-items: flex-start;
+        gap: 12px;
+        margin-top: 18px;
+      }
+
+      .lab-zone:empty {
+        margin-top: 12px;
+      }
+
+      .lab-zone.drag-over {
+        outline: 2px dashed var(--primary);
+        outline-offset: 3px;
+        border-radius: 12px;
+      }
+
+      .lab-zone .grid-container {
+        width: auto;
+        margin-bottom: 0;
+      }
+
+      .lab-zone .grid-container.lab-expanded {
+        width: 100%;
+        flex-basis: 100%;
+      }
+
       [data-retired] {
         display: none !important;
       }
@@ -1381,6 +1501,9 @@
         <div class="draggable-item mod-token" id="mod-token-2">
           <img src="https://res.cloudinary.com/dqwm4pdbz/image/upload/q_auto/f_auto/e_bgremoval/c_crop,w_341,h_341,x_14,y_661/v1787663276/lab-token_eoed14.jpg" alt="Mod Token" />
         </div>
+        <div class="draggable-item mod-token" id="mod-token-3">
+          <img src="https://res.cloudinary.com/dqwm4pdbz/image/upload/q_auto/f_auto/e_bgremoval/c_crop,w_341,h_341,x_14,y_661/v1787663276/lab-token_eoed14.jpg" alt="Mod Token" />
+        </div>
         <!-- Avatars -->
         <div class="draggable-item animal" id="onza-avatar" data-type="avatar">
           <img
@@ -1431,31 +1554,31 @@
         <div class="box-bar attract" id="boxBar"></div>
         <div class="box-trays" id="boxTrays"></div>
       </div>
-    </div>
-
-    <!-- Colour Lab: full-width, token-slot + colour bricks -->
-    <div class="grid-container" style="grid-template-columns: 1fr;">
-      <div class="spot-card colour-lab">
-        <div class="token-slot" id="token-slot"></div>
-        <div class="spot-title">Colour Lab</div>
-        <div class="drop-zone" id="spot-1">
-          <div class="slot"></div>
-          <div class="slot"></div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Animal Mod: full-width, token-slot + mod slots -->
-    <div class="grid-container" style="grid-template-columns: 1fr;">
-      <div class="spot-card colour-lab">
-        <div class="token-slot" id="token-slot-shapes"></div>
-        <div class="spot-title">Animal Mod</div>
-        <div class="drop-zone" id="spot-5">
-          <div class="slot mod-slot">
-            <div class="mod-chip mod-minus"><span class="mod-icon">âˆ’</span> slow</div>
-            <div class="mod-chip mod-plus"><span class="mod-icon">+</span> hits</div>
+      <div class="lab-zone" id="labZone">
+        <div class="grid-container" style="grid-template-columns: 1fr;">
+          <div class="spot-card colour-lab lab-collapsed">
+            <button type="button" class="lab-toggle" aria-label="Collapse Mixer" title="Collapse Mixer">+</button>
+            <div class="token-slot" id="token-slot"></div>
+            <div class="spot-title">Mixer</div>
+            <div class="drop-zone" id="spot-1">
+              <div class="slot"></div>
+              <div class="slot"></div>
+            </div>
           </div>
-          <div class="slot"></div>
+        </div>
+        <div class="grid-container" style="grid-template-columns: 1fr;">
+          <div class="spot-card colour-lab lab-collapsed">
+            <button type="button" class="lab-toggle" aria-label="Collapse Mod Lab" title="Collapse Mod Lab">+</button>
+            <div class="token-slot" id="token-slot-shapes"></div>
+            <div class="spot-title">Mod Lab</div>
+            <div class="drop-zone" id="spot-5">
+              <div class="slot mod-slot">
+                <div class="mod-chip mod-minus"><span class="mod-icon">âˆ’</span> slow</div>
+                <div class="mod-chip mod-plus"><span class="mod-icon">+</span> hits</div>
+              </div>
+              <div class="slot"></div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -1487,6 +1610,7 @@
         <div class="box-bar" id="boxBar2"></div>
         <div class="box-trays" id="boxTrays2"></div>
       </div>
+      <div class="lab-zone" id="labZone2"></div>
     </div>
 
     <!-- Animals -->
@@ -1628,6 +1752,9 @@
         whale: "Animals",
         dragon: "Special",
         dinosaur: "Special",
+        "turtle-mod": "Special",
+        "rabbit-mod": "Special",
+        "whale-mod": "Special",
         "phrase-whats-your-name": "Questions",
         "phrase-how-old": "Questions",
         "phrase-do-you-like": "Questions",
@@ -2132,7 +2259,7 @@
         updateGoals();
         updateInventorySummary();
       }
-      // Mod Token combining â€” mod token + turtle/rabbit in Animal Mod.
+      // Mod Token combining â€” mod token + turtle/rabbit/whale in Mod Lab.
       // Each mod stone upgrades exactly one animal (that animal's mod is then
       // locked), and every stone is spent on a different animal.
       var modCombining = false;
@@ -2141,8 +2268,165 @@
       var modStages = [
         { chip1: "\u2212 slow", chip2: "+ hits", animalId: "turtle", animalSrc: "https://res.cloudinary.com/dqwm4pdbz/image/upload/c_crop,w_189,h_188,x_386,y_760/v1786861646/260811_lesson7ee_01_jzlmlp.png", animalName: "Turtle" },
         { chip1: "\u2212 weak", chip2: "+ fast", animalId: "rabbit", animalSrc: "https://res.cloudinary.com/dmkhsyfzf/image/upload/c_crop,w_421,h_424,x_842,y_424/v1787862718/lesson6_vclj7z.png", animalName: "Rabbit" },
+        { chip1: "\u2212 fast", chip2: "+ big", animalId: "whale", animalSrc: "https://res.cloudinary.com/dqwm4pdbz/image/upload/c_crop,w_189,h_188,x_205,y_564/v1786861646/260811_lesson7ee_01_jzlmlp.png", animalName: "Whale" },
       ];
 
+      // ---- Lab collapse ----
+      // A toggle button in each lab card's top-right corner (available from
+      // the start) collapses the card into a compact chip or reopens it. No
+      // auto collapse happens on its own. The chip is draggable like a tidy
+      // box so it can be parked into either palette.
+      var labStates = {
+        "spot-1": { collapsed: true },
+        "spot-5": { collapsed: true },
+      };
+      var labHome = {
+        "spot-1": { parent: null, next: null },
+        "spot-5": { parent: null, next: null },
+      };
+
+      function recordLabHomes() {
+        ["spot-1", "spot-5"].forEach(function (spotId) {
+          var wrapper = document.getElementById(spotId).closest(".grid-container");
+          if (!wrapper) return;
+          labHome[spotId].parent = wrapper.parentElement;
+          labHome[spotId].next = wrapper.nextElementSibling;
+        });
+      }
+
+      function toggleLab(spotId) {
+        var st = labStates[spotId];
+        var zone = document.getElementById(spotId);
+        if (!st || !zone) return;
+        var card = zone.closest(".spot-card");
+        if (!card) return;
+        st.collapsed = !st.collapsed;
+        card.classList.toggle("lab-collapsed", st.collapsed);
+        card.classList.toggle("lab-open-pop", st.collapsed);
+        var wrapper = card.closest(".grid-container");
+        if (wrapper) wrapper.classList.toggle("lab-expanded", !st.collapsed);
+        var btn = card.querySelector(".lab-toggle");
+        if (btn) btn.textContent = st.collapsed ? "+" : "\u2212";
+      }
+
+      function restoreLabHomes() {
+        ["spot-1", "spot-5"].forEach(function (spotId) {
+          var st = labStates[spotId];
+          var zone = document.getElementById(spotId);
+          if (st) st.collapsed = true;
+          if (!zone) return;
+          var wrapper = zone.closest(".grid-container");
+          if (!wrapper) return;
+          wrapper.classList.remove("lab-expanded");
+          wrapper.querySelectorAll(".spot-card").forEach(function (card) {
+            card.classList.remove("lab-open-pop");
+            card.classList.add("lab-collapsed");
+            var btn = card.querySelector(".lab-toggle");
+            if (btn) btn.textContent = "+";
+          });
+          var home = labHome[spotId];
+          if (home && home.parent && wrapper.parentElement !== home.parent) {
+            home.parent.insertBefore(wrapper, home.next);
+          }
+        });
+      }
+
+      // Dragging a collapsed lab chip mirrors the tidy-box drag: drop it over
+      // either palette to park the whole card there, and the chip stays small
+      // until its toggle button reopens it.
+      var labChip = null;
+      var labGhost = null;
+      var labDragging = false;
+      var labStartX = 0;
+      var labStartY = 0;
+      var labOffX = 0;
+      var labOffY = 0;
+      var labOverZone = null;
+
+      document.addEventListener("pointerdown", function (e) {
+        if (labChip || activeItem || boxChip) return;
+        if (e.pointerType === "mouse" && e.button !== 0) return;
+        if (e.target.closest(".lab-toggle")) return;
+        var card = e.target.closest(".spot-card.lab-collapsed");
+        if (!card) return;
+        labChip = card;
+        labDragging = false;
+        labStartX = e.clientX;
+        labStartY = e.clientY;
+      });
+
+      document.addEventListener("pointermove", function (e) {
+        if (!labChip) return;
+        if (!labDragging) {
+          var dx = e.clientX - labStartX;
+          var dy = e.clientY - labStartY;
+          if (dx * dx + dy * dy < 64) return;
+          labDragging = true;
+          var rect = labChip.getBoundingClientRect();
+          labOffX = labStartX - rect.left;
+          labOffY = labStartY - rect.top;
+          labGhost = labChip.cloneNode(true);
+          labGhost.classList.add("ghost");
+          labGhost.style.width = rect.width + "px";
+          labGhost.style.left = e.clientX - labOffX + "px";
+          labGhost.style.top = e.clientY - labOffY + "px";
+          document.body.appendChild(labGhost);
+        }
+        e.preventDefault();
+        if (labGhost) {
+          labGhost.style.left = e.clientX - labOffX + "px";
+          labGhost.style.top = e.clientY - labOffY + "px";
+        }
+        var under = document.elementFromPoint(e.clientX, e.clientY);
+        var zone = under
+          ? under.closest(".item-container, .box-bar, .lab-zone")
+          : null;
+        if (zone !== labOverZone) {
+          if (labOverZone) labOverZone.classList.remove("drag-over");
+          labOverZone = zone;
+          if (labOverZone) labOverZone.classList.add("drag-over");
+        }
+      });
+
+      function endLabDrag() {
+        if (!labChip) return;
+        var wasDragging = labDragging;
+        if (labGhost) {
+          labGhost.remove();
+          labGhost = null;
+        }
+        if (labOverZone) {
+          labOverZone.classList.remove("drag-over");
+          if (wasDragging) {
+            var palette = labOverZone.closest(".palette");
+            if (palette) {
+              var wrapper = labChip.closest(".grid-container");
+              var labZone = palette.querySelector(".lab-zone");
+              var target = labZone || palette;
+              if (wrapper && wrapper.parentElement !== target) {
+                target.appendChild(wrapper);
+              }
+            }
+          }
+          labOverZone = null;
+        }
+        labChip = null;
+        labDragging = false;
+      }
+
+      document.addEventListener("pointerup", endLabDrag);
+      document.addEventListener("pointercancel", endLabDrag);
+
+      document.addEventListener("click", function (e) {
+        var btn = e.target.closest(".lab-toggle");
+        if (!btn) return;
+        var card = btn.closest(".spot-card");
+        if (!card) return;
+        var zone = card.querySelector(".drop-zone");
+        if (zone) toggleLab(zone.id);
+      });
+
+      recordLabHomes();
       buildBoxes();
       shuffleItems();
       checkGoal();
@@ -2686,6 +2970,7 @@
           ref.tray.classList.remove("open", "sealed");
         });
         suppressBoxClick = false;
+        restoreLabHomes();
         var boxAreaEl = document.getElementById("boxArea");
         if (boxAreaEl) {
           boxAreaEl.classList.remove("dissolving");
@@ -2742,7 +3027,7 @@
         "onza-avatar","sam-avatar",
         "num-five","num-six","num-seven","num-eight","num-nine",
         "lab-token-1","lab-token-2","lab-token-3",
-        "mod-token-1","mod-token-2",
+        "mod-token-1","mod-token-2","mod-token-3",
       ];
       var space2Items = [
         "phrase-whats-your-name","phrase-my-name-is",
