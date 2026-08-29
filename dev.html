@@ -281,7 +281,6 @@
       </div>
     </div>
 
-    <script src="config.js"></script>
     <script>
       /* ---- Theme toggle ---- */
       var themeBtn = document.getElementById("themeBtn");
@@ -304,11 +303,10 @@
         };
       }
 
-      /* ---- GitHub API helper (adds token to avoid rate limiting) ---- */
+      /* ---- GitHub API helper (proxied through Cloudflare Worker to avoid rate limiting) ---- */
+      var GH_PROXY = "https://english-explorer-tracker.mkmueller-mission.workers.dev/github?url=";
       function gh(url) {
-        var token = (typeof CONFIG !== "undefined" && CONFIG.GITHUB_TOKEN) ? CONFIG.GITHUB_TOKEN : "";
-        var sep = url.indexOf("?") >= 0 ? "&" : "?";
-        return fetch(token ? url + sep + "access_token=" + encodeURIComponent(token) : url);
+        return fetch(GH_PROXY + encodeURIComponent(url));
       }
 
       /* ---- Dynamic commit date (small) ---- */
@@ -598,6 +596,7 @@
           });
       })();
     </script>
+  <script src="config.js"></script>
   <script src="tracker.js"></script>
   </body>
 </html>
