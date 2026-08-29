@@ -606,30 +606,6 @@
         display: block;
         margin: 1.2em auto;
       }
-      .collectionEnlargeBtn {
-        position: absolute;
-        top: 6px;
-        right: 6px;
-        width: clamp(26px, 4vw, 38px);
-        height: clamp(26px, 4vw, 38px);
-        border-radius: 50%;
-        background: rgba(0, 0, 0, 0.55);
-        color: #fff;
-        border: none;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        cursor: pointer;
-        z-index: 5;
-        transition: 0.15s background, 0.15s transform;
-        padding: 0;
-      }
-      .collectionEnlargeBtn:hover {
-        background: rgba(0, 0, 0, 0.75);
-      }
-      .collectionEnlargeBtn:active {
-        transform: scale(0.9);
-      }
       .mediaThumbs .thumb img,
       .mediaThumbs .thumb video {
         width: 100%;
@@ -1829,12 +1805,6 @@
       :root[data-theme="dark"] .mediaEnlargeBtn:hover {
         background: rgba(255, 255, 255, 0.35);
       }
-      :root[data-theme="dark"] .collectionEnlargeBtn {
-        background: rgba(255, 255, 255, 0.2);
-      }
-      :root[data-theme="dark"] .collectionEnlargeBtn:hover {
-        background: rgba(255, 255, 255, 0.35);
-      }
     </style>
   </head>
   <body>
@@ -2957,21 +2927,21 @@
               cell.appendChild(aud);
             }
 
-            var enl = document.createElement("button");
-            enl.className = "collectionEnlargeBtn";
-            enl.type = "button";
-            enl.setAttribute("aria-label", "Enlarge");
-            enl.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="1.2em" height="1.2em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/><path d="M11 8v6"/><path d="M8 11h6"/></svg>';
-            enl.addEventListener("click", function () {
-              openCollectionOverlay(title);
-            });
-            cell.appendChild(enl);
-
             grid.appendChild(cell);
           })(i);
         }
 
         wrap.appendChild(grid);
+
+        var enlargeBtn = document.createElement("button");
+        enlargeBtn.className = "mediaEnlargeBtn";
+        enlargeBtn.type = "button";
+        enlargeBtn.setAttribute("aria-label", "Enlarge collection");
+        enlargeBtn.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="1.4em" height="1.4em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/><path d="M11 8v6"/><path d="M8 11h6"/></svg>';
+        enlargeBtn.addEventListener("click", function () {
+          openCollectionOverlay(title);
+        });
+        wrap.appendChild(enlargeBtn);
       }
 
       var dragFromIdx = -1;
