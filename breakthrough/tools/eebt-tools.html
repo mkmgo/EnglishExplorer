@@ -556,26 +556,6 @@
         background: var(--bg);
         padding: 0.3em 0 0.2em;
       }
-      .collectionEnlargeAllBtn {
-        flex: 0 0 auto;
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        gap: 0.5em;
-        margin: 0 auto 0.3em;
-        padding: 0.6em 1.4em;
-        border-radius: 999px;
-        background: var(--accent);
-        color: var(--accent2);
-        font-weight: 900;
-        font-size: clamp(1.05rem, 2vw, 1.7rem);
-        box-shadow: var(--shadow);
-        transition: 0.15s transform;
-        cursor: pointer;
-      }
-      .collectionEnlargeAllBtn:active {
-        transform: scale(0.95);
-      }
       .collectionViewGrid {
         display: grid;
         grid-template-columns: repeat(4, 1fr);
@@ -2942,18 +2922,6 @@
         h.className = "collectionViewTitle";
         h.textContent = title;
         wrap.appendChild(h);
-
-        var enlarge = document.createElement("button");
-        enlarge.type = "button";
-        enlarge.className = "collectionEnlargeAllBtn";
-        enlarge.innerHTML =
-          '<svg xmlns="http://www.w3.org/2000/svg" width="1.3em" height="1.3em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/><path d="M11 8v6"/><path d="M8 11h6"/></svg>' +
-          '<span>Enlarge collection</span>';
-        enlarge.setAttribute("aria-label", "Enlarge whole collection");
-        enlarge.addEventListener("click", function () {
-          openCollectionOverlay(title);
-        });
-        wrap.appendChild(enlarge);
 
         var grid = document.createElement("div");
         grid.className = "collectionViewGrid";
