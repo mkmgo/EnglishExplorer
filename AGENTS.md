@@ -13,6 +13,8 @@ EnglishExplorer/
 ├── README.md                   <-- Project overview for humans & visitors
 ├── AGENTS.md                   <-- This file
 ├── .gitignore                  <-- Ignores system metadata files (e.g. Desktop.ini)
+├── tracker.js                  <-- Visitor tracking helper (posts to the worker; see "Backend worker")
+├── english-explorer-tracker/   <-- Cloudflare Worker backend (airtable + GitHub proxy; see below)
 ├── junior/                     <-- Ages 6-9 ecosystem
 │   ├── thematic/               <-- Thematic lesson decks
 │   │   ├── animals.html
@@ -70,14 +72,33 @@ put in them (see "Self-contained files" below).
 - No spaces, underscores, or uppercase letters in file names.
 - Existing product display names are unaffected — only file names are constrained (e.g. the tools stay "EEBTools" on screen while the files are `eebt-tools.html` / `eebt-translator.html`).
 
-## Global visitor tracking (Airtable)
+## Backend worker (tracking + GitHub proxy)
 
-- **Approved exception to "self-contained files"**: `config.js` and `tracker.js` live in the repo root and are linked from **every** HTML page (including new ones) via `<script src>` right before `</body>`, with the correct relative prefix:
-  - Root pages (`index.html`, `advanced.html`, `dev.html`, `updates.html`): `src="config.js"`
-  - One level deep (`archive/`): `src="../config.js"`
-  - Two levels deep (`junior/...`, `breakthrough/...`): `src="../../config.js"` (and same for `tracker.js`)
-- `config.js` holds the Airtable Base ID, PAT, and table name (`SiteVisitorLogs`). It contains secrets and is **gitignored** — never commit it.
-- `tracker.js` exposes `logActivity(pupil, pagePath, section, actionType, details)` and auto-logs a `Page_View` on every page load. Reuse it for custom events instead of writing new fetch calls.
+There is **no `config.js`** — all secrets live server-side in the Cloudflare Worker
+(`english-explorer-tracker/`). The Worker reads them from its environment secrets
+(`AIRTABLE_BASE_ID`, `AIRTABLE_PAT`, `GITHUB_TOKEN`), never from the client.
+
+- `tracker.js` is the only shared, linked front-end script. It is **approved exception to
+  "self-contained files"**: linked from **every** HTML page (including new ones) via
+  `<script src="tracker.js">` right before `</body>`:
+  - Root pages (`index.html`, `advanced.html`, `dev.html`, `updates.html`): `src="tracker.js"`
+  - One level deep (`archive/`): `src="../tracker.js"`
+  - Two levels deep (`junior/...`, `breakthrough/...`): `src="../../tracker.js"`
+- `tracker.js` exposes `logActivity(pupil, pagePath, section, actionType, details)` and
+  auto-logs a `Page_View` on every page load. The worker POSTs it to Airtable
+  (`SiteVisitorLogs`) using `env.AIRTABLE_BASE_ID` / `env.AIRTABLE_PAT`. Reuse `logActivity`
+  for custom events instead of writing new fetch calls.
+- **GitHub proxy** (used by `dev.html` to avoid API rate limiting): the Worker also serves
+  `GET /github?url=<encoded GitHub URL>` and re-fetches the target with
+  `env.GITHUB_TOKEN` as a Bearer header. It only proxies `api.github.com`,
+  `raw.githubusercontent.com`, and `github.com`. `dev.html`'s `gh()` helper routes all
+  GitHub API calls through this endpoint — do not put a token in front-end code.
+- Worker endpoints:
+  - `GET /github?url=...` — GitHub API proxy (Bearer token added server-side).
+  - `POST /` — Airtable visitor tracking.
+  - `OPTIONS` — CORS preflight (`GET, POST, OPTIONS`).
+- Deploy with `npx wrangler deploy` from `english-explorer-tracker/`; set secrets with
+  `npx wrangler secret put <NAME>`. Run tests with `npm test` in that folder.
 
 ## Platforms
 
