@@ -1623,6 +1623,193 @@
           object-fit: cover;
         }
       }
+      .mdStage {
+        display: flex;
+        flex-direction: column;
+        align-items: stretch;
+        gap: 1em;
+        width: 100%;
+        max-width: 1200px;
+      }
+      .mdBar {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        align-items: center;
+        gap: 0.6em;
+      }
+      .mdChip {
+        border-radius: 999px;
+      }
+      .mdChip.mdAccent {
+        background: var(--accent);
+        color: var(--accent2);
+        border-color: var(--accent);
+      }
+      .mdHint {
+        width: 100%;
+        text-align: center;
+        color: var(--muted);
+        font-size: clamp(0.8rem, 1.3vw, 1.1rem);
+        font-weight: 700;
+        letter-spacing: 0.02em;
+      }
+      .mdPane {
+        background: var(--panel);
+        border-radius: 26px;
+        box-shadow: var(--shadow);
+        display: flex;
+        flex-direction: column;
+        min-height: 0;
+        overflow: hidden;
+      }
+      .mdPaneHead {
+        flex: 0 0 auto;
+        padding: 0.5em 1.2em;
+        font-size: clamp(0.85rem, 1.4vw, 1.2rem);
+        font-weight: 900;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        color: var(--accent2);
+        background: var(--accent);
+      }
+      .mdSource textarea {
+        flex: 1 1 auto;
+        min-height: 46vh;
+        border: 0;
+        background: transparent;
+        color: var(--ink);
+        font-family: Consolas, Menlo, Monaco, monospace;
+        font-size: clamp(1rem, 1.7vw, 1.5rem);
+        line-height: 1.55;
+        padding: 1em 1.2em;
+        resize: vertical;
+        outline: none;
+      }
+      .mdCanvas {
+        flex: 1 1 auto;
+        min-height: 46vh;
+        max-height: 62vh;
+        overflow-y: auto;
+        padding: 1em 1.2em;
+        text-align: left;
+        font-size: clamp(1.15rem, 2vw, 1.8rem);
+        line-height: 1.6;
+        scrollbar-width: none;
+      }
+      .mdCanvas::-webkit-scrollbar {
+        display: none;
+      }
+      .mdCanvas p {
+        margin: 0.5em 0;
+      }
+      .mdCanvas h1 {
+        font-size: clamp(2.2rem, 5vw, 4rem);
+        margin: 0.25em 0;
+      }
+      .mdCanvas h2 {
+        font-size: clamp(1.7rem, 3.4vw, 3rem);
+        margin: 0.25em 0;
+      }
+      .mdCanvas h3 {
+        font-size: clamp(1.35rem, 2.6vw, 2.3rem);
+        margin: 0.2em 0;
+      }
+      .mdCanvas ul,
+      .mdCanvas ol {
+        margin: 0.4em 0 0.4em 1.4em;
+      }
+      .mdCanvas li {
+        margin: 0.2em 0;
+      }
+      .mdCanvas blockquote {
+        margin: 0.5em 0;
+        padding: 0.2em 1em;
+        border-left: 4px solid var(--accent2);
+        color: var(--muted);
+      }
+      .mdCanvas code {
+        font-family: Consolas, Menlo, Monaco, monospace;
+        background: #eef1f7;
+        padding: 0.1em 0.4em;
+        border-radius: 6px;
+        font-size: 0.92em;
+      }
+      .mdCanvas pre {
+        background: #eef1f7;
+        padding: 0.8em 1em;
+        border-radius: 12px;
+        overflow-x: auto;
+      }
+      .mdWord {
+        cursor: pointer;
+        border-radius: 6px;
+        padding: 0 2px;
+        transition: background 0.15s, box-shadow 0.15s;
+      }
+      .mdWord:hover {
+        background: rgba(255, 184, 102, 0.35);
+      }
+      .mdWord.sel {
+        background: var(--accent2);
+        box-shadow: 0 0 0 2px var(--accent);
+        color: var(--ink);
+      }
+      .mdMedia {
+        display: block;
+        margin: 0.8em auto;
+        border-radius: 18px;
+        box-shadow: var(--shadow);
+        max-width: 100%;
+        max-height: 58vh;
+        object-fit: contain;
+        background: #eee;
+        cursor: pointer;
+      }
+      .mdMedia.video {
+        width: 100%;
+        max-width: 760px;
+      }
+      .mdMedia.audio {
+        width: min(60vw, 640px);
+      }
+      .mdMediaMissing {
+        color: var(--bad);
+        font-weight: 700;
+        font-style: italic;
+      }
+      @media (max-aspect-ratio: 1/1) {
+        .mdSource textarea,
+        .mdCanvas {
+          min-height: 34vh;
+        }
+        .mdCanvas {
+          max-height: 48vh;
+        }
+      }
+      @media (min-aspect-ratio: 4/3) and (min-width: 900px) {
+        .mdStage {
+          display: grid;
+          grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+          align-items: stretch;
+          gap: 1.2em;
+        }
+        .mdBar {
+          grid-column: 1 / -1;
+        }
+        .mdSource textarea,
+        .mdCanvas {
+          min-height: 58vh;
+          max-height: 66vh;
+        }
+      }
+      :root[data-theme="dark"] .mdCanvas code,
+      :root[data-theme="dark"] .mdCanvas pre {
+        background: #232a36;
+      }
+      :root[data-theme="dark"] .mdMedia {
+        background: #232a36;
+      }
       #mediaOverlay {
         position: fixed;
         inset: 0;
@@ -2109,6 +2296,50 @@
                 accept=".csv,text/csv"
                 style="display: none"
               />
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="screen title-slide" id="mdScreen">
+        <div class="content">
+          <div class="stage mdStage">
+            <div class="mdBar">
+              <button class="miniChip mdChip" id="mdRenderBtn" onclick="mdRender()">
+                <svg xmlns="http://www.w3.org/2000/svg" width="1.1em" height="1.1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-0.2em"><path d="M21 12a9 9 0 1 1-6.219-8.56"/></svg>
+                Render
+              </button>
+              <button class="miniChip mdChip" id="mdSpeakBtn" onclick="mdSay()">
+                <svg xmlns="http://www.w3.org/2000/svg" width="1.1em" height="1.1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-0.2em"><path d="M11 5 6 9H2v6h4l5 4z"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/></svg>
+                Read
+              </button>
+              <button class="miniChip mdChip mdAccent" id="mdTranslateBtn" onclick="mdTranslate()">
+                <svg xmlns="http://www.w3.org/2000/svg" width="1.1em" height="1.1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-0.2em"><path d="m5 8 6 6"/><path d="m4 14 6-6 2-3"/><path d="M2 5h12"/><path d="M7 2h1"/><path d="m22 22-5-10-5 10"/><path d="M14 18h6"/></svg>
+                Translate
+              </button>
+              <button class="miniChip mdChip" id="mdClearBtn" onclick="mdClear()">
+                <svg xmlns="http://www.w3.org/2000/svg" width="1.1em" height="1.1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-0.2em"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/></svg>
+                Clear
+              </button>
+              <span class="mdHint" id="mdHint">Tap a word to hear &amp; select it · Translate sends it to the translator</span>
+            </div>
+            <div class="mdPane mdSource">
+              <div class="mdPaneHead">Markdown</div>
+              <textarea
+                id="mdSourceInput"
+                spellcheck="false"
+                placeholder="# My presentation
+
+Tap a word to hear it. Use Markdown:
+- **bold**, *italic*, `code`
+1. numbered list
+
+{{media:myphoto}}  shows a loaded image, tap to enlarge."
+              ></textarea>
+            </div>
+            <div class="mdPane mdOutput">
+              <div class="mdPaneHead">Live</div>
+              <div id="mdOutput" class="mdCanvas"></div>
             </div>
           </div>
         </div>
@@ -3716,6 +3947,306 @@
       }
       show(0);
       renderMediaThumbs();
+
+      /* ---- MD Presenter (screen 3) ---- */
+      var mdSel = null;
+      var mdSelText = null;
+      var mdRenderTimer = null;
+
+      function mdEscape(s) {
+        return String(s)
+          .replace(/&/g, "&amp;")
+          .replace(/</g, "&lt;")
+          .replace(/>/g, "&gt;")
+          .replace(/"/g, "&quot;");
+      }
+
+      function mdResolveMedia(ref) {
+        ref = String(ref || "").trim();
+        if (!ref) return null;
+        for (var i = 0; i < mediaHistory.length; i++) {
+          if (mediaHistory[i].collection && mediaHistory[i].collection === ref) {
+            return mediaHistory[i];
+          }
+        }
+        for (var j = 0; j < mediaHistory.length; j++) {
+          if (mediaHistory[j].url === ref || mediaHistory[j].url.indexOf(ref) >= 0) {
+            return mediaHistory[j];
+          }
+        }
+        return null;
+      }
+
+      function appendWordSpan(parent, txt) {
+        var parts = String(txt).split(/(\s+)/);
+        for (var i = 0; i < parts.length; i++) {
+          var p = parts[i];
+          if (!p) continue;
+          if (/^\s+$/.test(p)) {
+            parent.appendChild(document.createTextNode(p));
+          } else {
+            var w = document.createElement("span");
+            w.className = "mdWord";
+            w.textContent = p;
+            w.setAttribute("data-word", p);
+            parent.appendChild(w);
+          }
+        }
+      }
+
+      function mdInline(raw, skipWords) {
+        var s = String(raw);
+        var out = [];
+        var re =
+          /(\[([^\]]*)\]\(([^)]+)\)|`([^`]*)`|\*\*([^*]+)\*\*|_([^_]+)_|\*([^*]+)\*)/g;
+        var last = 0;
+        var m;
+        while ((m = re.exec(s))) {
+          if (m.index > last) out.push(s.slice(last, m.index));
+          if (m[1] && m[1].indexOf("[") === 0) {
+            var a = document.createElement("a");
+            a.className = "mdLink";
+            a.textContent = m[2];
+            a.href = m[3];
+            a.target = "_blank";
+            a.rel = "noopener";
+            a.setAttribute("data-text", m[2]);
+            out.push(a);
+          } else if (m[4] !== undefined) {
+            var code = document.createElement("code");
+            code.textContent = m[4];
+            out.push(code);
+          } else {
+            var txt = m[5] !== undefined ? m[5] : m[6] !== undefined ? m[6] : m[7];
+            var em = document.createElement(m[5] !== undefined ? "strong" : "em");
+            appendWordSpan(em, txt);
+            out.push(em);
+          }
+          last = re.lastIndex;
+        }
+        if (last < s.length) out.push(s.slice(last));
+        return out;
+      }
+
+      function mdFillText(el, raw, skipWords) {
+        var nodes = mdInline(raw, skipWords);
+        for (var i = 0; i < nodes.length; i++) {
+          var n = nodes[i];
+          if (typeof n === "string") {
+            if (skipWords) el.appendChild(document.createTextNode(n));
+            else appendWordSpan(el, n);
+          } else {
+            el.appendChild(n);
+          }
+        }
+      }
+
+      function mdBuildMedia(ref) {
+        var item = mdResolveMedia(ref);
+        if (!item) {
+          var msg = document.createElement("span");
+          msg.className = "mdMediaMissing";
+          msg.textContent = "[media not found: " + ref + "]";
+          return msg;
+        }
+        if (item.type === "image") {
+          var img = document.createElement("img");
+          img.className = "mdMedia";
+          img.src = item.url;
+          img.alt = "media";
+          img.setAttribute("data-media", item.url);
+          return img;
+        }
+        if (item.type === "video") {
+          var vid = document.createElement("video");
+          vid.className = "mdMedia video";
+          vid.controls = true;
+          vid.preload = "metadata";
+          vid.src = item.url;
+          vid.setAttribute("data-media", item.url);
+          return vid;
+        }
+        var aud = document.createElement("audio");
+        aud.className = "mdMedia audio";
+        aud.controls = true;
+        aud.preload = "metadata";
+        aud.src = item.url;
+        aud.setAttribute("data-media", item.url);
+        return aud;
+      }
+
+      function mdRender() {
+        var input = document.getElementById("mdSourceInput");
+        var out = document.getElementById("mdOutput");
+        if (!input || !out) return;
+        if (mdSel) { mdSel.classList.remove("sel"); mdSel = null; }
+        mdSelText = null;
+        var src = input.value;
+        try {
+          localStorage.setItem("eebt-md-src", src);
+        } catch (e) {}
+        out.innerHTML = "";
+        var lines = String(src).split(/\r?\n/);
+        var blocks = [];
+        var para = [];
+        var list = null;
+        var ordered = false;
+        var pre = false;
+        var preBuf = [];
+
+        function flushPara() {
+          if (para.length) { blocks.push({ t: "p", text: para.join("\n") }); para = []; }
+        }
+        function flushList() {
+          if (list) { blocks.push({ t: "list", items: list, ordered: ordered }); list = null; }
+        }
+
+        for (var i = 0; i < lines.length; i++) {
+          var line = lines[i];
+          if (/^\s*```/.test(line)) {
+            flushPara();
+            flushList();
+            if (pre) { blocks.push({ t: "pre", text: preBuf.join("\n") }); preBuf = []; pre = false; }
+            else pre = true;
+            continue;
+          }
+          if (pre) { preBuf.push(line); continue; }
+          var trimmed = line.trim();
+          if (!trimmed) { flushPara(); flushList(); continue; }
+          var mt = trimmed.match(/^\{\{media:([^}]+)\}\}$/);
+          if (!mt) mt = trimmed.match(/^!\[([^\]]*)\]\(([^)]+)\)$/);
+          if (mt) {
+            flushPara();
+            flushList();
+            blocks.push({ t: "media", ref: (mt[1] || mt[2]).trim() });
+            continue;
+          }
+          var h = trimmed.match(/^(#{1,6})\s+(.*)$/);
+          if (h) { flushPara(); flushList(); blocks.push({ t: "h", level: h[1].length, text: h[2] }); continue; }
+          var bq = trimmed.match(/^>\s?(.*)$/);
+          if (bq) { flushPara(); flushList(); blocks.push({ t: "bq", text: bq[1] }); continue; }
+          var ol = trimmed.match(/^\d+\.\s+(.*)$/);
+          var ul = trimmed.match(/^[-*+]\s+(.*)$/);
+          if (ol || ul) {
+            flushPara();
+            if (!list) { list = []; ordered = !!ol; }
+            list.push(ol ? ol[1] : ul[1]);
+            continue;
+          }
+          flushList();
+          para.push(trimmed);
+        }
+        flushPara();
+        flushList();
+        if (pre) blocks.push({ t: "pre", text: preBuf.join("\n") });
+
+        for (var b = 0; b < blocks.length; b++) {
+          var blk = blocks[b];
+          var el;
+          if (blk.t === "media") { out.appendChild(mdBuildMedia(blk.ref)); continue; }
+          else if (blk.t === "h") { el = document.createElement("h" + blk.level); mdFillText(el, blk.text, false); }
+          else if (blk.t === "bq") { el = document.createElement("blockquote"); mdFillText(el, blk.text, false); }
+          else if (blk.t === "pre") { el = document.createElement("pre"); var c = document.createElement("code"); c.textContent = blk.text; el.appendChild(c); }
+          else if (blk.t === "list") {
+            el = document.createElement(blk.ordered ? "ol" : "ul");
+            for (var li = 0; li < blk.items.length; li++) {
+              var it = document.createElement("li");
+              mdFillText(it, blk.items[li], false);
+              el.appendChild(it);
+            }
+          }
+          else { el = document.createElement("p"); mdFillText(el, blk.text, false); }
+          out.appendChild(el);
+        }
+        updateMdHint();
+      }
+
+      function updateMdHint() {
+        var h = document.getElementById("mdHint");
+        if (!h) return;
+        h.textContent = mdSelText
+          ? 'Selected: "' + mdSelText + '"  ·  Translate sends it to the translator'
+          : "Tap a word to hear & select it · Translate sends it to the translator";
+      }
+
+      function mdSelect(text) {
+        mdSelText = String(text || "").trim();
+        updateMdHint();
+      }
+
+      function mdSay() {
+        if (mdSelText) { say(mdSelText); return; }
+        var out = document.getElementById("mdOutput");
+        if (out && out.textContent) say(out.textContent);
+      }
+
+      function mdTranslate() {
+        var text = mdSelText
+          ? mdSelText
+          : (function () {
+              var out = document.getElementById("mdOutput");
+              if (out && out.textContent) {
+                return out.textContent.split(/\s+/).slice(0, 12).join(" ");
+              }
+              return "";
+            })();
+        var clean = cleanEn(text);
+        if (!clean) { toast("Nothing to translate"); return; }
+        doTranslate(clean);
+        show(1);
+        toast("Translate: " + clean);
+      }
+
+      function mdClear() {
+        var input = document.getElementById("mdSourceInput");
+        if (!input) return;
+        input.value = "";
+        try { localStorage.removeItem("eebt-md-src"); } catch (e) {}
+        mdRender();
+        toast("Cleared");
+      }
+
+      function mdInit() {
+        var input = document.getElementById("mdSourceInput");
+        var out = document.getElementById("mdOutput");
+        if (!input || !out) return;
+        try {
+          var saved = localStorage.getItem("eebt-md-src");
+          if (saved && saved !== input.value) input.value = saved;
+        } catch (e) {}
+        mdRender();
+        input.addEventListener("input", function () {
+          clearTimeout(mdRenderTimer);
+          mdRenderTimer = setTimeout(mdRender, 280);
+        });
+        out.addEventListener("click", function (e) {
+          var t = e.target;
+          var media = t.closest ? t.closest(".mdMedia") : null;
+          if (media) {
+            var u = media.getAttribute("data-media");
+            if (u) openMediaOverlay(u);
+            return;
+          }
+          var w = t.closest ? t.closest(".mdWord") : null;
+          if (w) {
+            if (mdSel && mdSel !== w) mdSel.classList.remove("sel");
+            w.classList.add("sel");
+            mdSel = w;
+            var word = w.getAttribute("data-word") || w.textContent;
+            mdSelect(word);
+            say(word);
+            return;
+          }
+          var l = t.closest ? t.closest(".mdLink") : null;
+          if (l) {
+            e.preventDefault();
+            var lt = l.getAttribute("data-text") || l.textContent;
+            mdSelect(lt);
+            say(lt);
+          }
+        });
+      }
+      mdInit();
     </script>
   <script src="../../tracker.js"></script>
   </body>
