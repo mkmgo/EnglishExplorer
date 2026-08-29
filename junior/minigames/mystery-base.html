@@ -2103,15 +2103,33 @@
 
       // The Box Stack: dropping a real box onto the stack chip tucks the box
       // away (chip + tray hidden) to save space, growing the stack counter.
-      // A short tap on the stack chip dumps all stacked boxes back out.
+      // A tap while the stack is empty stacks every box at once; a tap once
+      // boxes are stacked dumps them all back out.
+      function doStack(ref) {
+        if (!ref || ref.stacked) return;
+        ref.stacked = true;
+        ref.chip.classList.add("stacked");
+        ref.tray.classList.add("stacked");
+      }
+
       function stackBox(chip) {
         var ref = chip && boxRefs[chip.dataset.cat];
         if (!ref || ref.stacked) return;
         if (openCat === chip.dataset.cat) closeBox();
-        ref.stacked = true;
-        ref.chip.classList.add("stacked");
-        ref.tray.classList.add("stacked");
+        doStack(ref);
         refreshStackCounts();
+      }
+
+      function stackAllBoxes() {
+        var any = false;
+        Object.keys(boxRefs).forEach(function (cat) {
+          var ref = boxRefs[cat];
+          if (ref.stacked) return;
+          if (openCat === cat) closeBox();
+          doStack(ref);
+          any = true;
+        });
+        if (any) refreshStackCounts();
       }
 
       function unstackBoxes() {
@@ -2127,10 +2145,14 @@
         if (any) refreshStackCounts();
       }
 
-      function refreshStackCounts() {
-        var n = Object.keys(boxRefs).filter(function (cat) {
+      function countStacked() {
+        return Object.keys(boxRefs).filter(function (cat) {
           return boxRefs[cat].stacked;
         }).length;
+      }
+
+      function refreshStackCounts() {
+        var n = countStacked();
         document.querySelectorAll(".stack-count").forEach(function (el) {
           el.textContent = String(n);
         });
@@ -2499,7 +2521,8 @@
             suppressBoxClick = false;
             return;
           }
-          unstackBoxes();
+          if (countStacked() === 0) stackAllBoxes();
+          else unstackBoxes();
         }
       });
 

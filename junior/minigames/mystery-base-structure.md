@@ -185,7 +185,7 @@ Box tags: Questions get `circle-question-mark` icon; Phrases get `circle-alert` 
 - Each palette's `.box-bar` starts with a `.box-chip.stack-chip` (`data-cat="stack"`, lucide **layers** icon, `.box-count.stack-count`).
 - The stack chip is draggable between spaces like any box (`storeBoxAt` supports ref-less chips, moving just the chip).
 - Dropping a real box onto the stack chip **stacks** it: `stackBox()` sets `ref.stacked`, adds `.stacked` (display: none) to the box chip + tray, and bumps the counter via `refreshStackCounts()`.
-- A short tap on a stack chip calls `unstackBoxes()`: all stacked boxes are shown again (count back to 0). `resetGame()` also un-stacks.
+- Tapping a stack chip toggles the pile: when the stack is empty (`countStacked() === 0`) it calls `stackAllBoxes()` to fold **every** box away at once; once anything is stacked it calls `unstackBoxes()` to dump everything back (count back to 0). `resetGame()` also un-stacks.
 - CSS: `.box-chip.stack-chip` (accent border + gradient), `.box-chip.drag-over`, `.box-chip.stacked` / `.box-tray.stacked` (hidden). Stack chip is excluded from the `attract` animation.
 
 ---
