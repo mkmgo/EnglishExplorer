@@ -681,6 +681,24 @@
         background: var(--goal-bg);
       }
 
+      /* The Box Stack chip: a special box that hides (stores) other boxes. */
+      .box-chip.stack-chip {
+        border-style: solid;
+        border-color: var(--accent);
+        background: linear-gradient(135deg, var(--dropzone-bg), var(--goal-bg));
+      }
+
+      .box-chip.drag-over {
+        outline: 2px dashed var(--primary);
+        outline-offset: 2px;
+      }
+
+      /* A stacked box and its tray are tucked away inside the Box Stack. */
+      .box-chip.stacked,
+      .box-tray.stacked {
+        display: none !important;
+      }
+
       @keyframes boxAttract {
         0%,
         100% {
@@ -692,7 +710,7 @@
         }
       }
 
-      .box-bar.attract .box-chip:not(.done):not(.open) {
+      .box-bar.attract .box-chip:not(.done):not(.open):not(.stack-chip) {
         animation: boxAttract 1.6s ease-in-out infinite;
       }
 
@@ -1551,7 +1569,13 @@
       </div>
       <div class="tidy-hint" id="tidyHint"></div>
       <div class="box-area" id="boxArea">
-        <div class="box-bar attract" id="boxBar"></div>
+        <div class="box-bar attract" id="boxBar">
+          <button type="button" class="box-chip stack-chip" data-cat="stack" title="Box Stack: drag a box here to store it away">
+            <span class="box-icon"><i data-lucide="layers"></i></span>
+            <span class="box-name">Stack</span>
+            <span class="box-count stack-count">0</span>
+          </button>
+        </div>
         <div class="box-trays" id="boxTrays"></div>
       </div>
       <div class="lab-zone" id="labZone">
@@ -1607,7 +1631,13 @@
         <div class="draggable-item phrase" id="phrase-show-me"><i data-lucide="circle-alert" class="phrase-tag"></i>Show me ...</div>
       </div>
       <div class="box-area" id="boxArea2">
-        <div class="box-bar" id="boxBar2"></div>
+        <div class="box-bar" id="boxBar2">
+          <button type="button" class="box-chip stack-chip" data-cat="stack" title="Box Stack: drag a box here to store it away">
+            <span class="box-icon"><i data-lucide="layers"></i></span>
+            <span class="box-name">Stack</span>
+            <span class="box-count stack-count">0</span>
+          </button>
+        </div>
         <div class="box-trays" id="boxTrays2"></div>
       </div>
       <div class="lab-zone" id="labZone2"></div>
@@ -1987,11 +2017,11 @@
         var ref = boxRefs[chip.dataset.cat];
         var bar = palette.querySelector(".box-bar");
         var trays = palette.querySelector(".box-trays");
-        if (!ref || !bar || !trays) return;
+        if (!bar || !trays) return;
         if (chip.parentElement === bar) return;
-        if (openCat === chip.dataset.cat) closeBox();
+        if (ref && openCat === chip.dataset.cat) closeBox();
         bar.appendChild(chip);
-        trays.appendChild(ref.tray);
+        if (ref && ref.tray) trays.appendChild(ref.tray);
       }
 
       document.addEventListener("pointerdown", function (e) {
@@ -2039,7 +2069,7 @@
         }
         var under = document.elementFromPoint(e.clientX, e.clientY);
         var zone = under
-          ? under.closest(".item-container, .box-bar")
+          ? under.closest(".item-container, .box-bar, .box-chip.stack-chip")
           : null;
         if (zone !== boxOverZone) {
           if (boxOverZone) boxOverZone.classList.remove("drag-over");
@@ -2058,7 +2088,10 @@
         boxChip.classList.remove("dragging-original");
         if (boxOverZone) {
           boxOverZone.classList.remove("drag-over");
-          if (wasDragging) storeBoxAt(boxChip, boxOverZone.closest(".palette"));
+          if (wasDragging) {
+            if (boxOverZone.closest(".box-chip.stack-chip")) stackBox(boxChip);
+            else storeBoxAt(boxChip, boxOverZone.closest(".palette"));
+          }
           boxOverZone = null;
         }
         boxChip = null;
@@ -2067,6 +2100,41 @@
 
       document.addEventListener("pointerup", endBoxDrag);
       document.addEventListener("pointercancel", endBoxDrag);
+
+      // The Box Stack: dropping a real box onto the stack chip tucks the box
+      // away (chip + tray hidden) to save space, growing the stack counter.
+      // A short tap on the stack chip dumps all stacked boxes back out.
+      function stackBox(chip) {
+        var ref = chip && boxRefs[chip.dataset.cat];
+        if (!ref || ref.stacked) return;
+        if (openCat === chip.dataset.cat) closeBox();
+        ref.stacked = true;
+        ref.chip.classList.add("stacked");
+        ref.tray.classList.add("stacked");
+        refreshStackCounts();
+      }
+
+      function unstackBoxes() {
+        var any = false;
+        Object.keys(boxRefs).forEach(function (cat) {
+          var ref = boxRefs[cat];
+          if (!ref.stacked) return;
+          ref.stacked = false;
+          ref.chip.classList.remove("stacked");
+          ref.tray.classList.remove("stacked");
+          any = true;
+        });
+        if (any) refreshStackCounts();
+      }
+
+      function refreshStackCounts() {
+        var n = Object.keys(boxRefs).filter(function (cat) {
+          return boxRefs[cat].stacked;
+        }).length;
+        document.querySelectorAll(".stack-count").forEach(function (el) {
+          el.textContent = String(n);
+        });
+      }
 
       // Randomize the order of items in Space One (Fisher-Yates on the
       // item children only; stored box chips keep their place).
@@ -2419,11 +2487,20 @@
 
       document.addEventListener("click", function (e) {
         var btn = e.target.closest(".lab-toggle");
-        if (!btn) return;
-        var card = btn.closest(".spot-card");
-        if (!card) return;
-        var zone = card.querySelector(".drop-zone");
-        if (zone) toggleLab(zone.id);
+        if (btn) {
+          var card = btn.closest(".spot-card");
+          if (!card) return;
+          var zone = card.querySelector(".drop-zone");
+          if (zone) toggleLab(zone.id);
+          return;
+        }
+        if (e.target.closest(".stack-chip")) {
+          if (suppressBoxClick) {
+            suppressBoxClick = false;
+            return;
+          }
+          unstackBoxes();
+        }
       });
 
       recordLabHomes();
@@ -2971,6 +3048,7 @@
         });
         suppressBoxClick = false;
         restoreLabHomes();
+        unstackBoxes();
         var boxAreaEl = document.getElementById("boxArea");
         if (boxAreaEl) {
           boxAreaEl.classList.remove("dissolving");
