@@ -645,6 +645,7 @@
       }
       .playRow {
         display: flex;
+        flex-wrap: wrap;
         justify-content: center;
         gap: 1rem;
         width: 100%;
@@ -2166,6 +2167,7 @@
       <section class="screen title-slide" id="translatorScreen">
         <div class="content">
           <div class="stage">
+            <div class="playRow">
             <button
               id="translateBtn"
               class="clipcard"
@@ -2192,6 +2194,33 @@
               </svg>
               Translate
             </button>
+            <button
+              id="wordListBtn"
+              class="clipcard"
+              onclick="translateWordList()"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="1.2em"
+                height="1.2em"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                style="vertical-align: -0.2em"
+              >
+                <path d="M8 6h13" />
+                <path d="M8 12h13" />
+                <path d="M8 18h13" />
+                <path d="M3 6h.01" />
+                <path d="M3 12h.01" />
+                <path d="M3 18h.01" />
+              </svg>
+              Word list
+            </button>
+            </div>
             <div class="panel">
               <div class="cast">
               <figure class="castMember">
@@ -2614,6 +2643,27 @@ Tap a word to hear it — SpotlightPro turns your notes into a live lesson.
 
       var translateSeq = 0;
 
+      function fetchZh(text) {
+        var url =
+          "https://translate.googleapis.com/translate_a/single" +
+          "?client=gtx&sl=auto&tl=zh-CN&dt=t&q=" +
+          encodeURIComponent(text);
+        return fetch(url)
+          .then(function (r) {
+            return r.json();
+          })
+          .then(function (data) {
+            var translated = "";
+            try {
+              var segs = data[0];
+              for (var i = 0; i < segs.length; i++) {
+                translated += segs[i][0] || "";
+              }
+            } catch (e) {}
+            return translated || text;
+          });
+      }
+
       function doTranslate(text) {
         text = cleanEn(text);
         var seq = ++translateSeq;
@@ -2629,28 +2679,13 @@ Tap a word to hear it — SpotlightPro turns your notes into a live lesson.
           zhBox.classList.add("filled");
         }
         equalizeBoxes();
-        var url =
-          "https://translate.googleapis.com/translate_a/single" +
-          "?client=gtx&sl=auto&tl=zh-CN&dt=t&q=" +
-          encodeURIComponent(text);
         if (typeof fetch !== "function") {
           if (zhBox) zhBox.textContent = "Translation failed";
           equalizeBoxes();
           return;
         }
-        fetch(url)
-          .then(function (r) {
-            return r.json();
-          })
-          .then(function (data) {
-            var translated = "";
-            try {
-              var segs = data[0];
-              for (var i = 0; i < segs.length; i++) {
-                translated += segs[i][0] || "";
-              }
-            } catch (e) {}
-            if (!translated) translated = text;
+        fetchZh(text)
+          .then(function (translated) {
             addClip(text, translated);
             if (seq !== translateSeq) return;
             lastZhText = translated;
@@ -2662,6 +2697,59 @@ Tap a word to hear it — SpotlightPro turns your notes into a live lesson.
             if (zhBox) zhBox.textContent = "Translation failed";
             equalizeBoxes();
           });
+      }
+
+      function translateWordList() {
+        openInputModal("Paste a word list (one word per line):", function (raw) {
+          var lines = String(raw || "").split(/\r?\n/);
+          var words = [];
+          for (var i = 0; i < lines.length; i++) {
+            var w = cleanEn(lines[i]);
+            if (w) words.push(w);
+          }
+          if (!words.length) {
+            toast("No words to translate");
+            return;
+          }
+          if (typeof fetch !== "function") {
+            toast("Translation not available");
+            return;
+          }
+          var seq = ++translateSeq;
+          var srcBox = document.getElementById("srcLangBox");
+          var zhBox = document.getElementById("zhLangBox");
+          if (zhBox) {
+            zhBox.textContent = "…";
+            zhBox.classList.add("filled");
+          }
+          var chain = Promise.resolve();
+          words.forEach(function (w) {
+            chain = chain.then(function () {
+              if (seq === translateSeq) {
+                lastSrcText = w;
+                if (srcBox) {
+                  srcBox.textContent = w;
+                  srcBox.classList.add("filled");
+                }
+                if (zhBox) zhBox.textContent = "…";
+                equalizeBoxes();
+              }
+              return fetchZh(w).then(function (zhText) {
+                addClip(w, zhText);
+                if (seq === translateSeq) {
+                  lastZhText = zhText;
+                  if (zhBox) zhBox.textContent = zhText;
+                  equalizeBoxes();
+                }
+              });
+            });
+          });
+          chain.catch(function () {
+            if (seq !== translateSeq) return;
+            if (zhBox) zhBox.textContent = "Translation failed";
+            equalizeBoxes();
+          });
+        });
       }
 
       function speakTranslate(lang) {
