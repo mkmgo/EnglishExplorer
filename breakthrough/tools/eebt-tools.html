@@ -3886,6 +3886,18 @@ Tap a word to hear it. Use Markdown:
           }
           return;
         }
+        var et = e.target;
+        var inField =
+          et &&
+          (et.tagName === "TEXTAREA" ||
+            et.tagName === "INPUT" ||
+            et.isContentEditable === true);
+        if (inField) {
+          if (k === "Escape" || kc === 27 || kc === 10009) {
+            if (et && et.blur) et.blur();
+          }
+          return;
+        }
         if (k === "ArrowRight" || kc === 39 || k === " " || kc === 32) {
           if (e.preventDefault) e.preventDefault();
           next();
