@@ -4187,9 +4187,9 @@ Tap a word to hear it. Use Markdown:
       }
 
       function mdSay() {
-        if (mdSelText) { say(mdSelText); return; }
+        if (mdSelText) { sayOther(mdSelText); return; }
         var out = document.getElementById("mdOutput");
-        if (out && out.textContent) say(out.textContent);
+        if (out && out.textContent) sayOther(out.textContent);
       }
 
       function mdTranslate() {
