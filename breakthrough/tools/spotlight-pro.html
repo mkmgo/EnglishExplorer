@@ -1758,6 +1758,84 @@
         background: #eef1f7;
         font-weight: 900;
       }
+      .mdSuggest {
+        position: fixed;
+        z-index: 95;
+        min-width: 220px;
+        max-width: 320px;
+        max-height: 42vh;
+        overflow-y: auto;
+        background: var(--panel);
+        border: 2px solid var(--accent2);
+        border-radius: 14px;
+        box-shadow: var(--shadow);
+        padding: 0.35em;
+        display: none;
+        scrollbar-width: none;
+      }
+      .mdSuggest.show {
+        display: block;
+      }
+      .mdSuggest::-webkit-scrollbar {
+        display: none;
+      }
+      .mdSuggestEmpty {
+        padding: 0.55em;
+        font-size: clamp(0.8rem, 1.3vw, 1.05rem);
+        color: var(--muted);
+        text-align: center;
+      }
+      .mdSuggestRow {
+        display: flex;
+        align-items: center;
+        gap: 0.55em;
+        width: 100%;
+        padding: 0.4em 0.5em;
+        border-radius: 10px;
+        cursor: pointer;
+        transition: background 0.12s;
+        font-size: clamp(0.8rem, 1.3vw, 1.05rem);
+        font-weight: 800;
+        color: var(--ink);
+        border: 0;
+        background: none;
+        text-align: left;
+        font-family: Arial, Helvetica, sans-serif;
+      }
+      .mdSuggestRow:hover,
+      .mdSuggestRow.sel {
+        background: #eef1f7;
+      }
+      .mdSuggestThumb {
+        width: 34px;
+        height: 34px;
+        object-fit: cover;
+        border-radius: 8px;
+        background: #ddd;
+        flex: 0 0 auto;
+      }
+      .mdSuggestIcon {
+        width: 34px;
+        height: 34px;
+        border-radius: 8px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1rem;
+        background: var(--accent2);
+        color: var(--accent);
+        flex: 0 0 auto;
+      }
+      .mdSuggestLabel {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        min-width: 0;
+      }
+      :root[data-theme="dark"] .mdSuggestRow:hover,
+      :root[data-theme="dark"] .mdSuggestRow.sel {
+        background: #232a36;
+      }
       .mdWord {
         cursor: pointer;
         border-radius: 6px;
@@ -2382,11 +2460,12 @@ Tap a word to hear it. Use Markdown:
 - **bold**, *italic*, `code`
 1. numbered list
 
-{{media:myphoto}}  shows a loaded image, tap to enlarge."
+Type {{ to pick a loaded image, video or audio · tap to enlarge."
               ># Welcome
 
 Tap a word to hear it — SpotlightPro turns your notes into a live lesson.
               </textarea>
+              <div id="mdSuggest" class="mdSuggest"></div>
             </div>
             <div class="mdPane mdOutput">
               <div class="mdPaneHead">Live</div>
@@ -4282,6 +4361,10 @@ Tap a word to hear it — SpotlightPro turns your notes into a live lesson.
           var trimmed = line.trim();
           if (!trimmed) { flushPara(); flushList(); flushTable(); continue; }
           var mt = trimmed.match(/^\{\{media:([^}]+)\}\}$/);
+          if (!mt) {
+            var bareRef = trimmed.match(/^\{\{([^^{}]+)\}\}$/);
+            if (bareRef && mdResolveMedia(bareRef[1].trim())) mt = bareRef;
+          }
           if (!mt) mt = trimmed.match(/^!\[([^\]]*)\]\(([^)]+)\)$/);
           if (mt) {
             flushPara();
@@ -4426,6 +4509,14 @@ Tap a word to hear it — SpotlightPro turns your notes into a live lesson.
         input.addEventListener("input", function () {
           clearTimeout(mdRenderTimer);
           mdRenderTimer = setTimeout(mdRender, 280);
+          updateMdSuggest();
+        });
+        input.addEventListener("keydown", function (e) {
+          if (!mdSuggestOpen()) return;
+          if (e.key === "ArrowDown") { e.preventDefault(); mdSuggestMove(1); }
+          else if (e.key === "ArrowUp") { e.preventDefault(); mdSuggestMove(-1); }
+          else if (e.key === "Enter" || e.key === "Tab") { e.preventDefault(); mdSuggestPick(); }
+          else if (e.key === "Escape") { hideMdSuggest(); }
         });
         out.addEventListener("click", function (e) {
           var t = e.target;
@@ -4454,6 +4545,223 @@ Tap a word to hear it — SpotlightPro turns your notes into a live lesson.
           }
         });
       }
+
+      var mdSuggestRows = [];
+      var mdSuggestIdx = -1;
+
+      function mdSuggestOpen() {
+        var p = document.getElementById("mdSuggest");
+        return !!p && p.classList.contains("show");
+      }
+
+      function mediaRefName(item) {
+        if (item && item.collection) return item.collection;
+        var s = String(item && item.url ? item.url : "").split("?")[0].split("#")[0];
+        var seg = s.split("/").pop() || "";
+        seg = seg.replace(/\.[a-zA-Z0-9]{2,5}$/i, "");
+        return seg || (item ? item.url : "");
+      }
+
+      function buildMediaRefs() {
+        var seen = {};
+        var out = [];
+        for (var i = 0; i < mediaHistory.length; i++) {
+          var it = mediaHistory[i];
+          var name = mediaRefName(it);
+          var key = name.toLowerCase();
+          var ref = key in seen ? it.url : name;
+          seen[key] = true;
+          out.push({ item: it, name: ref, label: name });
+        }
+        return out;
+      }
+
+      function caretMirrorPos(textarea) {
+        try {
+          var doc = textarea.ownerDocument;
+          var cs = getComputedStyle(textarea);
+          var mirror = doc.createElement("div");
+          mirror.style.cssText =
+            "position:absolute;visibility:hidden;white-space:pre-wrap;" +
+            "word-wrap:break-word;top:0;left:0;height:auto;";
+          mirror.style.fontFamily = cs.fontFamily;
+          mirror.style.fontSize = cs.fontSize;
+          mirror.style.fontStyle = cs.fontStyle;
+          mirror.style.fontWeight = cs.fontWeight;
+          mirror.style.letterSpacing = cs.letterSpacing;
+          mirror.style.lineHeight = cs.lineHeight;
+          mirror.style.textTransform = cs.textTransform;
+          mirror.style.textAlign = cs.textAlign;
+          mirror.style.textIndent = cs.textIndent;
+          mirror.style.padding = cs.padding;
+          mirror.style.borderWidth = cs.borderWidth;
+          mirror.style.boxSizing = cs.boxSizing;
+          mirror.style.width = cs.width;
+          if (textarea.scrollHeight > textarea.clientHeight) mirror.style.overflowY = "scroll";
+          mirror.textContent = textarea.value.substring(0, textarea.selectionStart);
+          var span = doc.createElement("span");
+          span.textContent = "\u200b";
+          mirror.appendChild(span);
+          doc.body.appendChild(mirror);
+          var coords = {
+            top: span.offsetTop - textarea.scrollTop,
+            left: span.offsetLeft,
+            height: (parseFloat(cs.fontSize) || 16) * 1.4
+          };
+          doc.body.removeChild(mirror);
+          return coords;
+        } catch (e) {
+          return null;
+        }
+      }
+
+      function updateMdSuggest() {
+        var input = document.getElementById("mdSourceInput");
+        var panel = document.getElementById("mdSuggest");
+        if (!input || !panel) return;
+        var start = input.selectionStart;
+        var before = input.value.slice(0, start);
+        var m = before.match(/\{\{([^{}]*)$/);
+        if (!m) { hideMdSuggest(); return; }
+        var needle = (m[1] || "").replace(/^media:/, "").toLowerCase();
+        var all = buildMediaRefs();
+        var matches = [];
+        for (var i = 0; i < all.length; i++) {
+          var hay = all[i].label.toLowerCase() + " " + all[i].item.url.toLowerCase();
+          if (hay.indexOf(needle) >= 0) matches.push(all[i]);
+        }
+        panel.innerHTML = "";
+        if (!matches.length) {
+          var em = document.createElement("div");
+          em.className = "mdSuggestEmpty";
+          em.textContent = mediaHistory.length
+            ? 'No loaded media matches "' + (m[1] || "") + '"'
+            : "No media loaded yet - add it on screen 1 (Media clipper) first";
+          panel.appendChild(em);
+          positionMdSuggest(panel);
+          return;
+        }
+        for (var j = 0; j < matches.length && j < 8; j++) {
+          var it = matches[j];
+          var r = document.createElement("button");
+          r.type = "button";
+          r.className = "mdSuggestRow";
+          r.setAttribute("data-name", it.name);
+          if (it.item.type === "image") {
+            var img = document.createElement("img");
+            img.className = "mdSuggestThumb";
+            img.src = it.item.url;
+            img.alt = "";
+            r.appendChild(img);
+          } else {
+            var ic = document.createElement("span");
+            ic.className = "mdSuggestIcon";
+            ic.textContent = it.item.type === "video" ? "\u25b6" : "\u266a";
+            r.appendChild(ic);
+          }
+          var lb = document.createElement("span");
+          lb.className = "mdSuggestLabel";
+          lb.textContent = it.label;
+          r.appendChild(lb);
+          r.addEventListener("mousedown", function (ev) { ev.preventDefault(); });
+          r.addEventListener("click", function (ev) {
+            insertMdSuggestion(ev.currentTarget.getAttribute("data-name"));
+          });
+          panel.appendChild(r);
+        }
+        mdSuggestRows = matches.slice(0, 8);
+        mdSuggestIdx = -1;
+        positionMdSuggest(panel);
+      }
+
+      function positionMdSuggest(panel) {
+        var input = document.getElementById("mdSourceInput");
+        if (!input) return;
+        panel.classList.add("show");
+        var rect = input.getBoundingClientRect();
+        var cp = caretMirrorPos(input);
+        var pW = Math.min(320, Math.max(220, panel.offsetWidth || 260));
+        var pH = Math.min(0.42 * window.innerHeight, panel.offsetHeight || 200);
+        var left, top;
+        if (cp && rect.width > 0) {
+          var cs = getComputedStyle(input);
+          var pl = parseFloat(cs.paddingLeft) || 0;
+          left = rect.left + cp.left + pl;
+          top = rect.top + cp.top + cp.height + 6;
+          if (left + pW > window.innerWidth - 8) left = window.innerWidth - pW - 8;
+          if (left < 8) left = 8;
+          if (top + pH > window.innerHeight - 8) top = rect.top + cp.top - pH - 6;
+          if (top < 8) top = 8;
+        } else {
+          left = (window.innerWidth - pW) / 2;
+          top = rect.top > 0 ? Math.max(8, rect.top - pH - 8) : 80;
+        }
+        panel.style.maxWidth = pW + "px";
+        panel.style.left = left + "px";
+        panel.style.top = top + "px";
+        panel.scrollTop = 0;
+      }
+
+      function mdSuggestMove(d) {
+        var panel = document.getElementById("mdSuggest");
+        if (!panel || !mdSuggestRows.length) return;
+        var rows = panel.querySelectorAll(".mdSuggestRow");
+        if (!rows.length) return;
+        if (mdSuggestIdx >= 0 && rows[mdSuggestIdx]) rows[mdSuggestIdx].classList.remove("sel");
+        mdSuggestIdx = (mdSuggestIdx + d + rows.length) % rows.length;
+        rows[mdSuggestIdx].classList.add("sel");
+        try { rows[mdSuggestIdx].scrollIntoView({ block: "nearest" }); } catch (e) {}
+      }
+
+      function mdSuggestPick() {
+        var panel = document.getElementById("mdSuggest");
+        if (!panel) return;
+        if (mdSuggestIdx >= 0) {
+          var rows = panel.querySelectorAll(".mdSuggestRow");
+          if (rows[mdSuggestIdx]) insertMdSuggestion(rows[mdSuggestIdx].getAttribute("data-name"));
+        } else if (mdSuggestRows.length) {
+          insertMdSuggestion(mdSuggestRows[0].name);
+        }
+      }
+
+      function insertMdSuggestion(name) {
+        var input = document.getElementById("mdSourceInput");
+        if (!input || !name) return;
+        var start = input.selectionStart;
+        var before = input.value.slice(0, start);
+        var m = before.match(/\{\{([^{}]*)$/);
+        if (!m) { hideMdSuggest(); return; }
+        var openAt = start - m[0].length;
+        var after = input.value.slice(start);
+        var close = after.indexOf("}}");
+        var end = close >= 0 ? start + close + 2 : start;
+        input.value =
+          input.value.slice(0, openAt) + "{{" + name + "}}" + input.value.slice(end);
+        hideMdSuggest();
+        mdRender();
+        input.focus();
+        var pos = openAt + name.length + 4;
+        try { input.setSelectionRange(pos, pos); } catch (e) {}
+        toast("Media: " + name);
+      }
+
+      function hideMdSuggest() {
+        var p = document.getElementById("mdSuggest");
+        if (p) p.classList.remove("show");
+        mdSuggestRows = [];
+        mdSuggestIdx = -1;
+      }
+
+      document.addEventListener("mousedown", function (e) {
+        var p = document.getElementById("mdSuggest");
+        var input = document.getElementById("mdSourceInput");
+        if (!p || !p.classList.contains("show")) return;
+        if (e.target === input || (p.contains && p.contains(e.target))) return;
+        hideMdSuggest();
+      });
+      window.addEventListener("resize", hideMdSuggest);
+      window.addEventListener("scroll", hideMdSuggest, true);
+
       mdInit();
     </script>
   <script src="../../tracker.js"></script>
