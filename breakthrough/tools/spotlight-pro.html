@@ -2496,24 +2496,40 @@ Tap a word to hear it — SpotlightPro turns your notes into a live lesson.
       var altVoice = null;
       var altVoice2 = null;
 
+      var FEMALE_VOICE_TOKENS = [
+        "zira","aria","jenny","michelle","emma","libby","susan",
+        "samantha","karen","moira","tessa","ana","amber","cora",
+        "elizabeth","sonja","catherine","sara","hazel","rachel",
+        "heidi","vanessa","fiona","ava","serena","joanna","salli",
+        "ivy","google us english","google uk english female",
+      ];
+
       function setVoice() {
         if (!synth) return;
         var voices = synth.getVoices();
         if (!voices || voices.length === 0) return;
-        var preferred = null;
+        var female = null;
+        var british = null;
         var fallback = null;
         for (var i = 0; i < voices.length; i++) {
           var v = voices[i];
           if (!v || !v.lang) continue;
           if (v.lang.toLowerCase().indexOf("en") !== 0) continue;
           if (!fallback) fallback = v;
-          if (v.lang.toLowerCase().indexOf("en-gb") === 0) {
-            preferred = v;
-            break;
+          if (!british && v.lang.toLowerCase().indexOf("en-gb") === 0) {
+            british = v;
           }
-          if (v.name && v.name.indexOf("Zira") >= 0) preferred = v;
+          if (!female && v.name) {
+            var lower = v.name.toLowerCase();
+            for (var k = 0; k < FEMALE_VOICE_TOKENS.length; k++) {
+              if (lower.indexOf(FEMALE_VOICE_TOKENS[k]) >= 0) {
+                female = v;
+                break;
+              }
+            }
+          }
         }
-        altVoice = preferred || fallback;
+        altVoice = female || british || fallback;
         altVoice2 = null;
         for (var j = 0; j < voices.length; j++) {
           var w = voices[j];
