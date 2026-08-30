@@ -1,0 +1,595 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no"
+    />
+    <title>EnglishExplorer — In, On, Under</title>
+    <meta
+      name="description"
+      content="EnglishExplorer — In, On, Under"
+    />
+    <meta name="theme-color" content="#2B0603" />
+    <meta property="og:title" content="English Tasks" />
+    <meta property="og:description" content="In, On, Under" />
+    <meta property="og:image" content="https://res.cloudinary.com/dmkhsyfzf/image/upload/v1788131516/box-empty_xc6gww.jpg" />
+    <meta name="twitter:title" content="English Tasks" />
+    <meta name="twitter:description" content="In, On, Under" />
+    <meta name="twitter:image" content="https://res.cloudinary.com/dmkhsyfzf/image/upload/v1788131516/box-empty_xc6gww.jpg" />
+    <link
+      rel="icon"
+      type="image/png"
+      href="https://res.cloudinary.com/dmkhsyfzf/image/upload/v1788131516/box-empty_xc6gww.jpg"
+    />
+    <link
+      rel="apple-touch-icon"
+      href="https://res.cloudinary.com/dmkhsyfzf/image/upload/v1788131516/box-empty_xc6gww.jpg"
+    />
+    <style>
+      :root {
+        --bg: #faf7f2;
+        --ink: #14213d;
+        --muted: #60708d;
+        --accent: #2b0603;
+        --accent2: #a63e32;
+        --panel: #fcfcfc;
+        --side: #f1dedb;
+        --sideTitle: #8a352c;
+        --sideEdge: rgba(166, 62, 50, 0.3);
+        --shadow: 0 18px 50px rgba(20, 33, 61, 0.14);
+      }
+      * {
+        box-sizing: border-box;
+      }
+      html,
+      body {
+        margin: 0;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+        background: var(--bg);
+        font-family: Arial, Helvetica, sans-serif;
+        color: var(--ink);
+        touch-action: manipulation;
+      }
+      button {
+        font: inherit;
+        border: 0;
+        cursor: pointer;
+        transition: transform 0.3s ease, filter 0.3s ease;
+      }
+      #app {
+        width: 100%;
+        height: 100vh;
+        height: 100dvh;
+        position: relative;
+        overflow: hidden;
+      }
+      .screen {
+        position: absolute;
+        inset: 0;
+        background: var(--bg);
+        display: flex;
+        align-items: flex-start;
+        justify-content: center;
+        padding: clamp(60px, 8.5vh, 80px) clamp(10px, 2vw, 24px)
+          clamp(10px, 2vh, 24px);
+      }
+      .content {
+        width: min(1400px, 100%);
+        max-height: 100%;
+        position: relative;
+        text-align: center;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: flex-start;
+        gap: 1.2em;
+        padding-bottom: clamp(8px, 1.5vh, 20px);
+        overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
+        overscroll-behavior: contain;
+        scrollbar-width: none;
+      }
+      .content::-webkit-scrollbar {
+        display: none;
+      }
+      .ribbon {
+        font-size: clamp(1.4rem, 2.8vw, 2.2rem);
+        font-weight: 800;
+        color: var(--accent);
+        margin: 0 0 0.4em 0;
+        position: relative;
+        display: inline-block;
+        padding: 0 0.3em;
+        letter-spacing: 0.06em;
+      }
+      .ribbon::after {
+        content: "";
+        position: absolute;
+        bottom: -4px;
+        left: 10%;
+        right: 10%;
+        height: 3px;
+        background: var(--accent2);
+        border-radius: 2px;
+      }
+      .banner {
+        display: inline-block;
+        background: var(--accent);
+        color: #fff;
+        padding: 0.15em 0.8em;
+        border-radius: 8px;
+        font-size: clamp(0.9rem, 1.6vw, 1.3rem);
+        font-weight: 700;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        margin-bottom: 0.1em;
+      }
+      .hint {
+        margin: -0.4em 0 0 0;
+        font-size: clamp(0.8rem, 1.3vw, 1rem);
+        color: var(--muted);
+        font-style: italic;
+      }
+      .frames {
+        width: 100%;
+        max-width: 1080px;
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: clamp(12px, 2vw, 24px);
+      }
+      .frame {
+        background: var(--side);
+        border: 2px solid var(--sideEdge);
+        border-radius: 22px;
+        box-shadow: var(--shadow);
+        padding: clamp(0.7rem, 1.2vw, 1.1rem);
+        display: flex;
+        flex-direction: column;
+        gap: 0.7em;
+        min-width: 0;
+        animation: rise 0.5s ease both;
+      }
+      .frame:nth-child(2) {
+        animation-delay: 0.12s;
+      }
+      .frame:nth-child(3) {
+        animation-delay: 0.24s;
+      }
+      @keyframes rise {
+        from {
+          opacity: 0;
+          transform: translateY(14px);
+        }
+        to {
+          opacity: 1;
+          transform: none;
+        }
+      }
+      .visual {
+        position: relative;
+        height: clamp(230px, 28vh, 270px);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: var(--panel);
+        border: 2px solid var(--sideEdge);
+        border-radius: 16px;
+        min-width: 0;
+      }
+      .visual .box {
+        width: clamp(110px, 19vw, 132px);
+        height: auto;
+        display: block;
+      }
+      .visual .ball {
+        position: absolute;
+        left: 50%;
+        width: clamp(68px, 12vw, 82px);
+        height: auto;
+        display: block;
+        transform: translate(-50%, -50%);
+        z-index: 1;
+      }
+      .visual .gshadow,
+      .visual .bshadow {
+        position: absolute;
+        left: 50%;
+        height: 12px;
+        border-radius: 50%;
+        background: radial-gradient(
+          ellipse at center,
+          rgba(20, 33, 61, 0.22) 0%,
+          rgba(20, 33, 61, 0) 70%
+        );
+        transform: translate(-50%, -50%);
+        pointer-events: none;
+      }
+      .visual .gshadow {
+        width: 44%;
+        top: calc(50% + 64px);
+      }
+      .visual .bshadow {
+        width: 30%;
+        top: calc(50% - 62px);
+        opacity: 0;
+      }
+      .frame[data-state="in"] .ball {
+        top: 50%;
+      }
+      .frame[data-state="on"] .ball {
+        top: calc(50% - 84px);
+      }
+      .frame[data-state="on"] .bshadow {
+        opacity: 1;
+      }
+      .frame[data-state="under"] .ball {
+        top: calc(50% + 82px);
+      }
+      .phraseBtn {
+        width: 100%;
+        padding: 0.35em 0.5em;
+        background: var(--accent);
+        color: #fff;
+        border-radius: 12px;
+        -webkit-tap-highlight-color: transparent;
+        box-shadow: 0 8px 20px rgba(20, 33, 61, 0.18);
+      }
+      .phraseBtn:active {
+        transform: scale(0.96);
+        filter: brightness(1.1);
+      }
+      .pw {
+        display: block;
+        font-size: clamp(1.2rem, 2vw, 1.5rem);
+        font-weight: 900;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        line-height: 1.1;
+        margin-bottom: 0.1em;
+      }
+      .ps {
+        display: block;
+        font-size: clamp(0.82rem, 1.4vw, 0.98rem);
+        opacity: 0.94;
+        line-height: 1.3;
+      }
+      button:focus-visible {
+        outline: 3px solid var(--accent2);
+        outline-offset: 3px;
+      }
+      @media (hover: hover) {
+        button:hover {
+          transform: translateY(-2px);
+        }
+      }
+      .topbar {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        height: clamp(48px, 7vh, 56px);
+        padding: 0 clamp(12px, 3vw, 28px);
+        background: var(--accent);
+        z-index: 20;
+        overflow: hidden;
+      }
+      .topbarTitle {
+        font-size: clamp(0.85rem, 2vw, 1.2rem);
+        font-weight: 800;
+        color: #fff;
+        letter-spacing: 0.04em;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+      .topbarRight {
+        display: flex;
+        align-items: center;
+        gap: 4px;
+      }
+      .ctrl {
+        min-width: 44px;
+        min-height: 44px;
+        padding: 0 4px;
+        background: transparent;
+        border: 0;
+        font-size: 0.95rem;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        line-height: 1;
+        -webkit-tap-highlight-color: transparent;
+      }
+      .tag {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        height: 30px;
+        min-width: 34px;
+        padding: 0 8px;
+        background: var(--accent2);
+        color: var(--accent);
+        border-radius: 8px;
+        filter: drop-shadow(0 3px 4px rgba(0, 0, 0, 0.22));
+        transition: transform 0.3s ease, filter 0.3s ease;
+      }
+      .ctrl:active .tag {
+        transform: scale(0.94);
+        filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.22));
+      }
+      .ctrl:hover .tag {
+        transform: scale(1.06);
+        filter: brightness(1.15) drop-shadow(0 4px 6px rgba(0, 0, 0, 0.3));
+      }
+      @media (max-width: 480px) {
+        .topbar {
+          padding: 0 8px;
+        }
+        .tag {
+          height: 28px;
+          min-width: 30px;
+          padding: 0 8px;
+        }
+        .topbarTitle {
+          font-size: 0.78rem;
+        }
+      }
+      @media (max-width: 860px) {
+        .frames {
+          grid-template-columns: 1fr;
+          gap: 14px;
+        }
+        .visual {
+          height: 210px;
+        }
+        .visual .box {
+          width: min(26vw, 112px);
+        }
+        .visual .ball {
+          width: min(16vw, 70px);
+        }
+        .visual .gshadow {
+          top: calc(50% + 56px);
+        }
+        .visual .bshadow {
+          top: calc(50% - 52px);
+        }
+        .frame[data-state="on"] .ball {
+          top: calc(50% - 71px);
+        }
+        .frame[data-state="under"] .ball {
+          top: calc(50% + 70px);
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div id="app">
+      <div class="topbar">
+        <span class="topbarTitle">In · On · Under</span>
+        <div class="topbarRight">
+          <button class="ctrl" id="soundBtn" aria-label="Sound">
+            <span class="tag">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="1.2em"
+                height="1.2em"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                style="vertical-align: -0.2em"
+              >
+                <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" />
+                <path d="M15.54 8.46a5 5 0 0 1 0 7.07" />
+                <path d="M19.07 4.93a10 10 0 0 1 0 14.14" />
+              </svg>
+            </span>
+          </button>
+        </div>
+      </div>
+
+      <section class="screen active" id="inOnUnderScreen">
+        <div class="content">
+          <span class="banner">Prepositions</span>
+          <h1 class="ribbon">Where is the Ball?</h1>
+          <p class="hint">Tap a card to listen</p>
+          <div class="frames">
+            <div class="frame" data-state="in">
+              <div class="visual">
+                <img
+                  class="box"
+                  src="https://res.cloudinary.com/dmkhsyfzf/image/upload/f_auto,q_auto/v1788131516/box-empty_xc6gww.jpg"
+                  alt="Box"
+                />
+                <img
+                  class="ball"
+                  src="https://res.cloudinary.com/dmkhsyfzf/image/upload/f_auto,q_auto/v1788131516/ball_tr_yfj9n8.png"
+                  alt="Ball in the box"
+                />
+                <span class="gshadow"></span>
+                <span class="bshadow"></span>
+              </div>
+              <button
+                class="phraseBtn"
+                data-phrase="The ball is in the box."
+              >
+                <span class="pw">In</span>
+                <span class="ps">The ball is <strong>in</strong> the box.</span>
+              </button>
+            </div>
+
+            <div class="frame" data-state="on">
+              <div class="visual">
+                <img
+                  class="box"
+                  src="https://res.cloudinary.com/dmkhsyfzf/image/upload/f_auto,q_auto/v1788131516/box-empty_xc6gww.jpg"
+                  alt="Box"
+                />
+                <img
+                  class="ball"
+                  src="https://res.cloudinary.com/dmkhsyfzf/image/upload/f_auto,q_auto/v1788131516/ball_tr_yfj9n8.png"
+                  alt="Ball on the box"
+                />
+                <span class="gshadow"></span>
+                <span class="bshadow"></span>
+              </div>
+              <button
+                class="phraseBtn"
+                data-phrase="The ball is on the box."
+              >
+                <span class="pw">On</span>
+                <span class="ps">The ball is <strong>on</strong> the box.</span>
+              </button>
+            </div>
+
+            <div class="frame" data-state="under">
+              <div class="visual">
+                <img
+                  class="box"
+                  src="https://res.cloudinary.com/dmkhsyfzf/image/upload/f_auto,q_auto/v1788131516/box-empty_xc6gww.jpg"
+                  alt="Box"
+                />
+                <img
+                  class="ball"
+                  src="https://res.cloudinary.com/dmkhsyfzf/image/upload/f_auto,q_auto/v1788131516/ball_tr_yfj9n8.png"
+                  alt="Ball under the box"
+                />
+                <span class="gshadow"></span>
+                <span class="bshadow"></span>
+              </div>
+              <button
+                class="phraseBtn"
+                data-phrase="The ball is under the box."
+              >
+                <span class="pw">Under</span>
+                <span class="ps">The ball is <strong>under</strong> the box.</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <script>
+      var ICON_VOLUME_ON =
+        '<svg xmlns="http://www.w3.org/2000/svg" width="1.2em" height="1.2em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: -0.2em"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/></svg>';
+      var ICON_VOLUME_OFF =
+        '<svg xmlns="http://www.w3.org/2000/svg" width="1.2em" height="1.2em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: -0.2em"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><line x1="22" x2="16" y1="9" y2="15"/><line x1="16" x2="22" y1="9" y2="15"/></svg>';
+      var soundOn = true;
+      var soundTag = document.getElementById("soundBtn").querySelector(".tag");
+      document.getElementById("soundBtn").onclick = function () {
+        soundOn = !soundOn;
+        soundTag.innerHTML = soundOn ? ICON_VOLUME_ON : ICON_VOLUME_OFF;
+        cancelSpeech();
+      };
+
+      var synth =
+        window.speechSynthesis ||
+        window.webkitSpeechSynthesis ||
+        window.mozSpeechSynthesis ||
+        null;
+      var altVoice = null;
+      var altVoice2 = null;
+
+      function setVoice() {
+        if (!synth) return;
+        var voices = synth.getVoices();
+        if (!voices || voices.length === 0) return;
+        var preferred = null;
+        var fallback = null;
+        for (var i = 0; i < voices.length; i++) {
+          var v = voices[i];
+          if (!v || !v.lang) continue;
+          if (v.lang.toLowerCase().indexOf("en") !== 0) continue;
+          if (!fallback) fallback = v;
+          if (v.lang.toLowerCase().indexOf("en-gb") === 0) {
+            preferred = v;
+            break;
+          }
+          if (v.name && v.name.indexOf("Zira") >= 0) preferred = v;
+        }
+        altVoice = preferred || fallback;
+        altVoice2 = null;
+        for (var j = 0; j < voices.length; j++) {
+          var w = voices[j];
+          if (!w || !w.lang) continue;
+          if (w.lang.toLowerCase().indexOf("en") !== 0) continue;
+          if (w === altVoice) continue;
+          altVoice2 = w;
+          break;
+        }
+        if (!altVoice2) altVoice2 = altVoice;
+      }
+      if (synth) {
+        setVoice();
+        if (typeof synth.addEventListener === "function") {
+          synth.addEventListener("voiceschanged", setVoice);
+        }
+        var voiceTimer = window.setInterval(function () {
+          if (altVoice2) window.clearInterval(voiceTimer);
+          setVoice();
+        }, 500);
+        window.setTimeout(function () {
+          window.clearInterval(voiceTimer);
+        }, 4000);
+      }
+
+      function cancelSpeech() {
+        if (synth && typeof synth.cancel === "function") {
+          try {
+            synth.cancel();
+          } catch (e) {}
+        }
+      }
+
+      function speakWord(word) {
+        if (!soundOn) return;
+        if (window.tizen && window.tizen.tts) {
+          try {
+            tizen.tts.speak(
+              String(word),
+              {
+                locale: "en-US",
+                rate: 0.85,
+                pitch: 1.0,
+                type: "TTS_TYPE_SCREEN_READER",
+              },
+              { onfinish: function () {} },
+            );
+            return;
+          } catch (e) {}
+        }
+        if (synth && typeof SpeechSynthesisUtterance !== "undefined") {
+          cancelSpeech();
+          var u = new SpeechSynthesisUtterance(String(word));
+          u.lang = "en-US";
+          u.rate = 0.82;
+          u.pitch = 1.08;
+          if (altVoice2) u.voice = altVoice2;
+          else if (altVoice) u.voice = altVoice;
+          synth.speak(u);
+        }
+      }
+
+      var phraseBtns = document.querySelectorAll(".phraseBtn");
+      for (var i = 0; i < phraseBtns.length; i++) {
+        (function (btn) {
+          btn.onclick = function () {
+            speakWord(btn.getAttribute("data-phrase") || btn.textContent);
+          };
+        })(phraseBtns[i]);
+      }
+    </script>
+  <script src="../../tracker.js"></script>
+  </body>
+</html>

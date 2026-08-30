@@ -18,10 +18,12 @@ EnglishExplorer/
 ├── junior/                     <-- Ages 6-9 ecosystem
 │   ├── thematic/               <-- Thematic lesson decks
 │   │   ├── animals.html
-│   │   ├── toys-things.html
+│   │   ├── food-and-drinks.html
+│   │   ├── house-home.html             <-- House & Home lesson deck
+│   │   ├── in-on-under.html            <-- Prepositions: in, on, under
 │   │   ├── my-family-my-classroom.html
 │   │   ├── numbers.html
-│   │   └── house-home.html             <-- House & Home lesson deck
+│   │   ├── toys-things.html
 │   └── minigames/              <-- Highly gamified mini-games (formerly /Features)
 │       ├── abc-world.html
 │       ├── mystery-base.html
