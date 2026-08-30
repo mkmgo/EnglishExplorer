@@ -1742,6 +1742,22 @@
         border-radius: 12px;
         overflow-x: auto;
       }
+      .mdCanvasTable {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 0.7em 0;
+        font-size: 0.88em;
+      }
+      .mdCanvasTable th,
+      .mdCanvasTable td {
+        border: 1px solid rgba(96, 112, 141, 0.4);
+        padding: 0.35em 0.7em;
+        vertical-align: top;
+      }
+      .mdCanvasTable th {
+        background: #eef1f7;
+        font-weight: 900;
+      }
       .mdWord {
         cursor: pointer;
         border-radius: 6px;
@@ -1806,6 +1822,9 @@
       }
       :root[data-theme="dark"] .mdCanvas code,
       :root[data-theme="dark"] .mdCanvas pre {
+        background: #232a36;
+      }
+      :root[data-theme="dark"] .mdCanvasTable th {
         background: #232a36;
       }
       :root[data-theme="dark"] .mdMedia {
@@ -4196,6 +4215,7 @@ Tap a word to hear it — SpotlightPro turns your notes into a live lesson.
         var ordered = false;
         var pre = false;
         var preBuf = [];
+        var tableBuf = null;
 
         function flushPara() {
           if (para.length) { blocks.push({ t: "p", text: para.join("\n") }); para = []; }
@@ -4203,27 +4223,81 @@ Tap a word to hear it — SpotlightPro turns your notes into a live lesson.
         function flushList() {
           if (list) { blocks.push({ t: "list", items: list, ordered: ordered }); list = null; }
         }
+        function isTableRow(line) {
+          var t = String(line || "").trim();
+          return t.charAt(0) === "|" && t.indexOf("|") >= 0;
+        }
+        function parseTableRow(line) {
+          var t = String(line || "").trim();
+          if (t.charAt(0) === "|") t = t.slice(1);
+          if (t.charAt(t.length - 1) === "|") t = t.slice(0, -1);
+          return t.split("|").map(function (c) { return c.trim(); });
+        }
+        function isTableSep(cells) {
+          if (!cells.length) return false;
+          for (var i = 0; i < cells.length; i++) {
+            if (!/^:?-+:?$/.test(cells[i])) return false;
+          }
+          return true;
+        }
+        function tableAligns(cells) {
+          var align = [];
+          for (var i = 0; i < cells.length; i++) {
+            var c = cells[i];
+            if (c.charAt(0) === ":" && c.charAt(c.length - 1) === ":") align.push("center");
+            else if (c.charAt(c.length - 1) === ":") align.push("right");
+            else align.push("left");
+          }
+          return align;
+        }
+        function flushTable() {
+          if (!tableBuf || !tableBuf.length) return;
+          if (tableBuf.length >= 2 && isTableSep(parseTableRow(tableBuf[1]))) {
+            var header = parseTableRow(tableBuf[0]);
+            var rows = [];
+            for (var i = 2; i < tableBuf.length; i++) rows.push(parseTableRow(tableBuf[i]));
+            blocks.push({
+              t: "table",
+              header: header,
+              rows: rows,
+              align: tableAligns(parseTableRow(tableBuf[1]))
+            });
+          } else {
+            para.push(tableBuf.join(" "));
+          }
+          tableBuf = null;
+        }
 
         for (var i = 0; i < lines.length; i++) {
           var line = lines[i];
           if (/^\s*```/.test(line)) {
             flushPara();
             flushList();
+            flushTable();
             if (pre) { blocks.push({ t: "pre", text: preBuf.join("\n") }); preBuf = []; pre = false; }
             else pre = true;
             continue;
           }
           if (pre) { preBuf.push(line); continue; }
           var trimmed = line.trim();
-          if (!trimmed) { flushPara(); flushList(); continue; }
+          if (!trimmed) { flushPara(); flushList(); flushTable(); continue; }
           var mt = trimmed.match(/^\{\{media:([^}]+)\}\}$/);
           if (!mt) mt = trimmed.match(/^!\[([^\]]*)\]\(([^)]+)\)$/);
           if (mt) {
             flushPara();
             flushList();
+            flushTable();
             blocks.push({ t: "media", ref: (mt[1] || mt[2]).trim() });
             continue;
           }
+          if (isTableRow(trimmed)) {
+            flushPara();
+            flushList();
+            if (!tableBuf) tableBuf = [];
+            tableBuf.push(trimmed);
+            continue;
+          }
+          flushTable();
           var h = trimmed.match(/^(#{1,6})\s+(.*)$/);
           if (h) { flushPara(); flushList(); blocks.push({ t: "h", level: h[1].length, text: h[2] }); continue; }
           var bq = trimmed.match(/^>\s?(.*)$/);
@@ -4241,6 +4315,7 @@ Tap a word to hear it — SpotlightPro turns your notes into a live lesson.
         }
         flushPara();
         flushList();
+        flushTable();
         if (pre) blocks.push({ t: "pre", text: preBuf.join("\n") });
 
         for (var b = 0; b < blocks.length; b++) {
@@ -4257,6 +4332,35 @@ Tap a word to hear it — SpotlightPro turns your notes into a live lesson.
               mdFillText(it, blk.items[li], false);
               el.appendChild(it);
             }
+          }
+          else if (blk.t === "table") {
+            el = document.createElement("table");
+            el.className = "mdCanvasTable";
+            var align = blk.align || [];
+            if (blk.header.length) {
+              var thead = document.createElement("thead");
+              var hr = document.createElement("tr");
+              for (var hc = 0; hc < blk.header.length; hc++) {
+                var th = document.createElement("th");
+                th.style.textAlign = align[hc] || "left";
+                mdFillText(th, blk.header[hc], false);
+                hr.appendChild(th);
+              }
+              thead.appendChild(hr);
+              el.appendChild(thead);
+            }
+            var tbody = document.createElement("tbody");
+            for (var r = 0; r < blk.rows.length; r++) {
+              var tr = document.createElement("tr");
+              for (var celli = 0; celli < blk.rows[r].length; celli++) {
+                var td = document.createElement("td");
+                td.style.textAlign = align[celli] || "left";
+                mdFillText(td, blk.rows[r][celli], false);
+                tr.appendChild(td);
+              }
+              tbody.appendChild(tr);
+            }
+            el.appendChild(tbody);
           }
           else { el = document.createElement("p"); mdFillText(el, blk.text, false); }
           out.appendChild(el);
