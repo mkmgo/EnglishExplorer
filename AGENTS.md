@@ -32,7 +32,7 @@ EnglishExplorer/
 ├── breakthrough/               <-- Older pupils (EEBT - Advanced / Breakthrough)
 │   ├── protocols/              <-- Daily Protocols (YYYY-MM-DD.html)
 │   └── tools/                  <-- Standalone utility collection (formerly EEBTools/)
-│       ├── eebt-tools.html
+│       ├── spotlight-pro.html
 │       └── eebt-translator.html
 ├── archive/                    <-- Older versions and backups for mobile/Tizen testing
 │   └── develop.html
@@ -70,7 +70,7 @@ put in them (see "Self-contained files" below).
 
 - Use **kebab-case**, all **lowercase**: `my-new-module.html`, never `MyNewModule.html`, `my_new_module.html`, or `my module.html`.
 - No spaces, underscores, or uppercase letters in file names.
-- Existing product display names are unaffected — only file names are constrained (e.g. the tools stay "EEBTools" on screen while the files are `eebt-tools.html` / `eebt-translator.html`).
+- Existing product display names are unaffected — only file names are constrained (e.g. the translator stays "EEBT Translator" while its file is `eebt-translator.html`; the presenter hub is `spotlight-pro.html`, shown on screen as "SpotlightPro").
 
 ## Backend worker (tracking + GitHub proxy)
 

@@ -18,7 +18,7 @@ EnglishExplorer/
 │       └── unlock-mystery.html <-- "Unlock Mystery" 1:1 English game
 ├── breakthrough/               <-- Older pupils (EEBT - Advanced / Breakthrough)
 │   └── tools/                  <-- Standalone utility collection (formerly EEBTools/)
-│       ├── eebt-tools.html     <-- Tool hub (includes a translator screen)
+│       ├── spotlight-pro.html  <-- SpotlightPro presenter tool hub
 │       └── eebt-translator.html <-- Standalone translator
 └── archive/                    <-- Older versions and backups for mobile/Tizen testing
     └── develop.html            <-- Superseded dev version; keep for reference/testing

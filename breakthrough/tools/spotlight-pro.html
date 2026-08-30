@@ -6,7 +6,7 @@
       name="viewport"
       content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no"
     />
-    <title>EEBTools</title>
+    <title>SpotlightPro</title>
     <meta name="description" content="English Explorer Breakthrough Tools — media clipper, translator, and more." />
     <meta name="theme-color" content="#e43703" />
     <link
@@ -19,11 +19,11 @@
       href="https://res.cloudinary.com/dqwm4pdbz/image/upload/q_auto/f_auto/w_180/v1782645670/dash_oardun.png"
     />
     <meta property="og:type" content="website" />
-    <meta property="og:title" content="EEBTools" />
+    <meta property="og:title" content="SpotlightPro" />
     <meta property="og:description" content="English Explorer Breakthrough Tools — media clipper, translator, and more." />
     <meta property="og:image" content="https://res.cloudinary.com/dqwm4pdbz/image/upload/q_auto/f_auto/v1782645670/dash_oardun.png" />
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="EEBTools" />
+    <meta name="twitter:title" content="SpotlightPro" />
     <meta name="twitter:description" content="English Explorer Breakthrough Tools — media clipper, translator, and more." />
     <meta name="twitter:image" content="https://res.cloudinary.com/dqwm4pdbz/image/upload/q_auto/f_auto/v1782645670/dash_oardun.png" />
     <style>
@@ -2116,7 +2116,7 @@
             onclick="next()"
           ></button>
         </div>
-        <span class="versionText">EEBTools V1.3</span>
+        <span class="versionText">SpotlightPro V1.4</span>
       </div>
 
       <!-- 1: Media clipper (paste Cloudinary asset link) -->
@@ -2335,7 +2335,10 @@ Tap a word to hear it. Use Markdown:
 1. numbered list
 
 {{media:myphoto}}  shows a loaded image, tap to enlarge."
-              ></textarea>
+              ># Welcome
+
+Tap a word to hear it — SpotlightPro turns your notes into a live lesson.
+              </textarea>
             </div>
             <div class="mdPane mdOutput">
               <div class="mdPaneHead">Live</div>
@@ -3957,7 +3960,7 @@ Tap a word to hear it. Use Markdown:
           loadMediaUrls(mediaFileInput);
         });
       }
-      show(0);
+      show(screens.indexOf(document.getElementById("mdScreen")));
       renderMediaThumbs();
 
       /* ---- MD Presenter (screen 3) ---- */
