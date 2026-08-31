@@ -1,0 +1,250 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no"
+    />
+    <title>Protocol 31/08/2026</title>
+    <meta name="description" content="English Explorer — Protocol 31/08/2026" />
+    <meta property="og:image" content="https://res.cloudinary.com/dmkhsyfzf/image/upload/q_auto/f_auto/v1781698464/protocol_r392x1.png" />
+    <link rel="icon" type="image/png" href="https://res.cloudinary.com/dmkhsyfzf/image/upload/q_auto/f_auto/v1781698464/protocol_r392x1.png" />
+    <link rel="apple-touch-icon" href="https://res.cloudinary.com/dmkhsyfzf/image/upload/q_auto/f_auto/v1781698464/protocol_r392x1.png" />
+    <style>
+      :root {
+        --bg: #FAF7F2;
+        --ink: #14213d;
+        --muted: #60708d;
+        --accent: #e43703;
+        --accent2: #ffb866;
+        --good: #19a974;
+        --panel: #fcfcfc;
+        --shadow: 0 18px 50px rgba(20, 33, 61, 0.14);
+      }
+      .container[data-weekday="mon"] { --accent: #2563eb; }
+      .container[data-weekday="tue"] { --accent: #e43703; }
+      .container[data-weekday="wed"] { --accent: #0d9488; }
+      .container[data-weekday="thu"] { --accent: #7c3aed; }
+      .container[data-weekday="fri"] { --accent: #dc2626; }
+      .container[data-weekday="sat"] { --accent: #d97706; }
+      .container[data-weekday="sun"] { --accent: #475569; }
+      * {
+        box-sizing: border-box;
+      }
+      html, body {
+        margin: 0;
+        width: 100%;
+        min-height: 100%;
+        background: var(--bg);
+        font-family: Arial, Helvetica, sans-serif;
+        color: var(--ink);
+        touch-action: manipulation;
+        line-height: 1.6;
+      }
+      .container {
+        max-width: 900px;
+        margin: 0 auto;
+        padding: clamp(16px, 4vw, 40px) clamp(12px, 3vw, 24px);
+      }
+      h1 {
+        font-size: clamp(1.8rem, 5vw, 3rem);
+        margin: 0 0 0.2em;
+        font-weight: 900;
+        letter-spacing: -0.03em;
+        color: var(--accent);
+      }
+      .date-sub {
+        font-size: clamp(0.9rem, 1.6vw, 1.2rem);
+        color: var(--muted);
+        font-weight: 700;
+        letter-spacing: 0.1em;
+        margin: 0 0 2em;
+      }
+      .intro {
+        background: var(--panel);
+        border-radius: 24px;
+        padding: clamp(1rem, 2.5vw, 1.8em);
+        box-shadow: var(--shadow);
+        margin-bottom: 2em;
+        font-size: clamp(1rem, 1.8vw, 1.2rem);
+        line-height: 1.7;
+      }
+      .zh {
+        display: block;
+        margin-top: 0.6em;
+        color: var(--muted);
+        font-size: 0.92em;
+      }
+      h2 {
+        font-size: clamp(1.3rem, 3.2vw, 2rem);
+        margin: 2em 0 0.6em;
+        font-weight: 900;
+        color: var(--ink);
+        letter-spacing: -0.02em;
+      }
+      h3 {
+        font-size: clamp(1.1rem, 2.2vw, 1.5rem);
+        margin: 1.6em 0 0.4em;
+        font-weight: 800;
+        color: var(--accent);
+      }
+      p {
+        font-size: clamp(1rem, 1.8vw, 1.15rem);
+        margin: 0.4em 0;
+      }
+      .story-section {
+        background: var(--panel);
+        border-radius: 24px;
+        padding: clamp(1rem, 2.5vw, 1.6em);
+        box-shadow: var(--shadow);
+        margin-bottom: 1.4em;
+      }
+      .story-section h3 {
+        margin-top: 0;
+      }
+      .story-section p {
+        margin: 0.3em 0;
+      }
+      .example {
+        background: #fdf3e7;
+        border-left: 5px solid var(--accent);
+        border-radius: 8px;
+        padding: 0.7em 1em;
+        margin: 0.8em 0 !important;
+        font-style: italic;
+      }
+      .exercise {
+        border-top: 1px dashed #eae5db;
+        padding-top: 0.8em;
+        margin-top: 1em !important;
+      }
+      .exercise strong {
+        color: var(--accent);
+      }
+
+      /* Vocabulary table */
+      .vocab-table {
+        width: 100%;
+        border-collapse: separate;
+        border-spacing: 0;
+        margin: 1.6em 0 2em;
+        background: var(--panel);
+        border-radius: 16px;
+        box-shadow: var(--shadow);
+        overflow: hidden;
+      }
+      .vocab-table th {
+        background: var(--ink);
+        color: var(--accent2);
+        font-size: clamp(0.85rem, 1.5vw, 1rem);
+        font-weight: 800;
+        letter-spacing: 0.06em;
+        padding: 0.8em 1em;
+        text-align: left;
+        white-space: nowrap;
+      }
+      .vocab-table td {
+        padding: 0.7em 1em;
+        font-size: clamp(0.9rem, 1.6vw, 1.05rem);
+        border-top: 1px solid #eae5db;
+        vertical-align: top;
+        word-break: break-word;
+      }
+      .vocab-table tr:nth-child(even) td {
+        background: #fdf9f3;
+      }
+      .vocab-table td:last-child {
+        color: var(--muted);
+        font-weight: 600;
+      }
+
+      @media (max-width: 600px) {
+        .vocab-table {
+          display: block;
+          overflow-x: auto;
+          -webkit-overflow-scrolling: touch;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container" data-weekday="mon">
+      <h1>Protocol 31/08/2026</h1>
+      <p class="date-sub">English Explorer | Breakthrough</p>
+
+      <div class="intro">
+        Please study the following structures and sentences well. Words and expressions must be fully understood and memorised. The last section shows today's new vocabulary as well as some repetitive words. Please carefully repeat these as well.
+        <span class="zh">请将这些句子抄到练习本的词汇表下方。所有单词和表达方式都必须完全理解和记忆。</span>
+      </div>
+
+      <h2>1. Stationary Categories</h2>
+      <div class="story-section">
+        <p>
+          <strong>Exercise:</strong> Allocate these products into the Stationary Categories below.
+        </p>
+        <p>
+          a) Hardcover Book &nbsp; b) Wax Crayons &nbsp; c) White Erasers &nbsp; d) Double-Hole Pencil Sharpener &nbsp; e) Examination Pad &nbsp; f) Fluorescent Highlighters &nbsp; g) Scientific Calculator &nbsp; h) All-Purpose Glue Stick &nbsp; i) Graphite Pencils &nbsp; j) Clear Plastic Ruler
+        </p>
+
+        <h3>1. Writing &amp; Drawing Instruments</h3>
+        <p class="example">Graphite Pencils, Fluorescent Highlighters</p>
+
+        <h3>2. Exercise Books &amp; Paper Products</h3>
+        <p class="example">Hardcover Book, Examination Pad</p>
+
+        <h3>3. Art, Craft &amp; Colour Supplies</h3>
+        <p class="example">Wax Crayons, All-Purpose Glue Stick</p>
+
+        <h3>4. Math &amp; Science Essentials</h3>
+        <p class="example">Scientific Calculator, Clear Plastic Ruler, Double-Hole Pencil Sharpener</p>
+
+        <h3>5. Organisation, Storage &amp; Accessories</h3>
+        <p class="example">White Erasers</p>
+
+        <p class="exercise">
+          <strong>Exercise:</strong> Write each product under the correct category in your exercise book.
+        </p>
+      </div>
+
+      <h2>Vocabulary — 31/08/2026</h2>
+
+      <h3>Stationary &amp; Categories</h3>
+      <table class="vocab-table">
+        <thead>
+          <tr><th>English</th><th>Chinese</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Stationary Categories</td><td>固定类别</td></tr>
+          <tr><td>Writing &amp; Drawing Instruments</td><td>书写和绘图工具</td></tr>
+          <tr><td>Exercise Books &amp; Paper Products</td><td>练习本和纸制品</td></tr>
+          <tr><td>Art, Craft &amp; Colour Supplies</td><td>艺术、工艺品和色彩用品</td></tr>
+          <tr><td>Math &amp; Science Essentials</td><td>数学与科学基础</td></tr>
+          <tr><td>Organisation, Storage &amp; Accessories</td><td>组织、存储和配件</td></tr>
+          <tr><td>Wax Crayons</td><td>蜡笔</td></tr>
+          <tr><td>Usually</td><td>通常</td></tr>
+          <tr><td>Ferry</td><td>渡船</td></tr>
+        </tbody>
+      </table>
+
+      <h3>Grammar — Possessive Pronouns</h3>
+      <table class="vocab-table">
+        <thead>
+          <tr><th>English</th><th>Chinese</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>She has a book.</td><td>她有一本书。</td></tr>
+          <tr><td>The book belongs to her.</td><td>这本书是她的。</td></tr>
+          <tr><td>It is her book.</td><td>这是她的书。</td></tr>
+          <tr><td>The book is hers.</td><td>这本书是她的。</td></tr>
+          <tr><td>I called my friend.</td><td>我打电话给我的朋友。</td></tr>
+          <tr><td>You left your keys.</td><td>你留下了钥匙。</td></tr>
+          <tr><td>I left my keys.</td><td>我留下了钥匙。</td></tr>
+          <tr><td>You passed your exams.</td><td>你通过了考试。</td></tr>
+        </tbody>
+      </table>
+
+    </div>
+  <script src="../../tracker.js"></script>
+  </body>
+</html>
