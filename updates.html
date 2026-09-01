@@ -447,7 +447,7 @@
 
           <div class="column">
             <h2 class="columnHead onza">Onza</h2>
-            <p class="columnSub">Class: wed, 02/09/2026, 10am</p>
+            <p class="columnSub">Class: Wed, 02/09/2026, 10am</p>
             <table class="updateTable">
               <thead>
                 <tr>
@@ -644,7 +644,9 @@
         var API =
           "https://api.github.com/repos/mkmgo/EnglishExplorer/commits?path=updates.html&per_page=1";
         fetch(API)
-          .then(function (r) { return r.json(); })
+          .then(function (r) {
+            return r.json();
+          })
           .then(function (data) {
             if (!Array.isArray(data) || !data.length) return;
             var d = new Date(data[0].commit.committer.date);
@@ -662,6 +664,6 @@
           .catch(function () {});
       })();
     </script>
-  <script src="tracker.js"></script>
+    <script src="tracker.js"></script>
   </body>
 </html>
