@@ -975,6 +975,61 @@
         border: 1px solid var(--brick-dark);
       }
 
+      /* Media clip spots flanking Onza's hero card. Placeholder slots for
+         future links — drop an <a> into the herocard to make them live. */
+      .media-brick {
+        width: 96px;
+        height: 84px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+        font-size: 0.72rem;
+        font-weight: bold;
+        padding: 5px;
+        gap: 3px;
+        border-radius: 12px;
+        flex-shrink: 0;
+        text-decoration: none;
+        line-height: 1;
+      }
+      .media-brick .media-frame {
+        width: 48px;
+        height: 48px;
+        border-radius: 50%;
+        border: 1px solid var(--brick-dark);
+        background-color: var(--brick-main);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+        box-sizing: border-box;
+        color: #fff;
+        transition: transform 0.15s ease;
+      }
+      .media-brick:active .media-frame {
+        transform: scale(0.92);
+      }
+      .media-brick .media-frame svg {
+        width: 22px;
+        height: 22px;
+      }
+      .media-brick-violet {
+        --brick-main: #8b5cf6;
+        --brick-dark: #6d28d9;
+        background-color: #8b5cf6;
+        color: #fff;
+        border: 1px solid var(--brick-dark);
+      }
+      .media-brick-teal {
+        --brick-main: #14b8a6;
+        --brick-dark: #0f766e;
+        background-color: #14b8a6;
+        color: #fff;
+        border: 1px solid var(--brick-dark);
+      }
+
       .lab-token {
         width: 44px;
         height: 44px;
@@ -1303,6 +1358,13 @@
         .instructions {
           padding: 10px 14px;
         }
+        .herocard {
+          flex-wrap: wrap;
+          gap: 10px;
+        }
+        .owner-img {
+          height: 52px;
+        }
         .grid-container {
           grid-template-columns: 1fr;
           gap: 14px;
@@ -1337,6 +1399,19 @@
         .brick::before {
           width: 40px;
           height: 40px;
+        }
+        .media-brick {
+          width: 84px;
+          height: 76px;
+          font-size: 0.68rem;
+        }
+        .media-brick .media-frame {
+          width: 40px;
+          height: 40px;
+        }
+        .media-brick .media-frame svg {
+          width: 19px;
+          height: 19px;
         }
         .palette {
           padding: 12px;
@@ -1394,6 +1469,10 @@
     </button>
     <h1>Onza's Mystery Base</h1>
     <div class="instructions herocard" id="goalText">
+      <a class="media-brick media-brick-violet" href="javascript:void(0)" title="Onza's movie clips" aria-label="Onza's movie clips">
+        <span class="media-frame"><svg fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M7 3v18"/><path d="M3 7.5h4"/><path d="M3 12h18"/><path d="M3 16.5h4"/><path d="M17 3v18"/><path d="M17 7.5h4"/><path d="M17 16.5h4"/></svg></span>
+        <span class="media-label">Movies</span>
+      </a>
       <img class="owner-img" src="https://res.cloudinary.com/dqwm4pdbz/image/upload/q_auto/f_auto/e_bgremoval/v1786623812/onza_3avface_gyyay8.png" alt="Onza" />
       <div class="owner-info">
         <div class="owner-name">Onza</div>
@@ -1408,6 +1487,10 @@
           <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M11.051 7.616a1 1 0 0 1 1.909.024l.737 1.452a1 1 0 0 0 .737.535l1.634.256a1 1 0 0 1 .588 1.806l-1.172 1.168a1 1 0 0 0-.282.866l.259 1.613a1 1 0 0 1-1.541 1.134l-1.465-.75a1 1 0 0 0-.912 0l-1.465.75a1 1 0 0 1-1.539-1.133l.258-1.613a1 1 0 0 0-.282-.867l-1.156-1.152a1 1 0 0 1 .572-1.822l1.633-.256a1 1 0 0 0 .737-.535z"/></svg>
         </div>
       </div>
+      <a class="media-brick media-brick-teal" href="javascript:void(0)" title="Onza's clips & songs" aria-label="Onza's clips and songs">
+        <span class="media-frame"><svg fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><circle cx="8.5" cy="18.5" r="3.5"/><circle cx="17.5" cy="15.5" r="3.5"/><path d="M12 18.5V6a5 5 0 0 1 5-5h2"/><path d="M12 6a5 5 0 0 1 5-5h2"/></svg></span>
+        <span class="media-label">Clips</span>
+      </a>
     </div>
 
     <!-- The Attic: items can live here or be stored back here -->
@@ -2544,6 +2627,49 @@
         }
       }
 
+      // While an item is being dragged, near the top/bottom of the viewport,
+      // auto-scroll the page so distant drop-zones (far down the stack on
+      // small screens) are reachable during a single drag gesture.
+      var edgeScrollTimer = null;
+      var edgeClientX = 0;
+      var edgeClientY = 0;
+      function scrollOnEdge(clientX, clientY) {
+        edgeClientX = clientX;
+        edgeClientY = clientY;
+        if (document.documentElement.scrollHeight <= window.innerHeight) return;
+        var edge = Math.min(80, window.innerHeight * 0.15);
+        var scrollDir =
+          clientY < edge ? -1 : clientY > window.innerHeight - edge ? 1 : 0;
+        if (edgeScrollTimer) {
+          clearInterval(edgeScrollTimer);
+          edgeScrollTimer = null;
+        }
+        if (!scrollDir) return;
+        var step =
+          Math.max(12, Math.round(Math.abs(window.innerHeight / 2 - clientY) / 14)) *
+          scrollDir;
+        edgeScrollTimer = setInterval(function () {
+          window.scrollBy(0, step);
+          if (!activeGhost) return;
+          // Keep the drop-zone highlight in sync while the page scrolls.
+          var under = document.elementFromPoint(edgeClientX, edgeClientY);
+          var zone = under
+            ? under.closest(
+                ".slot, .token-slot, .item-container, .box-tray-inner",
+              )
+            : null;
+          if (zone && zone.classList.contains("slot")) {
+            var zoneDrop = zone.closest(".drop-zone");
+            if (zoneDrop && !unlocked[zoneDrop.id]) zone = null;
+          }
+          if (zone !== overZone) {
+            clearOverZone();
+            overZone = zone;
+            if (overZone) overZone.classList.add("drag-over");
+          }
+        }, 16);
+      }
+
       document.addEventListener("pointerdown", function (e) {
         if (activeItem) return;
         if (e.pointerType === "mouse" && e.button !== 0) return;
@@ -2572,6 +2698,7 @@
       document.addEventListener("pointermove", function (e) {
         if (!activeItem) return;
         e.preventDefault();
+        scrollOnEdge(e.clientX, e.clientY);
         if (activeGhost) {
           activeGhost.style.left = e.clientX - grabOffsetX + "px";
           activeGhost.style.top = e.clientY - grabOffsetY + "px";
@@ -2594,6 +2721,10 @@
       function endDrag(e) {
         if (!activeItem) return;
         e.preventDefault();
+        if (edgeScrollTimer) {
+          clearInterval(edgeScrollTimer);
+          edgeScrollTimer = null;
+        }
         var prevLabSlot = activeItem.closest(".slot.lab-new-slot");
         if (activeGhost) {
           activeGhost.remove();
