@@ -1076,6 +1076,115 @@
         object-fit: contain;
       }
 
+      .verb-token {
+        width: 44px;
+        height: 44px;
+        border-radius: 8px;
+        background: linear-gradient(135deg, #fff7ed, #fb923c, #fff7ed);
+        border: 2px dashed var(--border-strong);
+        color: #c2410c;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: grab;
+        overflow: hidden;
+        box-sizing: border-box;
+        padding: 0;
+        position: relative;
+      }
+
+      .verb-token img {
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+      }
+
+      .verb-item {
+        width: 96px;
+        height: 84px;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+        font-size: 0.75rem;
+        padding: 4px;
+        gap: 3px;
+        background-color: var(--item-bg);
+        color: var(--text);
+        border: 1px solid var(--item-border);
+        border-radius: 8px;
+      }
+
+      .verb-item img {
+        width: 40px;
+        height: 40px;
+        object-fit: cover;
+        border-radius: 6px;
+        background-color: var(--img-bg);
+        border: 1px solid var(--item-border);
+        flex-shrink: 0;
+      }
+
+      /* Verb Lab drop zone: definite tracks so it never collapses to zero
+         width and its six slots stay visible and droppable. */
+      .verb-lab-grid {
+        grid-template-columns: repeat(3, 96px);
+        grid-template-rows: repeat(2, 84px);
+      }
+
+      .verb-item .verb-name {
+        font-weight: bold;
+        font-size: 0.7rem;
+        line-height: 1;
+        color: var(--text);
+      }
+
+      .verb-result {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 4px;
+        padding: 6px;
+        width: 100%;
+        height: 100%;
+      }
+
+      .verb-result img {
+        width: 40px;
+        height: 40px;
+        object-fit: cover;
+        border-radius: 6px;
+        background-color: var(--img-bg);
+        border: 1px solid var(--item-border);
+        flex-shrink: 0;
+      }
+
+      .verb-result .verb-name {
+        font-weight: bold;
+        font-size: 0.8rem;
+        line-height: 1;
+        color: var(--text);
+      }
+
+      .verb-result .verb-label {
+        font-size: 0.7rem;
+        color: var(--muted);
+        font-style: italic;
+      }
+
+      @media (max-width: 640px) {
+        .verb-item,
+        .spot-card.verb-lab:not(.lab-collapsed) .verb-item {
+          width: 84px;
+          height: 76px;
+        }
+        .verb-item img {
+          width: 36px;
+          height: 36px;
+        }
+      }
+
       .token-slot {
         position: absolute;
         top: 8px;
@@ -1445,6 +1554,15 @@
           justify-self: center;
           min-width: 0;
         }
+        /* Verb Lab has six verb slots — keep a tidy 3x2 grid on mobile. */
+        .spot-card.verb-lab:not(.lab-collapsed) > .drop-zone {
+          grid-template-columns: repeat(3, 84px);
+          grid-template-rows: repeat(2, 68px);
+        }
+        .spot-card.verb-lab:not(.lab-collapsed) > .drop-zone > .slot {
+          min-width: 84px;
+          min-height: 68px;
+        }
         .palette {
           padding: 12px;
         }
@@ -1637,6 +1755,16 @@
         <div class="draggable-item mod-token" id="mod-token-3">
           <img src="https://res.cloudinary.com/dqwm4pdbz/image/upload/q_auto/f_auto/e_bgremoval/c_crop,w_341,h_341,x_14,y_661/v1787663276/lab-token_eoed14.jpg" alt="Mod Token" />
         </div>
+        <!-- Verb Tokens -->
+        <div class="draggable-item verb-token" id="verb-token-1">
+          <img src="https://res.cloudinary.com/dqwm4pdbz/image/upload/q_auto/f_auto/e_bgremoval/c_crop,w_341,h_341,x_14,y_661/v1787663276/lab-token_eoed14.jpg" alt="Verb Token" />
+        </div>
+        <div class="draggable-item verb-token" id="verb-token-2">
+          <img src="https://res.cloudinary.com/dqwm4pdbz/image/upload/q_auto/f_auto/e_bgremoval/c_crop,w_341,h_341,x_14,y_661/v1787663276/lab-token_eoed14.jpg" alt="Verb Token" />
+        </div>
+        <div class="draggable-item verb-token" id="verb-token-3">
+          <img src="https://res.cloudinary.com/dqwm4pdbz/image/upload/q_auto/f_auto/e_bgremoval/c_crop,w_341,h_341,x_14,y_661/v1787663276/lab-token_eoed14.jpg" alt="Verb Token" />
+        </div>
         <!-- Avatars -->
         <div class="draggable-item animal" id="onza-avatar" data-type="avatar">
           <img
@@ -1719,10 +1847,22 @@
             </div>
           </div>
         </div>
+        <div class="grid-container" style="grid-template-columns: 1fr;">
+          <div class="spot-card colour-lab verb-lab lab-collapsed">
+            <button type="button" class="lab-toggle" aria-label="Collapse Verb Lab" title="Collapse Verb Lab">+</button>
+            <div class="token-slot" id="token-slot-verb"></div>
+            <div class="spot-title">Verb Lab</div>
+            <div class="drop-zone verb-lab-grid" id="spot-verb">
+              <div class="slot verb-empty"></div>
+              <div class="slot verb-empty"></div>
+              <div class="slot verb-empty"></div>
+              <div class="slot verb-empty"></div>
+              <div class="slot verb-empty"></div>
+              <div class="slot verb-empty"></div>
+            </div>
+          </div>
+        </div>
       </div>
-    </div>
-
-    <!-- Space Two: phrases can live here or be stored back here -->
     <div class="palette">
       <div class="palette-title">
         Space Two
@@ -1744,6 +1884,47 @@
         <div class="draggable-item phrase" id="phrase-do-you-like"><i data-lucide="circle-question-mark" class="phrase-tag"></i>Do you like ... ?</div>
         <div class="draggable-item phrase" id="phrase-where-is"><i data-lucide="circle-question-mark" class="phrase-tag"></i>Where is ... ?</div>
         <div class="draggable-item phrase" id="phrase-show-me"><i data-lucide="circle-alert" class="phrase-tag"></i>Show me ...</div>
+        <!-- Verb items -->
+        <div class="draggable-item verb-item" id="verb-wake-up">
+          <img src="https://res.cloudinary.com/dmkhsyfzf/image/upload/c_crop,w_281,h_384,x_0,y_0/v1788284552/verbs_qnipqh.jpg" alt="Wake up" />
+          <span class="verb-name">Wake up</span>
+        </div>
+        <div class="draggable-item verb-item" id="verb-get-up">
+          <img src="https://res.cloudinary.com/dmkhsyfzf/image/upload/c_crop,w_281,h_384,x_281,y_0/v1788284552/verbs_qnipqh.jpg" alt="Get up" />
+          <span class="verb-name">Get up</span>
+        </div>
+        <div class="draggable-item verb-item" id="verb-wash">
+          <img src="https://res.cloudinary.com/dmkhsyfzf/image/upload/c_crop,w_281,h_384,x_562,y_0/v1788284552/verbs_qnipqh.jpg" alt="Wash" />
+          <span class="verb-name">Wash</span>
+        </div>
+        <div class="draggable-item verb-item" id="verb-brush">
+          <img src="https://res.cloudinary.com/dmkhsyfzf/image/upload/c_crop,w_281,h_384,x_843,y_0/v1788284552/verbs_qnipqh.jpg" alt="Brush" />
+          <span class="verb-name">Brush</span>
+        </div>
+        <div class="draggable-item verb-item" id="verb-eat">
+          <img src="https://res.cloudinary.com/dmkhsyfzf/image/upload/c_crop,w_281,h_384,x_1124,y_0/v1788284552/verbs_qnipqh.jpg" alt="Eat" />
+          <span class="verb-name">Eat</span>
+        </div>
+        <div class="draggable-item verb-item" id="verb-drink">
+          <img src="https://res.cloudinary.com/dmkhsyfzf/image/upload/c_crop,w_281,h_384,x_0,y_384/v1788284552/verbs_qnipqh.jpg" alt="Drink" />
+          <span class="verb-name">Drink</span>
+        </div>
+        <div class="draggable-item verb-item" id="verb-play">
+          <img src="https://res.cloudinary.com/dmkhsyfzf/image/upload/c_crop,w_281,h_384,x_281,y_384/v1788284552/verbs_qnipqh.jpg" alt="Play" />
+          <span class="verb-name">Play</span>
+        </div>
+        <div class="draggable-item verb-item" id="verb-go">
+          <img src="https://res.cloudinary.com/dmkhsyfzf/image/upload/c_crop,w_281,h_384,x_562,y_384/v1788284552/verbs_qnipqh.jpg" alt="Go" />
+          <span class="verb-name">Go</span>
+        </div>
+        <div class="draggable-item verb-item" id="verb-sleep">
+          <img src="https://res.cloudinary.com/dmkhsyfzf/image/upload/c_crop,w_281,h_384,x_843,y_384/v1788284552/verbs_qnipqh.jpg" alt="Sleep" />
+          <span class="verb-name">Sleep</span>
+        </div>
+        <div class="draggable-item verb-item" id="verb-read">
+          <img src="https://res.cloudinary.com/dmkhsyfzf/image/upload/c_crop,w_281,h_384,x_1124,y_384/v1788284552/verbs_qnipqh.jpg" alt="Read" />
+          <span class="verb-name">Read</span>
+        </div>
       </div>
       <div class="box-area" id="boxArea2">
         <div class="box-bar" id="boxBar2">
@@ -1912,6 +2093,16 @@
         "phrase-sit-down": "Phrases",
         "phrase-come-here": "Phrases",
         "phrase-show-me": "Phrases",
+        "verb-wake-up": "Verbs",
+        "verb-get-up": "Verbs",
+        "verb-wash": "Verbs",
+        "verb-brush": "Verbs",
+        "verb-eat": "Verbs",
+        "verb-drink": "Verbs",
+        "verb-play": "Verbs",
+        "verb-go": "Verbs",
+        "verb-sleep": "Verbs",
+        "verb-read": "Verbs",
       };
       var categoryOrder = [
         "Colours",
@@ -1922,6 +2113,7 @@
         "Special",
         "Questions",
         "Phrases",
+        "Verbs",
       ];
       // Extra marker icon shown on each phrase box (next to the box):
       // question phrases get a question mark, the rest an alert circle.
@@ -1947,7 +2139,7 @@
         var bar2 = document.getElementById("boxBar2");
         var trays2 = document.getElementById("boxTrays2");
         if (!bar || !trays) return;
-        var spaceTwoCats = ["Questions", "Phrases"];
+        var spaceTwoCats = ["Questions", "Phrases", "Verbs"];
         var totals = {};
         Object.keys(itemCategories).forEach(function (id) {
           var cat = itemCategories[id];
@@ -2305,6 +2497,7 @@
         "spot-3": false,
         "spot-4": false,
         "spot-5": true,
+        "spot-verb": true,
       };
 
       // Progressive unlock state. spot-1 (Colours) is open from the start;
@@ -2317,6 +2510,7 @@
         "spot-3": false,
         "spot-4": false,
         "spot-5": true,
+        "spot-verb": true,
       };
 
       var goalTexts = [
@@ -2395,6 +2589,12 @@
         var s5Card = spot5 && spot5.closest(".spot-card");
         var modComplete = modCombosDone >= modStages.length;
         if (s5Card) s5Card.classList.toggle("goal-reached", modComplete);
+
+        // Check Verb Lab completion (all verb tokens used / verbs built)
+        var spotVerb = document.getElementById("spot-verb");
+        var verbCard = spotVerb && spotVerb.closest(".spot-card");
+        var verbComplete = verbCombosDone >= Object.keys(verbData).length;
+        if (verbCard) verbCard.classList.toggle("goal-reached", verbComplete);
 
         goals.forEach(function (goal) {
           if (goal.spotId === "spot-4") return;
@@ -2476,6 +2676,18 @@
         { chip1: "\u2212 fast", chip2: "+ big", animalId: "whale", animalSrc: "https://res.cloudinary.com/dqwm4pdbz/image/upload/c_crop,w_189,h_188,x_205,y_564/v1786861646/260811_lesson7ee_01_jzlmlp.png", animalName: "Whale" },
       ];
 
+      // ---- Verb Lab ----
+      // A verb token (orange magnifier) is placed in the Verb Lab token slot,
+      // then any verb image is dropped into one of the empty slots. The token
+      // is spent to build that verb into a labelled verb card.
+      var verbData = {
+        "verb-token-1": { label: "Verb 1" },
+        "verb-token-2": { label: "Verb 2" },
+        "verb-token-3": { label: "Verb 3" },
+      };
+      var verbCombosDone = 0;
+      var verbCombining = false;
+
       // ---- Lab collapse ----
       // A toggle button in each lab card's top-right corner (available from
       // the start) collapses the card into a compact chip or reopens it. No
@@ -2484,14 +2696,16 @@
       var labStates = {
         "spot-1": { collapsed: true },
         "spot-5": { collapsed: true },
+        "spot-verb": { collapsed: true },
       };
       var labHome = {
         "spot-1": { parent: null, next: null },
         "spot-5": { parent: null, next: null },
+        "spot-verb": { parent: null, next: null },
       };
 
       function recordLabHomes() {
-        ["spot-1", "spot-5"].forEach(function (spotId) {
+        ["spot-1", "spot-5", "spot-verb"].forEach(function (spotId) {
           var wrapper = document.getElementById(spotId).closest(".grid-container");
           if (!wrapper) return;
           labHome[spotId].parent = wrapper.parentElement;
@@ -2515,7 +2729,7 @@
       }
 
       function restoreLabHomes() {
-        ["spot-1", "spot-5"].forEach(function (spotId) {
+        ["spot-1", "spot-5", "spot-verb"].forEach(function (spotId) {
           var st = labStates[spotId];
           var zone = document.getElementById(spotId);
           if (st) st.collapsed = true;
@@ -2737,7 +2951,9 @@
         }
         var under = document.elementFromPoint(e.clientX, e.clientY);
         var zone = under
-          ? under.closest(".slot, .token-slot, .item-container, .box-tray-inner")
+          ? under.closest(
+              ".slot, .token-slot, .item-container, .box-tray-inner, .spot-card.verb-lab.lab-collapsed",
+            )
           : null;
         if (zone && zone.classList.contains("slot")) {
           var zoneDrop = zone.closest(".drop-zone");
@@ -2767,7 +2983,22 @@
         var ageLocked =
           srcZone && srcZone.id === "spot-age" && !reached["spot-age"];
         if (overZone) {
-          if (overZone.classList.contains("slot")) {
+          if (overZone.classList.contains("spot-card") && overZone.classList.contains("verb-lab")) {
+            // Dropping a verb token or verb item onto the collapsed Verb Lab
+            // opens it and routes the item into the token slot / first slot.
+            if (overZone.classList.contains("lab-collapsed")) toggleLab("spot-verb");
+            var isVerbTok = activeItem.classList.contains("verb-token");
+            if (isVerbTok) {
+              var vTok = overZone.querySelector("#token-slot-verb");
+              if (vTok && !vTok.querySelector(".draggable-item")) vTok.appendChild(activeItem);
+              checkVerbCombine();
+            } else {
+              var vSpot = overZone.querySelector("#spot-verb");
+              var vSlot = vSpot && firstEmptySlot(vSpot);
+              if (vSlot && !vSlot.querySelector(".draggable-item")) vSlot.appendChild(activeItem);
+              checkVerbCombine();
+            }
+          } else if (overZone.classList.contains("slot")) {
             var dropZone = overZone.closest(".drop-zone");
             var zoneLocked = dropZone && !unlocked[dropZone.id];
             var fromLockedAge =
@@ -2794,6 +3025,7 @@
                 }
           checkLabCombine();
           checkModCombine();
+          checkVerbCombine();
           checkMystery();
           checkGoal();
         } else if (canCombine) {
@@ -2805,12 +3037,15 @@
           } else if (overZone.classList.contains("token-slot")) {
             var isLabTok = activeItem.classList.contains("lab-token");
             var isModTok = activeItem.classList.contains("mod-token");
-            if ((isLabTok || isModTok) && !overZone.querySelector(".draggable-item")) {
+            var isVerbTok = activeItem.classList.contains("verb-token");
+            if ((isLabTok || isModTok || isVerbTok) && !overZone.querySelector(".draggable-item")) {
               overZone.appendChild(activeItem);
               if (isModTok && overZone.id === "token-slot-shapes") {
                 updateModChips();
                 checkModCombine();
                 toggleModChips(true);
+              } else if (isVerbTok && overZone.id === "token-slot-verb") {
+                checkVerbCombine();
               } else {
                 checkLabCombine();
               }
@@ -3065,6 +3300,76 @@
         }, 2000);
       }
 
+      function checkVerbCombine() {
+        if (verbCombining) return;
+        var tokenSlot = document.getElementById("token-slot-verb");
+        if (!tokenSlot) return;
+        var token = tokenSlot.querySelector(".draggable-item");
+        if (!token || !token.classList.contains("verb-token")) return;
+        var data = verbData[token.id];
+        if (!data) return;
+
+        var spot = document.getElementById("spot-verb");
+        if (!spot) return;
+
+        var verbItem = spot.querySelector(".draggable-item.verb-item");
+        if (!verbItem) return;
+
+        var verbSlot = verbItem.closest(".slot");
+        if (!verbSlot) return;
+
+        performVerbCombine(token, verbItem, verbSlot);
+      }
+
+      function performVerbCombine(token, verbItem, verbSlot) {
+        verbCombining = true;
+        var spot = document.getElementById("spot-verb");
+        var spotCard = spot ? spot.closest(".spot-card") : null;
+
+        if (spotCard) spotCard.classList.add("lab-drama");
+
+        var itemImg = verbItem.querySelector("img");
+        var itemName = verbItem.querySelector(".verb-name");
+        var src = itemImg ? itemImg.src : "";
+        var label = itemName ? itemName.textContent : verbItem.id;
+
+        setTimeout(function () {
+          token.classList.add("fade-out");
+        }, 800);
+
+        setTimeout(function () {
+          token.remove();
+          stashed.push(verbItem);
+          verbItem.remove();
+          if (spotCard) spotCard.classList.remove("lab-drama");
+
+          var newSlot = document.createElement("div");
+          newSlot.className = "slot lab-new-slot";
+
+          var newVerb = document.createElement("div");
+          newVerb.className = "draggable-item verb-item";
+          newVerb.id = verbItem.id + "-combined";
+          newVerb.setAttribute("data-verb-combined", "true");
+
+          var img = document.createElement("img");
+          img.src = src;
+          img.alt = label;
+
+          var name = document.createElement("span");
+          name.className = "verb-name";
+          name.textContent = label;
+
+          newVerb.appendChild(img);
+          newVerb.appendChild(name);
+          newSlot.appendChild(newVerb);
+          spot.appendChild(newSlot);
+
+          verbCombosDone++;
+          verbCombining = false;
+          checkGoal();
+        }, 2000);
+      }
+
       function makeCombined(id, imgSrc) {
         var el = document.createElement("div");
         el.className =
@@ -3146,14 +3451,22 @@
         var phraseBin = document.getElementById("phrases-inventory");
         // Phrase bricks belong back at Space Two, everything else Space One.
         function parkItem(el) {
-          if (el.classList.contains("phrase") && phraseBin)
+          if (
+            (el.classList.contains("phrase") ||
+              el.classList.contains("verb-item")) &&
+            phraseBin
+          )
             phraseBin.appendChild(el);
           else inventory.appendChild(el);
         }
         document
           .querySelectorAll(".drop-zone .draggable-item")
           .forEach(function (el) {
-            if (el.classList.contains("combined") || el.hasAttribute("data-mod-combined")) {
+            if (
+              el.classList.contains("combined") ||
+              el.hasAttribute("data-mod-combined") ||
+              el.hasAttribute("data-verb-combined")
+            ) {
               el.remove();
             } else {
               parkItem(el);
@@ -3162,7 +3475,7 @@
         document
           .querySelectorAll(".item-container .draggable-item")
           .forEach(function (el) {
-            if (el.classList.contains("combined") || el.hasAttribute("data-mod-combined")) {
+            if (el.classList.contains("combined") || el.hasAttribute("data-mod-combined") || el.hasAttribute("data-verb-combined")) {
               el.remove();
             } else {
               inventory.appendChild(el);
@@ -3183,6 +3496,8 @@
         modCombining = false;
         modCombosDone = 0;
         modDoneAnimals = {};        toggleModChips(false);
+        verbCombining = false;
+        verbCombosDone = 0;
         ["brick-green", "brick-purple", "brick-orange"].forEach(function (id) {
           var el = document.getElementById(id);
           if (el) el.remove();
@@ -3220,6 +3535,21 @@
             document.getElementById("inventory").appendChild(el);
           });
         }
+        var tokenSlotVerb = document.getElementById("token-slot-verb");
+        if (tokenSlotVerb) {
+          tokenSlotVerb.querySelectorAll(".draggable-item").forEach(function (el) {
+            document.getElementById("inventory").appendChild(el);
+          });
+        }
+        var spotVerbReset = document.getElementById("spot-verb");
+        if (spotVerbReset) {
+          spotVerbReset.querySelectorAll(".slot").forEach(function (s) { s.remove(); });
+          for (var i = 0; i < 6; i++) {
+            var verbSlot = document.createElement("div");
+            verbSlot.className = "slot verb-empty";
+            spotVerbReset.appendChild(verbSlot);
+          }
+        }
         // Park all boxes back at Space One.
         var homeBar = document.getElementById("boxBar");
         var homeTrays = document.getElementById("boxTrays");
@@ -3256,11 +3586,13 @@
         reached["spot-3"] = false;
         reached["spot-4"] = false;
         reached["spot-5"] = true;
+        reached["spot-verb"] = true;
         unlocked["spot-1"] = true;
         unlocked["spot-2"] = false;
         unlocked["spot-3"] = false;
         unlocked["spot-4"] = false;
         unlocked["spot-5"] = true;
+        unlocked["spot-verb"] = true;
         gameVersion++;
         ["spot-2", "spot-3", "spot-4"].forEach(function (id) {
           var zone = document.getElementById(id);
@@ -3292,6 +3624,7 @@
         "num-five","num-six","num-seven","num-eight","num-nine",
         "lab-token-1","lab-token-2","lab-token-3",
         "mod-token-1","mod-token-2","mod-token-3",
+        "verb-token-1","verb-token-2","verb-token-3",
       ];
       var space2Items = [
         "phrase-whats-your-name","phrase-my-name-is",
@@ -3299,6 +3632,8 @@
         "phrase-look","phrase-listen",
         "phrase-stand-up","phrase-sit-down","phrase-come-here",
         "phrase-do-you-like","phrase-where-is","phrase-show-me",
+        "verb-wake-up","verb-get-up","verb-wash","verb-brush","verb-eat",
+        "verb-drink","verb-play","verb-go","verb-sleep","verb-read",
       ];
 
       function flashBtn(btn) {
@@ -3324,7 +3659,10 @@
             return "slot:" + dz.id + ":" + idx;
           }
         }
-        if (el.closest(".token-slot")) return "token-slot";
+        if (el.closest(".token-slot")) {
+          var ts = el.closest(".token-slot");
+          return "token-slot:" + (ts.id || "");
+        }
         return "inventory";
       }
 
@@ -3404,8 +3742,10 @@
                 if (imp) imp.style.display = "none";
               }
             }
-          } else if (loc === "token-slot") {
-            var ts = document.getElementById("token-slot");
+          } else if (loc.indexOf("token-slot") === 0) {
+            var tsParts = loc.split(":");
+            var tsId = tsParts.length > 1 && tsParts[1] ? tsParts[1] : "token-slot";
+            var ts = document.getElementById(tsId);
             if (ts && !ts.contains(el)) ts.appendChild(el);
           }
         });
