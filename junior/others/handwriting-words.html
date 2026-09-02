@@ -1,0 +1,597 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+    />
+    <title>Write the Word! — Handwriting Practice</title>
+    <meta name="theme-color" content="#2B0603" />
+    <meta name="description" content="EnglishExplorer — Handwriting word practice on help lines" />
+    <meta property="og:title" content="Write the Word! — Handwriting Practice" />
+    <meta property="og:description" content="Fill in the missing word on the help lines." />
+    <meta property="og:image" content="https://res.cloudinary.com/dmkhsyfzf/image/upload/v1787858367/house-heart_dutvpy.png" />
+    <meta name="twitter:title" content="Write the Word! — Handwriting Practice" />
+    <meta name="twitter:description" content="Fill in the missing word on the help lines." />
+    <meta name="twitter:image" content="https://res.cloudinary.com/dmkhsyfzf/image/upload/v1787858367/house-heart_dutvpy.png" />
+    <style>
+      :root {
+        --bg: #faf7f2;
+        --ink: #14213d;
+        --muted: #60708d;
+        --accent: #a63e32;
+        --good: #2e9e4f;
+        --line: #9aa7bd;
+        --panel: #ffffff;
+        --shadow: 0 18px 50px rgba(20, 33, 61, 0.14);
+      }
+      html.dark {
+        --bg: #0f172a;
+        --ink: #e2e8f0;
+        --muted: #94a3b8;
+        --panel: #1e293b;
+        --line: #475569;
+      }
+      * {
+        box-sizing: border-box;
+        -webkit-tap-highlight-color: transparent;
+      }
+      html,
+      body {
+        margin: 0;
+        width: 100%;
+        height: 100%;
+        background: var(--bg);
+        font-family: "Segoe UI", Arial, Helvetica, sans-serif;
+        color: var(--ink);
+        touch-action: none;
+        overflow: hidden;
+        -webkit-user-select: none;
+        user-select: none;
+      }
+      #themeToggle {
+        position: fixed;
+        top: 10px;
+        right: 10px;
+        z-index: 10;
+        width: 42px;
+        height: 42px;
+        border-radius: 50%;
+        border: 2px solid transparent;
+        background: var(--panel);
+        color: var(--ink);
+        box-shadow: var(--shadow);
+        font-size: 1.25rem;
+      }
+
+      #app {
+        width: 100vw;
+        height: 100vh;
+        height: 100dvh;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: clamp(8px, 2.5vh, 18px);
+        gap: clamp(6px, 1.6vh, 12px);
+      }
+
+      .topbar {
+        width: 100%;
+        max-width: 980px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
+      .topbar h1 {
+        font-size: clamp(1.1rem, 3vw, 1.7rem);
+        margin: 0;
+        color: var(--accent);
+        letter-spacing: 0.5px;
+      }
+      html.dark .topbar h1 {
+        color: #fca5a5;
+      }
+      .word-count {
+        font-weight: 700;
+        color: var(--muted);
+        font-size: clamp(0.8rem, 2vw, 1rem);
+      }
+
+      .picture {
+        width: min(38vh, 300px);
+        max-width: 80vw;
+        border-radius: 12px;
+        box-shadow: var(--shadow);
+        object-fit: cover;
+      }
+
+      /* ---- The word written on help lines ---- */
+      .word-row {
+        display: flex;
+        gap: clamp(4px, 0.8vw, 10px);
+        background: var(--panel);
+        border-radius: 14px;
+        padding: clamp(10px, 2.4vh, 22px) clamp(12px, 2vw, 28px);
+        box-shadow: var(--shadow);
+        flex-wrap: wrap;
+        justify-content: center;
+      }
+      .chpad {
+        position: relative;
+        width: clamp(52px, 6.2vw, 84px);
+        height: clamp(70px, 12vh, 104px);
+        border-radius: 8px;
+        background: #fff;
+        overflow: hidden;
+      }
+      html.dark .chpad {
+        background: #0b1120;
+      }
+      /* Dotted baseline / midline guides inside each pad */
+      .chpad .guide {
+        position: absolute;
+        left: 0;
+        right: 0;
+        height: 0;
+        border-top: 1.5px dashed var(--line);
+        z-index: 1;
+        pointer-events: none;
+      }
+      .chpad .guide.base {
+        bottom: 22%;
+      }
+      .chpad .guide.mid {
+        bottom: 58%;
+      }
+      .chpad .guide.top {
+        top: 9%;
+      }
+      canvas {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        touch-action: none;
+        z-index: 2;
+        background: transparent;
+      }
+
+      .controls {
+        display: flex;
+        gap: 12px;
+        align-items: center;
+        margin-top: 2px;
+      }
+      button.act {
+        font-size: clamp(0.85rem, 2.4vw, 1.05rem);
+        font-weight: 800;
+        color: #fff;
+        border: 0;
+        border-radius: 10px;
+        padding: clamp(9px, 1.8vh, 14px) clamp(14px, 2.4vw, 24px);
+        cursor: pointer;
+        transition: transform 0.15s ease, filter 0.2s ease;
+      }
+      button.act:hover {
+        filter: brightness(1.05);
+      }
+      button.act:active {
+        transform: scale(0.96);
+      }
+      .btn-check {
+        background: var(--good);
+      }
+      .btn-clear {
+        background: var(--accent);
+      }
+      .btn-next {
+        background: #3b82f6;
+      }
+
+      .verdict {
+        min-height: clamp(1.3rem, 4vh, 2rem);
+        font-size: clamp(1rem, 3vw, 1.3rem);
+        font-weight: 800;
+        margin: 0;
+        text-align: center;
+      }
+      .verdict.ok {
+        color: var(--good);
+      }
+      .verdict.almost {
+        color: #f59e0b;
+      }
+      .verdict.part {
+        color: var(--muted);
+      }
+      .verdict.fail {
+        color: var(--accent);
+      }
+      .hint {
+        color: var(--muted);
+        font-size: clamp(0.75rem, 2vw, 0.92rem);
+        text-align: center;
+        margin: 0;
+      }
+
+      @media (orientation: portrait) {
+        .picture {
+          max-height: 22vh;
+        }
+      }
+      .hidden {
+        display: none !important;
+      }
+
+      /* Completion over a center screen (vertical space is tight) */
+      #done {
+        position: fixed;
+        inset: 0;
+        display: none;
+        align-items: center;
+        justify-content: center;
+        background: rgba(0, 0, 0, 0.55);
+        z-index: 50;
+      }
+      #done.show {
+        display: flex;
+      }
+      .done-card {
+        background: var(--panel);
+        color: var(--ink);
+        border-radius: 16px;
+        padding: 26px 34px;
+        text-align: center;
+        box-shadow: var(--shadow);
+        border-top: 6px solid var(--good);
+        max-width: 90vw;
+      }
+      .done-card h2 {
+        margin: 0 0 8px;
+      }
+      .done-card .confetti {
+        font-size: 28px;
+        letter-spacing: 6px;
+        margin: 0 0 10px;
+      }
+      .done-card button {
+        margin-top: 14px;
+      }
+    </style>
+  </head>
+  <body>
+    <button id="themeToggle" aria-label="Toggle dark mode" title="Toggle dark mode">🌙</button>
+
+    <div id="app">
+      <div class="topbar">
+        <h1>Write the Word!</h1>
+        <span class="word-count" id="countLabel"></span>
+      </div>
+
+      <img id="picture" class="picture" alt="Word picture" />
+
+      <div class="word-row" id="wordRow"></div>
+
+      <div class="controls">
+        <button id="checkBtn" class="act btn-check" type="button">Check</button>
+        <button id="clearBtn" class="act btn-clear" type="button">Clear</button>
+        <button id="nextBtn" class="act btn-next" type="button">Next →</button>
+      </div>
+
+      <p id="verdict" class="verdict"></p>
+      <p id="hintLine" class="hint"></p>
+    </div>
+
+    <div id="done">
+      <div class="done-card">
+        <div class="confetti">🎉 🎉 🎉</div>
+        <h2>Amazing writing!</h2>
+        <p id="doneMsg" class="hint"></p>
+        <button id="againBtn" class="act btn-check" type="button">Play again</button>
+      </div>
+    </div>
+
+    <script>
+      // ---- Word list (quest vocab: inside & outside the house) ----
+      // Each word: the full lowercase word + a picture hint.
+      var WORDS = [
+        { w: "tree", img: "https://res.cloudinary.com/dqwm4pdbz/image/upload/c_crop,w_189,h_188,x_378,y_20/v1786861646/260811_lesson7ee_01_jzlmlp.png" },
+        { w: "cup", img: "https://res.cloudinary.com/dmkhsyfzf/image/upload/c_crop,w_281,h_384,x_0,y_384/v1788284552/verbs_qnipqh.jpg" },
+        { w: "book", img: "https://res.cloudinary.com/dp455m4rk/image/upload/c_crop,w_424,h_421,x_424,y_842/v1786261038/book_pencil_v8ipxw.png" },
+        { w: "kite", img: "https://res.cloudinary.com/dqwm4pdbz/image/upload/c_crop,w_421,h_424,x_842,y_424/v1786599929/260813_toys_01_txjh3y.png" },
+        { w: "bike", img: "https://res.cloudinary.com/dqwm4pdbz/image/upload/c_crop,w_421,h_424,x_421,y_424/v1786599929/260813_toys_01_txjh3y.png" },
+        { w: "ball", img: "https://res.cloudinary.com/dqwm4pdbz/image/upload/c_crop,w_421,h_424,x_842,y_0/v1786599929/260813_toys_01_txjh3y.png" },
+        { w: "bed", img: "https://res.cloudinary.com/dqwm4pdbz/image/upload/c_crop,w_421,h_424,x_0,y_424/v1786599929/260813_toys_01_txjh3y.png" }
+      ];
+
+      // ---- Pen stroke shape signature per letter.
+      // We cannot run OCR, so we compare the pupil's stroke(s) to a rough
+      // letter template: how many strokes, where the pen starts, and the
+      // overall vertical/horizontal spread (normalised). This gives a
+      // friendly self-check — not a spelling guarantee.
+      // signature: [minStrokes, minFootHeight, expectStart]
+      var LETTER_SHAPES = {
+        a: { strokes: 2, foot: 0.1 },
+        b: { strokes: 2, foot: 0.1 },
+        c: { strokes: 1, foot: 0.1 },
+        d: { strokes: 2, foot: 0.1 },
+        e: { strokes: 1, foot: 0.1 },
+        i: { strokes: 2, foot: 0.1 },
+        k: { strokes: 2, foot: 0.1 },
+        l: { strokes: 1, foot: 0.1 },
+        r: { strokes: 2, foot: 0.1 },
+        t: { strokes: 2, foot: 0.1 },
+        u: { strokes: 1, foot: 0.1 },
+        b2: { strokes: 2, foot: 0.1 }
+      };
+
+      // ---- State ----
+      var current = 0;
+      var locked = false; // after Check, drawing is read-only until Next/Clear
+
+      var $ = function (id) { return document.getElementById(id); };
+      $("countLabel").textContent = "1/" + WORDS.length;
+
+      // Faint traceable letter shown inside each blank pad before/while the
+      // pupil writes. Painted on top of the cleared canvas on every redraw.
+      // The capital first letter is TALL and spans from the top help line to
+      // the baseline; lowercase letters are SHORTER and span from the middle
+      // help line to the baseline (e.g. "Tree": a tall T, short r-e-e).
+      function drawGhost(en) {
+        var ctx = en.ctx;
+        var cw = en.canvas.getBoundingClientRect().width;
+        var ch = en.canvas.getBoundingClientRect().height;
+        var topLine = ch * 0.09;
+        var midLine = ch * 0.42;
+        var baseline = ch * 0.78;
+        var isCap = en.ghost === en.ghost.toUpperCase();
+        var targetTop = isCap ? topLine : midLine * 0.8;
+
+        ctx.save();
+        ctx.textAlign = "center";
+        ctx.textBaseline = "alphabetic";
+        ctx.fillStyle = "rgba(160,170,190,0.45)";
+
+        var fs = ch * (isCap ? 0.6 : 0.36);
+        for (var i = 0; i < 4; i++) {
+          ctx.font = "900 " + fs + "px 'Segoe UI', Arial, sans-serif";
+          var m = ctx.measureText(en.ghost);
+          var ascent = m.actualBoundingBoxAscent || fs * 0.72;
+          var descent = m.actualBoundingBoxDescent || fs * 0.2;
+          var availH = baseline - targetTop;
+          var k = availH / (ascent + descent);
+          fs *= k;
+        }
+        // Guard against overflowing the pad width on wide letters.
+        ctx.font = "900 " + fs + "px 'Segoe UI', Arial, sans-serif";
+        if (ctx.measureText(en.ghost).width > cw * 0.92) {
+          fs *= (cw * 0.92) / ctx.measureText(en.ghost).width;
+          ctx.font = "900 " + fs + "px 'Segoe UI', Arial, sans-serif";
+        }
+        ctx.fillText(en.ghost, cw / 2, baseline);
+        ctx.restore();
+      }
+
+      // ---- Theme ----
+      (function () {
+        var d = document.documentElement;
+        var theme = "system";
+        try { var s = localStorage.getItem("handTheme"); if (s === "dark" || s === "light") theme = s; } catch (e) {}
+        var mq = window.matchMedia("(prefers-color-scheme: dark)");
+        function apply() {
+          var dark = theme === "dark" || (theme === "system" && mq.matches);
+          d.classList.toggle("dark", dark);
+          $("themeToggle").textContent = dark ? "☀️" : "🌙";
+        }
+        apply();
+        if (mq.addEventListener) mq.addEventListener("change", apply);
+        else if (mq.addListener) mq.addListener(apply);
+        $("themeToggle").addEventListener("click", function () {
+          theme = theme === "dark" ? "light" : "dark";
+          try { localStorage.setItem("handTheme", theme); } catch (e) {}
+          apply();
+        });
+      })();
+
+      // ---- Build canvases for the current word ----
+      var pads = []; // {canvas, ctx, strokes:[[{x,y},...],...], drawing}
+      function buildWord() {
+        var word = WORDS[current];
+        $("picture").src = word.img;
+        $("picture").alt = word.w;
+        var row = $("wordRow");
+        row.innerHTML = "";
+        pads = [];
+        locked = false;
+        $("verdict").textContent = "";
+        $("verdict").className = "verdict";
+        $("hintLine").textContent = "Trace the letters: “" + word.w + "”";
+        $("countLabel").textContent = (current + 1) + "/" + WORDS.length;
+
+        word.w.split("").forEach(function () {
+          var pad = document.createElement("div");
+          pad.className = "chpad";
+          var g1 = document.createElement("div");
+          g1.className = "guide base";
+          var g2 = document.createElement("div");
+          g2.className = "guide mid";
+          var g0 = document.createElement("div");
+          g0.className = "guide top";
+          var canvas = document.createElement("canvas");
+          pad.appendChild(g0);
+          pad.appendChild(g2);
+          pad.appendChild(g1);
+          pad.appendChild(canvas);
+          row.appendChild(pad);
+
+          var ctx = canvas.getContext("2d");
+          var entry = { canvas: canvas, ctx: ctx, strokes: [], drawing: false };
+          // First letter is a capital, the rest lowercase (e.g. "Tree").
+          entry.ghost =
+            pads.length === 0
+              ? word.w.charAt(0).toUpperCase()
+              : word.w.charAt(pads.length);
+          pads.push(entry);
+
+          function size() {
+            var r = canvas.getBoundingClientRect();
+            var dpr = window.devicePixelRatio || 1;
+            canvas.width = Math.round(r.width * dpr);
+            canvas.height = Math.round(r.height * dpr);
+            ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+            redraw(entry); // re-apply the faint letter + any strokes
+          }
+          size();
+          window.addEventListener("resize", size);
+
+          function pos(e) {
+            var r = canvas.getBoundingClientRect();
+            return { x: e.clientX - r.left, y: e.clientY - r.top };
+          }
+          function down(e) {
+            if (locked) return;
+            e.preventDefault();
+            var p = pos(e.touches ? e.touches[0] : e);
+            entry.drawing = true;
+            entry.strokes.push([p]);
+            ctx.lineWidth = 6;
+            ctx.lineCap = "round";
+            ctx.lineJoin = "round";
+            ctx.strokeStyle = "#1d4ed8";
+          }
+          function move(e) {
+            if (!entry.drawing || locked) return;
+            e.preventDefault();
+            var p = pos(e.touches ? e.touches[0] : e);
+            var last = entry.strokes[entry.strokes.length - 1];
+            last.push(p);
+            var w = canvas.getBoundingClientRect().width;
+            var h = canvas.getBoundingClientRect().height;
+            ctx.lineWidth = Math.max(4, w * 0.11);
+            redraw(entry);
+          }
+          function redraw(en) {
+            en.ctx.clearRect(0, 0, en.canvas.width, en.canvas.height);
+            drawGhost(en);
+            en.strokes.forEach(function (st) {
+              if (!st.length) return;
+              en.ctx.beginPath();
+              en.ctx.moveTo(st[0].x, st[0].y);
+              for (var i = 1; i < st.length; i++) en.ctx.lineTo(st[i].x, st[i].y);
+              en.ctx.stroke();
+            });
+          }
+          function up() { entry.drawing = false; }
+
+          canvas.addEventListener("pointerdown", function (e) { canvas.setPointerCapture && canvas.setPointerCapture(e.pointerId); down(e); });
+          canvas.addEventListener("pointermove", move);
+          canvas.addEventListener("pointerup", up);
+          canvas.addEventListener("pointercancel", up);
+        });
+      }
+
+      // ---- Shape check for one letter pad ----
+      function checkPad(en) {
+        if (!en.strokes.length) return { drawn: false, score: 0 };
+        var all = [];
+        en.strokes.forEach(function (st) { all = all.concat(st); });
+        var minX = Infinity, maxX = -Infinity, minY = Infinity, maxY = -Infinity;
+        all.forEach(function (p) {
+          if (p.x < minX) minX = p.x;
+          if (p.x > maxX) maxX = p.x;
+          if (p.y < minY) minY = p.y;
+          if (p.y > maxY) maxY = p.y;
+        });
+        var w = maxX - minX, h = maxY - minY;
+        var box = en.canvas.getBoundingClientRect();
+        var span = Math.min(box.width, box.height) || 1;
+        // Coverage: did the pen fill a decent amount of the box?
+        var coverage = Math.min(1, (w * h) / (box.width * box.height));
+        var single = en.strokes.length === 1;
+        // Score: strokes<2 bonus for single-stroke letters is handled per letter.
+        return { drawn: true, coverage: coverage, single: single, multi: en.strokes.length >= 2 };
+      }
+
+      // ---- Check the whole word ----
+      function checkWord() {
+        if (locked) return;
+        locked = true;
+        var word = WORDS[current];
+        var letters = word.w.split("");
+        var anyDrawn = false,
+          okCount = 0;
+        pads.forEach(function (en, i) {
+          var r = checkPad(en);
+          if (r.drawn) anyDrawn = true;
+          var ch = letters[i];
+          var spec = LETTER_SHAPES[ch] || { strokes: 1 };
+          // Simple heuristic: a sensible letter generally has coverage in
+          // a middle band and the strokes are few (<4). Single-stroke vs
+          // multi-stroke adds a small bonus for letters that should have them.
+          var goodCov = r.coverage > 0.18 && r.coverage < 0.95;
+          var fewStrokes = r.multi ? en.strokes.length <= 3 : en.strokes.length <= 2;
+          if (r.drawn && goodCov && fewStrokes) okCount++;
+        });
+        var v = $("verdict");
+        if (!anyDrawn) {
+          v.textContent = "Draw the word first, then check.";
+          v.className = "verdict fail";
+          locked = false;
+          return;
+        }
+        if (okCount === pads.length) {
+          v.textContent = "Great job! “" + word.w + "” looks right!";
+          v.className = "verdict ok";
+        } else if (okCount >= pads.length - 1) {
+          v.textContent = "Almost! One letter needs a little more care.";
+          v.className = "verdict almost";
+        } else if (okCount >= 1) {
+          v.textContent = "Good try — " + okCount + " letter(s) looked good. Try the others again.";
+          v.className = "verdict part";
+        } else {
+          v.textContent = "Have another go — take your time tracing “" + word.w + "”.";
+          v.className = "verdict fail";
+        }
+      }
+
+      // ---- Clearing / navigation ----
+      function clearAll() {
+        locked = false;
+        pads.forEach(function (en) {
+          en.strokes = [];
+          en.ctx.clearRect(0, 0, en.canvas.width, en.canvas.height);
+          drawGhost(en);
+        });
+        $("verdict").textContent = "";
+        $("verdict").className = "verdict";
+      }
+      function next() {
+        if (current < WORDS.length - 1) {
+          current++;
+          buildWord();
+        } else {
+          doneAll();
+        }
+      }
+      function doneAll() {
+        $("doneMsg").textContent = "You wrote all " + WORDS.length + " words like a star!";
+        $("done").classList.add("show");
+      }
+
+      $("checkBtn").addEventListener("click", checkWord);
+      $("clearBtn").addEventListener("click", clearAll);
+      $("nextBtn").addEventListener("click", next);
+      $("againBtn").addEventListener("click", function () {
+        $("done").classList.remove("show");
+        current = 0;
+        buildWord();
+      });
+
+      buildWord();
+    </script>
+
+    <script src="../../tracker.js"></script>
+  </body>
+</html>

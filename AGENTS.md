@@ -25,7 +25,8 @@ EnglishExplorer/
 │   │   ├── numbers.html
 │   │   ├── toys-things.html
 │   ├── others/                  <-- Standalone classroom activity games (formerly empty placeholder)
-│   │   └── indoor-outdoor-quest.html  <-- QR quest: scan, find something inside/outside the house
+│   │   ├── indoor-outdoor-quest.html  <-- QR quest: scan, find something inside/outside the house
+│   │   └── handwriting-words.html    <-- iPad handwriting: fill the word on help lines
 │   └── minigames/              <-- Highly gamified mini-games (formerly /Features)
 │       ├── abc-world.html
 │       ├── mystery-base.html
