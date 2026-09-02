@@ -24,6 +24,8 @@ EnglishExplorer/
 │   │   ├── my-family-my-classroom.html
 │   │   ├── numbers.html
 │   │   ├── toys-things.html
+│   ├── others/                  <-- Standalone classroom activity games (formerly empty placeholder)
+│   │   └── indoor-outdoor-quest.html  <-- QR quest: scan, find something inside/outside the house
 │   └── minigames/              <-- Highly gamified mini-games (formerly /Features)
 │       ├── abc-world.html
 │       ├── mystery-base.html
