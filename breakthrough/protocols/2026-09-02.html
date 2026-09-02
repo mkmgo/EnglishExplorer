@@ -1,0 +1,252 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no"
+    />
+    <title>Protocol 02/09/2026</title>
+    <meta name="description" content="English Explorer — Protocol 02/09/2026" />
+    <meta property="og:image" content="https://res.cloudinary.com/dmkhsyfzf/image/upload/q_auto/f_auto/v1781698464/protocol_r392x1.png" />
+    <link rel="icon" type="image/png" href="https://res.cloudinary.com/dmkhsyfzf/image/upload/q_auto/f_auto/v1781698464/protocol_r392x1.png" />
+    <link rel="apple-touch-icon" href="https://res.cloudinary.com/dmkhsyfzf/image/upload/q_auto/f_auto/v1781698464/protocol_r392x1.png" />
+    <style>
+      :root {
+        --bg: #FAF7F2;
+        --ink: #14213d;
+        --muted: #60708d;
+        --accent: #e43703;
+        --accent2: #ffb866;
+        --good: #19a974;
+        --panel: #fcfcfc;
+        --shadow: 0 18px 50px rgba(20, 33, 61, 0.14);
+      }
+      .container[data-weekday="mon"] { --accent: #2563eb; }
+      .container[data-weekday="tue"] { --accent: #e43703; }
+      .container[data-weekday="wed"] { --accent: #0d9488; }
+      .container[data-weekday="thu"] { --accent: #7c3aed; }
+      .container[data-weekday="fri"] { --accent: #dc2626; }
+      .container[data-weekday="sat"] { --accent: #d97706; }
+      .container[data-weekday="sun"] { --accent: #475569; }
+      * {
+        box-sizing: border-box;
+      }
+      html, body {
+        margin: 0;
+        width: 100%;
+        min-height: 100%;
+        background: var(--bg);
+        font-family: Arial, Helvetica, sans-serif;
+        color: var(--ink);
+        touch-action: manipulation;
+        line-height: 1.6;
+      }
+      .container {
+        max-width: 900px;
+        margin: 0 auto;
+        padding: clamp(16px, 4vw, 40px) clamp(12px, 3vw, 24px);
+      }
+      h1 {
+        font-size: clamp(1.8rem, 5vw, 3rem);
+        margin: 0 0 0.2em;
+        font-weight: 900;
+        letter-spacing: -0.03em;
+        color: var(--accent);
+      }
+      .date-sub {
+        font-size: clamp(0.9rem, 1.6vw, 1.2rem);
+        color: var(--muted);
+        font-weight: 700;
+        letter-spacing: 0.1em;
+        margin: 0 0 2em;
+      }
+      .intro {
+        background: var(--panel);
+        border-radius: 24px;
+        padding: clamp(1rem, 2.5vw, 1.8em);
+        box-shadow: var(--shadow);
+        margin-bottom: 2em;
+        font-size: clamp(1rem, 1.8vw, 1.2rem);
+        line-height: 1.7;
+      }
+      .zh {
+        display: block;
+        margin-top: 0.6em;
+        color: var(--muted);
+        font-size: 0.92em;
+      }
+      h2 {
+        font-size: clamp(1.3rem, 3.2vw, 2rem);
+        margin: 2em 0 0.6em;
+        font-weight: 900;
+        color: var(--ink);
+        letter-spacing: -0.02em;
+      }
+      h3 {
+        font-size: clamp(1.1rem, 2.2vw, 1.5rem);
+        margin: 1.6em 0 0.4em;
+        font-weight: 800;
+        color: var(--accent);
+      }
+      p {
+        font-size: clamp(1rem, 1.8vw, 1.15rem);
+        margin: 0.4em 0;
+      }
+      .story-section {
+        background: var(--panel);
+        border-radius: 24px;
+        padding: clamp(1rem, 2.5vw, 1.6em);
+        box-shadow: var(--shadow);
+        margin-bottom: 1.4em;
+      }
+      .story-section h3 {
+        margin-top: 0;
+      }
+      .story-section p {
+        margin: 0.3em 0;
+      }
+      .example {
+        background: #fdf3e7;
+        border-left: 5px solid var(--accent);
+        border-radius: 8px;
+        padding: 0.7em 1em;
+        margin: 0.8em 0 !important;
+        font-style: italic;
+      }
+      .exercise {
+        border-top: 1px dashed #eae5db;
+        padding-top: 0.8em;
+        margin-top: 1em !important;
+      }
+      .exercise strong {
+        color: var(--accent);
+      }
+
+      /* Vocabulary table */
+      .vocab-table {
+        width: 100%;
+        border-collapse: separate;
+        border-spacing: 0;
+        margin: 1.6em 0 2em;
+        background: var(--panel);
+        border-radius: 16px;
+        box-shadow: var(--shadow);
+        overflow: hidden;
+      }
+      .vocab-table th {
+        background: var(--ink);
+        color: var(--accent2);
+        font-size: clamp(0.85rem, 1.5vw, 1rem);
+        font-weight: 800;
+        letter-spacing: 0.06em;
+        padding: 0.8em 1em;
+        text-align: left;
+        white-space: nowrap;
+      }
+      .vocab-table td {
+        padding: 0.7em 1em;
+        font-size: clamp(0.9rem, 1.6vw, 1.05rem);
+        border-top: 1px solid #eae5db;
+        vertical-align: top;
+        word-break: break-word;
+      }
+      .vocab-table tr:nth-child(even) td {
+        background: #fdf9f3;
+      }
+      .vocab-table td:last-child {
+        color: var(--muted);
+        font-weight: 600;
+      }
+
+      @media (max-width: 600px) {
+        .vocab-table {
+          display: block;
+          overflow-x: auto;
+          -webkit-overflow-scrolling: touch;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container" data-weekday="wed">
+      <h1>Protocol 02/09/2026</h1>
+      <p class="date-sub">English Explorer | Breakthrough</p>
+
+      <div class="intro">
+        Please study the following structures and sentences well. Words and expressions must be fully understood and memorised. The last section shows today's new vocabulary as well as some repetitive words. Please carefully repeat these as well.
+        <span class="zh">请将这些句子抄到练习本的词汇表下方。所有单词和表达方式都必须完全理解和记忆。</span>
+      </div>
+
+      <h2>1. Pronouns — Fill in the Correct Pronoun</h2>
+      <div class="story-section">
+        <p>
+          <strong>Exercise:</strong> Fill in the correct pronouns.
+        </p>
+        <p>
+          Yesterday, Marcus and [1] _____ met at the library to finish our history presentation. [2] _____ had brought his laptop, but I forgot [3] _____, so he shared his screen with [4] ____. After an hour of research, Sarah joined us and sat at [5] _____ table. She pulled out a stack of notes and handed [6] _____ to Marcus. "Are these notes [7] _____?" she asked him, pointing to the messy handwriting. Marcus checked the pages and replied, "No, [8] _____ are not mine; I think they belong to the students who sat here before [9] _____."
+
+        <h3>Answers</h3>
+        <p class="example">[1] me &nbsp; [2] He &nbsp; [3] mine &nbsp; [4] me &nbsp; [5] our &nbsp; [6] them &nbsp; [7] yours? &nbsp; [8] They &nbsp; [9] us</p>
+      </div>
+
+      <h2>Vocabulary — 02/09/2026</h2>
+
+      <h3>History, Presentation &amp; Library</h3>
+      <table class="vocab-table">
+        <thead>
+          <tr><th>English</th><th>Chinese</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>History</td><td>历史</td></tr>
+          <tr><td>Presentation</td><td>推介会</td></tr>
+          <tr><td>Library</td><td>图书馆</td></tr>
+          <tr><td>To finish</td><td>完成</td></tr>
+          <tr><td>To forget</td><td>忘记</td></tr>
+          <tr><td>To bring</td><td>携带</td></tr>
+          <tr><td>To share</td><td>分享</td></tr>
+          <tr><td>A screen</td><td>一个屏幕</td></tr>
+          <tr><td>To join</td><td>加入</td></tr>
+          <tr><td>Research</td><td>研究</td></tr>
+        </tbody>
+      </table>
+
+      <h3>Notes, Handwriting &amp; Belonging</h3>
+      <table class="vocab-table">
+        <thead>
+          <tr><th>English</th><th>Chinese</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>A stack</td><td>一个堆栈</td></tr>
+          <tr><td>To point</td><td>到点</td></tr>
+          <tr><td>Handwriting</td><td>手写</td></tr>
+          <tr><td>Messy handwriting</td><td>字迹凌乱</td></tr>
+          <tr><td>To check</td><td>检查</td></tr>
+          <tr><td>The page / The pages</td><td>页面</td></tr>
+          <tr><td>To reply</td><td>回复</td></tr>
+          <tr><td>To belong to</td><td>属于</td></tr>
+          <tr><td>To think</td><td>去思考</td></tr>
+          <tr><td>To meet</td><td>见面</td></tr>
+        </tbody>
+      </table>
+
+      <h3>Additional Vocabulary</h3>
+      <table class="vocab-table">
+        <thead>
+          <tr><th>English</th><th>Chinese</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Yesterday I sat in the library.</td><td>昨天我坐在图书馆里。</td></tr>
+          <tr><td>Research for my history presentation.</td><td>研究我的历史演讲。</td></tr>
+          <tr><td>She pulled out her notes and handed them to Marcus.</td><td>她拿出笔记，递给马库斯。</td></tr>
+          <tr><td>Shade</td><td>遮荫</td></tr>
+          <tr><td>A sun umbrella provides shade.</td><td>太阳伞可以提供阴凉。</td></tr>
+          <tr><td>A "normal" umbrella is against rain.</td><td>"普通"的雨伞可以防雨。</td></tr>
+          <tr><td>The first part of today's lesson was very hard.</td><td>今天课程的第一部分非常难。</td></tr>
+        </tbody>
+      </table>
+
+    </div>
+  <script src="../../tracker.js"></script>
+  </body>
+</html>
