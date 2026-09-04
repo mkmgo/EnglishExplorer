@@ -3016,6 +3016,7 @@ Tap a word to hear it — SpotlightPro turns your notes into a live lesson.
         row.offsetHeight;
         row.style.transition = "0.2s transform ease-out";
         row.style.transform = "";
+        saveWords();
         toast(dir < 0 ? "Moved up" : "Moved down");
       }
 
@@ -3030,6 +3031,7 @@ Tap a word to hear it — SpotlightPro turns your notes into a live lesson.
         }
         if (idx < 0) return;
         clipHistory.splice(idx, 1);
+        saveWords();
         row.style.transition = "0.2s opacity ease-out, 0.2s transform ease-out";
         row.style.opacity = "0";
         row.style.transform = "translateX(20px)";
@@ -3060,6 +3062,24 @@ Tap a word to hear it — SpotlightPro turns your notes into a live lesson.
         });
         clipHistory.push({ time: time, en: en, zh: zh });
         renderClipList();
+        saveWords();
+      }
+
+      function saveWords() {
+        try {
+          localStorage.setItem("spotlight-words", JSON.stringify(clipHistory));
+        } catch (e) {}
+      }
+
+      function restoreWords() {
+        try {
+          var raw = localStorage.getItem("spotlight-words");
+          if (!raw) return;
+          var arr = JSON.parse(raw);
+          if (!Array.isArray(arr)) return;
+          clipHistory = arr;
+          renderClipList();
+        } catch (e) {}
       }
 
       function csvCell(v) {
@@ -3214,7 +3234,8 @@ Tap a word to hear it — SpotlightPro turns your notes into a live lesson.
             count++;
           }
           updateClipMoveButtons();
-          var msg = count ? "Loaded " + count + " clip(s)" : "No new clips";
+          saveWords();
+          var msg = count ? "Loaded " + count + " word(s)" : "No new words";
           if (skipped) msg += ", " + skipped + " duplicate(s) skipped";
           if (garbled)
             msg += " \u2014 " + garbled + " garbled, re-save CSV as UTF-8";
@@ -4246,6 +4267,7 @@ Tap a word to hear it — SpotlightPro turns your notes into a live lesson.
       }
       show(screens.indexOf(document.getElementById("mdScreen")));
       renderMediaThumbs();
+      restoreWords();
 
       /* ---- MD Presenter (screen 3) ---- */
       var mdSel = null;
