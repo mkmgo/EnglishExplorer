@@ -651,28 +651,82 @@
           zhBox.classList.add("filled");
         }
         equalizeBoxes();
-        var url =
-          "https://translate.googleapis.com/translate_a/single" +
-          "?client=gtx&sl=auto&tl=zh-CN&dt=t&q=" +
-          encodeURIComponent(text);
         if (typeof fetch !== "function") {
           if (zhBox) zhBox.textContent = "Translation failed";
           equalizeBoxes();
           return;
         }
-        fetch(url)
-          .then(function (r) {
-            return r.json();
-          })
-          .then(function (data) {
-            var translated = "";
-            try {
-              var segs = data[0];
-              for (var i = 0; i < segs.length; i++) {
-                translated += segs[i][0] || "";
+
+        function parseGoogleZh(data) {
+          var out = "";
+          try {
+            var segs = data[0];
+            if (typeof segs === "string") {
+              out = segs;
+            } else if (segs && segs.length) {
+              var first = segs[0];
+              if (Array.isArray(first)) {
+                for (var i = 0; i < segs.length; i++) {
+                  if (segs[i]) out += segs[i][0] || "";
+                }
+              } else if (typeof first === "string") {
+                out = first;
               }
-            } catch (e) {}
-            if (!translated) translated = text;
+            }
+          } catch (e) {}
+          return out;
+        }
+
+        function parseMemoryZh(data) {
+          try {
+            var t = data.responseData && data.responseData.translatedText;
+            if (typeof t === "string" && t) {
+              try {
+                return decodeURIComponent(t);
+              } catch (e) {
+                return t;
+              }
+            }
+          } catch (e) {}
+          return "";
+        }
+
+        function fetchZh(txt) {
+          var googleUrl =
+            "https://clients5.google.com/translate_a/t" +
+            "?client=dict-chrome-ex&sl=auto&tl=zh-CN&q=" +
+            encodeURIComponent(txt);
+          var memoryUrl =
+            "https://api.mymemory.translated.net/get" +
+            "?q=" +
+            encodeURIComponent(txt) +
+            "&langpair=en|zh-CN";
+          return fetch(googleUrl)
+            .then(function (r) {
+              if (!r.ok) throw new Error("HTTP " + r.status);
+              return r.json();
+            })
+            .then(function (data) {
+              var out = parseGoogleZh(data);
+              if (out) return out;
+              throw new Error("Empty google result");
+            })
+            .catch(function () {
+              return fetch(memoryUrl)
+                .then(function (r) {
+                  if (!r.ok) throw new Error("HTTP " + r.status);
+                  return r.json();
+                })
+                .then(function (data) {
+                  var out = parseMemoryZh(data);
+                  if (out) return out;
+                  throw new Error("Empty memory result");
+                });
+            });
+        }
+
+        fetchZh(text)
+          .then(function (translated) {
             lastZhText = translated;
             if (zhBox) zhBox.textContent = translated;
             equalizeBoxes();

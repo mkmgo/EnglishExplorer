@@ -11,7 +11,7 @@
     <meta name="theme-color" content="#e43703" />
     <link
       rel="icon"
-      type="image/png"in trans
+      type="image/png"
       href="https://res.cloudinary.com/dqwm4pdbz/image/upload/q_auto/f_auto/v1782645670/dash_oardun.png"
     />
     <link
@@ -2815,24 +2815,71 @@ Tap a word to hear it — SpotlightPro turns your notes into a live lesson.
 
       var translateSeq = 0;
 
+      function parseGoogleZh(data) {
+        var translated = "";
+        try {
+          var segs = data[0];
+          if (typeof segs === "string") {
+            translated = segs;
+          } else if (segs && segs.length) {
+            var first = segs[0];
+            if (Array.isArray(first)) {
+              for (var i = 0; i < segs.length; i++) {
+                if (segs[i]) translated += segs[i][0] || "";
+              }
+            } else if (typeof first === "string") {
+              translated = first;
+            }
+          }
+        } catch (e) {}
+        return translated;
+      }
+
+      function parseMemoryZh(data) {
+        try {
+          var t = data.responseData && data.responseData.translatedText;
+          if (typeof t === "string" && t) {
+            try {
+              return decodeURIComponent(t);
+            } catch (e) {
+              return t;
+            }
+          }
+        } catch (e) {}
+        return "";
+      }
+
       function fetchZh(text) {
-        var url =
-          "https://translate.googleapis.com/translate_a/single" +
-          "?client=gtx&sl=auto&tl=zh-CN&dt=t&q=" +
+        var googleUrl =
+          "https://clients5.google.com/translate_a/t" +
+          "?client=dict-chrome-ex&sl=auto&tl=zh-CN&q=" +
           encodeURIComponent(text);
-        return fetch(url)
+        var memoryUrl =
+          "https://api.mymemory.translated.net/get" +
+          "?q=" +
+          encodeURIComponent(text) +
+          "&langpair=en|zh-CN";
+        return fetch(googleUrl)
           .then(function (r) {
+            if (!r.ok) throw new Error("HTTP " + r.status);
             return r.json();
           })
           .then(function (data) {
-            var translated = "";
-            try {
-              var segs = data[0];
-              for (var i = 0; i < segs.length; i++) {
-                translated += segs[i][0] || "";
-              }
-            } catch (e) {}
-            return translated || text;
+            var out = parseGoogleZh(data);
+            if (out) return out;
+            throw new Error("Empty google result");
+          })
+          .catch(function () {
+            return fetch(memoryUrl)
+              .then(function (r) {
+                if (!r.ok) throw new Error("HTTP " + r.status);
+                return r.json();
+              })
+              .then(function (data) {
+                var out = parseMemoryZh(data);
+                if (out) return out;
+                throw new Error("Empty memory result");
+              });
           });
       }
 
