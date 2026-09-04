@@ -2849,17 +2849,66 @@ Tap a word to hear it — SpotlightPro turns your notes into a live lesson.
         return "";
       }
 
+      var googleDead = false;
+
+      function fetchWithTimeout(url, ms) {
+        return new Promise(function (resolve, reject) {
+          var done = false;
+          var ctrl = null;
+          if (typeof AbortController !== "undefined") ctrl = new AbortController();
+          var opts = { cache: "no-store" };
+          if (ctrl) opts.signal = ctrl.signal;
+          var timer = setTimeout(function () {
+            if (done) return;
+            done = true;
+            if (ctrl) {
+              try {
+                ctrl.abort();
+              } catch (e) {}
+            }
+            reject(new Error("timeout"));
+          }, ms);
+          fetch(url, opts).then(
+            function (r) {
+              if (done) return;
+              done = true;
+              clearTimeout(timer);
+              resolve(r);
+            },
+            function (e) {
+              if (done) return;
+              done = true;
+              clearTimeout(timer);
+              reject(e);
+            },
+          );
+        });
+      }
+
       function fetchZh(text) {
-        var googleUrl =
-          "https://clients5.google.com/translate_a/t" +
-          "?client=dict-chrome-ex&sl=auto&tl=zh-CN&q=" +
-          encodeURIComponent(text);
         var memoryUrl =
           "https://api.mymemory.translated.net/get" +
           "?q=" +
           encodeURIComponent(text) +
           "&langpair=en|zh-CN";
-        return fetch(googleUrl)
+        var fromMemory = function () {
+          return fetchWithTimeout(memoryUrl, 8000)
+            .then(function (r) {
+              if (!r.ok) throw new Error("HTTP " + r.status);
+              return r.json();
+            })
+            .then(function (data) {
+              var out = parseMemoryZh(data);
+              if (out) return out;
+              throw new Error("Empty memory result");
+            });
+        };
+        if (googleDead) return fromMemory();
+        var googleUrl =
+          "https://clients5.google.com/translate_a/t" +
+          "?client=dict-chrome-ex&sl=auto&tl=zh-CN&q=" +
+          encodeURIComponent(text);
+        return fetchWithTimeout(googleUrl, 3000)
           .then(function (r) {
             if (!r.ok) throw new Error("HTTP " + r.status);
             return r.json();
@@ -2870,16 +2919,8 @@ Tap a word to hear it — SpotlightPro turns your notes into a live lesson.
             throw new Error("Empty google result");
           })
           .catch(function () {
-            return fetch(memoryUrl)
-              .then(function (r) {
-                if (!r.ok) throw new Error("HTTP " + r.status);
-                return r.json();
-              })
-              .then(function (data) {
-                var out = parseMemoryZh(data);
-                if (out) return out;
-                throw new Error("Empty memory result");
-              });
+            googleDead = true;
+            return fromMemory();
           });
       }
 
@@ -2942,6 +2983,7 @@ Tap a word to hear it — SpotlightPro turns your notes into a live lesson.
             zhBox.classList.add("filled");
           }
           var chain = Promise.resolve();
+          var failed = 0;
           words.forEach(function (w) {
             chain = chain.then(function () {
               if (seq === translateSeq) {
@@ -2953,20 +2995,28 @@ Tap a word to hear it — SpotlightPro turns your notes into a live lesson.
                 if (zhBox) zhBox.textContent = "…";
                 equalizeBoxes();
               }
-              return fetchZh(w).then(function (zhText) {
-                addClip(w, zhText);
-                if (seq === translateSeq) {
-                  lastZhText = zhText;
-                  if (zhBox) zhBox.textContent = zhText;
-                  equalizeBoxes();
-                }
-              });
+              return fetchZh(w)
+                .then(function (zhText) {
+                  addClip(w, zhText);
+                  if (seq === translateSeq) {
+                    lastZhText = zhText;
+                    if (zhBox) zhBox.textContent = zhText;
+                    equalizeBoxes();
+                  }
+                })
+                .catch(function () {
+                  failed++;
+                  if (seq === translateSeq && zhBox)
+                    zhBox.textContent = "Translation failed";
+                });
             });
           });
-          chain.catch(function () {
+          chain.then(function () {
             if (seq !== translateSeq) return;
-            if (zhBox) zhBox.textContent = "Translation failed";
-            equalizeBoxes();
+            if (words.length) {
+              if (failed) toast(failed + " word(s) failed to translate");
+              else toast(words.length + " word(s) translated");
+            }
           });
         });
       }
@@ -3106,7 +3156,7 @@ Tap a word to hear it — SpotlightPro turns your notes into a live lesson.
             break;
           }
         }
-        if (idx < 0) return;
+if (idx < 0) return;
         clipHistory.splice(idx, 1);
         saveWords();
         row.style.transition = "0.2s opacity ease-out, 0.2s transform ease-out";
