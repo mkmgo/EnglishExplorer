@@ -1,0 +1,266 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no"
+    />
+    <title>Protocol 04/09/2026</title>
+    <meta name="description" content="English Explorer — Protocol 04/09/2026" />
+    <meta property="og:image" content="https://res.cloudinary.com/dmkhsyfzf/image/upload/q_auto/f_auto/v1781698464/protocol_r392x1.png" />
+    <link rel="icon" type="image/png" href="https://res.cloudinary.com/dmkhsyfzf/image/upload/q_auto/f_auto/v1781698464/protocol_r392x1.png" />
+    <link rel="apple-touch-icon" href="https://res.cloudinary.com/dmkhsyfzf/image/upload/q_auto/f_auto/v1781698464/protocol_r392x1.png" />
+    <style>
+      :root {
+        --bg: #FAF7F2;
+        --ink: #14213d;
+        --muted: #60708d;
+        --accent: #e43703;
+        --accent2: #ffb866;
+        --good: #19a974;
+        --panel: #fcfcfc;
+        --shadow: 0 18px 50px rgba(20, 33, 61, 0.14);
+      }
+      .container[data-weekday="mon"] { --accent: #2563eb; }
+      .container[data-weekday="tue"] { --accent: #e43703; }
+      .container[data-weekday="wed"] { --accent: #0d9488; }
+      .container[data-weekday="thu"] { --accent: #7c3aed; }
+      .container[data-weekday="fri"] { --accent: #dc2626; }
+      .container[data-weekday="sat"] { --accent: #d97706; }
+      .container[data-weekday="sun"] { --accent: #475569; }
+      * {
+        box-sizing: border-box;
+      }
+      html, body {
+        margin: 0;
+        width: 100%;
+        min-height: 100%;
+        background: var(--bg);
+        font-family: Arial, Helvetica, sans-serif;
+        color: var(--ink);
+        touch-action: manipulation;
+        line-height: 1.6;
+      }
+      .container {
+        max-width: 900px;
+        margin: 0 auto;
+        padding: clamp(16px, 4vw, 40px) clamp(12px, 3vw, 24px);
+      }
+      h1 {
+        font-size: clamp(1.8rem, 5vw, 3rem);
+        margin: 0 0 0.2em;
+        font-weight: 900;
+        letter-spacing: -0.03em;
+        color: var(--accent);
+      }
+      .date-sub {
+        font-size: clamp(0.9rem, 1.6vw, 1.2rem);
+        color: var(--muted);
+        font-weight: 700;
+        letter-spacing: 0.1em;
+        margin: 0 0 2em;
+      }
+      .intro {
+        background: var(--panel);
+        border-radius: 24px;
+        padding: clamp(1rem, 2.5vw, 1.8em);
+        box-shadow: var(--shadow);
+        margin-bottom: 2em;
+        font-size: clamp(1rem, 1.8vw, 1.2rem);
+        line-height: 1.7;
+      }
+      .zh {
+        display: block;
+        margin-top: 0.6em;
+        color: var(--muted);
+        font-size: 0.92em;
+      }
+      h2 {
+        font-size: clamp(1.3rem, 3.2vw, 2rem);
+        margin: 2em 0 0.6em;
+        font-weight: 900;
+        color: var(--ink);
+        letter-spacing: -0.02em;
+      }
+      h3 {
+        font-size: clamp(1.1rem, 2.2vw, 1.5rem);
+        margin: 1.6em 0 0.4em;
+        font-weight: 800;
+        color: var(--accent);
+      }
+      p {
+        font-size: clamp(1rem, 1.8vw, 1.15rem);
+        margin: 0.4em 0;
+      }
+      .story-section {
+        background: var(--panel);
+        border-radius: 24px;
+        padding: clamp(1rem, 2.5vw, 1.6em);
+        box-shadow: var(--shadow);
+        margin-bottom: 1.4em;
+      }
+      .story-section h3 {
+        margin-top: 0;
+      }
+      .story-section p {
+        margin: 0.3em 0;
+      }
+      .example {
+        background: #fdf3e7;
+        border-left: 5px solid var(--accent);
+        border-radius: 8px;
+        padding: 0.7em 1em;
+        margin: 0.8em 0 !important;
+        font-style: italic;
+      }
+      .exercise {
+        border-top: 1px dashed #eae5db;
+        padding-top: 0.8em;
+        margin-top: 1em !important;
+      }
+      .exercise strong {
+        color: var(--accent);
+      }
+
+      /* Vocabulary table */
+      .vocab-table {
+        width: 100%;
+        border-collapse: separate;
+        border-spacing: 0;
+        margin: 1.6em 0 2em;
+        background: var(--panel);
+        border-radius: 16px;
+        box-shadow: var(--shadow);
+        overflow: hidden;
+      }
+      .vocab-table th {
+        background: var(--ink);
+        color: var(--accent2);
+        font-size: clamp(0.85rem, 1.5vw, 1rem);
+        font-weight: 800;
+        letter-spacing: 0.06em;
+        padding: 0.8em 1em;
+        text-align: left;
+        white-space: nowrap;
+      }
+      .vocab-table td {
+        padding: 0.7em 1em;
+        font-size: clamp(0.9rem, 1.6vw, 1.05rem);
+        border-top: 1px solid #eae5db;
+        vertical-align: top;
+        word-break: break-word;
+      }
+      .vocab-table tr:nth-child(even) td {
+        background: #fdf9f3;
+      }
+      .vocab-table td:last-child {
+        color: var(--muted);
+        font-weight: 600;
+      }
+
+      @media (max-width: 600px) {
+        .vocab-table {
+          display: block;
+          overflow-x: auto;
+          -webkit-overflow-scrolling: touch;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container" data-weekday="fri">
+      <h1>Protocol 04/09/2026</h1>
+      <p class="date-sub">English Explorer | Breakthrough</p>
+
+      <div class="intro">
+        Please study the following structures and sentences well. Words and expressions must be fully understood and memorised. The last section shows today's new vocabulary as well as some repetitive words. Please carefully repeat these as well.
+        <span class="zh">请将这些句子抄到练习本的词汇表下方。所有单词和表达方式都必须完全理解和记忆。</span>
+      </div>
+
+      <h2>1. Story — The Storm and the Puppy</h2>
+      <div class="story-section">
+        <h3>Setting the Scene</h3>
+        <p>
+          An old oak tree stood at the end of a quiet neighbourhood. A neighbour noticed that a branch had fallen during last night's storm.
+        </p>
+        <h3>Lisa Goes Outside</h3>
+        <p>
+          She noticed something hiding under the fallen wood — a poor puppy. Lisa picked it up and brought it inside her house.
+        </p>
+        <h3>Calling the Puppy Over</h3>
+        <p>
+          She spoke with a gentle voice to call something over. The puppy wagged his tail timidly and began to approach.
+        </p>
+      </div>
+
+      <h2>Vocabulary — 04/09/2026</h2>
+
+      <h3>Setting &amp; Storm</h3>
+      <table class="vocab-table">
+        <thead>
+          <tr><th>English</th><th>Chinese</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>An old oak tree</td><td>一棵老橡树</td></tr>
+          <tr><td>A neighbour</td><td>一个邻居</td></tr>
+          <tr><td>Neighbourhood</td><td>邻里</td></tr>
+          <tr><td>A branch</td><td>一个树枝</td></tr>
+          <tr><td>During</td><td>期间</td></tr>
+          <tr><td>Storm</td><td>风暴</td></tr>
+          <tr><td>Last night</td><td>昨夜</td></tr>
+          <tr><td>Last night's storm</td><td>昨晚的暴风雨</td></tr>
+        </tbody>
+      </table>
+
+      <h3>Lisa &amp; the Puppy</h3>
+      <table class="vocab-table">
+        <thead>
+          <tr><th>English</th><th>Chinese</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Outside</td><td>外面</td></tr>
+          <tr><td>She noticed</td><td>她注意到</td></tr>
+          <tr><td>Hiding</td><td>躲藏</td></tr>
+          <tr><td>The fallen wood</td><td>倒下的木头</td></tr>
+          <tr><td>A piece of wood</td><td>一块木头</td></tr>
+          <tr><td>The poor puppy</td><td>可怜的小狗</td></tr>
+          <tr><td>With a gentle voice</td><td>用温柔的声音</td></tr>
+          <tr><td>To call something over</td><td>叫过来</td></tr>
+          <tr><td>To approach</td><td>靠近</td></tr>
+          <tr><td>To wag his tail</td><td>摇尾巴</td></tr>
+          <tr><td>Timidly</td><td>胆怯地</td></tr>
+          <tr><td>Lisa picked it up and brought it inside her house</td><td>丽莎捡起它并把它带进了她的房子</td></tr>
+        </tbody>
+      </table>
+
+      <h3>Build Mode — City Builder Vocabulary</h3>
+      <table class="vocab-table">
+        <thead>
+          <tr><th>English</th><th>Chinese</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Level</td><td>等级</td></tr>
+          <tr><td>Build</td><td>建造</td></tr>
+          <tr><td>Free Roam</td><td>自由漫游</td></tr>
+          <tr><td>Vehicles</td><td>车辆</td></tr>
+          <tr><td>Back to City Mode</td><td>返回城市模式</td></tr>
+          <tr><td>Inspect</td><td>检查</td></tr>
+          <tr><td>Town Hall</td><td>市政厅</td></tr>
+          <tr><td>Mayor</td><td>市长</td></tr>
+          <tr><td>Stats</td><td>统计数据</td></tr>
+          <tr><td>Quests</td><td>任务</td></tr>
+          <tr><td>Events</td><td>活动</td></tr>
+          <tr><td>Roads</td><td>道路</td></tr>
+          <tr><td>Buildings</td><td>建筑物</td></tr>
+          <tr><td>Zones</td><td>区域</td></tr>
+          <tr><td>Nature</td><td>自然</td></tr>
+          <tr><td>Repair</td><td>维修</td></tr>
+          <tr><td>Demolish</td><td>拆除</td></tr>
+        </tbody>
+      </table>
+
+    </div>
+  <script src="../../tracker.js"></script>
+  </body>
+</html>
