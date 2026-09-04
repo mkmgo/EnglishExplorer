@@ -1597,7 +1597,10 @@
          .translateBox.filled { border-color: var(--accent); } */
       .translateBox {
           width: min(84vw, 420px);
-          min-height: 24vh;
+          min-height: 12vh;
+        }
+        .clipList {
+          max-height: 22vh;
         }
         .mediaWrap img,
         .mediaWrap video {
@@ -2427,6 +2430,29 @@
                   </svg>
                   <span>Load CSV</span>
                 </button>
+                <button
+                  type="button"
+                  class="miniChip voiceChip downloadCsvBtn"
+                  onclick="clearWords()"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="1.2em"
+                    height="1.2em"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    style="vertical-align: -0.2em"
+                  >
+                    <path d="M3 6h18" />
+                    <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6" />
+                    <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2" />
+                  </svg>
+                  <span>Clear</span>
+                </button>
               </div>
               <input
                 type="file"
@@ -3086,6 +3112,14 @@ Tap a word to hear it — SpotlightPro turns your notes into a live lesson.
         } catch (e) {}
       }
 
+      function clearWords() {
+        clipHistory = [];
+        lastClipKey = "";
+        renderClipList();
+        saveWords();
+        toast("Word list cleared");
+      }
+
       function csvCell(v) {
         v = String(v == null ? "" : v);
         return '"' + v.replace(/"/g, '""') + '"';
@@ -3239,8 +3273,16 @@ Tap a word to hear it — SpotlightPro turns your notes into a live lesson.
           }
           updateClipMoveButtons();
           saveWords();
-          var msg = count ? "Loaded " + count + " word(s)" : "No new words";
-          if (skipped) msg += ", " + skipped + " duplicate(s) skipped";
+          var msg;
+          if (count && skipped) {
+            msg = "Loaded " + count + " word(s), " + skipped + " duplicate(s) skipped";
+          } else if (count) {
+            msg = "Loaded " + count + " word(s)";
+          } else if (skipped) {
+            msg = "All " + skipped + " entries already loaded \u2014 use Clear to start fresh";
+          } else {
+            msg = "No new words found";
+          }
           if (garbled)
             msg += " \u2014 " + garbled + " garbled, re-save CSV as UTF-8";
           toast(msg);
