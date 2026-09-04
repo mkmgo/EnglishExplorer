@@ -2716,13 +2716,13 @@ Tap a word to hear it — SpotlightPro turns your notes into a live lesson.
 
       var inputCallback = null;
 
-      function openInputModal(title, cb) {
+      function openInputModal(title, cb, initial) {
         inputCallback = cb || null;
         var t = document.getElementById("inputTitle");
         if (t) t.textContent = title;
         var f = document.getElementById("inputField");
         if (f) {
-          f.value = "";
+          f.value = initial || "";
           f.focus();
         }
         document.getElementById("inputModal").classList.add("show");
@@ -2940,6 +2940,7 @@ Tap a word to hear it — SpotlightPro turns your notes into a live lesson.
         }
         equalizeBoxes();
         if (typeof fetch !== "function") {
+          addClip(text, "");
           if (zhBox) zhBox.textContent = "Translation failed";
           equalizeBoxes();
           return;
@@ -2953,6 +2954,7 @@ Tap a word to hear it — SpotlightPro turns your notes into a live lesson.
             equalizeBoxes();
           })
           .catch(function () {
+            addClip(text, "");
             if (seq !== translateSeq) return;
             if (zhBox) zhBox.textContent = "Translation failed";
             equalizeBoxes();
@@ -2972,7 +2974,10 @@ Tap a word to hear it — SpotlightPro turns your notes into a live lesson.
             return;
           }
           if (typeof fetch !== "function") {
-            toast("Translation not available");
+            for (var fi = 0; fi < words.length; fi++) {
+              addClip(words[fi], "");
+            }
+            toast("Translation not available \u2014 words added to the list");
             return;
           }
           var seq = ++translateSeq;
@@ -3006,6 +3011,7 @@ Tap a word to hear it — SpotlightPro turns your notes into a live lesson.
                 })
                 .catch(function () {
                   failed++;
+                  addClip(w, "");
                   if (seq === translateSeq && zhBox)
                     zhBox.textContent = "Translation failed";
                 });
