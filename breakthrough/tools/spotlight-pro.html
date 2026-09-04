@@ -11,7 +11,7 @@
     <meta name="theme-color" content="#e43703" />
     <link
       rel="icon"
-      type="image/png"
+      type="image/png"in trans
       href="https://res.cloudinary.com/dqwm4pdbz/image/upload/q_auto/f_auto/v1782645670/dash_oardun.png"
     />
     <link
@@ -866,6 +866,7 @@
         align-items: stretch;
         gap: 0.4em;
         width: 100%;
+        overflow: hidden;
       }
       .clipRow .clip {
         flex: 1 1 auto;
@@ -877,7 +878,8 @@
         gap: 0.25em;
         flex: 0 0 auto;
       }
-      .clipMove {
+      .clipMove,
+      .clipDel {
         width: clamp(30px, 5vw, 44px);
         height: clamp(16px, 2.5vh, 22px);
         border-radius: 8px;
@@ -892,13 +894,18 @@
         padding: 0;
         transition: 0.15s transform;
       }
-      .clipMove:active {
+      .clipMove:active,
+      .clipDel:active {
         transform: scale(0.9);
       }
       .clipMove:disabled {
         opacity: 0.3;
         cursor: default;
         transform: none;
+      }
+      .clipDel {
+        color: var(--bad);
+        border-color: rgba(224, 82, 82, 0.35);
       }
       .downloadCsvBtn {
         display: flex;
@@ -2069,6 +2076,11 @@
         color: var(--accent2);
         border-color: var(--accent2);
       }
+      :root[data-theme="dark"] .clipDel {
+        background: #232a36;
+        color: var(--bad);
+        border-color: var(--bad);
+      }
       :root[data-theme="dark"] .clip time {
         color: var(--accent2);
         opacity: 0.6;
@@ -2585,6 +2597,8 @@ Tap a word to hear it — SpotlightPro turns your notes into a live lesson.
         '<svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="m18 15-6-9-6 9"/></svg>';
       var ICON_MOVE_DOWN =
         '<svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 9 6-9"/></svg>';
+      var ICON_DELETE =
+        '<svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/></svg>';
 
       function show(i) {
         idx = Math.max(0, Math.min(screens.length - 1, i));
@@ -2940,8 +2954,18 @@ Tap a word to hear it — SpotlightPro turns your notes into a live lesson.
           e.stopPropagation();
           moveClipRow(row, 1);
         });
+        var delBtn = document.createElement("button");
+        delBtn.className = "clipDel";
+        delBtn.type = "button";
+        delBtn.innerHTML = ICON_DELETE;
+        delBtn.setAttribute("aria-label", "Delete entry");
+        delBtn.addEventListener("click", function (e) {
+          e.stopPropagation();
+          deleteClipRow(row);
+        });
         moves.appendChild(upBtn);
         moves.appendChild(downBtn);
+        moves.appendChild(delBtn);
         row.appendChild(moves);
 
         clipList.appendChild(row);
@@ -2981,8 +3005,46 @@ Tap a word to hear it — SpotlightPro turns your notes into a live lesson.
         var tmp = clipHistory[idx];
         clipHistory[idx] = clipHistory[newIdx];
         clipHistory[newIdx] = tmp;
-        renderClipList();
+        if (dir < 0) {
+          clipList.insertBefore(row, rows[newIdx]);
+        } else {
+          clipList.insertBefore(row, rows[newIdx].nextSibling);
+        }
+        updateClipMoveButtons();
+        row.style.transition = "none";
+        row.style.transform = dir < 0 ? "translateY(-4px)" : "translateY(4px)";
+        row.offsetHeight;
+        row.style.transition = "0.2s transform ease-out";
+        row.style.transform = "";
         toast(dir < 0 ? "Moved up" : "Moved down");
+      }
+
+      function deleteClipRow(row) {
+        var rows = clipList.children;
+        var idx = -1;
+        for (var i = 0; i < rows.length; i++) {
+          if (rows[i] === row) {
+            idx = i;
+            break;
+          }
+        }
+        if (idx < 0) return;
+        clipHistory.splice(idx, 1);
+        row.style.transition = "0.2s opacity ease-out, 0.2s transform ease-out";
+        row.style.opacity = "0";
+        row.style.transform = "translateX(20px)";
+        row.style.maxHeight = row.offsetHeight + "px";
+        row.offsetHeight;
+        row.style.maxHeight = "0";
+        row.style.paddingTop = "0";
+        row.style.paddingBottom = "0";
+        row.style.marginTop = "0";
+        row.style.marginBottom = "-0.5em";
+        setTimeout(function () {
+          if (row.parentNode) row.parentNode.removeChild(row);
+          updateClipMoveButtons();
+        }, 210);
+        toast("Deleted");
       }
 
       function addClip(en, zh) {
