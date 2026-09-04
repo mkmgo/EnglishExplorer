@@ -2467,6 +2467,10 @@
                 <svg xmlns="http://www.w3.org/2000/svg" width="1.1em" height="1.1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-0.2em"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" x2="12" y1="3" y2="15"/></svg>
                 Load
               </button>
+              <button class="miniChip mdChip mdAccent" id="mdProtocolBtn" onclick="generateProtocol()">
+                <svg xmlns="http://www.w3.org/2000/svg" width="1.1em" height="1.1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-0.2em"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/><path d="M10 9H8"/><path d="M16 13H8"/><path d="M16 17H8"/></svg>
+                Protocol
+              </button>
               <span class="mdHint" id="mdHint">Tap a word to hear &amp; select it · Translate sends it to the translator</span>
             </div>
             <div class="mdPane mdSource">
@@ -4396,17 +4400,7 @@ Tap a word to hear it — SpotlightPro turns your notes into a live lesson.
         return aud;
       }
 
-      function mdRender() {
-        var input = document.getElementById("mdSourceInput");
-        var out = document.getElementById("mdOutput");
-        if (!input || !out) return;
-        if (mdSel) { mdSel.classList.remove("sel"); mdSel = null; }
-        mdSelText = null;
-        var src = input.value;
-        try {
-          localStorage.setItem("spotlight-md-src", src);
-        } catch (e) {}
-        out.innerHTML = "";
+      function parseMd(src) {
         var lines = String(src).split(/\r?\n/);
         var blocks = [];
         var para = [];
@@ -4520,6 +4514,30 @@ Tap a word to hear it — SpotlightPro turns your notes into a live lesson.
         flushList();
         flushTable();
         if (pre) blocks.push({ t: "pre", text: preBuf.join("\n") });
+        return blocks;
+      }
+
+      function mdStripInline(raw) {
+        var s = String(raw);
+        s = s.replace(/`([^`]*)`/g, "$1");
+        s = s.replace(/\[([^\]]*)\]\([^)]*\)/g, "$1");
+        s = s.replace(/(\*\*|__)(.*?)\1/g, "$2");
+        s = s.replace(/(\*|_)(.*?)\1/g, "$2");
+        return s.trim();
+      }
+
+      function mdRender() {
+        var input = document.getElementById("mdSourceInput");
+        var out = document.getElementById("mdOutput");
+        if (!input || !out) return;
+        if (mdSel) { mdSel.classList.remove("sel"); mdSel = null; }
+        mdSelText = null;
+        var src = input.value;
+        try {
+          localStorage.setItem("spotlight-md-src", src);
+        } catch (e) {}
+        out.innerHTML = "";
+        var blocks = parseMd(src);
 
         for (var b = 0; b < blocks.length; b++) {
           var blk = blocks[b];
@@ -4569,6 +4587,158 @@ Tap a word to hear it — SpotlightPro turns your notes into a live lesson.
           out.appendChild(el);
         }
         updateMdHint();
+      }
+
+      function generateProtocol() {
+        if (!clipHistory.length) {
+          toast("Add words in the translator first");
+          return;
+        }
+        var input = document.getElementById("mdSourceInput");
+        var src = input ? input.value : "";
+        var blocks = parseMd(src);
+        var firstH1 = "";
+        for (var fi = 0; fi < blocks.length; fi++) {
+          if (blocks[fi].t === "h" && blocks[fi].level === 1) {
+            firstH1 = mdStripInline(blocks[fi].text);
+            break;
+          }
+        }
+        openInputModal(
+          "Story title for today's protocol:" + (firstH1 ? "\n(detected: " + firstH1 + ")" : ""),
+          function (title) {
+            if (!title && firstH1) title = firstH1;
+            if (!title) { toast("Title required"); return; }
+            buildProtocolHtml(title, blocks);
+          }
+        );
+        var field = document.getElementById("inputField");
+        if (field && firstH1) {
+          field.value = firstH1;
+          field.select();
+        }
+      }
+
+      function buildProtocolHtml(title, blocks) {
+        var now = new Date();
+        var dd = String(now.getDate()).padStart(2, "0");
+        var mm = String(now.getMonth() + 1).padStart(2, "0");
+        var yyyy = now.getFullYear();
+        var dateStr = dd + "/" + mm + "/" + yyyy;
+        var weekday = ["sun","mon","tue","wed","thu","fri","sat"][now.getDay()];
+        var sections = [];
+        var currentSection = null;
+        for (var i = 0; i < blocks.length; i++) {
+          var b = blocks[i];
+          if (b.t === "h" && b.level === 2) {
+            if (currentSection) sections.push(currentSection);
+            currentSection = { title: mdStripInline(b.text), items: [] };
+          } else if (currentSection) {
+            if (b.t === "p") currentSection.items.push({ t: "p", text: b.text });
+            else if (b.t === "list") currentSection.items.push({ t: b.ordered ? "ol" : "ul", items: b.items });
+            else if (b.t === "bq") currentSection.items.push({ t: "bq", text: b.text });
+          }
+        }
+        if (currentSection) sections.push(currentSection);
+        var sectionHtml = "";
+        for (var s = 0; s < sections.length; s++) {
+          var sec = sections[s];
+          sectionHtml += '      <h2>' + mdEscapeHtml(sec.title) + '</h2>\n';
+          sectionHtml += '      <div class="story-section">\n';
+          for (var j = 0; j < sec.items.length; j++) {
+            var item = sec.items[j];
+            if (item.t === "p") {
+              sectionHtml += '        <p>' + mdStripInline(item.text) + '</p>\n';
+            } else if (item.t === "ol" || item.t === "ul") {
+              var tag = item.t;
+              sectionHtml += '        <' + tag + '>\n';
+              for (var k = 0; k < item.items.length; k++) {
+                sectionHtml += '          <li>' + mdStripInline(item.items[k]) + '</li>\n';
+              }
+              sectionHtml += '        </' + tag + '>\n';
+            } else if (item.t === "bq") {
+              sectionHtml += '        <p class="example">' + mdStripInline(item.text) + '</p>\n';
+            }
+          }
+          sectionHtml += '      </div>\n';
+        }
+        var vocabRows = "";
+        for (var v = 0; v < clipHistory.length; v++) {
+          var w = clipHistory[v];
+          vocabRows += '          <tr><td>' + mdEscapeHtml(w.en) + '</td><td>' + mdEscapeHtml(w.zh) + '</td></tr>\n';
+        }
+        var protocolHtml =
+          '<!doctype html>\n' +
+          '<html lang="en">\n' +
+          '  <head>\n' +
+          '    <meta charset="utf-8" />\n' +
+          '    <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no" />\n' +
+          '    <title>Protocol ' + dateStr + '</title>\n' +
+          '    <meta name="description" content="English Explorer — Protocol ' + dateStr + '" />\n' +
+          '    <meta property="og:image" content="https://res.cloudinary.com/dmkhsyfzf/image/upload/q_auto/f_auto/v1781698464/protocol_r392x1.png" />\n' +
+          '    <link rel="icon" type="image/png" href="https://res.cloudinary.com/dmkhsyfzf/image/upload/q_auto/f_auto/v1781698464/protocol_r392x1.png" />\n' +
+          '    <link rel="apple-touch-icon" href="https://res.cloudinary.com/dmkhsyfzf/image/upload/q_auto/f_auto/v1781698464/protocol_r392x1.png" />\n' +
+          '    <style>\n' +
+          '      :root { --bg: #FAF7F2; --ink: #14213d; --muted: #60708d; --accent: #e43703; --accent2: #ffb866; --panel: #fcfcfc; --shadow: 0 18px 50px rgba(20,33,61,0.14); }\n' +
+          '      .container[data-weekday="mon"]{--accent:#2563eb} .container[data-weekday="tue"]{--accent:#e43703} .container[data-weekday="wed"]{--accent:#0d9488} .container[data-weekday="thu"]{--accent:#7c3aed} .container[data-weekday="fri"]{--accent:#dc2626} .container[data-weekday="sat"]{--accent:#d97706} .container[data-weekday="sun"]{--accent:#475569}\n' +
+          '      *{box-sizing:border-box} html,body{margin:0;width:100%;min-height:100%;background:var(--bg);font-family:Arial,Helvetica,sans-serif;color:var(--ink);touch-action:manipulation;line-height:1.6}\n' +
+          '      .container{max-width:900px;margin:0 auto;padding:clamp(16px,4vw,40px) clamp(12px,3vw,24px)}\n' +
+          '      h1{font-size:clamp(1.8rem,5vw,3rem);margin:0 0 .2em;font-weight:900;letter-spacing:-.03em;color:var(--accent)}\n' +
+          '      .date-sub{font-size:clamp(.9rem,1.6vw,1.2rem);color:var(--muted);font-weight:700;letter-spacing:.1em;margin:0 0 2em}\n' +
+          '      .intro{background:var(--panel);border-radius:24px;padding:clamp(1rem,2.5vw,1.8em);box-shadow:var(--shadow);margin-bottom:2em;font-size:clamp(1rem,1.8vw,1.2rem);line-height:1.7}\n' +
+          '      .zh{display:block;margin-top:.6em;color:var(--muted);font-size:.92em}\n' +
+          '      h2{font-size:clamp(1.3rem,3.2vw,2rem);margin:2em 0 .6em;font-weight:900;color:var(--ink);letter-spacing:-.02em}\n' +
+          '      h3{font-size:clamp(1.1rem,2.2vw,1.5rem);margin:1.6em 0 .4em;font-weight:800;color:var(--accent)}\n' +
+          '      p{font-size:clamp(1rem,1.8vw,1.15rem);margin:.4em 0}\n' +
+          '      .story-section{background:var(--panel);border-radius:24px;padding:clamp(1rem,2.5vw,1.6em);box-shadow:var(--shadow);margin-bottom:1.4em}\n' +
+          '      .story-section h3{margin-top:0} .story-section p{margin:.3em 0}\n' +
+          '      .example{background:#fdf3e7;border-left:5px solid var(--accent);border-radius:8px;padding:.7em 1em;margin:.8em 0 !important;font-style:italic}\n' +
+          '      .vocab-table{width:100%;border-collapse:separate;border-spacing:0;margin:1.6em 0 2em;background:var(--panel);border-radius:16px;box-shadow:var(--shadow);overflow:hidden}\n' +
+          '      .vocab-table th{background:var(--ink);color:var(--accent2);font-size:clamp(.85rem,1.5vw,1rem);font-weight:800;letter-spacing:.06em;padding:.8em 1em;text-align:left;white-space:nowrap}\n' +
+          '      .vocab-table td{padding:.7em 1em;font-size:clamp(.9rem,1.6vw,1.05rem);border-top:1px solid #eae5db;vertical-align:top;word-break:break-word}\n' +
+          '      .vocab-table tr:nth-child(even) td{background:#fdf9f3}\n' +
+          '      .vocab-table td:last-child{color:var(--muted);font-weight:600}\n' +
+          '    </style>\n' +
+          '  </head>\n' +
+          '  <body>\n' +
+          '    <div class="container" data-weekday="' + weekday + '">\n' +
+          '      <h1>Protocol ' + dateStr + '</h1>\n' +
+          '      <p class="date-sub">English Explorer | Breakthrough</p>\n' +
+          '      <div class="intro">\n' +
+          '        Please study the following structures and sentences well. Words and expressions must be fully understood and memorised. The last section shows today\'s new vocabulary. Please carefully repeat these as well.\n' +
+          '        <span class="zh">\u8BF7\u5C06\u8FD9\u4E9B\u53E5\u5B50\u6284\u5230\u7EC3\u4E60\u672C\u7684\u8BCD\u6C47\u8868\u4E0B\u65B9\u3002\u6240\u6709\u5355\u8BCD\u548C\u8868\u8FBE\u65B9\u5F0F\u90FD\u5FC5\u987B\u5B8C\u5168\u7406\u89E3\u548C\u8BB0\u5FC6\u3002</span>\n' +
+          '      </div>\n' +
+          '      <h2>' + mdEscapeHtml(title) + '</h2>\n' +
+          sectionHtml +
+          '      <h2>Vocabulary \u2014 ' + dateStr + '</h2>\n' +
+          '      <table class="vocab-table">\n' +
+          '        <thead><tr><th>English</th><th>Chinese</th></tr></thead>\n' +
+          '        <tbody>\n' +
+          vocabRows +
+          '        </tbody>\n' +
+          '      </table>\n' +
+          '    </div>\n' +
+          '  </body>\n' +
+          '</html>';
+        var blob = new Blob([protocolHtml], { type: "text/html;charset=utf-8" });
+        var url = URL.createObjectURL(blob);
+        var a = document.createElement("a");
+        a.href = url;
+        var dt = yyyy + "-" + mm + "-" + dd;
+        a.download = dt + ".html";
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        setTimeout(function () { URL.revokeObjectURL(url); }, 1000);
+        toast("Protocol " + dateStr + " downloaded");
+      }
+
+      function mdEscapeHtml(s) {
+        return String(s)
+          .replace(/&/g, "&amp;")
+          .replace(/</g, "&lt;")
+          .replace(/>/g, "&gt;")
+          .replace(/"/g, "&quot;");
       }
 
       function updateMdHint() {
