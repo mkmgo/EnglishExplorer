@@ -1076,48 +1076,58 @@
         object-fit: contain;
       }
 
-      .verb-token {
-        width: 44px;
-        height: 44px;
+      .joker-token {
+        width: 46px;
+        height: 56px;
         border-radius: 8px;
         background: linear-gradient(135deg, #fff7ed, #fb923c, #fff7ed);
         border: 2px dashed var(--border-strong);
         color: #c2410c;
         display: flex;
+        flex-direction: column;
         align-items: center;
         justify-content: center;
         cursor: grab;
         overflow: hidden;
         box-sizing: border-box;
-        padding: 0;
+        padding: 2px;
         position: relative;
       }
 
-      .verb-token img {
-        width: 100%;
-        height: 100%;
+      .joker-token img {
+        width: 34px;
+        height: 34px;
         object-fit: contain;
+        flex-shrink: 0;
       }
 
-      .verb-item {
-        width: 96px;
-        height: 84px;
+      .joker-token .joker-label {
+        font-size: 0.5rem;
+        font-weight: bold;
+        line-height: 1;
+        color: #c2410c;
+        white-space: nowrap;
+      }
+
+      .activity-item {
+        width: 72px;
+        height: 60px;
         flex-direction: column;
         justify-content: center;
         align-items: center;
         text-align: center;
         font-size: 0.75rem;
-        padding: 4px;
-        gap: 3px;
+        padding: 3px;
+        gap: 2px;
         background-color: var(--item-bg);
         color: var(--text);
         border: 1px solid var(--item-border);
         border-radius: 8px;
       }
 
-      .verb-item img {
-        width: 40px;
-        height: 40px;
+      .activity-item img {
+        width: 44px;
+        height: 44px;
         object-fit: cover;
         border-radius: 6px;
         background-color: var(--img-bg);
@@ -1125,34 +1135,89 @@
         flex-shrink: 0;
       }
 
-      /* Verb Lab drop zone: definite tracks so it never collapses to zero
-         width and its six slots stay visible and droppable. */
-      .verb-lab-grid {
-        grid-template-columns: repeat(3, 96px);
-        grid-template-rows: repeat(2, 84px);
-      }
-
-      .verb-item .verb-name {
+      .text-brick {
+        width: 68px;
+        height: 20px;
+        flex: 0 0 auto;
+        min-width: 0;
+        max-width: 100%;
+        padding: 0 4px;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        border-radius: 6px;
+        background: #fef3c7;
+        color: #92400e;
+        border: 1px solid #f59e0b;
+        font-size: 0.66rem;
         font-weight: bold;
-        font-size: 0.7rem;
         line-height: 1;
-        color: var(--text);
+        white-space: nowrap;
+        box-sizing: border-box;
+      }
+      .dark .text-brick,
+      html.dark .text-brick {
+        background: #451a03;
+        color: #fcd34d;
+        border-color: #d97706;
       }
 
-      .verb-result {
+      /* Activity Lab drop zone: definite tracks so it never collapses to zero
+         width and its ten slots stay visible and droppable. */
+      .spot-card.activity-lab:not(.lab-collapsed) > .drop-zone {
+        grid-template-columns: repeat(5, 84px);
+        grid-template-rows: repeat(2, 96px);
+      }
+
+      /* Each activity slot stacks an image zone over a word strip. */
+      .activity-slot {
+        flex-direction: column;
+        gap: 2px;
+        padding: 4px;
+      }
+
+      .act-img-zone,
+      .act-word-zone {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+        min-width: 0;
+      }
+
+      .act-img-zone {
+        flex: 1;
+      }
+
+      .act-word-zone {
+        height: 24px;
+        border-top: 2px dashed var(--border-strong);
+        padding-top: 2px;
+        box-sizing: border-box;
+      }
+
+      .act-word-zone .text-brick {
+        font-size: 0.6rem;
+      }
+
+      .activity-result {
         display: flex;
         flex-direction: column;
         align-items: center;
         justify-content: center;
-        gap: 4px;
-        padding: 6px;
-        width: 100%;
-        height: 100%;
+        gap: 2px;
+        padding: 3px;
+        width: 72px;
+        height: 60px;
+        background-color: var(--item-bg);
+        border: 1px solid var(--item-border);
+        border-radius: 8px;
+        box-sizing: border-box;
       }
 
-      .verb-result img {
-        width: 40px;
-        height: 40px;
+      .activity-result img {
+        width: 44px;
+        height: 44px;
         object-fit: cover;
         border-radius: 6px;
         background-color: var(--img-bg);
@@ -1160,28 +1225,39 @@
         flex-shrink: 0;
       }
 
-      .verb-result .verb-name {
+      .activity-result .activity-name {
         font-weight: bold;
         font-size: 0.8rem;
         line-height: 1;
         color: var(--text);
-      }
-
-      .verb-result .verb-label {
-        font-size: 0.7rem;
-        color: var(--muted);
-        font-style: italic;
+        white-space: nowrap;
       }
 
       @media (max-width: 640px) {
-        .verb-item,
-        .spot-card.verb-lab:not(.lab-collapsed) .verb-item {
-          width: 84px;
-          height: 76px;
+        .activity-item,
+        .spot-card.activity-lab:not(.lab-collapsed) .activity-item {
+          width: 52px;
+          height: 48px;
         }
-        .verb-item img {
-          width: 36px;
-          height: 36px;
+        .activity-item img,
+        .activity-result img {
+          width: 34px;
+          height: 34px;
+        }
+        .activity-result .activity-name {
+          font-size: 0.66rem;
+        }
+        .activity-result {
+          gap: 2px;
+          padding: 2px;
+          width: 52px;
+          height: 54px;
+        }
+        .text-brick {
+          width: 48px;
+          height: 18px;
+          font-size: 0.55rem;
+          padding: 0 2px;
         }
       }
 
@@ -1554,14 +1630,21 @@
           justify-self: center;
           min-width: 0;
         }
-        /* Verb Lab has six verb slots — keep a tidy 3x2 grid on mobile. */
-        .spot-card.verb-lab:not(.lab-collapsed) > .drop-zone {
-          grid-template-columns: repeat(3, 84px);
-          grid-template-rows: repeat(2, 68px);
+        /* Activity Lab has ten activity slots — keep a tidy 5x2 grid on mobile. */
+        .spot-card.activity-lab:not(.lab-collapsed) > .drop-zone {
+          grid-template-columns: repeat(5, 60px);
+          grid-template-rows: repeat(2, 84px);
         }
-        .spot-card.verb-lab:not(.lab-collapsed) > .drop-zone > .slot {
-          min-width: 84px;
-          min-height: 68px;
+        .spot-card.activity-lab:not(.lab-collapsed) > .drop-zone > .slot {
+          min-width: 60px;
+          min-height: 84px;
+        }
+        .spot-card.activity-lab:not(.lab-collapsed) .act-word-zone {
+          height: 20px;
+        }
+        .spot-card.activity-lab:not(.lab-collapsed) > .drop-zone > .slot:nth-child(3) {
+          grid-column: auto;
+          justify-self: stretch;
         }
         .palette {
           padding: 12px;
@@ -1755,15 +1838,18 @@
         <div class="draggable-item mod-token" id="mod-token-3">
           <img src="https://res.cloudinary.com/dqwm4pdbz/image/upload/q_auto/f_auto/e_bgremoval/c_crop,w_341,h_341,x_14,y_661/v1787663276/lab-token_eoed14.jpg" alt="Mod Token" />
         </div>
-        <!-- Verb Tokens -->
-        <div class="draggable-item verb-token" id="verb-token-1">
-          <img src="https://res.cloudinary.com/dqwm4pdbz/image/upload/q_auto/f_auto/e_bgremoval/c_crop,w_341,h_341,x_14,y_661/v1787663276/lab-token_eoed14.jpg" alt="Verb Token" />
+        <!-- Joker Tokens (kept visible for a future mechanic) -->
+        <div class="draggable-item joker-token" id="joker-token-1" title="Joker Token">
+          <img src="https://res.cloudinary.com/dqwm4pdbz/image/upload/q_auto/f_auto/e_bgremoval/c_crop,w_341,h_341,x_14,y_661/v1787663276/lab-token_eoed14.jpg" alt="Joker Token" />
+          <span class="joker-label">Joker</span>
         </div>
-        <div class="draggable-item verb-token" id="verb-token-2">
-          <img src="https://res.cloudinary.com/dqwm4pdbz/image/upload/q_auto/f_auto/e_bgremoval/c_crop,w_341,h_341,x_14,y_661/v1787663276/lab-token_eoed14.jpg" alt="Verb Token" />
+        <div class="draggable-item joker-token" id="joker-token-2" title="Joker Token">
+          <img src="https://res.cloudinary.com/dqwm4pdbz/image/upload/q_auto/f_auto/e_bgremoval/c_crop,w_341,h_341,x_14,y_661/v1787663276/lab-token_eoed14.jpg" alt="Joker Token" />
+          <span class="joker-label">Joker</span>
         </div>
-        <div class="draggable-item verb-token" id="verb-token-3">
-          <img src="https://res.cloudinary.com/dqwm4pdbz/image/upload/q_auto/f_auto/e_bgremoval/c_crop,w_341,h_341,x_14,y_661/v1787663276/lab-token_eoed14.jpg" alt="Verb Token" />
+        <div class="draggable-item joker-token" id="joker-token-3" title="Joker Token">
+          <img src="https://res.cloudinary.com/dqwm4pdbz/image/upload/q_auto/f_auto/e_bgremoval/c_crop,w_341,h_341,x_14,y_661/v1787663276/lab-token_eoed14.jpg" alt="Joker Token" />
+          <span class="joker-label">Joker</span>
         </div>
         <!-- Avatars -->
         <div class="draggable-item animal" id="onza-avatar" data-type="avatar">
@@ -1848,17 +1934,20 @@
           </div>
         </div>
         <div class="grid-container" style="grid-template-columns: 1fr;">
-          <div class="spot-card colour-lab verb-lab lab-collapsed">
-            <button type="button" class="lab-toggle" aria-label="Collapse Verb Lab" title="Collapse Verb Lab">+</button>
-            <div class="token-slot" id="token-slot-verb"></div>
-            <div class="spot-title">Verb Lab</div>
-            <div class="drop-zone verb-lab-grid" id="spot-verb">
-              <div class="slot verb-empty"></div>
-              <div class="slot verb-empty"></div>
-              <div class="slot verb-empty"></div>
-              <div class="slot verb-empty"></div>
-              <div class="slot verb-empty"></div>
-              <div class="slot verb-empty"></div>
+          <div class="spot-card colour-lab activity-lab lab-collapsed">
+            <button type="button" class="lab-toggle" aria-label="Collapse Activity Lab" title="Collapse Activity Lab">+</button>
+            <div class="spot-title">Activity Lab</div>
+            <div class="drop-zone activity-lab-grid" id="spot-activity">
+              <div class="slot activity-slot"><div class="act-img-zone"></div><div class="act-word-zone"></div></div>
+              <div class="slot activity-slot"><div class="act-img-zone"></div><div class="act-word-zone"></div></div>
+              <div class="slot activity-slot"><div class="act-img-zone"></div><div class="act-word-zone"></div></div>
+              <div class="slot activity-slot"><div class="act-img-zone"></div><div class="act-word-zone"></div></div>
+              <div class="slot activity-slot"><div class="act-img-zone"></div><div class="act-word-zone"></div></div>
+              <div class="slot activity-slot"><div class="act-img-zone"></div><div class="act-word-zone"></div></div>
+              <div class="slot activity-slot"><div class="act-img-zone"></div><div class="act-word-zone"></div></div>
+              <div class="slot activity-slot"><div class="act-img-zone"></div><div class="act-word-zone"></div></div>
+              <div class="slot activity-slot"><div class="act-img-zone"></div><div class="act-word-zone"></div></div>
+              <div class="slot activity-slot"><div class="act-img-zone"></div><div class="act-word-zone"></div></div>
             </div>
           </div>
         </div>
@@ -1884,47 +1973,49 @@
         <div class="draggable-item phrase" id="phrase-do-you-like"><i data-lucide="circle-question-mark" class="phrase-tag"></i>Do you like ... ?</div>
         <div class="draggable-item phrase" id="phrase-where-is"><i data-lucide="circle-question-mark" class="phrase-tag"></i>Where is ... ?</div>
         <div class="draggable-item phrase" id="phrase-show-me"><i data-lucide="circle-alert" class="phrase-tag"></i>Show me ...</div>
-        <!-- Verb items -->
-        <div class="draggable-item verb-item" id="verb-wake-up">
+        <!-- Activity items (image only, word added in the Activity Lab) -->
+        <div class="draggable-item activity-item" id="act-wake-up" data-word="wake-up">
           <img src="https://res.cloudinary.com/dmkhsyfzf/image/upload/c_crop,w_268,h_298,x_16,y_26/v1788284552/verbs_qnipqh.jpg" alt="Wake up" />
-          <span class="verb-name">Wake up</span>
         </div>
-        <div class="draggable-item verb-item" id="verb-get-up">
+        <div class="draggable-item activity-item" id="act-get-up" data-word="get-up">
           <img src="https://res.cloudinary.com/dmkhsyfzf/image/upload/c_crop,w_262,h_301,x_298,y_24/v1788284552/verbs_qnipqh.jpg" alt="Get up" />
-          <span class="verb-name">Get up</span>
         </div>
-        <div class="draggable-item verb-item" id="verb-wash">
+        <div class="draggable-item activity-item" id="act-wash" data-word="wash">
           <img src="https://res.cloudinary.com/dmkhsyfzf/image/upload/c_crop,w_262,h_296,x_574,y_26/v1788284552/verbs_qnipqh.jpg" alt="Wash" />
-          <span class="verb-name">Wash</span>
         </div>
-        <div class="draggable-item verb-item" id="verb-brush">
+        <div class="draggable-item activity-item" id="act-brush" data-word="brush">
           <img src="https://res.cloudinary.com/dmkhsyfzf/image/upload/c_crop,w_261,h_294,x_852,y_25/v1788284552/verbs_qnipqh.jpg" alt="Brush" />
-          <span class="verb-name">Brush</span>
         </div>
-        <div class="draggable-item verb-item" id="verb-eat">
+        <div class="draggable-item activity-item" id="act-eat" data-word="eat">
           <img src="https://res.cloudinary.com/dmkhsyfzf/image/upload/c_crop,w_266,h_304,x_1126,y_20/v1788284552/verbs_qnipqh.jpg" alt="Eat" />
-          <span class="verb-name">Eat</span>
         </div>
-        <div class="draggable-item verb-item" id="verb-drink">
+        <div class="draggable-item activity-item" id="act-drink" data-word="drink">
           <img src="https://res.cloudinary.com/dmkhsyfzf/image/upload/c_crop,w_266,h_352,x_16,y_395/v1788284552/verbs_qnipqh.jpg" alt="Drink" />
-          <span class="verb-name">Drink</span>
         </div>
-        <div class="draggable-item verb-item" id="verb-play">
+        <div class="draggable-item activity-item" id="act-play" data-word="play">
           <img src="https://res.cloudinary.com/dmkhsyfzf/image/upload/c_crop,w_269,h_351,x_292,y_396/v1788284552/verbs_qnipqh.jpg" alt="Play" />
-          <span class="verb-name">Play</span>
         </div>
-        <div class="draggable-item verb-item" id="verb-go">
+        <div class="draggable-item activity-item" id="act-go" data-word="go">
           <img src="https://res.cloudinary.com/dmkhsyfzf/image/upload/c_crop,w_266,h_321,x_572,y_397/v1788284552/verbs_qnipqh.jpg" alt="Go" />
-          <span class="verb-name">Go</span>
         </div>
-        <div class="draggable-item verb-item" id="verb-sleep">
+        <div class="draggable-item activity-item" id="act-sleep" data-word="sleep">
           <img src="https://res.cloudinary.com/dmkhsyfzf/image/upload/c_crop,w_265,h_351,x_851,y_396/v1788284552/verbs_qnipqh.jpg" alt="Sleep" />
-          <span class="verb-name">Sleep</span>
         </div>
-        <div class="draggable-item verb-item" id="verb-read">
+        <div class="draggable-item activity-item" id="act-read" data-word="read">
           <img src="https://res.cloudinary.com/dmkhsyfzf/image/upload/c_crop,w_270,h_352,x_1126,y_396/v1788284552/verbs_qnipqh.jpg" alt="Read" />
-          <span class="verb-name">Read</span>
         </div>
+        <div class="inv-separator"></div>
+        <!-- Activity word bricks (matched to the image in the Activity Lab) -->
+        <div class="draggable-item text-brick" id="txt-wake-up" data-word="wake-up">Wake up</div>
+        <div class="draggable-item text-brick" id="txt-get-up" data-word="get-up">Get up</div>
+        <div class="draggable-item text-brick" id="txt-wash" data-word="wash">Wash</div>
+        <div class="draggable-item text-brick" id="txt-brush" data-word="brush">Brush</div>
+        <div class="draggable-item text-brick" id="txt-eat" data-word="eat">Eat</div>
+        <div class="draggable-item text-brick" id="txt-drink" data-word="drink">Drink</div>
+        <div class="draggable-item text-brick" id="txt-play" data-word="play">Play</div>
+        <div class="draggable-item text-brick" id="txt-go" data-word="go">Go</div>
+        <div class="draggable-item text-brick" id="txt-sleep" data-word="sleep">Sleep</div>
+        <div class="draggable-item text-brick" id="txt-read" data-word="read">Read</div>
       </div>
       <div class="box-area" id="boxArea2">
         <div class="box-bar" id="boxBar2">
@@ -2093,16 +2184,26 @@
         "phrase-sit-down": "Phrases",
         "phrase-come-here": "Phrases",
         "phrase-show-me": "Phrases",
-        "verb-wake-up": "Verbs",
-        "verb-get-up": "Verbs",
-        "verb-wash": "Verbs",
-        "verb-brush": "Verbs",
-        "verb-eat": "Verbs",
-        "verb-drink": "Verbs",
-        "verb-play": "Verbs",
-        "verb-go": "Verbs",
-        "verb-sleep": "Verbs",
-        "verb-read": "Verbs",
+        "act-wake-up": "Activities",
+        "act-get-up": "Activities",
+        "act-wash": "Activities",
+        "act-brush": "Activities",
+        "act-eat": "Activities",
+        "act-drink": "Activities",
+        "act-play": "Activities",
+        "act-go": "Activities",
+        "act-sleep": "Activities",
+        "act-read": "Activities",
+        "txt-wake-up": "Activities",
+        "txt-get-up": "Activities",
+        "txt-wash": "Activities",
+        "txt-brush": "Activities",
+        "txt-eat": "Activities",
+        "txt-drink": "Activities",
+        "txt-play": "Activities",
+        "txt-go": "Activities",
+        "txt-sleep": "Activities",
+        "txt-read": "Activities",
       };
       var categoryOrder = [
         "Colours",
@@ -2113,7 +2214,7 @@
         "Special",
         "Questions",
         "Phrases",
-        "Verbs",
+        "Activities",
       ];
       // Extra marker icon shown on each phrase box (next to the box):
       // question phrases get a question mark, the rest an alert circle.
@@ -2139,7 +2240,7 @@
         var bar2 = document.getElementById("boxBar2");
         var trays2 = document.getElementById("boxTrays2");
         if (!bar || !trays) return;
-        var spaceTwoCats = ["Questions", "Phrases", "Verbs"];
+        var spaceTwoCats = ["Questions", "Phrases", "Activities"];
         var totals = {};
         Object.keys(itemCategories).forEach(function (id) {
           var cat = itemCategories[id];
@@ -2497,7 +2598,7 @@
         "spot-3": false,
         "spot-4": false,
         "spot-5": true,
-        "spot-verb": true,
+        "spot-activity": true,
       };
 
       // Progressive unlock state. spot-1 (Colours) is open from the start;
@@ -2510,7 +2611,7 @@
         "spot-3": false,
         "spot-4": false,
         "spot-5": true,
-        "spot-verb": true,
+        "spot-activity": true,
       };
 
       var goalTexts = [
@@ -2590,11 +2691,12 @@
         var modComplete = modCombosDone >= modStages.length;
         if (s5Card) s5Card.classList.toggle("goal-reached", modComplete);
 
-        // Check Verb Lab completion (all verb tokens used / verbs built)
-        var spotVerb = document.getElementById("spot-verb");
-        var verbCard = spotVerb && spotVerb.closest(".spot-card");
-        var verbComplete = verbCombosDone >= Object.keys(verbData).length;
-        if (verbCard) verbCard.classList.toggle("goal-reached", verbComplete);
+        // Check Activity Lab completion (all ten activity bricks built)
+        var spotActivity = document.getElementById("spot-activity");
+        var activityCard = spotActivity && spotActivity.closest(".spot-card");
+        var activityComplete = activityCombosDone >= ACTIVITY_COUNT;
+        if (activityCard)
+          activityCard.classList.toggle("goal-reached", activityComplete);
 
         goals.forEach(function (goal) {
           if (goal.spotId === "spot-4") return;
@@ -2676,17 +2778,14 @@
         { chip1: "\u2212 fast", chip2: "+ big", animalId: "whale", animalSrc: "https://res.cloudinary.com/dqwm4pdbz/image/upload/c_crop,w_189,h_188,x_205,y_564/v1786861646/260811_lesson7ee_01_jzlmlp.png", animalName: "Whale" },
       ];
 
-      // ---- Verb Lab ----
-      // A verb token (orange magnifier) is placed in the Verb Lab token slot,
-      // then any verb image is dropped into one of the empty slots. The token
-      // is spent to build that verb into a labelled verb card.
-      var verbData = {
-        "verb-token-1": { label: "Verb 1" },
-        "verb-token-2": { label: "Verb 2" },
-        "verb-token-3": { label: "Verb 3" },
-      };
-      var verbCombosDone = 0;
-      var verbCombining = false;
+      // ---- Activity Lab ----
+      // Learners match each activity image with its word. An image brick is
+      // dropped into a slot and its word brick underneath it; a correct pair
+      // combines into a labelled Activity Brick. A wrong word snaps back to
+      // the palette until the matching image is found.
+      var ACTIVITY_COUNT = 10;
+      var activityCombosDone = 0;
+      var activityCombining = false;
 
       // ---- Lab collapse ----
       // A toggle button in each lab card's top-right corner (available from
@@ -2696,16 +2795,16 @@
       var labStates = {
         "spot-1": { collapsed: true },
         "spot-5": { collapsed: true },
-        "spot-verb": { collapsed: true },
+        "spot-activity": { collapsed: true },
       };
       var labHome = {
         "spot-1": { parent: null, next: null },
         "spot-5": { parent: null, next: null },
-        "spot-verb": { parent: null, next: null },
+        "spot-activity": { parent: null, next: null },
       };
 
       function recordLabHomes() {
-        ["spot-1", "spot-5", "spot-verb"].forEach(function (spotId) {
+        ["spot-1", "spot-5", "spot-activity"].forEach(function (spotId) {
           var wrapper = document.getElementById(spotId).closest(".grid-container");
           if (!wrapper) return;
           labHome[spotId].parent = wrapper.parentElement;
@@ -2729,7 +2828,7 @@
       }
 
       function restoreLabHomes() {
-        ["spot-1", "spot-5", "spot-verb"].forEach(function (spotId) {
+        ["spot-1", "spot-5", "spot-activity"].forEach(function (spotId) {
           var st = labStates[spotId];
           var zone = document.getElementById(spotId);
           if (st) st.collapsed = true;
@@ -2952,7 +3051,7 @@
         var under = document.elementFromPoint(e.clientX, e.clientY);
         var zone = under
           ? under.closest(
-              ".slot, .token-slot, .item-container, .box-tray-inner, .spot-card.verb-lab.lab-collapsed",
+              ".slot, .token-slot, .item-container, .box-tray-inner, .spot-card.activity-lab.lab-collapsed",
             )
           : null;
         if (zone && zone.classList.contains("slot")) {
@@ -2983,20 +3082,52 @@
         var ageLocked =
           srcZone && srcZone.id === "spot-age" && !reached["spot-age"];
         if (overZone) {
-          if (overZone.classList.contains("spot-card") && overZone.classList.contains("verb-lab")) {
-            // Dropping a verb token or verb item onto the collapsed Verb Lab
-            // opens it and routes the item into the token slot / first slot.
-            if (overZone.classList.contains("lab-collapsed")) toggleLab("spot-verb");
-            var isVerbTok = activeItem.classList.contains("verb-token");
-            if (isVerbTok) {
-              var vTok = overZone.querySelector("#token-slot-verb");
-              if (vTok && !vTok.querySelector(".draggable-item")) vTok.appendChild(activeItem);
-              checkVerbCombine();
-            } else {
-              var vSpot = overZone.querySelector("#spot-verb");
-              var vSlot = vSpot && firstEmptySlot(vSpot);
-              if (vSlot && !vSlot.querySelector(".draggable-item")) vSlot.appendChild(activeItem);
-              checkVerbCombine();
+          if (overZone.classList.contains("spot-card") && overZone.classList.contains("activity-lab")) {
+            // Dropping an activity image or word brick onto the collapsed
+            // Activity Lab opens it and routes the item to the right zone.
+            if (overZone.classList.contains("lab-collapsed")) toggleLab("spot-activity");
+            var actSpot = overZone.querySelector("#spot-activity");
+            var isActItem = activeItem.classList.contains("activity-item");
+            var isTextBrick = activeItem.classList.contains("text-brick");
+            if (actSpot) {
+              var actSlots = actSpot.querySelectorAll(".activity-slot");
+              var actTarget = null;
+              if (isActItem) {
+                for (var ai = 0; ai < actSlots.length; ai++) {
+                  if (!actSlots[ai].querySelector(".activity-item")) {
+                    actTarget = actSlots[ai];
+                    break;
+                  }
+                }
+                if (actTarget) {
+                  var aImgZone = actTarget.querySelector(".act-img-zone");
+                  if (aImgZone) aImgZone.appendChild(activeItem);
+                }
+              } else if (isTextBrick) {
+                for (var ti = 0; ti < actSlots.length; ti++) {
+                  if (!actSlots[ti].querySelector(".text-brick")) {
+                    actTarget = actSlots[ti];
+                    break;
+                  }
+                }
+                if (actTarget) {
+                  var aWordZone = actTarget.querySelector(".act-word-zone");
+                  if (aWordZone) aWordZone.appendChild(activeItem);
+                }
+              }
+              if (isActItem || isTextBrick) checkActivityCombine();
+            }
+          } else if (overZone.classList.contains("activity-slot")) {
+            var isActItem = activeItem.classList.contains("activity-item");
+            var isTextBrick = activeItem.classList.contains("text-brick");
+            var actImgZone = overZone.querySelector(".act-img-zone");
+            var actWordZone = overZone.querySelector(".act-word-zone");
+            if (isActItem && actImgZone && !actImgZone.querySelector(".draggable-item")) {
+              actImgZone.appendChild(activeItem);
+              checkActivityCombine();
+            } else if (isTextBrick && actWordZone && !actWordZone.querySelector(".draggable-item")) {
+              actWordZone.appendChild(activeItem);
+              checkActivityCombine();
             }
           } else if (overZone.classList.contains("slot")) {
             var dropZone = overZone.closest(".drop-zone");
@@ -3025,7 +3156,6 @@
                 }
           checkLabCombine();
           checkModCombine();
-          checkVerbCombine();
           checkMystery();
           checkGoal();
         } else if (canCombine) {
@@ -3037,15 +3167,12 @@
           } else if (overZone.classList.contains("token-slot")) {
             var isLabTok = activeItem.classList.contains("lab-token");
             var isModTok = activeItem.classList.contains("mod-token");
-            var isVerbTok = activeItem.classList.contains("verb-token");
-            if ((isLabTok || isModTok || isVerbTok) && !overZone.querySelector(".draggable-item")) {
+            if ((isLabTok || isModTok) && !overZone.querySelector(".draggable-item")) {
               overZone.appendChild(activeItem);
               if (isModTok && overZone.id === "token-slot-shapes") {
                 updateModChips();
                 checkModCombine();
                 toggleModChips(true);
-              } else if (isVerbTok && overZone.id === "token-slot-verb") {
-                checkVerbCombine();
               } else {
                 checkLabCombine();
               }
@@ -3068,6 +3195,7 @@
                   oldImp.classList.add("taken");
                 }
               }
+              checkActivityCombine();
               checkGoal();
             }
           }
@@ -3300,74 +3428,87 @@
         }, 2000);
       }
 
-      function checkVerbCombine() {
-        if (verbCombining) return;
-        var tokenSlot = document.getElementById("token-slot-verb");
-        if (!tokenSlot) return;
-        var token = tokenSlot.querySelector(".draggable-item");
-        if (!token || !token.classList.contains("verb-token")) return;
-        var data = verbData[token.id];
-        if (!data) return;
-
-        var spot = document.getElementById("spot-verb");
+      function checkActivityCombine() {
+        if (activityCombining) return;
+        var spot = document.getElementById("spot-activity");
         if (!spot) return;
-
-        var verbItem = spot.querySelector(".draggable-item.verb-item");
-        if (!verbItem) return;
-
-        var verbSlot = verbItem.closest(".slot");
-        if (!verbSlot) return;
-
-        performVerbCombine(token, verbItem, verbSlot);
+        spot.querySelectorAll(".activity-slot").forEach(function (slot) {
+          var imgEl = slot.querySelector(".activity-item");
+          var txtEl = slot.querySelector(".text-brick");
+          if (!txtEl) return;
+          if (!imgEl || !imgEl.dataset.word) {
+            snapTextBrickBack(txtEl);
+            return;
+          }
+          if (txtEl.dataset.word !== imgEl.dataset.word) {
+            snapTextBrickBack(txtEl);
+            return;
+          }
+          performActivityCombine(slot, imgEl, txtEl);
+        });
       }
 
-      function performVerbCombine(token, verbItem, verbSlot) {
-        verbCombining = true;
-        var spot = document.getElementById("spot-verb");
+      function snapTextBrickBack(txtEl) {
+        if (
+          txtEl.parentElement &&
+          txtEl.parentElement.classList.contains("act-word-zone")
+        ) {
+          txtEl.parentElement.removeChild(txtEl);
+        }
+        var inv = document.getElementById("phrases-inventory");
+        if (inv && !inv.contains(txtEl)) inv.appendChild(txtEl);
+      }
+
+      function titleCaseWord(word) {
+        return word
+          .split("-")
+          .map(function (w) {
+            return w.charAt(0).toUpperCase() + w.slice(1);
+          })
+          .join(" ");
+      }
+
+      function performActivityCombine(slot, imgEl, txtEl) {
+        activityCombining = true;
+        var spot = document.getElementById("spot-activity");
         var spotCard = spot ? spot.closest(".spot-card") : null;
 
         if (spotCard) spotCard.classList.add("lab-drama");
 
-        var itemImg = verbItem.querySelector("img");
-        var itemName = verbItem.querySelector(".verb-name");
-        var src = itemImg ? itemImg.src : "";
-        var label = itemName ? itemName.textContent : verbItem.id;
+        var word = imgEl.dataset.word;
+        var img = imgEl.querySelector("img");
+        var src = img ? img.src : "";
+        var label = titleCaseWord(word);
 
         setTimeout(function () {
-          token.classList.add("fade-out");
-        }, 800);
-
-        setTimeout(function () {
-          token.remove();
-          stashed.push(verbItem);
-          verbItem.remove();
+          stashed.push(imgEl, txtEl);
+          txtEl.remove();
+          imgEl.remove();
           if (spotCard) spotCard.classList.remove("lab-drama");
 
-          var newSlot = document.createElement("div");
-          newSlot.className = "slot lab-new-slot";
+          var result = document.createElement("div");
+          result.className = "draggable-item activity-result";
+          result.id = "act-" + word + "-built";
+          result.setAttribute("data-activity-combined", "true");
 
-          var newVerb = document.createElement("div");
-          newVerb.className = "draggable-item verb-item";
-          newVerb.id = verbItem.id + "-combined";
-          newVerb.setAttribute("data-verb-combined", "true");
+          var rImg = document.createElement("img");
+          rImg.src = src;
+          rImg.alt = label;
 
-          var img = document.createElement("img");
-          img.src = src;
-          img.alt = label;
+          var rName = document.createElement("span");
+          rName.className = "activity-name";
+          rName.textContent = label;
 
-          var name = document.createElement("span");
-          name.className = "verb-name";
-          name.textContent = label;
+          result.appendChild(rImg);
+          result.appendChild(rName);
+          slot.innerHTML = "";
+          slot.appendChild(result);
 
-          newVerb.appendChild(img);
-          newVerb.appendChild(name);
-          newSlot.appendChild(newVerb);
-          spot.appendChild(newSlot);
-
-          verbCombosDone++;
-          verbCombining = false;
+          activityCombosDone++;
+          activityCombining = false;
+          checkActivityCombine();
           checkGoal();
-        }, 2000);
+        }, 900);
       }
 
       function makeCombined(id, imgSrc) {
@@ -3453,7 +3594,8 @@
         function parkItem(el) {
           if (
             (el.classList.contains("phrase") ||
-              el.classList.contains("verb-item")) &&
+              el.classList.contains("activity-item") ||
+              el.classList.contains("text-brick")) &&
             phraseBin
           )
             phraseBin.appendChild(el);
@@ -3465,7 +3607,8 @@
             if (
               el.classList.contains("combined") ||
               el.hasAttribute("data-mod-combined") ||
-              el.hasAttribute("data-verb-combined")
+              el.hasAttribute("data-verb-combined") ||
+              el.hasAttribute("data-activity-combined")
             ) {
               el.remove();
             } else {
@@ -3475,14 +3618,14 @@
         document
           .querySelectorAll(".item-container .draggable-item")
           .forEach(function (el) {
-            if (el.classList.contains("combined") || el.hasAttribute("data-mod-combined") || el.hasAttribute("data-verb-combined")) {
+            if (el.classList.contains("combined") || el.hasAttribute("data-mod-combined") || el.hasAttribute("data-verb-combined") || el.hasAttribute("data-activity-combined")) {
               el.remove();
             } else {
               inventory.appendChild(el);
             }
           });
         stashed.forEach(function (el) {
-          inventory.appendChild(el);
+          parkItem(el);
         });
         stashed = [];
         document
@@ -3496,8 +3639,8 @@
         modCombining = false;
         modCombosDone = 0;
         modDoneAnimals = {};        toggleModChips(false);
-        verbCombining = false;
-        verbCombosDone = 0;
+        activityCombining = false;
+        activityCombosDone = 0;
         ["brick-green", "brick-purple", "brick-orange"].forEach(function (id) {
           var el = document.getElementById(id);
           if (el) el.remove();
@@ -3535,19 +3678,19 @@
             document.getElementById("inventory").appendChild(el);
           });
         }
-        var tokenSlotVerb = document.getElementById("token-slot-verb");
-        if (tokenSlotVerb) {
-          tokenSlotVerb.querySelectorAll(".draggable-item").forEach(function (el) {
-            document.getElementById("inventory").appendChild(el);
-          });
-        }
-        var spotVerbReset = document.getElementById("spot-verb");
-        if (spotVerbReset) {
-          spotVerbReset.querySelectorAll(".slot").forEach(function (s) { s.remove(); });
-          for (var i = 0; i < 6; i++) {
-            var verbSlot = document.createElement("div");
-            verbSlot.className = "slot verb-empty";
-            spotVerbReset.appendChild(verbSlot);
+        var spotActivityReset = document.getElementById("spot-activity");
+        if (spotActivityReset) {
+          spotActivityReset.querySelectorAll(".slot").forEach(function (s) { s.remove(); });
+          for (var i = 0; i < 10; i++) {
+            var actSlot = document.createElement("div");
+            actSlot.className = "slot activity-slot";
+            var actImgZone = document.createElement("div");
+            actImgZone.className = "act-img-zone";
+            var actWordZone = document.createElement("div");
+            actWordZone.className = "act-word-zone";
+            actSlot.appendChild(actImgZone);
+            actSlot.appendChild(actWordZone);
+            spotActivityReset.appendChild(actSlot);
           }
         }
         // Park all boxes back at Space One.
@@ -3586,13 +3729,13 @@
         reached["spot-3"] = false;
         reached["spot-4"] = false;
         reached["spot-5"] = true;
-        reached["spot-verb"] = true;
+        reached["spot-activity"] = true;
         unlocked["spot-1"] = true;
         unlocked["spot-2"] = false;
         unlocked["spot-3"] = false;
         unlocked["spot-4"] = false;
         unlocked["spot-5"] = true;
-        unlocked["spot-verb"] = true;
+        unlocked["spot-activity"] = true;
         gameVersion++;
         ["spot-2", "spot-3", "spot-4"].forEach(function (id) {
           var zone = document.getElementById(id);
@@ -3624,7 +3767,7 @@
         "num-five","num-six","num-seven","num-eight","num-nine",
         "lab-token-1","lab-token-2","lab-token-3",
         "mod-token-1","mod-token-2","mod-token-3",
-        "verb-token-1","verb-token-2","verb-token-3",
+        "joker-token-1","joker-token-2","joker-token-3",
       ];
       var space2Items = [
         "phrase-whats-your-name","phrase-my-name-is",
@@ -3632,8 +3775,10 @@
         "phrase-look","phrase-listen",
         "phrase-stand-up","phrase-sit-down","phrase-come-here",
         "phrase-do-you-like","phrase-where-is","phrase-show-me",
-        "verb-wake-up","verb-get-up","verb-wash","verb-brush","verb-eat",
-        "verb-drink","verb-play","verb-go","verb-sleep","verb-read",
+        "act-wake-up","act-get-up","act-wash","act-brush","act-eat",
+        "act-drink","act-play","act-go","act-sleep","act-read",
+        "txt-wake-up","txt-get-up","txt-wash","txt-brush","txt-eat",
+        "txt-drink","txt-play","txt-go","txt-sleep","txt-read",
       ];
 
       function flashBtn(btn) {
@@ -3737,7 +3882,23 @@
             if (dz) {
               var slot = dz.children[slotIdx];
               if (slot && slot.classList.contains("slot")) {
-                if (!slot.contains(el)) slot.appendChild(el);
+                if (!slot.contains(el)) {
+                  if (
+                    slot.classList.contains("activity-slot") &&
+                    el.classList.contains("activity-item")
+                  ) {
+                    var actImgZone = slot.querySelector(".act-img-zone");
+                    if (actImgZone) actImgZone.appendChild(el);
+                  } else if (
+                    slot.classList.contains("activity-slot") &&
+                    el.classList.contains("text-brick")
+                  ) {
+                    var actWordZone = slot.querySelector(".act-word-zone");
+                    if (actWordZone) actWordZone.appendChild(el);
+                  } else {
+                    slot.appendChild(el);
+                  }
+                }
                 var imp = slot.querySelector(".imprint");
                 if (imp) imp.style.display = "none";
               }
