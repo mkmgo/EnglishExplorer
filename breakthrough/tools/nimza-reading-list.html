@@ -478,23 +478,62 @@
         window.mozSpeechSynthesis ||
         null;
       var altVoice = null;
+      var FEMALE_HINTS = [
+        "aria", "jenny", "sonia", "zira", "hazel", "samantha", "karen",
+        "moira", "tessa", "veena", "emma", "natasha", "susan", "mary",
+        "amy", "libby", "olivia", "mira", "anya", "lena", "katya", "female",
+      ];
+      var MALE_HINTS = [
+        "david", "mark", "daniel", "alex", "fred", "george", "rishi",
+        "arthur", "guy", "james", "thomas", "oliver", "ryan",
+        "christopher", "matthew", "sasha", "male",
+      ];
+      var NATURAL_HINTS = ["google", "natural", "neural", "premium", "online"];
+
+      function voiceScore(v) {
+        if (!v || !v.lang) return -1;
+        var lang = String(v.lang).toLowerCase();
+        if (lang.indexOf("en") !== 0) return -1;
+        var name = String(v.name || "").toLowerCase();
+        var score = 0;
+        if (lang.indexOf("en-gb") === 0) score += 10;
+        else if (lang.indexOf("en-us") === 0) score += 8;
+        else score += 2;
+        for (var i = 0; i < FEMALE_HINTS.length; i++) {
+          if (name.indexOf(FEMALE_HINTS[i]) >= 0) {
+            score += 30;
+            break;
+          }
+        }
+        for (var j = 0; j < MALE_HINTS.length; j++) {
+          if (name.indexOf(MALE_HINTS[j]) >= 0) {
+            score -= 30;
+            break;
+          }
+        }
+        for (var k = 0; k < NATURAL_HINTS.length; k++) {
+          if (name.indexOf(NATURAL_HINTS[k]) >= 0) {
+            score += 15;
+            break;
+          }
+        }
+        return score;
+      }
+
       function setVoice() {
         if (!synth) return;
         var voices = synth.getVoices();
         if (!voices || !voices.length) return;
-        var preferred = null;
-        var fallback = null;
+        var best = null;
+        var bestScore = -999;
         for (var i = 0; i < voices.length; i++) {
-          var v = voices[i];
-          if (!v || !v.lang || v.lang.toLowerCase().indexOf("en") !== 0) continue;
-          if (!fallback) fallback = v;
-          if (v.lang.toLowerCase().indexOf("en-gb") === 0) {
-            preferred = v;
-            break;
+          var s = voiceScore(voices[i]);
+          if (s > bestScore) {
+            bestScore = s;
+            best = voices[i];
           }
-          if (v.name && v.name.indexOf("Zira") >= 0) preferred = v;
         }
-        altVoice = preferred || fallback;
+        altVoice = best;
       }
       if (synth) {
         setVoice();
