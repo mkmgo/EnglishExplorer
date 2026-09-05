@@ -38,7 +38,8 @@ EnglishExplorer/
 │   ├── protocols/              <-- Daily Protocols (YYYY-MM-DD.html)
 │   └── tools/                  <-- Standalone utility collection (formerly EEBTools/)
 │       ├── spotlight-pro.html
-│       └── eebt-translator.html
+│       ├── eebt-translator.html
+│       └── nimza-reading-list.html   <-- Nimza's reading list (Airtable-powered, dark mode)
 ├── archive/                    <-- Older versions and backups for mobile/Tizen testing
 │   └── develop.html
 └── template/                   <-- Reusable layouts (see "template/" below)
@@ -100,6 +101,9 @@ There is **no `config.js`** — all secrets live server-side in the Cloudflare W
   GitHub API calls through this endpoint — do not put a token in front-end code.
 - Worker endpoints:
   - `GET /github?url=...` — GitHub API proxy (Bearer token added server-side).
+  - `GET /airtable?table=<TableName>` — read-only Airtable reader (PAT stays server-side).
+    Only **allowlisted** tables are readable: `ReadingList`. Returns `{ records: [...] }` sorted by
+    the `DisplayOrder` field ascending. Used by `nimza-reading-list.html`.
   - `POST /` — Airtable visitor tracking.
   - `OPTIONS` — CORS preflight (`GET, POST, OPTIONS`).
 - Deploy with `npx wrangler deploy` from `english-explorer-tracker/`; set secrets with
@@ -135,3 +139,30 @@ There is **no `config.js`** — all secrets live server-side in the Cloudflare W
 ## Daily Protocols
 
 When creating a new protocol, first read `breakthrough/protocols/README.md` for the required template and section order. Save the file as `breakthrough/protocols/YYYY-MM-DD.html`.
+
+## Nimza's Reading List (Airtable-powered)
+
+`breakthrough/tools/nimza-reading-list.html` renders a reading list for the Breakthrough tutee, pulling content from Airtable at runtime (no hardcoded content).
+
+- The page fetches `GET /airtable?table=ReadingList` from the tracker worker and renders one tappable card per record.
+- It is responsive, has a dark-mode toggle (persisted in `localStorage["eebt-theme"]`, matching `updates.html`), and speaks each reading title via TTS (Tizen + Web Speech), consistent with the rest of the platform.
+- Reached from the **Reading List** row in `updates.html` (Nimza column).
+
+### Airtable `ReadingList` table schema
+
+Simple, content-agnostic — keep it to ~3 columns:
+
+| Field | Type | Purpose |
+|---|---|---|
+| `Title` | Single line text | Reading name shown on the card (also spoken via TTS). |
+| `Text` | Long text *(optional)* | Passage/paragraph. Cards with text get a **READ** button that opens the passage in an in-page modal (Tizen-safe) with a LISTEN button (chunked TTS). Used for story passages, the monthly programme overviews, and the profile template. |
+| `Link` | URL *(optional)* | Asset link — Cloudinary image/video, PDF, or external page. If it's an image, it's shown as a thumbnail; becomes the card's **OPEN** button. |
+| `DisplayOrder` | Number *(optional)* | Sort order (ascending). Omit for default Airtable order. |
+| `Subtitle` | Single line text *(optional)* | Short note shown under the title. |
+
+- Only `Title` is required (`Text`/`Link` optional, at least one recommended). The reader also accepts `Name`/`URL`/`Note`/`Passage` aliases.
+- To add a reading: create a new row in the `ReadingList` table (same base as visitor tracking) with the title and the asset URL. No code change needed — the page updates on reload (meta tags force no-cache).
+
+### Blocked Cloudinary assets
+
+The `dp455m4rk` Cloudinary account requires **signed delivery** and returns `401` for anonymous image/video URLs (see `asset-cloud-issues.MD`). When adding asset links to `ReadingList`, use a working account (`dqwm4pdbz` / `dmkhsyfzf`) — i.e. re-upload any blocked assets to one of those and paste the working URL. The reader renders whatever `Link` points to, so valid URLs just work.

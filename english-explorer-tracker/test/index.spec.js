@@ -32,6 +32,49 @@ describe("English Explorer Tracker worker", () => {
 		expect(response.status).toBe(400);
 	});
 
+	it("rejects /airtable when table is missing", async () => {
+		const response = await SELF.fetch("https://tracker.dev/airtable");
+		expect(response.status).toBe(400);
+	});
+
+	it("rejects /airtable for a non-allowlisted table", async () => {
+		const response = await SELF.fetch(
+			"https://tracker.dev/airtable?table=Secrets",
+		);
+		expect(response.status).toBe(400);
+	});
+
+	it("reads an allowlisted Airtable table and returns records", async () => {
+		const ctx = createExecutionContext();
+		const inner = () =>
+			new Response(
+				JSON.stringify({
+					records: [
+						{
+							id: "rec1",
+							fields: { Title: "Interests and Hobbies", Link: "https://example.com/a.png" },
+						},
+					],
+				}),
+				{ status: 200, headers: { "Content-Type": "application/json" } },
+			);
+		const origFetch = globalThis.fetch;
+		globalThis.fetch = inner;
+		try {
+			const response = await worker.fetch(
+				new Request("https://tracker.dev/airtable?table=ReadingList"),
+				{ AIRTABLE_BASE_ID: "base1", AIRTABLE_PAT: "pat-test" },
+				ctx,
+			);
+			await waitOnExecutionContext(ctx);
+			expect(response.status).toBe(200);
+			const body = await response.json();
+			expect(body.records[0].fields.Title).toBe("Interests and Hobbies");
+		} finally {
+			globalThis.fetch = origFetch;
+		}
+	});
+
 	it("proxies a GET to the GitHub API", async () => {
 		const ctx = createExecutionContext();
 		const inner = () =>

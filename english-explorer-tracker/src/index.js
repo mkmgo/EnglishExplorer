@@ -4,6 +4,10 @@ const CORS_HEADERS = {
 	'Access-Control-Allow-Headers': 'Content-Type',
 };
 
+// Tables that may be read through GET /airtable?table=<name>.
+// Kept server-side so untrusted clients cannot read arbitrary tables.
+const ALLOWED_AIRTABLE_TABLES = ['ReadingList'];
+
 function json(data, status = 200) {
 	return new Response(JSON.stringify(data), {
 		status,
@@ -34,6 +38,26 @@ async function handleTracking(request, env) {
 	} catch (err) {
 		return json({ error: err.message }, 500);
 	}
+}
+
+async function handleAirtable(request, env) {
+	const table = new URL(request.url).searchParams.get('table');
+	if (!table || !ALLOWED_AIRTABLE_TABLES.includes(table)) {
+		return json({ error: 'Invalid or missing table' }, 400);
+	}
+
+	const airtableUrl =
+		`https://api.airtable.com/v0/${env.AIRTABLE_BASE_ID}/${encodeURIComponent(table)}` +
+		'?maxRecords=200&pageSize=100&sort[0][field]=DisplayOrder&sort[0][direction]=asc';
+
+	const response = await fetch(airtableUrl, {
+		headers: {
+			Authorization: `Bearer ${env.AIRTABLE_PAT}`,
+		},
+	});
+
+	const data = await response.json();
+	return json(data, response.status);
 }
 
 async function handleGitHub(request, env) {
@@ -83,6 +107,11 @@ export default {
 		// GitHub API proxy (GET /github?url=...)
 		if (request.method === 'GET' && url.pathname === '/github') {
 			return handleGitHub(request, env);
+		}
+
+		// Airtable table reader (GET /airtable?table=...)
+		if (request.method === 'GET' && url.pathname === '/airtable') {
+			return handleAirtable(request, env);
 		}
 
 		// Airtable visitor tracking (POST)
