@@ -1,0 +1,720 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Grid Shift</title>
+    <style>
+      :root,
+      html.light {
+        color-scheme: light;
+        --bg-color: #f0f4f8;
+        --card-bg: #ffffff;
+        --primary: #3b82f6;
+        --accent: #f59e0b;
+        --text: #1f2937;
+        --heading: #1e3a8a;
+        --muted: #475569;
+        --border: #cbd5e1;
+        --border-strong: #94a3b8;
+        --dropzone-bg: #f8fafc;
+        --dropzone-hover: #dbeafe;
+        --item-bg: #e5e7eb;
+        --item-border: #6b7280;
+        --img-bg: #ffffff;
+        --good: #10b981;
+        --goal-bg: #d1fae5;
+        --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        --color-blue: #3b82f6;
+        --color-yellow: #eab308;
+        --color-green: #22c55e;
+        --color-red: #ef4444;
+        --color-orange: #f97316;
+        --color-purple: #a855f7;
+      }
+
+      @media (prefers-color-scheme: dark) {
+        :root {
+          color-scheme: dark;
+          --bg-color: #0f172a;
+          --card-bg: #1e293b;
+          --primary: #60a5fa;
+          --accent: #fbbf24;
+          --text: #e2e8f0;
+          --heading: #93c5fd;
+          --muted: #94a3b8;
+          --border: #334155;
+          --border-strong: #475569;
+          --dropzone-bg: #16233a;
+          --dropzone-hover: #1d3a5f;
+          --item-bg: #1e293b;
+          --item-border: #64748b;
+          --img-bg: #f8fafc;
+          --good: #34d399;
+          --goal-bg: #064e3b;
+          --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.45);
+        }
+      }
+
+      html.dark {
+        color-scheme: dark;
+        --bg-color: #0f172a;
+        --card-bg: #1e293b;
+        --primary: #60a5fa;
+        --accent: #fbbf24;
+        --text: #e2e8f0;
+        --heading: #93c5fd;
+        --muted: #94a3b8;
+        --border: #334155;
+        --border-strong: #475569;
+        --dropzone-bg: #16233a;
+        --dropzone-hover: #1d3a5f;
+        --item-bg: #1e293b;
+        --item-border: #64748b;
+        --img-bg: #f8fafc;
+        --good: #34d399;
+        --goal-bg: #064e3b;
+        --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.45);
+      }
+
+      #themeToggle {
+        position: fixed;
+        top: 12px;
+        right: 12px;
+        z-index: 10;
+        width: 46px;
+        height: 46px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.3rem;
+        line-height: 1;
+        background: var(--card-bg);
+        color: var(--text);
+        border: 2px solid var(--border);
+        border-radius: 999px;
+        box-shadow: var(--shadow);
+        cursor: pointer;
+        -webkit-tap-highlight-color: transparent;
+      }
+
+      body {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        background-color: var(--bg-color);
+        color: var(--text);
+        margin: 0;
+        padding: 20px;
+        min-height: 100vh;
+        overflow-x: hidden;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+
+      h1 {
+        margin: 0 0 8px;
+        color: var(--heading);
+        font-size: clamp(1.4rem, 3.4vw, 2rem);
+        text-align: center;
+      }
+
+      .instructions {
+        margin-bottom: 18px;
+        max-width: 800px;
+        font-size: clamp(0.9rem, 0.5vw + 0.8rem, 1.05rem);
+        background: var(--card-bg);
+        color: var(--text);
+        padding: 9px 18px;
+        border-radius: 10px;
+        border: 2px solid var(--border);
+        border-left: 5px solid var(--primary);
+        box-shadow: var(--shadow);
+        text-align: center;
+      }
+
+      .stage {
+        display: flex;
+        align-items: flex-start;
+        justify-content: center;
+        gap: clamp(14px, 2.4vw, 28px);
+        width: 100%;
+        max-width: 1000px;
+      }
+
+      /* ---------- Deck (stacked mystery bricks) ---------- */
+      .deckPanel {
+        flex: none;
+        width: 120px;
+        background: var(--card-bg);
+        border: 2px solid var(--border);
+        border-radius: 14px;
+        box-shadow: var(--shadow);
+        padding: 12px;
+        box-sizing: border-box;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 12px;
+      }
+      .deckHead {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-weight: 800;
+        color: var(--muted);
+        font-size: clamp(0.9rem, 1.6vw, 1.05rem);
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+      }
+      .count {
+        background: var(--item-bg);
+        border: 1px solid var(--item-border);
+        border-radius: 999px;
+        padding: 2px 10px;
+        font-size: 0.9em;
+        color: var(--text);
+      }
+      .deck {
+        position: relative;
+        width: 96px;
+        height: 84px;
+      }
+      .statusText {
+        text-align: center;
+        font-weight: 900;
+        color: var(--good);
+        font-size: 0.95rem;
+      }
+      .hint {
+        text-align: center;
+        color: var(--muted);
+        font-size: 0.78rem;
+        font-weight: 600;
+        line-height: 1.35;
+      }
+
+      /* ---------- Flip card (front + back brick) ---------- */
+      .flipCard {
+        width: 96px;
+        height: 84px;
+        box-sizing: border-box;
+        position: absolute;
+        top: 0;
+        left: 0;
+        perspective: 600px;
+        cursor: grab;
+        touch-action: none;
+        -webkit-tap-highlight-color: transparent;
+        -webkit-touch-callout: none;
+        -webkit-user-select: none;
+        user-select: none;
+      }
+      .flipCard:active {
+        cursor: grabbing;
+      }
+      .flipInner {
+        position: relative;
+        width: 100%;
+        height: 100%;
+        transform-style: preserve-3d;
+        transition: transform 0.45s ease;
+      }
+      .flipCard.flipped .flipInner {
+        transform: rotateY(180deg);
+      }
+      .face {
+        position: absolute;
+        inset: 0;
+        border-radius: 10px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 3px;
+        padding: 4px;
+        text-align: center;
+        box-sizing: border-box;
+        backface-visibility: hidden;
+        -webkit-backface-visibility: hidden;
+      }
+      .frontFace {
+        transform: rotateY(180deg);
+        background-color: var(--item-bg);
+        color: var(--text);
+        border: 1px solid var(--item-border);
+      }
+      .backFace {
+        background: var(--item-bg) center center / cover no-repeat;
+        border: 1px solid var(--item-border);
+        box-shadow: inset 0 0 12px rgba(0, 0, 0, 0.35);
+      }
+      .round {
+        width: 48px;
+        height: 48px;
+        flex: none;
+        border-radius: 50%;
+        overflow: hidden;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: var(--img-bg);
+        border: 1px solid var(--item-border);
+        box-sizing: border-box;
+      }
+      .round img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
+        -webkit-user-drag: none;
+        pointer-events: none;
+      }
+      .round svg {
+        width: 28px;
+        height: 28px;
+      }
+      .cardName {
+        font-weight: bold;
+        font-size: 0.85rem;
+        line-height: 1;
+        color: var(--text);
+        max-width: 100%;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+
+      /* Only the top card of the stack can be flipped / dragged. */
+      .deck .flipCard:not(:last-child) {
+        pointer-events: none;
+      }
+      .flipCard.dragging-original {
+        opacity: 0.35;
+      }
+      .flipCard.ghost {
+        position: fixed;
+        z-index: 1000;
+        pointer-events: none;
+        margin: 0;
+        transform: scale(1.05);
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.25);
+      }
+      /* A placed brick sits snugly inside its grid cell and is inert. */
+      .cell .flipCard {
+        position: relative;
+        top: auto !important;
+        left: auto !important;
+        z-index: auto !important;
+        pointer-events: none;
+        cursor: default;
+      }
+
+      /* ---------- 7 x 5 grid ---------- */
+      .gridWrap {
+        max-width: 100%;
+      }
+      .grid {
+        display: grid;
+        grid-template-columns: repeat(7, 96px);
+        grid-template-rows: repeat(5, 84px);
+        gap: 10px;
+        padding: 12px;
+        background: var(--dropzone-bg);
+        border: 2px dashed var(--border-strong);
+        border-radius: 14px;
+        box-sizing: border-box;
+      }
+      .cell {
+        width: 96px;
+        height: 84px;
+        box-sizing: border-box;
+        outline: 2px dashed var(--border-strong);
+        outline-offset: -2px;
+        border-radius: 10px;
+        background: var(--item-bg);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: background-color 0.2s, outline-color 0.2s;
+      }
+      .cell.drag-over {
+        background: var(--dropzone-hover);
+        outline-color: var(--primary);
+      }
+      .cell.filled {
+        outline-style: solid;
+        outline-color: var(--border);
+        background: transparent;
+      }
+      .grid.done {
+        border-color: var(--good);
+        background: var(--goal-bg);
+      }
+
+      @media (max-width: 900px) {
+        body {
+          padding: 14px;
+        }
+        .stage {
+          flex-direction: column;
+          align-items: center;
+        }
+        .deckPanel {
+          width: auto;
+          flex-direction: row;
+          flex-wrap: wrap;
+          justify-content: center;
+        }
+        .deck {
+          margin: 0 6px;
+        }
+        .hint {
+          flex-basis: 100%;
+        }
+        .gridWrap {
+          overflow-x: auto;
+          max-width: 100%;
+        }
+        .grid {
+          width: max-content;
+          margin: 0 auto;
+        }
+      }
+
+      @media (max-width: 640px) {
+        html,
+        body {
+          -webkit-touch-callout: none;
+          -webkit-user-select: none;
+          user-select: none;
+        }
+      }
+
+      img {
+        -webkit-user-drag: none;
+        pointer-events: none;
+      }
+    </style>
+  </head>
+  <body>
+    <button id="themeToggle" aria-label="Toggle dark mode" title="Toggle dark mode">
+      🌙
+    </button>
+    <h1>Grid Shift</h1>
+    <p class="instructions">Turn the top card to reveal it, then drag it onto any empty square.</p>
+
+    <main class="stage">
+      <section class="deckPanel">
+        <div class="deckHead"><span>Cards</span><span class="count" id="count">0</span></div>
+        <div class="deck" id="deck"></div>
+        <div class="statusText" id="status" hidden>Grid complete!</div>
+        <div class="hint">Tap the top card to turn it over.</div>
+      </section>
+
+      <div class="gridWrap">
+        <section class="grid" id="grid"></section>
+      </div>
+    </main>
+
+    <script>
+      // Theme toggle (dark mode). Defaults to system preference.
+      (function () {
+        var root = document.documentElement;
+        var btn = document.getElementById("themeToggle");
+        var theme = "system";
+        try {
+          var saved = localStorage.getItem("miniGameTheme");
+          if (saved === "dark" || saved === "light") theme = saved;
+        } catch (e) {}
+        var darkMq = window.matchMedia("(prefers-color-scheme: dark)");
+
+        function apply() {
+          var dark = theme === "dark" || (theme === "system" && darkMq.matches);
+          root.classList.toggle("dark", dark);
+          root.classList.toggle("light", !dark);
+          btn.textContent = dark ? "☀️" : "🌙";
+        }
+
+        apply();
+        if (darkMq.addEventListener) darkMq.addEventListener("change", apply);
+        else if (darkMq.addListener) darkMq.addListener(apply);
+        btn.addEventListener("click", function () {
+          theme = theme === "dark" ? "light" : "dark";
+          try {
+            localStorage.setItem("miniGameTheme", theme);
+          } catch (e) {}
+          apply();
+        });
+      })();
+
+      var WORKER =
+        "https://english-explorer-tracker.mkmueller-mission.workers.dev/airtable?table=GridShift";
+      var PAGE = "/junior/minigames/mb-grid-shift.html";
+
+      var deckEl = document.getElementById("deck");
+      var gridEl = document.getElementById("grid");
+      var countEl = document.getElementById("count");
+      var statusEl = document.getElementById("status");
+
+      var COLS = 7;
+      var ROWS = 5;
+
+      // Lucide icon paths for the Rooms category (self-contained, no CDN).
+      var ICONS = {
+        "cooking-pot":
+          '<path d="M2 12h20"/><path d="M20 12v8a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2v-8"/><path d="m4 8 16-4"/><path d="m8.86 6.78-.45-1.81a2 2 0 0 1 1.45-2.43l1.94-.48a2 2 0 0 1 2.43 1.46l.45 1.8"/>',
+        sun:
+          '<circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/>',
+        sofa:
+          '<path d="M20 9V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v3"/><path d="M2 16a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-5a2 2 0 0 0-4 0v1.5a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5V11a2 2 0 0 0-4 0z"/><path d="M4 18v2"/><path d="M20 18v2"/><path d="M12 4v9"/>',
+        "tent-tree":
+          '<circle cx="4" cy="4" r="2"/><path d="m14 5 3-3 3 3"/><path d="m14 10 3-3 3 3"/><path d="M17 14V2"/><path d="M17 14H7l-5 8h20Z"/><path d="M8 14v8"/><path d="m9 14 5 8"/>',
+        "library-big":
+          '<rect width="8" height="18" x="3" y="3" rx="1"/><path d="M7 3v18"/><path d="M20.4 18.9c.2.5-.1 1.1-.6 1.3l-1.9.7c-.5.2-1.1-.1-1.3-.6L11.1 5.1c-.2-.5.1-1.1.6-1.3l1.9-.7c.5-.2 1.1.1 1.3.6Z"/>',
+      };
+
+      function track(action, detail) {
+        if (typeof logActivity === "function") {
+          logActivity("Nimza", PAGE, "GridShift", action, detail || "").catch(function () {});
+        }
+      }
+
+      // Empty drop cells (7 x 5).
+      for (var c = 0; c < COLS * ROWS; c++) {
+        var cell = document.createElement("div");
+        cell.className = "cell";
+        gridEl.appendChild(cell);
+      }
+
+      var remaining = [];
+
+      function buildCard(rec) {
+        var f = (rec && rec.fields) || {};
+        var id = f.GridShiftID || f.TileName || "";
+        var mode = f.RenderMode || "cloudinary-img";
+        var label = f.Display || f.TileName || id;
+        var front = f.TileFront || "";
+        var back = f.TileBack || "";
+        var fill = f.Fill || f.PrimaryColour || "";
+        var primary = f.PrimaryColour || "#060606";
+
+        var card = document.createElement("div");
+        card.className = "flipCard draggable-item";
+        card.dataset.flipped = "false";
+        card.dataset.id = String(id);
+
+        var inner = document.createElement("div");
+        inner.className = "flipInner";
+
+        var backFace = document.createElement("div");
+        backFace.className = "face backFace";
+        if (back) backFace.style.backgroundImage = "url('" + back + "')";
+
+        var frontFace = document.createElement("div");
+        frontFace.className = "face frontFace";
+
+        var round = document.createElement("div");
+        round.className = "round";
+        if (mode === "colour-only" && fill) {
+          round.style.background = fill;
+        } else if (mode === "lucide-icon") {
+          var name = String(f.Lucide || "").toLowerCase();
+          round.style.background = "transparent";
+          round.style.border = "0";
+          round.innerHTML =
+            '<svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="' +
+            primary +
+            '" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">' +
+            (ICONS[name] || "") +
+            "</svg>";
+        } else if (front) {
+          var img = document.createElement("img");
+          img.src = front;
+          img.alt = label;
+          img.loading = "lazy";
+          img.draggable = false;
+          round.appendChild(img);
+        } else {
+          round.textContent = "?";
+          round.style.background = "var(--item-bg)";
+        }
+        frontFace.appendChild(round);
+
+        var nameEl = document.createElement("span");
+        nameEl.className = "cardName";
+        nameEl.textContent = label || id;
+        frontFace.appendChild(nameEl);
+
+        inner.appendChild(backFace);
+        inner.appendChild(frontFace);
+        card.appendChild(inner);
+        return card;
+      }
+
+      function refreshDeck() {
+        while (deckEl.firstChild) deckEl.removeChild(deckEl.firstChild);
+        countEl.textContent = String(remaining.length);
+        for (var i = 0; i < remaining.length; i++) {
+          var card = remaining[i];
+          card.style.top = i * 3 + "px";
+          card.style.left = i * 3 + "px";
+          card.style.zIndex = String(i + 1);
+          deckEl.appendChild(card);
+        }
+        if (!remaining.length) {
+          gridEl.classList.add("done");
+          statusEl.hidden = false;
+        } else {
+          gridEl.classList.remove("done");
+          statusEl.hidden = true;
+        }
+      }
+
+      // ---------- Pointer-based drag & drop ----------
+      var activeItem = null;
+      var activeGhost = null;
+      var grabOffsetX = 0;
+      var grabOffsetY = 0;
+      var overCell = null;
+
+      function clearOverCell() {
+        if (overCell) {
+          overCell.classList.remove("drag-over");
+          overCell = null;
+        }
+      }
+
+      var edgeScrollTimer = null;
+      var edgeClientX = 0;
+      var edgeClientY = 0;
+      function scrollOnEdge(clientX, clientY) {
+        edgeClientX = clientX;
+        edgeClientY = clientY;
+        if (document.documentElement.scrollHeight <= window.innerHeight) return;
+        var edge = Math.min(80, window.innerHeight * 0.15);
+        var scrollDir =
+          clientY < edge ? -1 : clientY > window.innerHeight - edge ? 1 : 0;
+        if (edgeScrollTimer) {
+          clearInterval(edgeScrollTimer);
+          edgeScrollTimer = null;
+        }
+        if (!scrollDir) return;
+        var step =
+          Math.max(12, Math.round(Math.abs(window.innerHeight / 2 - clientY) / 14)) *
+          scrollDir;
+        edgeScrollTimer = setInterval(function () {
+          window.scrollBy(0, step);
+          if (!activeGhost) return;
+          var under = document.elementFromPoint(edgeClientX, edgeClientY);
+          var cell = under ? under.closest(".cell") : null;
+          if (cell !== overCell) {
+            clearOverCell();
+            overCell = cell;
+            if (overCell) overCell.classList.add("drag-over");
+          }
+        }, 16);
+      }
+
+      document.addEventListener("pointerdown", function (e) {
+        if (activeItem) return;
+        if (e.pointerType === "mouse" && e.button !== 0) return;
+        var card = e.target.closest(".flipCard");
+        if (!card) return;
+        e.preventDefault();
+        // Unrevealed card: turn it over instead of dragging.
+        if (card.dataset.flipped !== "true") {
+          card.classList.add("flipped");
+          card.dataset.flipped = "true";
+          track("Turn", card.dataset.id);
+          return;
+        }
+        activeItem = card;
+        var rect = card.getBoundingClientRect();
+        grabOffsetX = e.clientX - rect.left;
+        grabOffsetY = e.clientY - rect.top;
+        activeGhost = card.cloneNode(true);
+        activeGhost.classList.remove("dragging-original");
+        activeGhost.classList.add("ghost");
+        activeGhost.style.width = rect.width + "px";
+        activeGhost.style.height = rect.height + "px";
+        activeGhost.style.left = e.clientX - grabOffsetX + "px";
+        activeGhost.style.top = e.clientY - grabOffsetY + "px";
+        document.body.appendChild(activeGhost);
+        card.classList.add("dragging-original");
+        if (card.setPointerCapture) {
+          try {
+            card.setPointerCapture(e.pointerId);
+          } catch (err) {}
+        }
+      });
+
+      document.addEventListener("pointermove", function (e) {
+        if (!activeItem) return;
+        e.preventDefault();
+        scrollOnEdge(e.clientX, e.clientY);
+        if (activeGhost) {
+          activeGhost.style.left = e.clientX - grabOffsetX + "px";
+          activeGhost.style.top = e.clientY - grabOffsetY + "px";
+        }
+        var under = document.elementFromPoint(e.clientX, e.clientY);
+        var cell = under ? under.closest(".cell") : null;
+        if (cell !== overCell) {
+          clearOverCell();
+          overCell = cell;
+          if (overCell) overCell.classList.add("drag-over");
+        }
+      });
+
+      function endDrag(e) {
+        if (!activeItem) return;
+        e.preventDefault();
+        if (edgeScrollTimer) {
+          clearInterval(edgeScrollTimer);
+          edgeScrollTimer = null;
+        }
+        if (activeGhost) {
+          activeGhost.remove();
+          activeGhost = null;
+        }
+        activeItem.classList.remove("dragging-original");
+        var card = activeItem;
+        if (overCell && !overCell.querySelector(".flipCard")) {
+          overCell.appendChild(card);
+          overCell.classList.add("filled");
+          var idx = remaining.indexOf(card);
+          if (idx > -1) remaining.splice(idx, 1);
+          track("Place", card.dataset.id);
+          refreshDeck();
+        }
+        clearOverCell();
+        activeItem = null;
+      }
+
+      document.addEventListener("pointerup", endDrag);
+
+      // ---------- Build from Airtable ----------
+      fetch(WORKER)
+        .then(function (r) {
+          if (!r.ok) throw new Error("HTTP " + r.status);
+          return r.json();
+        })
+        .then(function (data) {
+          var records = (data && data.records) || [];
+          records.forEach(function (rec) {
+            var card = buildCard(rec);
+            if (card) remaining.push(card);
+          });
+          refreshDeck();
+          if (!remaining.length) {
+            deckEl.textContent = "No cards yet.";
+            countEl.textContent = "0";
+          }
+        })
+        .catch(function () {
+          deckEl.textContent = "Couldn't load cards.";
+          countEl.textContent = "!";
+        });
+    </script>
+    <script src="../../tracker.js"></script>
+  </body>
+</html>

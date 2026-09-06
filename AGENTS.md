@@ -29,6 +29,7 @@ EnglishExplorer/
 │   │   └── handwriting-words.html    <-- iPad handwriting: fill the word on help lines
 │   └── minigames/              <-- Highly gamified mini-games (formerly /Features)
 │       ├── abc-world.html
+│       ├── mb-grid-shift.html  <-- Grid Shift: flip bricks (front/back) from a stack, drag onto 7x5 grid; Airtable table GridShift
 │       ├── mystery-base.html   <-- FLAGSHIP: most-viewed, most-developed version; keep pristine, treat as base for feature integration
 │       ├── mystery-phrases.html
 │       ├── new-words-wizard.html
@@ -38,7 +39,7 @@ EnglishExplorer/
 │   ├── protocols/              <-- Daily Protocols (YYYY-MM-DD.html)
 │   └── tools/                  <-- Standalone utility collection (formerly EEBTools/)
 │       ├── bt-spotlight-pro.html
-│       └── bt-reading-list.html   <-- My Reading List (Airtable-powered, dark mode)
+│       └── bt-study-hub.html        <-- Study Hub (Airtable-powered, dark mode; formerly bt-reading-list.html)
 ├── archive/                    <-- Older versions and backups for mobile/Tizen testing
 │   ├── develop.html
 │   └── eebt-translator.html    <-- Retired EEBT Translator tool
@@ -102,8 +103,10 @@ There is **no `config.js`** — all secrets live server-side in the Cloudflare W
 - Worker endpoints:
   - `GET /github?url=...` — GitHub API proxy (Bearer token added server-side).
   - `GET /airtable?table=<TableName>` — read-only Airtable reader (PAT stays server-side).
-    Only **allowlisted** tables are readable: `ReadingList`. Returns `{ records: [...] }` sorted by
-    the `DisplayOrder` field ascending. Used by `bt-reading-list.html`.
+    Only **allowlisted** tables are readable. Each table is sorted by its own field (or its
+    natural Airtable order when it has no sort field): `ReadingList` (sorted by `DisplayOrder`,
+    used by `bt-study-hub.html`) and `GridShift` (natural order, used by `mb-grid-shift.html`).
+    Returns `{ records: [...] }`.
   - `POST /` — Airtable visitor tracking.
   - `OPTIONS` — CORS preflight (`GET, POST, OPTIONS`).
 - Deploy with `npx wrangler deploy` from `english-explorer-tracker/`; set secrets with
@@ -140,9 +143,50 @@ There is **no `config.js`** — all secrets live server-side in the Cloudflare W
 
 When creating a new protocol, first read `breakthrough/protocols/README.md` for the required template and section order. Save the file as `breakthrough/protocols/YYYY-MM-DD.html`.
 
+## Grid Shift minigame (Airtable-powered)
+
+`junior/minigames/mb-grid-shift.html` is a mystery-base-derived game: a stack of
+96×84 bricks with **front + back** faces (3D flip). Bricks start backs-up; tapping
+the top card turns it, and the revealed front can be dragged onto any empty cell of
+a fixed 7×5 grid (35 cells, sized to fit an iPad landscape board). No placement
+rules yet — any card may go in any empty square.
+
+- Built minimal (only the code needed): theme toggle, pointer drag & drop (ghost +
+  drop-zone highlight + edge auto-scroll), and `logActivity` (Turn / Place) via
+  the shared `tracker.js` (`../../tracker.js`).
+- The deck keeps cards in Airtable's natural order (the worker applies **no** sort
+  for this table). When a card is placed the next one is revealed for turning.
+- The game fetches `GET /airtable?table=GridShift` (allowlisted in the worker).
+
+### Airtable `GridShift` table schema
+
+The minigame reads fields **by name**, not position. Note: for colour-only rows the
+CSS colour variable arrives in `PrimaryColour` (not `Fill`) — the game accepts both.
+
+| Field | Type | Purpose |
+|---|---|---|
+| `GridShiftID` | Autonumber | Stable per-brick id (also logs Turn/Place actions). |
+| `TileName` | Single line text | Internal machine name (e.g. `Living-Room`). |
+| `Display` | Single line text | Word shown on the brick front (e.g. `Lounge`) — falls back to `TileName`. |
+| `Category` | Single line text | Grouping (Numbers, Clothes, Animals, Colours, Rooms, Directions) — currently unused by the UI. |
+| `CategoryColour` | Single line text | Category accent (Beige/Blue/…) — currently unused. |
+| `RenderMode` | Single line text | `cloudinary-img` (image front), `colour-only` (coloured circle), or `lucide-icon` (inline icon). |
+| `TileFront` | URL *(optional)* | Front asset for `cloudinary-img` (absolute Cloudinary URL). |
+| `TileBack` | URL *(optional)* | Back-of-brick art, shown on the mystery stack (cover). |
+| `Lucide` | Single line text *(optional)* | Icon name for `lucide-icon` mode (`cooking-pot`, `sun`, `sofa`, `tent-tree`, `library-big`). |
+| `Stroke` | Number *(optional)* | Icon stroke width (2). |
+| `IconSize` | Single line text *(optional)* | `Medium` etc. |
+| `PrimaryColour` | Single line text *(optional)* | Icon stroke colour (`#060606`) **or** the CSS colour var for `colour-only` (`var(--color-red)`). |
+| `SecondColour`/`Fill`/`Subtext` | *optional* | Reserved; `Fill` is accepted as a colour-only fallback. |
+
+- To add bricks: they already fill a 35-cell board; add/remove rows in Airtable
+  and the deck + grid self-size (`COLS`/`ROWS` in the file are fixed while the grid
+  is 7×5; padding/empty cells are fine if fewer).
+- The worker fetch is capped at 200 records — ample for the current 35.
+
 ## Nimza's Reading List (Airtable-powered)
 
-`breakthrough/tools/bt-reading-list.html` renders a reading list for the Breakthrough tutee, pulling content from Airtable at runtime (no hardcoded content).
+`breakthrough/tools/bt-study-hub.html` renders a reading list for the Breakthrough tutee, pulling content from Airtable at runtime (no hardcoded content).
 
 - The page fetches `GET /airtable?table=ReadingList` from the tracker worker and renders one tappable card per record.
 - It is responsive, has a dark-mode toggle (persisted in `localStorage["eebt-theme"]`, matching `updates.html`), and speaks each reading title via TTS (Tizen + Web Speech), consistent with the rest of the platform.

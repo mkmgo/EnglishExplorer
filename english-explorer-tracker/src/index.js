@@ -6,7 +6,13 @@ const CORS_HEADERS = {
 
 // Tables that may be read through GET /airtable?table=<name>.
 // Kept server-side so untrusted clients cannot read arbitrary tables.
-const ALLOWED_AIRTABLE_TABLES = ['ReadingList'];
+// Maps table name to the field it should be sorted by, or null to keep
+// Airtable's default row order (a table that has no DisplayOrder field
+// would otherwise make the sort query fail).
+const ALLOWED_AIRTABLE_TABLES = {
+	ReadingList: 'DisplayOrder',
+	GridShift: null,
+};
 
 function json(data, status = 200) {
 	return new Response(JSON.stringify(data), {
@@ -42,13 +48,19 @@ async function handleTracking(request, env) {
 
 async function handleAirtable(request, env) {
 	const table = new URL(request.url).searchParams.get('table');
-	if (!table || !ALLOWED_AIRTABLE_TABLES.includes(table)) {
+	const sortField = ALLOWED_AIRTABLE_TABLES[table];
+	if (!table || sortField === undefined) {
 		return json({ error: 'Invalid or missing table' }, 400);
 	}
 
-	const airtableUrl =
+	let airtableUrl =
 		`https://api.airtable.com/v0/${env.AIRTABLE_BASE_ID}/${encodeURIComponent(table)}` +
-		'?maxRecords=200&pageSize=100&sort[0][field]=DisplayOrder&sort[0][direction]=asc';
+		'?maxRecords=200&pageSize=100';
+	if (sortField) {
+		airtableUrl +=
+			`&sort[0][field]=${encodeURIComponent(sortField)}` +
+			'&sort[0][direction]=asc';
+	}
 
 	const response = await fetch(airtableUrl, {
 		headers: {

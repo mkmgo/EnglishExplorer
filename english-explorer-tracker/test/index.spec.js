@@ -75,6 +75,36 @@ describe("English Explorer Tracker worker", () => {
 		}
 	});
 
+	it("reads a GridShift table without a sort param", async () => {
+		const ctx = createExecutionContext();
+		let requestedUrl = "";
+		const inner = (url) => {
+			requestedUrl = String(url);
+			return new Response(
+				JSON.stringify({
+					records: [{ id: "rec9", fields: { TileName: "Dog", Display: "Dog" } }],
+				}),
+				{ status: 200, headers: { "Content-Type": "application/json" } },
+			);
+		};
+		const origFetch = globalThis.fetch;
+		globalThis.fetch = inner;
+		try {
+			const response = await worker.fetch(
+				new Request("https://tracker.dev/airtable?table=GridShift"),
+				{ AIRTABLE_BASE_ID: "base1", AIRTABLE_PAT: "pat-test" },
+				ctx,
+			);
+			await waitOnExecutionContext(ctx);
+			expect(response.status).toBe(200);
+			expect(requestedUrl).not.toContain("sort[0][field]");
+			const body = await response.json();
+			expect(body.records[0].fields.TileName).toBe("Dog");
+		} finally {
+			globalThis.fetch = origFetch;
+		}
+	});
+
 	it("proxies a GET to the GitHub API", async () => {
 		const ctx = createExecutionContext();
 		const inner = () =>
