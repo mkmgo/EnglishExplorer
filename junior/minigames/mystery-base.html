@@ -1824,6 +1824,18 @@
         background: rgba(245, 158, 11, 0.28);
         transform: scale(1.25);
       }
+      /* Gamepad cursor hover state: blue ring when over a clickable /
+         draggable target so the player knows Cross (or grab) will activate it. */
+      #gamepadCursor.hovering {
+        border-color: #3b82f6;
+        background: rgba(59, 130, 246, 0.28);
+        box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.4);
+      }
+      #gamepadCursor.hovering.grabbing {
+        border-color: #f59e0b;
+        background: rgba(245, 158, 11, 0.28);
+        box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.35);
+      }
     </style>
   </head>
   <body>
@@ -4088,6 +4100,13 @@
       // a visible cursor (stick / D-pad), and fires synthetic pointer events on
       // Cross-press / Cross-release so the existing drag-and-drop handles it.
       // If no gamepad is present the block is inert and the page is unchanged.
+      //
+      // NOTE: controller steering still needs fine-tuning. Brick dragging
+      // works, but opening labs/boxes and scrolling were the gaps — the fixes
+      // below (synthetic click on tap, D-pad page scroll, hover ring, slower
+      // D-pad repeat) are sensible browser defaults — not yet tuned on the
+      // real Tizen/PS4 setup. Cursor speed, tap distance, scroll amount and
+      // the hover ring all need on-device verification / adjustment.
       var padCursor = document.getElementById("gamepadCursor");
       var padActive = false; // a gamepad is being polled
       var padX = window.innerWidth / 2;
@@ -4098,7 +4117,9 @@
       // Advance one "move" per held key tick (repeat delay/factor).
       var padTick = 0;
       var padPadHeld = false;
-      var lastGamepads = [];
+      // A Cross release counts as a "tap" (fires synthetic click) when the
+      // cursor moved less than this many px from the grab point.
+      var padTapDist = 14;
 
       function padFind() {
         var pads;
@@ -4209,11 +4230,22 @@
             var dRight = padBtnDown(gp, 15);
             var dpadActive = dUp || dDown || dLeft || dRight;
             if (dpadActive) {
-              if (!padPadHeld || padTick % 6 === 0) {
+              // Repeat every 8 frames (~130 ms) — slower than before so menu
+              // and cursor navigation is steadier and easier to steer.
+              if (!padPadHeld || padTick % 8 === 0) {
                 var ds = 60;
                 var dxp = (dRight ? 1 : 0) - (dLeft ? 1 : 0);
                 var dyp = (dDown ? 1 : 0) - (dUp ? 1 : 0);
                 padMove(dxp * ds, dyp * ds);
+                // When NOT grabbing anything, D-pad Up/Down scrolls the page
+                // instead of moving the cursor, so off-view content downhill is
+                // reachable without first grabbing an item. Left/Right still
+                // move the cursor horizontally.
+                if (!padGrabbing) {
+                  if (dUp && window.scrollY > 0) window.scrollBy(0, -ds);
+                  if (dDown && window.scrollY < document.documentElement.scrollHeight - window.innerHeight)
+                    window.scrollBy(0, ds);
+                }
               }
               padPadHeld = true;
             } else {
@@ -4232,10 +4264,37 @@
           } else if (!cross && padGrabbing) {
             padGrabbing = false;
             padCursor.classList.remove("grabbing");
+            var moved = Math.sqrt(
+              (padX - padDownX) * (padX - padDownX) +
+                (padY - padDownY) * (padY - padDownY),
+            );
             // If the cursor hasn't moved from the grab point, still fire a
             // pointerup so any pending highlight clears. Movement is handled
             // through the synthetic pointermove below.
             padDispatch("pointerup", padX, padY, 0);
+            // A short tap (little or no movement) on a click-only target
+            // (lab-toggle, box chips, stack chip, media bricks) needs a real
+            // click — browsers do NOT synthesise "click" from a dispatched
+            // PointerEvent, so labs/boxes would never open. Fire our own.
+            if (moved < padTapDist) {
+              var tapEl = document.elementFromPoint(padX, padY);
+              if (tapEl) {
+                var isClickable = tapEl.closest(
+                  ".lab-toggle, .box-chip, .stack-chip, .media-brick, .sl-btn, #themeToggle, .win-box button",
+                );
+                if (isClickable) {
+                  var cev = new PointerEvent("click", {
+                    bubbles: true,
+                    cancelable: true,
+                    clientX: padX,
+                    clientY: padY,
+                    pointerType: "touch",
+                    pointerId: 991,
+                  });
+                  tapEl.dispatchEvent(cev);
+                }
+              }
+            }
           }
           // Fire continuous pointermove while grabbing so the ghost follows
           // the cursor exactly as with a mouse drag.
@@ -4265,6 +4324,15 @@
             padMove(rx * rn * 5, ry * rn * 5);
           }
         }
+        // Hover highlight: blue ring when the cursor sits over an interactive
+        // target so the player sees what Cross / grab will activate.
+        var hovEl = document.elementFromPoint(padX, padY);
+        var hoverable =
+          hovEl &&
+          hovEl.closest(
+            ".lab-toggle, .box-chip, .stack-chip, .media-brick, .draggable-item, .sl-btn, #themeToggle, .win-box button",
+          );
+        padCursor.classList.toggle("hovering", !!hoverable);
         requestAnimationFrame(padPoll);
       }
 
