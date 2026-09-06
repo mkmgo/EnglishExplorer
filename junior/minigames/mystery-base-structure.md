@@ -2,13 +2,15 @@
 
 ## Overview
 
-The game has **2 inventory spaces**, **7 spot cards (drop zones)**, and **8 box categories** for tidy-up sorting. Items are dragged from spaces into spots to complete goals and unlock progression.
+The game has **1 discovery zone (single palette)**, **7 spot cards (drop zones)**, and **9 box categories** for tidy-up sorting. Items are dragged from the shelves into spots to complete goals and unlock progression.
 
 ---
 
-## Spaces (Inventory)
+## Discovery Zone (single palette)
 
-### Space One (`#inventory`)
+One palette card titled "The Discovery Zone" holds both item shelves, the tidy box bar, the lab zones, and the classroom spots.
+
+### Main Shelf (`#inventory`)
 Source palette for object bricks, colour bricks, tokens, avatars, and numbers.
 
 | Element | ID | Type | Visual |
@@ -38,8 +40,8 @@ Source palette for object bricks, colour bricks, tokens, avatars, and numbers.
 | Eight | `#num-eight` | `.animal` `data-type="number"` | 48px circular image + name |
 | Nine | `#num-nine` | `.animal` `data-type="number"` | 48px circular image + name |
 
-### Space Two (`#phrases-inventory`)
-Source palette for phrase bricks (questions + statements).
+### Phrase & Activity Shelf (`#phrases-inventory`)
+Source palette for phrase bricks (questions + statements), activity images, and word bricks.
 
 #### Questions (`circle-question-mark` icon, blue)
 
@@ -160,7 +162,7 @@ Requires 1 mod-token in `#token-slot-shapes`. Token is consumed. Animal gets gre
 
 ## Box Categories (Tidy-Up System)
 
-### Space One Boxes (`#boxBar` / `#boxTrays`)
+### Boxes (`#boxBar` / `#boxTrays`)
 
 | Category | Items |
 |----------|-------|
@@ -170,23 +172,19 @@ Requires 1 mod-token in `#token-slot-shapes`. Token is consumed. Animal gets gre
 | Toys | `car`, `bike`, `robot`, `kite` |
 | Animals | `bee`, `rabbit`, `dog`, `elephant`, `turtle`, `whale` |
 | Special | `dragon`, `dinosaur`, `turtle-mod`, `rabbit-mod`, `whale-mod` |
-
-### Space Two Boxes (`#boxBar2` / `#boxTrays2`)
-
-| Category | Items |
-|----------|-------|
 | Questions | `phrase-whats-your-name`, `phrase-how-old`, `phrase-do-you-like`, `phrase-where-is` |
 | Phrases | `phrase-my-name-is`, `phrase-i-am-old`, `phrase-look`, `phrase-listen`, `phrase-stand-up`, `phrase-sit-down`, `phrase-come-here`, `phrase-show-me` |
+| Activities | the built activity tiles (`data-activity-combined`, `act-<word>-built`) |
 
 Box tags: Questions get `circle-question-mark` icon; Phrases get `circle-alert` icon.
 
-### Box Stack (both spaces)
+### Box Stack
 
-- Each palette's `.box-bar` starts with a `.box-chip.stack-chip` (`data-cat="stack"`, lucide **layers** icon, `.box-count.stack-count`).
-- The stack chip is draggable between spaces like any box (`storeBoxAt` supports ref-less chips, moving just the chip).
+- The palette's `.box-bar` starts with a `.box-chip.stack-chip` (`data-cat="stack"`, lucide **layers** icon, `.box-count.stack-count`).
+- The stack chip is draggable like any box (`storeBoxAt` supports ref-less chips, moving just the chip).
 - Dropping a real box onto the stack chip **stacks** it: `stackBox()` sets `ref.stacked`, adds `.stacked` (display: none) to the box chip + tray, and bumps the counter via `refreshStackCounts()`.
 - Tapping a stack chip toggles the pile: when the stack is empty (`countStacked() === 0`) it calls `stackAllBoxes()` to fold **every** box away at once; once anything is stacked it calls `unstackBoxes()` to dump everything back (count back to 0). `resetGame()` also un-stacks.
-- CSS: `.box-chip.stack-chip` (accent border + gradient), `.box-chip.drag-over`, `.box-chip.stacked` / `.box-tray.stacked` (hidden). Stack chip is excluded from the `attract` animation.
+- CSS: `.box-chip.stack-chip` (accent border + gradient), `.box-chip.drag-over`, `.box-chip.stacked` / `.box-tray.stacked` (hidden).
 
 ---
 

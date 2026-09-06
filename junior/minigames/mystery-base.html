@@ -151,12 +151,50 @@
         gap: 16px;
         position: relative;
         overflow: hidden;
+        background: var(--card-bg);
+        border: 2px solid var(--border);
+        border-radius: 12px;
+        padding: 12px 24px;
+        box-shadow: var(--shadow);
+      }
+
+      /* Row wrapping Onza's hero card with his gimmicks to its left,
+         outside of the hero card itself. */
+      .hero-row {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 14px;
+        width: 100%;
+        max-width: 880px;
+      }
+      .gimmick-box {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 10px;
+        flex-shrink: 0;
+        background: var(--card-bg);
+        border: 2px solid var(--border);
+        border-radius: 12px;
+        padding: 12px;
+        box-shadow: var(--shadow);
+        margin-bottom: 18px;
+      }
+      @media (max-width: 640px) {
+        .hero-row {
+          flex-direction: column;
+          gap: 8px;
+        }
+        .gimmick-box {
+          flex-direction: row;
+        }
       }
 
       .owner-info {
         display: flex;
         flex-direction: column;
-        align-items: center;
+        align-items: flex-start;
         gap: 12px;
       }
 
@@ -188,6 +226,29 @@
 
       .owner-rank svg.earned path {
         fill: currentColor;
+      }
+
+      /* Silver medal star (always filled silver) */
+      .owner-rank svg.star-silver {
+        opacity: 1;
+        filter: none;
+      }
+      .owner-rank svg.star-silver circle {
+        fill: none;
+        stroke: #9ca3af;
+      }
+      .owner-rank svg.star-silver path {
+        fill: #c0c0c0;
+        stroke: #c0c0c0;
+      }
+
+      /* Rank label under the stars */
+      .owner-rank-label {
+        font-size: 0.78rem;
+        font-weight: 700;
+        letter-spacing: 0.6px;
+        text-transform: uppercase;
+        color: var(--muted);
       }
 
       /* Grid Layout */
@@ -356,6 +417,7 @@
         align-items: flex-start;
         gap: 12px;
         margin-top: 18px;
+        margin-bottom: 18px;
       }
 
       .lab-zone:empty {
@@ -699,21 +761,6 @@
         display: none !important;
       }
 
-      @keyframes boxAttract {
-        0%,
-        100% {
-          transform: scale(1);
-        }
-        50% {
-          transform: scale(1.06);
-          box-shadow: 0 0 0 6px rgba(59, 130, 246, 0.18);
-        }
-      }
-
-      .box-bar.attract .box-chip:not(.done):not(.open):not(.stack-chip) {
-        animation: boxAttract 1.6s ease-in-out infinite;
-      }
-
       .box-tray {
         display: none;
         margin-top: 12px;
@@ -821,6 +868,11 @@
         min-height: 60px;
         padding: 4px 0;
         border-radius: 8px;
+      }
+
+      #phrases-inventory {
+        margin-top: 18px;
+        margin-bottom: 18px;
       }
 
       .item-container.drag-over {
@@ -978,14 +1030,14 @@
       /* Media clip spots flanking Onza's hero card. Placeholder slots for
          future links — drop an <a> into the herocard to make them live. */
       .media-brick {
-        width: 96px;
-        height: 84px;
+        width: 84px;
+        height: 72px;
         display: flex;
         flex-direction: column;
         justify-content: center;
         align-items: center;
         text-align: center;
-        font-size: 0.72rem;
+        font-size: 0.68rem;
         font-weight: bold;
         padding: 5px;
         gap: 3px;
@@ -995,8 +1047,8 @@
         line-height: 1;
       }
       .media-brick .media-frame {
-        width: 48px;
-        height: 48px;
+        width: 40px;
+        height: 40px;
         border-radius: 50%;
         border: 1px solid var(--brick-dark);
         background-color: var(--brick-main);
@@ -1012,8 +1064,8 @@
         transform: scale(0.92);
       }
       .media-brick .media-frame svg {
-        width: 22px;
-        height: 22px;
+        width: 19px;
+        height: 19px;
       }
       .media-brick-violet {
         --brick-main: #8b5cf6;
@@ -1165,7 +1217,7 @@
       /* Activity Lab drop zone: definite tracks so it never collapses to zero
          width and its ten slots stay visible and droppable. */
       .spot-card.activity-lab:not(.lab-collapsed) > .drop-zone {
-        grid-template-columns: repeat(5, 84px);
+        grid-template-columns: repeat(5, 96px);
         grid-template-rows: repeat(2, 96px);
       }
 
@@ -1205,21 +1257,23 @@
         flex-direction: column;
         align-items: center;
         justify-content: center;
-        gap: 2px;
-        padding: 3px;
-        width: 72px;
-        height: 60px;
+        gap: 3px;
+        padding: 5px;
+        width: 96px;
+        height: 84px;
         background-color: var(--item-bg);
+        color: var(--text);
         border: 1px solid var(--item-border);
-        border-radius: 8px;
+        border-radius: 5px;
         box-sizing: border-box;
+        text-align: center;
       }
 
       .activity-result img {
-        width: 44px;
-        height: 44px;
+        width: 48px;
+        height: 48px;
         object-fit: cover;
-        border-radius: 6px;
+        border-radius: 50%;
         background-color: var(--img-bg);
         border: 1px solid var(--item-border);
         flex-shrink: 0;
@@ -1227,10 +1281,17 @@
 
       .activity-result .activity-name {
         font-weight: bold;
-        font-size: 0.8rem;
+        font-size: 0.85rem;
         line-height: 1;
         color: var(--text);
         white-space: nowrap;
+      }
+
+      /* Inside the Activity Lab the built brick fills its slot; it keeps
+         the full brick size once parked into the Activities box. */
+      .spot-card.activity-lab:not(.lab-collapsed) > .drop-zone > .slot .activity-result {
+        width: 100%;
+        max-width: 96px;
       }
 
       @media (max-width: 640px) {
@@ -1239,19 +1300,22 @@
           width: 52px;
           height: 48px;
         }
-        .activity-item img,
-        .activity-result img {
+        .activity-item img {
           width: 34px;
           height: 34px;
         }
-        .activity-result .activity-name {
-          font-size: 0.66rem;
-        }
         .activity-result {
-          gap: 2px;
-          padding: 2px;
-          width: 52px;
-          height: 54px;
+          width: 84px;
+          height: 76px;
+          gap: 3px;
+          padding: 5px;
+        }
+        .activity-result img {
+          width: 40px;
+          height: 40px;
+        }
+        .activity-result .activity-name {
+          font-size: 0.85rem;
         }
         .text-brick {
           width: 48px;
@@ -1586,17 +1650,17 @@
           height: 40px;
         }
         .media-brick {
-          width: 84px;
-          height: 76px;
-          font-size: 0.68rem;
+          width: 78px;
+          height: 66px;
+          font-size: 0.64rem;
         }
         .media-brick .media-frame {
-          width: 40px;
-          height: 40px;
+          width: 36px;
+          height: 36px;
         }
         .media-brick .media-frame svg {
-          width: 19px;
-          height: 19px;
+          width: 17px;
+          height: 17px;
         }
         /* Colour Lab (Mixer) & Mod Lab: the wide horizontal 3-column row
            overflows small phones, so on mobile the inner elements reflow into
@@ -1701,16 +1765,23 @@
       🌙
     </button>
     <h1>Onza's Mystery Base</h1>
-    <div class="instructions herocard" id="goalText">
-      <a class="media-brick media-brick-violet" href="javascript:void(0)" title="Onza's movie clips" aria-label="Onza's movie clips">
-        <span class="media-frame"><svg fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M7 3v18"/><path d="M3 7.5h4"/><path d="M3 12h18"/><path d="M3 16.5h4"/><path d="M17 3v18"/><path d="M17 7.5h4"/><path d="M17 16.5h4"/></svg></span>
-        <span class="media-label">Movies</span>
-      </a>
+<div class="hero-row">
+      <div class="gimmick-box">
+        <a class="media-brick media-brick-violet" href="javascript:void(0)" title="Onza's clips" aria-label="Onza's clips">
+          <span class="media-frame"><svg fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M7 3v18"/><path d="M3 7.5h4"/><path d="M3 12h18"/><path d="M3 16.5h4"/><path d="M17 3v18"/><path d="M17 7.5h4"/><path d="M17 16.5h4"/></svg></span>
+          <span class="media-label">Clips</span>
+        </a>
+        <a class="media-brick media-brick-teal" href="javascript:void(0)" title="Onza's audio" aria-label="Onza's audio">
+          <span class="media-frame"><svg fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><circle cx="8.5" cy="18.5" r="3.5"/><circle cx="17.5" cy="15.5" r="3.5"/><path d="M12 18.5V6a5 5 0 0 1 5-5h2"/><path d="M12 6a5 5 0 0 1 5-5h2"/></svg></span>
+          <span class="media-label">Audio</span>
+        </a>
+      </div>
+      <div class="instructions herocard" id="goalText">
       <img class="owner-img" src="https://res.cloudinary.com/dqwm4pdbz/image/upload/q_auto/f_auto/e_bgremoval/v1786623812/onza_3avface_gyyay8.png" alt="Onza" />
       <div class="owner-info">
         <div class="owner-name">Onza</div>
         <div class="owner-rank">
-          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M11.051 7.616a1 1 0 0 1 1.909.024l.737 1.452a1 1 0 0 0 .737.535l1.634.256a1 1 0 0 1 .588 1.806l-1.172 1.168a1 1 0 0 0-.282.866l.259 1.613a1 1 0 0 1-1.541 1.134l-1.465-.75a1 1 0 0 0-.912 0l-1.465.75a1 1 0 0 1-1.539-1.133l.258-1.613a1 1 0 0 0-.282-.867l-1.156-1.152a1 1 0 0 1 .572-1.822l1.633-.256a1 1 0 0 0 .737-.535z"/></svg>
+          <svg class="star-silver" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M11.051 7.616a1 1 0 0 1 1.909.024l.737 1.452a1 1 0 0 0 .737.535l1.634.256a1 1 0 0 1 .588 1.806l-1.172 1.168a1 1 0 0 0-.282.866l.259 1.613a1 1 0 0 1-1.541 1.134l-1.465-.75a1 1 0 0 0-.912 0l-1.465.75a1 1 0 0 1-1.539-1.133l.258-1.613a1 1 0 0 0-.282-.867l-1.156-1.152a1 1 0 0 1 .572-1.822l1.633-.256a1 1 0 0 0 .737-.535z"/></svg>
           <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M11.051 7.616a1 1 0 0 1 1.909.024l.737 1.452a1 1 0 0 0 .737.535l1.634.256a1 1 0 0 1 .588 1.806l-1.172 1.168a1 1 0 0 0-.282.866l.259 1.613a1 1 0 0 1-1.541 1.134l-1.465-.75a1 1 0 0 0-.912 0l-1.465.75a1 1 0 0 1-1.539-1.133l.258-1.613a1 1 0 0 0-.282-.867l-1.156-1.152a1 1 0 0 1 .572-1.822l1.633-.256a1 1 0 0 0 .737-.535z"/></svg>
           <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M11.051 7.616a1 1 0 0 1 1.909.024l.737 1.452a1 1 0 0 0 .737.535l1.634.256a1 1 0 0 1 .588 1.806l-1.172 1.168a1 1 0 0 0-.282.866l.259 1.613a1 1 0 0 1-1.541 1.134l-1.465-.75a1 1 0 0 0-.912 0l-1.465.75a1 1 0 0 1-1.539-1.133l.258-1.613a1 1 0 0 0-.282-.867l-1.156-1.152a1 1 0 0 1 .572-1.822l1.633-.256a1 1 0 0 0 .737-.535z"/></svg>
           <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M11.051 7.616a1 1 0 0 1 1.909.024l.737 1.452a1 1 0 0 0 .737.535l1.634.256a1 1 0 0 1 .588 1.806l-1.172 1.168a1 1 0 0 0-.282.866l.259 1.613a1 1 0 0 1-1.541 1.134l-1.465-.75a1 1 0 0 0-.912 0l-1.465.75a1 1 0 0 1-1.539-1.133l.258-1.613a1 1 0 0 0-.282-.867l-1.156-1.152a1 1 0 0 1 .572-1.822l1.633-.256a1 1 0 0 0 .737-.535z"/></svg>
@@ -1719,20 +1790,18 @@
           <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M11.051 7.616a1 1 0 0 1 1.909.024l.737 1.452a1 1 0 0 0 .737.535l1.634.256a1 1 0 0 1 .588 1.806l-1.172 1.168a1 1 0 0 0-.282.866l.259 1.613a1 1 0 0 1-1.541 1.134l-1.465-.75a1 1 0 0 0-.912 0l-1.465.75a1 1 0 0 1-1.539-1.133l.258-1.613a1 1 0 0 0-.282-.867l-1.156-1.152a1 1 0 0 1 .572-1.822l1.633-.256a1 1 0 0 0 .737-.535z"/></svg>
           <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M11.051 7.616a1 1 0 0 1 1.909.024l.737 1.452a1 1 0 0 0 .737.535l1.634.256a1 1 0 0 1 .588 1.806l-1.172 1.168a1 1 0 0 0-.282.866l.259 1.613a1 1 0 0 1-1.541 1.134l-1.465-.75a1 1 0 0 0-.912 0l-1.465.75a1 1 0 0 1-1.539-1.133l.258-1.613a1 1 0 0 0-.282-.867l-1.156-1.152a1 1 0 0 1 .572-1.822l1.633-.256a1 1 0 0 0 .737-.535z"/></svg>
         </div>
-      </div>
-      <a class="media-brick media-brick-teal" href="javascript:void(0)" title="Onza's clips & songs" aria-label="Onza's clips and songs">
-        <span class="media-frame"><svg fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><circle cx="8.5" cy="18.5" r="3.5"/><circle cx="17.5" cy="15.5" r="3.5"/><path d="M12 18.5V6a5 5 0 0 1 5-5h2"/><path d="M12 6a5 5 0 0 1 5-5h2"/></svg></span>
-        <span class="media-label">Clips</span>
-      </a>
+        <div class="owner-rank-label">Novice</div>
+</div>
+    </div>
     </div>
 
-    <!-- The Attic: items can live here or be stored back here -->
+<!-- The Discovery Zone: items can live here or be stored back here -->
     <div class="palette">
       <div class="palette-title">
-        The Attic
+        The Discovery Zone
         <span class="save-load-btns">
-          <button class="sl-btn" id="save-s1" title="Save The Attic">&#x1F4BE;</button>
-          <button class="sl-btn" id="load-s1" title="Load The Attic">&#x1F4C2;</button>
+          <button class="sl-btn" id="save-s1" title="Save The Discovery Zone">&#x1F4BE;</button>
+          <button class="sl-btn" id="load-s1" title="Load The Discovery Zone">&#x1F4C2;</button>
         </span>
       </div>
       <div class="item-container" id="inventory">
@@ -1898,7 +1967,7 @@
       </div>
       <div class="tidy-hint" id="tidyHint"></div>
       <div class="box-area" id="boxArea">
-        <div class="box-bar attract" id="boxBar">
+        <div class="box-bar" id="boxBar">
           <button type="button" class="box-chip stack-chip" data-cat="stack" title="Box Stack: drag a box here to store it away">
             <span class="box-icon"><i data-lucide="layers"></i></span>
             <span class="box-name">Stack</span>
@@ -1952,15 +2021,7 @@
           </div>
         </div>
       </div>
-    <div class="palette">
-      <div class="palette-title">
-        Space Two
-        <span class="save-load-btns">
-          <button class="sl-btn" id="save-s2" title="Save Space Two">&#x1F4BE;</button>
-          <button class="sl-btn" id="load-s2" title="Load Space Two">&#x1F4C2;</button>
-        </span>
-      </div>
-      <div class="item-container" id="phrases-inventory">
+    <div class="item-container" id="phrases-inventory">
         <div class="draggable-item phrase" id="phrase-whats-your-name"><i data-lucide="circle-question-mark" class="phrase-tag"></i>What is your name?</div>
         <div class="draggable-item phrase" id="phrase-my-name-is"><i data-lucide="circle-alert" class="phrase-tag"></i>My name is ...</div>
         <div class="draggable-item phrase" id="phrase-how-old"><i data-lucide="circle-question-mark" class="phrase-tag"></i>How old are you?</div>
@@ -2017,18 +2078,6 @@
         <div class="draggable-item text-brick" id="txt-sleep" data-word="sleep">Sleep</div>
         <div class="draggable-item text-brick" id="txt-read" data-word="read">Read</div>
       </div>
-      <div class="box-area" id="boxArea2">
-        <div class="box-bar" id="boxBar2">
-          <button type="button" class="box-chip stack-chip" data-cat="stack" title="Box Stack: drag a box here to store it away">
-            <span class="box-icon"><i data-lucide="layers"></i></span>
-            <span class="box-name">Stack</span>
-            <span class="box-count stack-count">0</span>
-          </button>
-        </div>
-        <div class="box-trays" id="boxTrays2"></div>
-      </div>
-      <div class="lab-zone" id="labZone2"></div>
-    </div>
 
     <!-- Animals -->
     <div class="grid-container" style="grid-template-columns: 1fr; max-width: 320px;">
@@ -2194,16 +2243,6 @@
         "act-go": "Activities",
         "act-sleep": "Activities",
         "act-read": "Activities",
-        "txt-wake-up": "Activities",
-        "txt-get-up": "Activities",
-        "txt-wash": "Activities",
-        "txt-brush": "Activities",
-        "txt-eat": "Activities",
-        "txt-drink": "Activities",
-        "txt-play": "Activities",
-        "txt-go": "Activities",
-        "txt-sleep": "Activities",
-        "txt-read": "Activities",
       };
       var categoryOrder = [
         "Colours",
@@ -2237,10 +2276,7 @@
       function buildBoxes() {
         var bar = document.getElementById("boxBar");
         var trays = document.getElementById("boxTrays");
-        var bar2 = document.getElementById("boxBar2");
-        var trays2 = document.getElementById("boxTrays2");
         if (!bar || !trays) return;
-        var spaceTwoCats = ["Questions", "Phrases", "Activities"];
         var totals = {};
         Object.keys(itemCategories).forEach(function (id) {
           var cat = itemCategories[id];
@@ -2273,9 +2309,7 @@
             }
             toggleBox(cat);
           });
-          var isSpaceTwo = spaceTwoCats.indexOf(cat) !== -1;
-          if (isSpaceTwo && bar2) bar2.appendChild(chip);
-          else bar.appendChild(chip);
+          bar.appendChild(chip);
 
           var tray = document.createElement("div");
           tray.className = "box-tray";
@@ -2294,8 +2328,7 @@
           var inner = document.createElement("div");
           inner.className = "box-tray-inner";
           tray.appendChild(inner);
-          if (isSpaceTwo && trays2) trays2.appendChild(tray);
-          else trays.appendChild(tray);
+          trays.appendChild(tray);
 
           boxRefs[cat] = {
             chip: chip,
@@ -2350,8 +2383,6 @@
 
       function toggleBox(cat) {
         var ref = boxRefs[cat];
-        var homeBar = ref && ref.chip.closest(".box-bar");
-        if (homeBar) homeBar.classList.remove("attract");
         if (openCat === cat) {
           closeBox();
           return;
@@ -2453,8 +2484,6 @@
           boxDragging = true;
           suppressBoxClick = true;
           if (openCat === boxChip.dataset.cat) closeBox();
-          var homeBar = boxChip.closest(".box-bar");
-          if (homeBar) homeBar.classList.remove("attract");
           var rect = boxChip.getBoundingClientRect();
           boxOffX = boxStartX - rect.left;
           boxOffY = boxStartY - rect.top;
@@ -2566,7 +2595,7 @@
         });
       }
 
-      // Randomize the order of items in Space One (Fisher-Yates on the
+      // Randomize the order of items in the main shelf (Fisher-Yates on the
       // item children only; stored box chips keep their place).
       function shuffleItems() {
         var container = document.getElementById("inventory");
@@ -3180,7 +3209,10 @@
           } else if (overZone.classList.contains("box-tray-inner")) {
             var trayEl = overZone.closest(".box-tray");
             var boxCat = trayEl ? trayEl.dataset.cat : null;
-            if (boxCat && itemCategories[activeItem.id] === boxCat) {
+            var itemCat = itemCategories[activeItem.id];
+            if (activeItem.hasAttribute("data-activity-combined"))
+              itemCat = "Activities";
+            if (boxCat && itemCat === boxCat) {
               overZone.appendChild(activeItem);
               checkGoal();
             }
@@ -3590,7 +3622,7 @@
       function resetGame() {
         var inventory = document.getElementById("inventory");
         var phraseBin = document.getElementById("phrases-inventory");
-        // Phrase bricks belong back at Space Two, everything else Space One.
+        // Phrase/activity bricks live in their own shelf, everything else in the main one.
         function parkItem(el) {
           if (
             (el.classList.contains("phrase") ||
@@ -3693,7 +3725,7 @@
             spotActivityReset.appendChild(actSlot);
           }
         }
-        // Park all boxes back at Space One.
+        // Park all boxes back into the palette.
         var homeBar = document.getElementById("boxBar");
         var homeTrays = document.getElementById("boxTrays");
         Object.keys(boxRefs).forEach(function (cat) {
@@ -3713,8 +3745,6 @@
           boxAreaEl.classList.remove("dissolving");
           boxAreaEl.style.display = "";
         }
-        var barEl = document.getElementById("boxBar");
-        if (barEl) barEl.classList.add("attract");
         setTidyHint("");
         document
           .querySelectorAll(".drop-zone .imprint")
@@ -3933,17 +3963,11 @@
 
       document.getElementById("save-s1").addEventListener("click", function () {
         saveSpace("mysteryBase_space1", space1Items);
+        saveSpace("mysteryBase_space2", space2Items);
         flashBtn(this);
       });
       document.getElementById("load-s1").addEventListener("click", function () {
         loadSpace("mysteryBase_space1", space1Items, "inventory");
-        flashBtn(this);
-      });
-      document.getElementById("save-s2").addEventListener("click", function () {
-        saveSpace("mysteryBase_space2", space2Items);
-        flashBtn(this);
-      });
-      document.getElementById("load-s2").addEventListener("click", function () {
         loadSpace("mysteryBase_space2", space2Items, "phrases-inventory");
         flashBtn(this);
       });
