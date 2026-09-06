@@ -189,6 +189,13 @@
       .btn-next {
         background: #3b82f6;
       }
+      #nextBtn:disabled {
+        background: #94a3b8;
+        cursor: not-allowed;
+        transform: none;
+        filter: none;
+        opacity: 0.6;
+      }
 
       .verdict {
         min-height: clamp(1.3rem, 4vh, 2rem);
@@ -328,12 +335,27 @@
         b2: { strokes: 2, foot: 0.1 }
       };
 
+      var ASCENDERS = "bdfhkl";
+      var DESCENDERS = "gjpqy";
+      function letterType(ch) {
+        if (ch !== ch.toLowerCase()) return "tall";
+        if (ASCENDERS.indexOf(ch) >= 0) return "tall";
+        if (DESCENDERS.indexOf(ch) >= 0) return "descender";
+        return "short";
+      }
+
       // ---- State ----
       var current = 0;
       var locked = false; // after Check, drawing is read-only until Next/Clear
+      var passed = false; // the current word has passed its Check
 
       var $ = function (id) { return document.getElementById(id); };
       $("countLabel").textContent = "1/" + WORDS.length;
+      function setNextEnabled(enabled) {
+        var b = $("nextBtn");
+        b.disabled = !enabled;
+        b.title = enabled ? "Go to the next word" : "Check your word first";
+      }
 
       // Faint traceable letter shown inside each blank pad before/while the
       // pupil writes. Painted on top of the cleared canvas on every redraw.
@@ -347,30 +369,25 @@
         var topLine = ch * 0.09;
         var midLine = ch * 0.42;
         var baseline = ch * 0.78;
-        var isCap = en.ghost === en.ghost.toUpperCase();
-        var targetTop = isCap ? topLine : midLine * 0.8;
+        var type = letterType(en.ghost);
+        var zoneTop = (type === "tall") ? topLine : midLine;
+        var availH = baseline - zoneTop;
 
         ctx.save();
         ctx.textAlign = "center";
         ctx.textBaseline = "alphabetic";
         ctx.fillStyle = "rgba(160,170,190,0.45)";
 
-        var fs = ch * (isCap ? 0.6 : 0.36);
-        for (var i = 0; i < 4; i++) {
-          ctx.font = "900 " + fs + "px 'Segoe UI', Arial, sans-serif";
-          var m = ctx.measureText(en.ghost);
-          var ascent = m.actualBoundingBoxAscent || fs * 0.72;
-          var descent = m.actualBoundingBoxDescent || fs * 0.2;
-          var availH = baseline - targetTop;
-          var k = availH / (ascent + descent);
-          fs *= k;
-        }
-        // Guard against overflowing the pad width on wide letters.
+        var refChar = (type === "tall") ? "H" : "x";
+        ctx.font = "900 100px 'Segoe UI', Arial, sans-serif";
+        var refAscent = (ctx.measureText(refChar).actualBoundingBoxAscent || 75) / 100;
+        var fs = availH / refAscent;
+
         ctx.font = "900 " + fs + "px 'Segoe UI', Arial, sans-serif";
-        if (ctx.measureText(en.ghost).width > cw * 0.92) {
-          fs *= (cw * 0.92) / ctx.measureText(en.ghost).width;
-          ctx.font = "900 " + fs + "px 'Segoe UI', Arial, sans-serif";
+        if (ctx.measureText(en.ghost).width > cw * 0.88) {
+          fs *= (cw * 0.88) / ctx.measureText(en.ghost).width;
         }
+        ctx.font = "900 " + fs + "px 'Segoe UI', Arial, sans-serif";
         ctx.fillText(en.ghost, cw / 2, baseline);
         ctx.restore();
       }
@@ -406,6 +423,8 @@
         row.innerHTML = "";
         pads = [];
         locked = false;
+        passed = false;
+        setNextEnabled(false);
         $("verdict").textContent = "";
         $("verdict").className = "verdict";
         $("hintLine").textContent = "Trace the letters: “" + word.w.charAt(0).toUpperCase() + word.w.slice(1) + "”";
@@ -428,7 +447,7 @@
           row.appendChild(pad);
 
           var ctx = canvas.getContext("2d");
-          var entry = { canvas: canvas, ctx: ctx, strokes: [], drawing: false };
+          var entry = { canvas: canvas, ctx: ctx, strokes: [], drawing: false, lineWidth: 6 };
           // First letter is a capital, the rest lowercase (e.g. "Tree").
           entry.ghost =
             pads.length === 0
@@ -457,7 +476,7 @@
             var p = pos(e.touches ? e.touches[0] : e);
             entry.drawing = true;
             entry.strokes.push([p]);
-            ctx.lineWidth = 6;
+            ctx.lineWidth = entry.lineWidth;
             ctx.lineCap = "round";
             ctx.lineJoin = "round";
             ctx.strokeStyle = "#1d4ed8";
@@ -468,9 +487,6 @@
             var p = pos(e.touches ? e.touches[0] : e);
             var last = entry.strokes[entry.strokes.length - 1];
             last.push(p);
-            var w = canvas.getBoundingClientRect().width;
-            var h = canvas.getBoundingClientRect().height;
-            ctx.lineWidth = Math.max(4, w * 0.11);
             redraw(entry);
           }
           function redraw(en) {
@@ -495,7 +511,11 @@
 
       // ---- Shape check for one letter pad ----
       function checkPad(en) {
-        if (!en.strokes.length) return { drawn: false, score: 0 };
+        if (!en.strokes.length) return { drawn: false };
+        var type = letterType(en.ghost);
+        var box = en.canvas.getBoundingClientRect();
+        var ch = box.height;
+        var cw = box.width;
         var all = [];
         en.strokes.forEach(function (st) { all = all.concat(st); });
         var minX = Infinity, maxX = -Infinity, minY = Infinity, maxY = -Infinity;
@@ -506,13 +526,21 @@
           if (p.y > maxY) maxY = p.y;
         });
         var w = maxX - minX, h = maxY - minY;
-        var box = en.canvas.getBoundingClientRect();
-        var span = Math.min(box.width, box.height) || 1;
-        // Coverage: did the pen fill a decent amount of the box?
-        var coverage = Math.min(1, (w * h) / (box.width * box.height));
-        var single = en.strokes.length === 1;
-        // Score: strokes<2 bonus for single-stroke letters is handled per letter.
-        return { drawn: true, coverage: coverage, single: single, multi: en.strokes.length >= 2 };
+        var coverage = Math.min(1, (w * h) / (cw * ch));
+        var hints = [];
+        var zoneOk = true;
+        if (type === "tall") {
+          if (minY / ch > 0.50) { hints.push("Reach higher to the top line"); zoneOk = false; }
+          if (maxY / ch < 0.68) { hints.push("Come down to the baseline"); zoneOk = false; }
+        } else if (type === "short") {
+          if (minY / ch < 0.32) { hints.push("Stay below the middle line"); zoneOk = false; }
+          if (maxY / ch > 0.88) { hints.push("Don\u2019t go below the baseline"); zoneOk = false; }
+          if (maxY / ch < 0.68) { hints.push("Reach down to the baseline"); zoneOk = false; }
+        } else {
+          if (minY / ch < 0.32) { hints.push("Start from the middle line"); zoneOk = false; }
+          if (maxY / ch < 0.78) { hints.push("The tail should go below the baseline"); zoneOk = false; }
+        }
+        return { drawn: true, zoneOk: zoneOk, coverage: coverage, hints: hints, strokes: en.strokes.length };
       }
 
       // ---- Check the whole word ----
@@ -522,44 +550,51 @@
         var word = WORDS[current];
         var letters = word.w.split("");
         var anyDrawn = false,
-          okCount = 0;
+          okCount = 0,
+          allHints = [];
         pads.forEach(function (en, i) {
           var r = checkPad(en);
           if (r.drawn) anyDrawn = true;
-          var ch = letters[i];
-          var spec = LETTER_SHAPES[ch] || { strokes: 1 };
-          // Simple heuristic: a sensible letter generally has coverage in
-          // a middle band and the strokes are few (<4). Single-stroke vs
-          // multi-stroke adds a small bonus for letters that should have them.
-          var goodCov = r.coverage > 0.18 && r.coverage < 0.95;
-          var fewStrokes = r.multi ? en.strokes.length <= 3 : en.strokes.length <= 2;
-          if (r.drawn && goodCov && fewStrokes) okCount++;
+          var ok = r.drawn && r.zoneOk && r.coverage > 0.08 && r.coverage < 0.95 && r.strokes <= 4;
+          if (ok) {
+            okCount++;
+          } else if (r.drawn && r.hints.length) {
+            allHints.push({ letter: letters[i], hint: r.hints[0] });
+          }
         });
         var v = $("verdict");
+        var h = $("hintLine");
         if (!anyDrawn) {
           v.textContent = "Draw the word first, then check.";
           v.className = "verdict fail";
+          h.textContent = "";
           locked = false;
           return;
         }
         if (okCount === pads.length) {
-          v.textContent = "Great job! “" + word.w + "” looks right!";
+          passed = true;
+          setNextEnabled(true);
+          v.textContent = "\u201c" + word.w + "\u201d looks right!";
           v.className = "verdict ok";
+          h.textContent = "";
         } else if (okCount >= pads.length - 1) {
-          v.textContent = "Almost! One letter needs a little more care.";
+          v.textContent = "Almost! One letter needs care.";
           v.className = "verdict almost";
-        } else if (okCount >= 1) {
-          v.textContent = "Good try — " + okCount + " letter(s) looked good. Try the others again.";
-          v.className = "verdict part";
+          h.textContent = allHints.length ? "\u201c" + allHints[0].letter + "\u201d: " + allHints[0].hint : "";
         } else {
-          v.textContent = "Have another go — take your time tracing “" + word.w + "”.";
+          v.textContent = "Try again \u2014 check the guide lines.";
           v.className = "verdict fail";
+          h.textContent = allHints.slice(0, 2).map(function (x) {
+            return "\u201c" + x.letter + "\u201d: " + x.hint;
+          }).join("   ");
         }
       }
 
       // ---- Clearing / navigation ----
       function clearAll() {
         locked = false;
+        passed = false;
+        setNextEnabled(false);
         pads.forEach(function (en) {
           en.strokes = [];
           en.ctx.clearRect(0, 0, en.canvas.width, en.canvas.height);
@@ -567,8 +602,10 @@
         });
         $("verdict").textContent = "";
         $("verdict").className = "verdict";
+        $("hintLine").textContent = "";
       }
       function next() {
+        if (!passed) return;
         if (current < WORDS.length - 1) {
           current++;
           buildWord();
