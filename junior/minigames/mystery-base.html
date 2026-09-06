@@ -737,7 +737,21 @@
         background: var(--dropzone-hover);
       }
 
-      .box-chip.done {
+      /* Graphical box experiment (on hold): closed-box photo on packed chips.
+.box-chip.done {
+        border: none;
+        background: linear-gradient(rgba(30, 30, 40, 0.22), rgba(30, 30, 40, 0.22)),
+          url("https://res.cloudinary.com/dmkhsyfzf/image/upload/q_auto/f_auto/v1788284551/closed_box_nmnei5.png") center center / cover no-repeat;
+        color: #fff;
+        text-shadow: 0 1px 3px rgba(0, 0, 0, 0.65);
+      }
+
+      .box-chip.done .box-icon {
+        display: none;
+      }
+*/
+
+.box-chip.done {
         border-style: solid;
         border-color: var(--good);
         background: var(--goal-bg);
@@ -811,7 +825,25 @@
         border-color: var(--primary);
       }
 
-      .box-tray.sealed .box-tray-inner {
+      /* Graphical box experiment (on hold): open-box photo backdrop in trays.
+.box-tray.open .box-tray-inner {
+        border: none;
+        border-radius: 16px;
+        width: 100%;
+        max-width: 460px;
+        min-height: 280px;
+        aspect-ratio: 1 / 1;
+        margin: 0 auto;
+        background: url("https://res.cloudinary.com/dmkhsyfzf/image/upload/q_auto/f_auto/v1788284535/box-empty_xc6gww.png") center center / cover no-repeat;
+        padding: 18px;
+      }
+
+      .box-tray.open .box-tray-inner.drag-over {
+        box-shadow: inset 0 0 0 3px var(--primary);
+      }
+*/
+
+.box-tray.sealed .box-tray-inner {
         background: var(--goal-bg);
         border-color: var(--good);
         pointer-events: none;
@@ -857,6 +889,12 @@
           width: 84px;
           height: 76px;
         }
+        /* Graphical box experiment (on hold):
+        .box-tray.open .box-tray-inner {
+          max-width: 320px;
+          padding: 12px;
+        }
+        */
       }
 
       .item-container {
@@ -1214,11 +1252,12 @@
         border-color: #d97706;
       }
 
-      /* Activity Lab drop zone: definite tracks so it never collapses to zero
-         width and its ten slots stay visible and droppable. */
+      /* Activity Lab drop zone: one row of four reusable slots so it never
+         collapses to zero width; built tiles are parked into the Activities
+         box, freeing a slot for the next combination. */
       .spot-card.activity-lab:not(.lab-collapsed) > .drop-zone {
-        grid-template-columns: repeat(5, 96px);
-        grid-template-rows: repeat(2, 96px);
+        grid-template-columns: repeat(4, 96px);
+        grid-template-rows: 96px;
       }
 
       /* Each activity slot stacks an image zone over a word strip. */
@@ -1694,21 +1733,24 @@
           justify-self: center;
           min-width: 0;
         }
-        /* Activity Lab has ten activity slots — keep a tidy 5x2 grid on mobile. */
+        /* Activity Lab has four reusable slots — on mobile they relax into a
+           fluid 4-column row that fits any phone width without overflow. */
         .spot-card.activity-lab:not(.lab-collapsed) > .drop-zone {
-          grid-template-columns: repeat(5, 60px);
-          grid-template-rows: repeat(2, 84px);
+          grid-template-columns: repeat(4, 1fr);
+          grid-template-rows: 84px;
+          gap: 8px;
+          width: 100%;
+          max-width: 340px;
+          height: auto;
+          padding: 8px;
         }
-        .spot-card.activity-lab:not(.lab-collapsed) > .drop-zone > .slot {
-          min-width: 60px;
+        .spot-card.activity-lab:not(.lab-collapsed) .activity-slot {
+          padding: 2px;
+          min-width: 0;
           min-height: 84px;
         }
         .spot-card.activity-lab:not(.lab-collapsed) .act-word-zone {
           height: 20px;
-        }
-        .spot-card.activity-lab:not(.lab-collapsed) > .drop-zone > .slot:nth-child(3) {
-          grid-column: auto;
-          justify-self: stretch;
         }
         .palette {
           padding: 12px;
@@ -2007,12 +2049,6 @@
             <button type="button" class="lab-toggle" aria-label="Collapse Activity Lab" title="Collapse Activity Lab">+</button>
             <div class="spot-title">Activity Lab</div>
             <div class="drop-zone activity-lab-grid" id="spot-activity">
-              <div class="slot activity-slot"><div class="act-img-zone"></div><div class="act-word-zone"></div></div>
-              <div class="slot activity-slot"><div class="act-img-zone"></div><div class="act-word-zone"></div></div>
-              <div class="slot activity-slot"><div class="act-img-zone"></div><div class="act-word-zone"></div></div>
-              <div class="slot activity-slot"><div class="act-img-zone"></div><div class="act-word-zone"></div></div>
-              <div class="slot activity-slot"><div class="act-img-zone"></div><div class="act-word-zone"></div></div>
-              <div class="slot activity-slot"><div class="act-img-zone"></div><div class="act-word-zone"></div></div>
               <div class="slot activity-slot"><div class="act-img-zone"></div><div class="act-word-zone"></div></div>
               <div class="slot activity-slot"><div class="act-img-zone"></div><div class="act-word-zone"></div></div>
               <div class="slot activity-slot"><div class="act-img-zone"></div><div class="act-word-zone"></div></div>
@@ -2813,6 +2849,7 @@
       // combines into a labelled Activity Brick. A wrong word snaps back to
       // the palette until the matching image is found.
       var ACTIVITY_COUNT = 10;
+      var ACTIVITY_SLOT_COUNT = 4;
       var activityCombosDone = 0;
       var activityCombining = false;
 
@@ -3713,7 +3750,7 @@
         var spotActivityReset = document.getElementById("spot-activity");
         if (spotActivityReset) {
           spotActivityReset.querySelectorAll(".slot").forEach(function (s) { s.remove(); });
-          for (var i = 0; i < 10; i++) {
+          for (var i = 0; i < ACTIVITY_SLOT_COUNT; i++) {
             var actSlot = document.createElement("div");
             actSlot.className = "slot activity-slot";
             var actImgZone = document.createElement("div");
