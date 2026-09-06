@@ -26,7 +26,7 @@ EnglishExplorer/
 │   │   ├── toys-things.html
 │   ├── others/                  <-- Standalone classroom activity games (formerly empty placeholder)
 │   │   ├── indoor-outdoor-quest.html  <-- QR quest: scan, find something inside/outside the house
-│   │   └── handwriting-words.html    <-- iPad handwriting: fill the word on help lines
+│   │   └── handwriting-practice-01.html  <-- iPad handwriting: fill the word on help lines
 │   └── minigames/              <-- Highly gamified mini-games (formerly /Features)
 │       ├── abc-world.html
 │       ├── mb-grid-shift.html  <-- Grid Shift: flip bricks (front/back) from a stack, drag onto 7x5 grid; Airtable table GridShift
