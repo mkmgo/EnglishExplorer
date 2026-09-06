@@ -202,6 +202,7 @@ Simple, content-agnostic table. Column order in Airtable (autonumber first) is c
 | `ReadingListID` | Autonumber | First column; only Airtable seems to require a unique first field. Not used by the reader. |
 | `Title` | Single line text | Reading name shown on the card (also spoken via TTS). |
 | `Subtitle` | Single line text *(optional)* | Short note under the title (scene label, programme theme, etc.). |
+| `Feature` | Single select *(optional)* | Card emphasis. `Background (Accent)` fills the card with the subtle accent (Nimza purple); `Border` gives the card a visible accent-coloured border. Left empty for the default flat card. |
 | `Text` | Long text *(optional)* | Passage/paragraph. Cards with text get a **READ** button that opens the passage in an in-page modal (Tizen-safe) with a LISTEN button (chunked TTS). Used for story passages, the monthly programme overviews, and the profile template. |
 | `Link` | URL *(optional)* | Asset link — Cloudinary image/video, PDF, or external page. If it's an image, it's shown as a thumbnail; becomes the card's **OPEN** button. |
 | `DisplayOrder` | Number *(optional)* | Sort order (ascending, via the worker). Rows **without** a value sort to the **top** (Airtable orders empty numbers first); set it on every new row to control position. |

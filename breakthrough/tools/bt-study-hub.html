@@ -166,6 +166,15 @@
       .card:active {
         transform: scale(0.99);
       }
+      .card.feature-bg {
+        background: var(--accent2);
+      }
+      .card.feature-border {
+        border: 3px solid var(--accent);
+      }
+      .card.feature-border:hover {
+        border-color: var(--accent);
+      }
       .thumb {
         flex: none;
         width: clamp(64px, 12vw, 96px);
@@ -711,6 +720,9 @@
 
           var card = document.createElement("div");
           card.className = "card";
+          var feature = String(f.Feature || "").toLowerCase();
+          if (feature.indexOf("background") >= 0) card.classList.add("feature-bg");
+          else if (feature.indexOf("border") >= 0) card.classList.add("feature-border");
 
           var thumb = document.createElement("div");
           thumb.className = "thumb";
