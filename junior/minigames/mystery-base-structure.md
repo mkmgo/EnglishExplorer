@@ -2,7 +2,7 @@
 
 ## Overview
 
-The game has **1 discovery zone (single palette)**, **7 spot cards (drop zones)**, and **9 box categories** for tidy-up sorting. Items are dragged from the shelves into spots to complete goals and unlock progression.
+The game has **1 discovery zone (single palette)**, **8 spot cards (drop zones)**, and **10 box categories** for tidy-up sorting. Items are dragged from the shelves into spots to complete goals and unlock progression.
 
 ---
 
@@ -32,6 +32,7 @@ Source palette for object bricks, colour bricks, tokens, avatars, and numbers.
 | Blue | `#brick-blue` | `.brick.brick-blue` | Coloured circle + label |
 | Lab Token x3 | `#lab-token-1/2/3` | `.lab-token` | 44px image, yellow gradient bg |
 | Mod Token x3 | `#mod-token-1/2/3` | `.mod-token` | 44px image, green gradient bg |
+| Joker Token x3 | `#joker-token-1/2/3` | `.joker-token` | 46x56px, orange gradient, "Joker" label |
 | Onza | `#onza-avatar` | `.animal` `data-type="avatar"` | 48px circular image + name |
 | Sam | `#sam-avatar` | `.animal` `data-type="avatar"` | 48px circular image + name |
 | Five | `#num-five` | `.animal` `data-type="number"` | 48px circular image + name |
@@ -65,11 +66,43 @@ Source palette for phrase bricks (questions + statements), activity images, and 
 | Come here. | `#phrase-come-here` | Come here. |
 | Show me ... | `#phrase-show-me` | Show me ... |
 
+#### Activity Images (`.activity-item`, `data-word` attr)
+
+| Element | ID | data-word |
+|---------|-----|-----------|
+| Wake up | `#act-wake-up` | `wake-up` |
+| Get up | `#act-get-up` | `get-up` |
+| Wash | `#act-wash` | `wash` |
+| Brush | `#act-brush` | `brush` |
+| Eat | `#act-eat` | `eat` |
+| Drink | `#act-drink` | `drink` |
+| Play | `#act-play` | `play` |
+| Go | `#act-go` | `go` |
+| Sleep | `#act-sleep` | `sleep` |
+| Read | `#act-read` | `read` |
+
+#### Word Bricks (`.text-brick`, amber/yellow, matched to activity images)
+
+| Element | ID | data-word | Label |
+|---------|-----|-----------|-------|
+| Wake up | `#txt-wake-up` | `wake-up` | Wake up |
+| Get up | `#txt-get-up` | `get-up` | Get up |
+| Wash | `#txt-wash` | `wash` | Wash |
+| Brush | `#txt-brush` | `brush` | Brush |
+| Eat | `#txt-eat` | `eat` | Eat |
+| Drink | `#txt-drink` | `drink` | Drink |
+| Play | `#txt-play` | `play` | Play |
+| Go | `#txt-go` | `go` | Go |
+| Sleep | `#txt-sleep` | `sleep` | Sleep |
+| Read | `#txt-read` | `read` | Read |
+
+An `.inv-separator` divider sits between the activity images and word bricks.
+
 ---
 
 ## Spots (Drop Zones)
 
-### 1. Colour Lab (`#spot-1`)
+### 1. Colour Lab — "Mixer" (`#spot-1`)
 - **Layout:** Full-width, horizontal row (`colour-lab` class)
 - **Token slot:** `#token-slot` — accepts lab-tokens
 - **Drop zone:** 2 empty slots for colour bricks
@@ -96,15 +129,22 @@ Source palette for phrase bricks (questions + statements), activity images, and 
 - **Goal:** Place combined mystery items: `red-car`, `yellow-bee`, `blue-rabbit`
 - **Mechanic:** Drag brick + matching colour brick into Mystery slot → auto-combines
 
-### 5. Animal Mod (`#spot-5`)
+### 5. Animal Mod — "Mod Lab" (`#spot-5`)
 - **Layout:** Full-width, horizontal row (`colour-lab` class)
 - **Token slot:** `#token-slot-shapes` — accepts mod-tokens
 - **Drop zone:** 1 mod-slot (with modifier chips) + 1 empty slot
-- **Mod chips:** `- slow` / `+ hits` (stage 1) → `- weak` / `+ fast` (stage 2)
+- **Mod chips:** `- slow` / `+ hits` (stage 1) → `- weak` / `+ fast` (stage 2) → `- fast` / `+ big` (stage 3)
 - **Unlock:** Open from start
 - **Goal:** Complete 3 animal modifications
 
-### 6. Age (`#spot-age`)
+### 6. Activity Lab (`#spot-activity`)
+- **Layout:** Full-width, horizontal row (`colour-lab` class, `activity-lab` class)
+- **Drop zone:** 4 reusable `activity-slot` slots, each split into `.act-img-zone` (top) + `.act-word-zone` (bottom)
+- **Unlock:** Open from start
+- **Mechanic:** Drop an activity image into `.act-img-zone` and its matching word brick into `.act-word-zone` → if `data-word` matches, auto-combines into an `.activity-result` brick, then parks into the Activities box
+- **Goal:** All 10 activity bricks built (`activityCombosDone >= 10`)
+
+### 7. Age (`#spot-age`)
 - **Layout:** 2-column grid (left side, with Name dialogue)
 - **Drop zone:** 4 slots with imprints, open from start
 - **Imprint slots (in order):**
@@ -114,7 +154,7 @@ Source palette for phrase bricks (questions + statements), activity images, and 
   4. Eight (`data-accept="num-eight"`)
 - **Goal:** Place each item into its matching imprinted slot
 
-### 7. What is your Name? (`#spot-dialogue`)
+### 8. What is your Name? (`#spot-dialogue`)
 - **Layout:** 2-column grid (right side, with Age)
 - **Drop zone:** 4 slots with imprints, open from start
 - **Imprint slots (in order):**
@@ -158,6 +198,23 @@ Requires 1 lab-token in `#token-slot`. Token is consumed. New brick gets `data-l
 
 Requires 1 mod-token in `#token-slot-shapes`. Token is consumed. Animal gets green ring + `data-mod-combined="true"`. Original animal is stashed for reset.
 
+### Activity Combining (in `#spot-activity`)
+
+| Image | + Word Brick | = Result |
+|-------|-------------|----------|
+| `act-wake-up` | `txt-wake-up` | `act-wake-up-built` |
+| `act-get-up` | `txt-get-up` | `act-get-up-built` |
+| `act-wash` | `txt-wash` | `act-wash-built` |
+| `act-brush` | `txt-brush` | `act-brush-built` |
+| `act-eat` | `txt-eat` | `act-eat-built` |
+| `act-drink` | `txt-drink` | `act-drink-built` |
+| `act-play` | `txt-play` | `act-play-built` |
+| `act-go` | `txt-go` | `act-go-built` |
+| `act-sleep` | `txt-sleep` | `act-sleep-built` |
+| `act-read` | `txt-read` | `act-read-built` |
+
+Image and word brick must share the same `data-word`. The combined result gets `data-activity-combined="true"` and is parked into the Activities box after 700ms. A wrong word snaps back to the palette.
+
 ---
 
 ## Box Categories (Tidy-Up System)
@@ -175,6 +232,7 @@ Requires 1 mod-token in `#token-slot-shapes`. Token is consumed. Animal gets gre
 | Questions | `phrase-whats-your-name`, `phrase-how-old`, `phrase-do-you-like`, `phrase-where-is` |
 | Phrases | `phrase-my-name-is`, `phrase-i-am-old`, `phrase-look`, `phrase-listen`, `phrase-stand-up`, `phrase-sit-down`, `phrase-come-here`, `phrase-show-me` |
 | Activities | the built activity tiles (`data-activity-combined`, `act-<word>-built`) |
+| Words | `txt-wake-up`, `txt-get-up`, `txt-wash`, `txt-brush`, `txt-eat`, `txt-drink`, `txt-play`, `txt-go`, `txt-sleep`, `txt-read` |
 
 Box tags: Questions get `circle-question-mark` icon; Phrases get `circle-alert` icon.
 
@@ -192,9 +250,10 @@ Box tags: Questions get `circle-question-mark` icon; Phrases get `circle-alert` 
 
 ```
 Start
- ├─ Colour Lab (#spot-1)    ← open
- ├─ Animal Mod (#spot-5)    ← open
- ├─ Age (#spot-age)          ← open
+ ├─ Colour Lab (#spot-1)        ← open
+ ├─ Animal Mod (#spot-5)        ← open
+ ├─ Activity Lab (#spot-activity) ← open
+ ├─ Age (#spot-age)              ← open
  └─ Name dialogue (#spot-dialogue) ← open
 
 spot-1 reached ──→ Animals (#spot-2) unlocks
@@ -217,6 +276,7 @@ All of the following must be `true` to show the win overlay:
 | `#spot-age` | onza-avatar + num-seven + sam-avatar + num-eight all inside |
 | `#spot-dialogue` | phrase-whats-your-name + phrase-my-name-is + onza-avatar + sam-avatar all inside |
 | `#spot-5` | Always `true` (open, no strict win gate) |
+| `#spot-activity` | Always `true` (open, no strict win gate) |
 
 ---
 
@@ -234,3 +294,19 @@ All of the following must be `true` to show the win overlay:
 | Box done | `.box-chip.done` | Solid green border + green bg |
 | Dragging original | `.dragging-original` | 35% opacity |
 | Ghost (drag proxy) | `.ghost` | Fixed position, follows pointer |
+| Gamepad cursor | `#gamepadCursor` | 30px green ring, hidden until gamepad connected |
+| Gamepad grabbing | `#gamepadCursor.grabbing` | Amber ring, scaled up |
+| Gamepad hovering | `#gamepadCursor.hovering` | Blue ring over interactive targets |
+
+---
+
+## PS4 Gamepad Support
+
+A gamepad polling loop (`padPoll`) runs via `requestAnimationFrame` when `navigator.getGamepads` is available. It bridges the raw Gamepad API to the existing pointer-based drag-and-drop:
+
+- **Left stick / D-pad:** Move the green cursor ring across the screen.
+- **Cross (button 0):** Hold to grab (`pointerdown`), release to drop (`pointerup`). A short tap (< 14px movement) fires a synthetic `click` on toggle/button targets so labs and boxes open.
+- **Circle (button 1):** Cancel current drag — item snaps back to inventory.
+- **Right stick (axes 2/3):** Fine-fine alternate cursor movement (lower speed multiplier).
+- **D-pad when not grabbing:** Up/Down scrolls the page (60px per tick, 8-frame repeat ~130ms).
+- **Hover ring:** Blue ring appears when the cursor sits over an interactive target (`.lab-toggle`, `.box-chip`, `.draggable-item`, etc.).
