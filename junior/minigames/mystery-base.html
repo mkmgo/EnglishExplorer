@@ -1798,6 +1798,32 @@
         cursor: pointer;
         -webkit-tap-highlight-color: transparent;
       }
+
+      /* PS4 controller cursor (shown when a gamepad is connected) */
+      #gamepadCursor {
+        position: fixed;
+        z-index: 3000;
+        width: 30px;
+        height: 30px;
+        margin: -15px 0 0 -15px;
+        border-radius: 50%;
+        border: 3px solid #22c55e;
+        background: rgba(34, 197, 94, 0.18);
+        box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.25);
+        pointer-events: none;
+        display: none;
+        transition:
+          border-color 0.15s,
+          background-color 0.15s;
+      }
+      #gamepadCursor.connected {
+        display: block;
+      }
+      #gamepadCursor.grabbing {
+        border-color: #f59e0b;
+        background: rgba(245, 158, 11, 0.28);
+        transform: scale(1.25);
+      }
     </style>
   </head>
   <body>
@@ -1808,6 +1834,7 @@
     >
       🌙
     </button>
+    <div id="gamepadCursor"></div>
     <h1>Onza's Mystery Base</h1>
 <div class="hero-row">
       <div class="gimmick-box">
@@ -4054,6 +4081,196 @@
 
       var restartBtn = document.getElementById("restartBtn");
       if (restartBtn) restartBtn.addEventListener("click", resetGame);
+
+      // ---- PS4 controller -> pointer bridge ----
+      // Tizen (USB gamepad) exposes the controller only via the raw Gamepad
+      // API, producing no DOM events. This polls the gamepad each frame, moves
+      // a visible cursor (stick / D-pad), and fires synthetic pointer events on
+      // Cross-press / Cross-release so the existing drag-and-drop handles it.
+      // If no gamepad is present the block is inert and the page is unchanged.
+      var padCursor = document.getElementById("gamepadCursor");
+      var padActive = false; // a gamepad is being polled
+      var padX = window.innerWidth / 2;
+      var padY = window.innerHeight / 2;
+      var padGrabbing = false;
+      var padDownX = 0;
+      var padDownY = 0;
+      // Advance one "move" per held key tick (repeat delay/factor).
+      var padTick = 0;
+      var padPadHeld = false;
+      var lastGamepads = [];
+
+      function padFind() {
+        var pads;
+        try {
+          pads = navigator.getGamepads ? navigator.getGamepads() : [];
+        } catch (e) {
+          pads = [];
+        }
+        for (var i = 0; i < pads.length; i++) {
+          if (pads[i] && pads[i].connected) return pads[i];
+        }
+        return null;
+      }
+
+      function padBtnValue(gp, index) {
+        if (!gp || !gp.buttons || !gp.buttons[index]) return 0;
+        var b = gp.buttons[index];
+        return typeof b === "number" ? b : b.value;
+      }
+
+      function padBtnDown(gp, index) {
+        if (!gp || !gp.buttons || !gp.buttons[index]) return false;
+        var b = gp.buttons[index];
+        return typeof b === "number" ? b > 0 : b.pressed;
+      }
+
+      // Map a pointer-type event onto the element currently under the cursor.
+      function padDispatch(type, clientX, clientY, buttons) {
+        var el = document.elementFromPoint(clientX, clientY);
+        if (!el) return;
+        try {
+          var ev = new PointerEvent(type, {
+            bubbles: true,
+            cancelable: true,
+            clientX: clientX,
+            clientY: clientY,
+            pointerType: "touch",
+            pointerId: 991,
+            isPrimary: true,
+            buttons: buttons,
+          });
+          el.dispatchEvent(ev);
+        } catch (e) {}
+      }
+
+      function padPlaceCursor() {
+        padCursor.style.left = padX + "px";
+        padCursor.style.top = padY + "px";
+      }
+
+      function padMove(dx, dy) {
+        padX += dx;
+        padY += dy;
+        if (padX < 0) padX = 0;
+        if (padY < 0) padY = 0;
+        if (padX > window.innerWidth) padX = window.innerWidth;
+        if (padY > window.innerHeight) padY = window.innerHeight;
+        padPlaceCursor();
+        // Auto-scroll while dragging if the cursor hugs the viewport edge.
+        if (padGrabbing) padAutoScroll();
+      }
+
+      function padAutoScroll() {
+        var edge = Math.min(70, window.innerHeight * 0.15);
+        var step = 22;
+        if (padY < edge) window.scrollBy(0, -step);
+        else if (padY > window.innerHeight - edge) window.scrollBy(0, step);
+      }
+
+      function padPoll() {
+        var gp = padFind();
+        var pads;
+        try {
+          pads = navigator.getGamepads ? navigator.getGamepads() : [];
+        } catch (e) {
+          pads = [];
+        }
+        // Detect a newly connected gamepad even without an event.
+        var anyNow = false;
+        for (var i = 0; i < pads.length; i++) {
+          if (pads[i] && pads[i].connected) anyNow = true;
+        }
+        if (anyNow !== padActive) {
+          padActive = anyNow;
+          padCursor.classList.toggle("connected", padActive);
+          if (padActive) padPlaceCursor();
+        }
+        padTick++;
+
+        if (gp) {
+          // Left stick axes 0/1 (and 2/3 if 0/1 are the triggers on some maps).
+          var ax = padBtnValue(gp, 0) || 0;
+          var ay = padBtnValue(gp, 1) || 0;
+          var lx = gp.axes && gp.axes.length > 0 ? gp.axes[0] : 0;
+          var ly = gp.axes && gp.axes.length > 1 ? gp.axes[1] : 0;
+          var dead = 0.2;
+          var magL = Math.sqrt(lx * lx + ly * ly);
+          if (magL > dead) {
+            var n = (magL - dead) / (1 - dead);
+            padMove(lx * n * 18, ly * n * 18);
+            padPadHeld = false;
+            padTick = 0;
+          } else {
+            // D-pad: buttons 12=up 13=down 14=left 15=right.
+            var dUp = padBtnDown(gp, 12);
+            var dDown = padBtnDown(gp, 13);
+            var dLeft = padBtnDown(gp, 14);
+            var dRight = padBtnDown(gp, 15);
+            var dpadActive = dUp || dDown || dLeft || dRight;
+            if (dpadActive) {
+              if (!padPadHeld || padTick % 6 === 0) {
+                var ds = 60;
+                var dxp = (dRight ? 1 : 0) - (dLeft ? 1 : 0);
+                var dyp = (dDown ? 1 : 0) - (dUp ? 1 : 0);
+                padMove(dxp * ds, dyp * ds);
+              }
+              padPadHeld = true;
+            } else {
+              padPadHeld = false;
+            }
+          }
+
+          // Cross (button 0): hold = grab, release = drop.
+          var cross = padBtnDown(gp, 0);
+          if (cross && !padGrabbing) {
+            padGrabbing = true;
+            padCursor.classList.add("grabbing");
+            padDownX = padX;
+            padDownY = padY;
+            padDispatch("pointerdown", padX, padY, 1);
+          } else if (!cross && padGrabbing) {
+            padGrabbing = false;
+            padCursor.classList.remove("grabbing");
+            // If the cursor hasn't moved from the grab point, still fire a
+            // pointerup so any pending highlight clears. Movement is handled
+            // through the synthetic pointermove below.
+            padDispatch("pointerup", padX, padY, 0);
+          }
+          // Fire continuous pointermove while grabbing so the ghost follows
+          // the cursor exactly as with a mouse drag.
+          if (padGrabbing) {
+            padDispatch("pointermove", padX, padY, 1);
+          }
+
+          // Circle (button 1): cancel a drag snapped back to inventory.
+          if (padBtnDown(gp, 1) && padGrabbing) {
+            padGrabbing = false;
+            padCursor.classList.remove("grabbing");
+            // Move the cursor to the inventory and drop there, then a final
+            // move/up to snap the item to the shelf.
+            var inv = document.getElementById("inventory");
+            padDispatch("pointermove", padX, padY, 1);
+            padDispatch("pointerup", padX, padY, 0);
+            padCursor.classList.remove("connected");
+            padActive = false;
+          }
+
+          // Right stick as a fast-fine alternate (axes 2/3) when present.
+          var rx = gp.axes && gp.axes.length > 2 ? gp.axes[2] : 0;
+          var ry = gp.axes && gp.axes.length > 3 ? gp.axes[3] : 0;
+          var magR = Math.sqrt(rx * rx + ry * ry);
+          if (magR > dead) {
+            var rn = (magR - dead) / (1 - dead);
+            padMove(rx * rn * 5, ry * rn * 5);
+          }
+        }
+        requestAnimationFrame(padPoll);
+      }
+
+      if (typeof navigator !== "undefined" && navigator.getGamepads) {
+        padPoll();
+      }
     </script>
 
     <script src="https://unpkg.com/lucide@latest"></script>
