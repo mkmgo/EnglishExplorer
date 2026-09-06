@@ -29,7 +29,7 @@ EnglishExplorer/
 │   │   └── handwriting-words.html    <-- iPad handwriting: fill the word on help lines
 │   └── minigames/              <-- Highly gamified mini-games (formerly /Features)
 │       ├── abc-world.html
-│       ├── mystery-base.html
+│       ├── mystery-base.html   <-- FLAGSHIP: most-viewed, most-developed version; keep pristine, treat as base for feature integration
 │       ├── mystery-phrases.html
 │       ├── new-words-wizard.html
 │       ├── unlock-mystery.html
