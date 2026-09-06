@@ -37,11 +37,11 @@ EnglishExplorer/
 ├── breakthrough/               <-- Older pupils (EEBT - Advanced / Breakthrough)
 │   ├── protocols/              <-- Daily Protocols (YYYY-MM-DD.html)
 │   └── tools/                  <-- Standalone utility collection (formerly EEBTools/)
-│       ├── spotlight-pro.html
-│       ├── eebt-translator.html
-│       └── nimza-reading-list.html   <-- Nimza's reading list (Airtable-powered, dark mode)
+│       ├── bt-spotlight-pro.html
+│       └── bt-reading-list.html   <-- My Reading List (Airtable-powered, dark mode)
 ├── archive/                    <-- Older versions and backups for mobile/Tizen testing
-│   └── develop.html
+│   ├── develop.html
+│   └── eebt-translator.html    <-- Retired EEBT Translator tool
 └── template/                   <-- Reusable layouts (see "template/" below)
     └── thematic-layout.html    <-- Base thematic lesson deck scaffold
 ```
@@ -76,7 +76,7 @@ put in them (see "Self-contained files" below).
 
 - Use **kebab-case**, all **lowercase**: `my-new-module.html`, never `MyNewModule.html`, `my_new_module.html`, or `my module.html`.
 - No spaces, underscores, or uppercase letters in file names.
-- Existing product display names are unaffected — only file names are constrained (e.g. the translator stays "EEBT Translator" while its file is `eebt-translator.html`; the presenter hub is `spotlight-pro.html`, shown on screen as "SpotlightPro").
+- Existing product display names are unaffected — only file names are constrained (e.g. the translator stays "EEBT Translator" while its file is `eebt-translator.html`; the presenter hub is `bt-spotlight-pro.html`, shown on screen as "SpotlightPro").
 
 ## Backend worker (tracking + GitHub proxy)
 
@@ -103,7 +103,7 @@ There is **no `config.js`** — all secrets live server-side in the Cloudflare W
   - `GET /github?url=...` — GitHub API proxy (Bearer token added server-side).
   - `GET /airtable?table=<TableName>` — read-only Airtable reader (PAT stays server-side).
     Only **allowlisted** tables are readable: `ReadingList`. Returns `{ records: [...] }` sorted by
-    the `DisplayOrder` field ascending. Used by `nimza-reading-list.html`.
+    the `DisplayOrder` field ascending. Used by `bt-reading-list.html`.
   - `POST /` — Airtable visitor tracking.
   - `OPTIONS` — CORS preflight (`GET, POST, OPTIONS`).
 - Deploy with `npx wrangler deploy` from `english-explorer-tracker/`; set secrets with
@@ -142,7 +142,7 @@ When creating a new protocol, first read `breakthrough/protocols/README.md` for 
 
 ## Nimza's Reading List (Airtable-powered)
 
-`breakthrough/tools/nimza-reading-list.html` renders a reading list for the Breakthrough tutee, pulling content from Airtable at runtime (no hardcoded content).
+`breakthrough/tools/bt-reading-list.html` renders a reading list for the Breakthrough tutee, pulling content from Airtable at runtime (no hardcoded content).
 
 - The page fetches `GET /airtable?table=ReadingList` from the tracker worker and renders one tappable card per record.
 - It is responsive, has a dark-mode toggle (persisted in `localStorage["eebt-theme"]`, matching `updates.html`), and speaks each reading title via TTS (Tizen + Web Speech), consistent with the rest of the platform.

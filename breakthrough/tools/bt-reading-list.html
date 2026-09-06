@@ -9,8 +9,8 @@
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
     <meta http-equiv="Pragma" content="no-cache" />
     <meta http-equiv="Expires" content="0" />
-    <title>English Explorer — Nimza's Reading List</title>
-    <meta name="description" content="Nimza's Breakthrough reading list — powered by Airtable." />
+    <title>English Explorer — My Reading List</title>
+    <meta name="description" content="Breakthrough reading list — powered by Airtable." />
     <link
       rel="icon"
       type="image/png"
@@ -392,7 +392,7 @@
   </head>
   <body>
     <div class="topbar">
-      <span class="topbarTitle">Nimza's Reading List</span>
+      <span class="topbarTitle">My Reading List</span>
       <button id="themeBtn" aria-label="Toggle dark mode">
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -633,7 +633,7 @@
       function closeRead() {
         readModal.classList.remove("show");
         cancelSpeech();
-        logActivity("Nimza", "/breakthrough/tools/nimza-reading-list.html", "ReadingList", "CloseRead", "");
+        logActivity("Nimza", "/breakthrough/tools/bt-reading-list.html", "ReadingList", "CloseRead", "");
       }
       function speakReading() {
         speakLong(activeReading);
@@ -709,7 +709,7 @@
               '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/></svg>';
             speak.onclick = function () {
               say(title);
-              logActivity("Nimza", "/breakthrough/tools/nimza-reading-list.html", "ReadingList", "Speak", title);
+              logActivity("Nimza", "/breakthrough/tools/bt-reading-list.html", "ReadingList", "Speak", title);
             };
             head.appendChild(speak);
           }
@@ -733,7 +733,7 @@
               '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>READ';
             read.onclick = function () {
               openRead(title, text);
-              logActivity("Nimza", "/breakthrough/tools/nimza-reading-list.html", "ReadingList", "Read", title);
+              logActivity("Nimza", "/breakthrough/tools/bt-reading-list.html", "ReadingList", "Read", title);
             };
             actions.appendChild(read);
           }
@@ -746,7 +746,7 @@
             open.target = "_blank";
             open.rel = "noopener";
             open.onclick = function () {
-              logActivity("Nimza", "/breakthrough/tools/nimza-reading-list.html", "ReadingList", "OpenAsset", title);
+              logActivity("Nimza", "/breakthrough/tools/bt-reading-list.html", "ReadingList", "OpenAsset", title);
             };
             actions.appendChild(open);
           }
