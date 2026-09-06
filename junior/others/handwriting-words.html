@@ -408,7 +408,7 @@
         locked = false;
         $("verdict").textContent = "";
         $("verdict").className = "verdict";
-        $("hintLine").textContent = "Trace the letters: “" + word.w + "”";
+        $("hintLine").textContent = "Trace the letters: “" + word.w.charAt(0).toUpperCase() + word.w.slice(1) + "”";
         $("countLabel").textContent = (current + 1) + "/" + WORDS.length;
 
         word.w.split("").forEach(function () {
