@@ -118,6 +118,32 @@ There is **no `config.js`** — all secrets live server-side in the Cloudflare W
 - When a feature behaves differently per platform (e.g., clipboard, dialogs, video autoplay), test and handle both: Tizen first, then mobile. Avoid `window.prompt`/`window.confirm` on Tizen — use in-page modals (e.g., `#inputModal`) so users can type or paste.
 - Keep layouts responsive: desktop, tablet, and portrait/landscape phones must all fit without overflow.
 
+### PS4 controller steering (gamepad bridge)
+
+Tizen (USB gamepad) exposes the controller only via the raw **Gamepad API**, so
+the minigames poll it each frame with a "pointer bridge" that moves a visible
+cursor and fires synthetic `PointerEvent`s (Cross-press/release) into the
+existing document-level drag-and-drop handlers.
+
+- Implemented in **`junior/minigames/mystery-base.html`** (flagship) and
+  **`junior/minigames/mb-grid-shift.html`**. Steering is confirmed working
+  on-device (Tizen + PS4 controller). **Keep both copies in sync** when changing
+  the bridge.
+- Layout pieces required: the `#gamepadCursor` div, its CSS block (`.connected`,
+  `.grabbing`, `.hovering`), and the poller starting with
+  `if (typeof navigator !== "undefined" && navigator.getGamepads) { padPoll(); }`.
+- Button map: **Cross** = grab/drop (a short Cross tap on an unflipped brick
+  turns it), **Circle** = cancel drag (mystery-base: snap back to inventory;
+  grid-shift: snap back onto the deck), **D-pad** = move cursor and, when not
+  grabbing, Up/Down scroll the page, **R2** = toggle light/dark theme (reuses
+  the `#themeToggle` click handler so it persists to `localStorage["miniGameTheme"]`),
+  **Right stick** = fine cursor movement.
+- The bridge is inert (page unchanged) when no gamepad is present, so it is
+  safe on mobile/desktop too.
+- When porting to a new game, adapt the hover/click selector lists to that
+  game's interactive elements (`.flipCard, .cell, #themeToggle` in grid-shift)
+  and re-tune `padTapDist` / D-pad repeat speed only on real hardware if needed.
+
 ## Dialogue layout (slide 3 "Greeting and Introduction" and similar)
 
 - Dialogue bubbles alternate sides: Sam speaks on the **left** (`icardst` / accent background), Onza speaks on the **right** (`icardstb` / accent2 background).

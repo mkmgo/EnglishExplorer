@@ -1858,11 +1858,7 @@
           <span class="media-frame"><svg fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><circle cx="8.5" cy="18.5" r="3.5"/><circle cx="17.5" cy="15.5" r="3.5"/><path d="M12 18.5V6a5 5 0 0 1 5-5h2"/><path d="M12 6a5 5 0 0 1 5-5h2"/></svg></span>
           <span class="media-label">Audio</span>
         </a>
-        <a class="media-brick media-brick-teal" href="javascript:void(0)" title="Check gamepad" aria-label="Check gamepad" onclick="alert('Gamepads: ' + (navigator.getGamepads ? navigator.getGamepads().length : 'unsupported'))">
-          <span class="media-frame">🎮</span>
-          <span class="media-label">Pad</span>
-        </a>
-      </div>
+        </div>
       <div class="instructions herocard" id="goalText">
       <img class="owner-img" src="https://res.cloudinary.com/dqwm4pdbz/image/upload/q_auto/f_auto/e_bgremoval/v1786623812/onza_3avface_gyyay8.png" alt="Onza" />
       <div class="owner-info">
@@ -4101,12 +4097,13 @@
       // Cross-press / Cross-release so the existing drag-and-drop handles it.
       // If no gamepad is present the block is inert and the page is unchanged.
       //
-      // NOTE: controller steering still needs fine-tuning. Brick dragging
-      // works, but opening labs/boxes and scrolling were the gaps — the fixes
-      // below (synthetic click on tap, D-pad page scroll, hover ring, slower
-      // D-pad repeat) are sensible browser defaults — not yet tuned on the
-      // real Tizen/PS4 setup. Cursor speed, tap distance, scroll amount and
-      // the hover ring all need on-device verification / adjustment.
+      // Steering is confirmed working on-device (Tizen + PS4 controller):
+      // stick/D-pad cursor movement, Cross grab/drop, tap clicks for
+      // labs/boxes, D-pad page scroll and the hover ring are all tuned.
+      //
+      // Button map: Cross = grab/drop, Circle = cancel drag & snap back,
+      // D-pad = move cursor / scroll page, R2 = toggle light/dark theme,
+      // Right stick = fine cursor movement.
       var padCursor = document.getElementById("gamepadCursor");
       var padActive = false; // a gamepad is being polled
       var padX = window.innerWidth / 2;
@@ -4120,6 +4117,8 @@
       // A Cross release counts as a "tap" (fires synthetic click) when the
       // cursor moved less than this many px from the grab point.
       var padTapDist = 14;
+      // R2 (button 7) toggles the theme on its rising edge, not on hold.
+      var padThemePrev = false;
 
       function padFind() {
         var pads;
@@ -4314,6 +4313,15 @@
             padCursor.classList.remove("connected");
             padActive = false;
           }
+
+          // R2 (button 7): toggle light/dark theme on press — reuses the
+          // #themeToggle click handler so it persists to localStorage too.
+          var r2 = padBtnDown(gp, 7);
+          if (r2 && !padThemePrev) {
+            var themeBtn = document.getElementById("themeToggle");
+            if (themeBtn) themeBtn.click();
+          }
+          padThemePrev = r2;
 
           // Right stick as a fast-fine alternate (axes 2/3) when present.
           var rx = gp.axes && gp.axes.length > 2 ? gp.axes[2] : 0;
