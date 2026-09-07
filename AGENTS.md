@@ -68,7 +68,12 @@ put in them (see "Self-contained files" below).
 
 ### Self-contained files — no cross-file dependencies
 
-- Every HTML file is fully self-contained: inline `<style>` and inline `<script>`, no external JS/CSS libraries, no local assets folder.
+- Every HTML file is fully self-contained: inline `<style>` and inline `<script>`, no local assets folder.
+- **Approved exception for external JS**: the Lucide icon library (`https://unpkg.com/lucide@latest`,
+  loaded right before `tracker.js`) — used by `junior/minigames/mystery-base.html` and
+  `junior/minigames/mb-grid-shift.html`. Icons are declared as `<i data-lucide="name">` placeholders
+  and swapped for real SVGs with `lucide.createIcons()` via a `renderIcons()` helper. Do **not** add
+  any other external JS/CSS library without discussion.
 - Images and videos are hosted on Cloudinary and referenced by absolute `https://res.cloudinary.com/...` URLs.
 - No HTML file links to another HTML file (no local `href`/`src`/`window.open` to sibling files). **Do not introduce relative file references** — if two files must share code, treat that as a deliberate refactor and discuss it first.
 - When moving/renaming a file, move it without editing (git detects byte-identical copies as renames), then apply any edits on the new path.
@@ -205,7 +210,7 @@ CSS colour variable arrives in `PrimaryColour` (not `Fill`) — the game accepts
 | `TileFront` | URL *(optional)* | Front asset for `cloudinary-img` (absolute Cloudinary URL). |
 | `TileBackA` | URL *(optional)* | Back art for the **Red** deck (left). Falls back to legacy `TileBack`. |
 | `TileBackB` | URL *(optional)* | Back art for the **Orange** deck (right). |
-| `Lucide` | Single line text *(optional)* | Icon name for `lucide-icon` mode (`cooking-pot`, `sun`, `sofa`, `tent-tree`, `library-big`, `corner-right-down`, `corner-right-up`, `corner-left-down`, `corner-up-right`, `rotate-cw`). |
+| `Lucide` | Single line text *(optional)* | Any Lucide icon name for `lucide-icon` mode (e.g. `corner-right-down`, `rotate-cw`). Loaded at runtime from the CDN — no per-icon code needed. |
 | `Stroke` | Number *(optional)* | Icon stroke width (2). |
 | `IconSize` | Single line text *(optional)* | `Medium` etc. |
 | `PrimaryColour` | Single line text *(optional)* | Icon stroke colour (`#060606`) **or** the CSS colour var for `colour-only` (`var(--color-red)`). |
