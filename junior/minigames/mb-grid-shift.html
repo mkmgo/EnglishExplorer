@@ -692,6 +692,16 @@
 
       document.addEventListener("pointerup", endDrag);
 
+      function shuffle(arr) {
+        for (var i = arr.length - 1; i > 0; i--) {
+          var j = Math.floor(Math.random() * (i + 1));
+          var tmp = arr[i];
+          arr[i] = arr[j];
+          arr[j] = tmp;
+        }
+        return arr;
+      }
+
       // ---------- Build from Airtable ----------
       fetch(WORKER)
         .then(function (r) {
@@ -704,6 +714,7 @@
             var card = buildCard(rec);
             if (card) remaining.push(card);
           });
+          shuffle(remaining);
           refreshDeck();
           if (!remaining.length) {
             deckEl.textContent = "No cards yet.";

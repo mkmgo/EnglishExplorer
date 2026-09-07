@@ -154,8 +154,8 @@ rules yet — any card may go in any empty square.
 - Built minimal (only the code needed): theme toggle, pointer drag & drop (ghost +
   drop-zone highlight + edge auto-scroll), and `logActivity` (Turn / Place) via
   the shared `tracker.js` (`../../tracker.js`).
-- The deck keeps cards in Airtable's natural order (the worker applies **no** sort
-  for this table). When a card is placed the next one is revealed for turning.
+- The deck **randomises** brick order on load (`shuffle`, Fisher–Yates), overriding
+  Airtable's natural order. When a card is placed the next one is revealed for turning.
 - The game fetches `GET /airtable?table=GridShift` (allowlisted in the worker).
 
 ### Airtable `GridShift` table schema
