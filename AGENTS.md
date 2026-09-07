@@ -29,7 +29,7 @@ EnglishExplorer/
 │   │   └── handwriting-practice-01.html  <-- iPad handwriting: fill the word on help lines
 │   └── minigames/              <-- Highly gamified mini-games (formerly /Features)
 │       ├── abc-world.html
-│       ├── mb-grid-shift.html  <-- Grid Shift: flip bricks (front/back) from a stack, drag onto 7x5 grid; Airtable table GridShift
+│       ├── mb-grid-shift.html  <-- Grid Shift: flip bricks (front/back) from two 20-card stacks onto a shared 8x5 grid; Airtable table GridShift
 │       ├── mystery-base.html   <-- FLAGSHIP: most-viewed, most-developed version; keep pristine, treat as base for feature integration
 │       ├── mystery-phrases.html
 │       ├── new-words-wizard.html
@@ -171,17 +171,22 @@ When creating a new protocol, first read `breakthrough/protocols/README.md` for 
 
 ## Grid Shift minigame (Airtable-powered)
 
-`junior/minigames/mb-grid-shift.html` is a mystery-base-derived game: a stack of
-96×84 bricks with **front + back** faces (3D flip). Bricks start backs-up; tapping
-the top card turns it, and the revealed front can be dragged onto any empty cell of
-a fixed 7×5 grid (35 cells, sized to fit an iPad landscape board). No placement
-rules yet — any card may go in any empty square.
+`junior/minigames/mb-grid-shift.html` is a mystery-base-derived game: **two** player
+stacks of 96×84 bricks with **front + back** faces (3D flip), played on one shared
+8×5 grid (40 cells, sized to fit an iPad landscape board). The 40 Airtable bricks
+are **shuffled and dealt 20/20**: the Red deck (left) shows `TileBackA` backs, the
+Orange deck (right) shows `TileBackB` backs — every card in a deck shares its back
+art. Bricks start backs-up; tapping a deck's top card turns it, and the revealed
+front can be dragged onto any empty cell. No placement rules yet — any card may go
+in any empty square.
 
 - Built minimal (only the code needed): theme toggle, pointer drag & drop (ghost +
   drop-zone highlight + edge auto-scroll), and `logActivity` (Turn / Place) via
   the shared `tracker.js` (`../../tracker.js`).
-- The deck **randomises** brick order on load (`shuffle`, Fisher–Yates), overriding
-  Airtable's natural order. When a card is placed the next one is revealed for turning.
+- Each deck **randomises** its deal on load (`shuffle`, Fisher–Yates) and both decks
+  self-size from the Airtable fetch (`COLS`/`ROWS` are fixed; if fewer than 40 rows,
+  the second deck gets the remainder). When a card is placed the next one is revealed
+  for turning. "Grid complete!" fires only when **both** decks are empty.
 - The game fetches `GET /airtable?table=GridShift` (allowlisted in the worker).
 
 ### Airtable `GridShift` table schema
@@ -198,17 +203,18 @@ CSS colour variable arrives in `PrimaryColour` (not `Fill`) — the game accepts
 | `CategoryColour` | Single line text | Category accent (Beige/Blue/…) — currently unused. |
 | `RenderMode` | Single line text | `cloudinary-img` (image front), `colour-only` (coloured circle), or `lucide-icon` (inline icon). |
 | `TileFront` | URL *(optional)* | Front asset for `cloudinary-img` (absolute Cloudinary URL). |
-| `TileBack` | URL *(optional)* | Back-of-brick art, shown on the mystery stack (cover). |
+| `TileBackA` | URL *(optional)* | Back art for the **Red** deck (left). Falls back to legacy `TileBack`. |
+| `TileBackB` | URL *(optional)* | Back art for the **Orange** deck (right). |
 | `Lucide` | Single line text *(optional)* | Icon name for `lucide-icon` mode (`cooking-pot`, `sun`, `sofa`, `tent-tree`, `library-big`). |
 | `Stroke` | Number *(optional)* | Icon stroke width (2). |
 | `IconSize` | Single line text *(optional)* | `Medium` etc. |
 | `PrimaryColour` | Single line text *(optional)* | Icon stroke colour (`#060606`) **or** the CSS colour var for `colour-only` (`var(--color-red)`). |
 | `SecondColour`/`Fill`/`Subtext` | *optional* | Reserved; `Fill` is accepted as a colour-only fallback. |
 
-- To add bricks: they already fill a 35-cell board; add/remove rows in Airtable
-  and the deck + grid self-size (`COLS`/`ROWS` in the file are fixed while the grid
-  is 7×5; padding/empty cells are fine if fewer).
-- The worker fetch is capped at 200 records — ample for the current 35.
+- To add bricks: they already fill a 40-cell board; add/remove rows in Airtable
+  and the decks + grid self-size (`COLS`/`ROWS` in the file are fixed while the grid
+  is 8×5; padding/empty cells are fine if fewer).
+- The worker fetch is capped at 200 records — ample for the current 40.
 
 ## Nimza's Reading List (Airtable-powered)
 

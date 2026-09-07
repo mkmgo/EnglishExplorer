@@ -134,11 +134,20 @@
 
       .stage {
         display: flex;
-        align-items: flex-start;
-        justify-content: center;
-        gap: clamp(14px, 2.4vw, 28px);
+        flex-direction: column;
+        align-items: center;
+        gap: 18px;
         width: 100%;
         max-width: 1000px;
+      }
+
+      /* The two decks side by side (red left, orange right). */
+      .deckPair {
+        display: flex;
+        justify-content: center;
+        align-items: flex-start;
+        gap: 14px;
+        flex-wrap: wrap;
       }
 
       /* ---------- Deck (stacked mystery bricks) ---------- */
@@ -166,6 +175,14 @@
         text-transform: uppercase;
         letter-spacing: 0.05em;
       }
+      /* Deck colour badge (Red / Orange). */
+      .deckHead .dot {
+        width: 14px;
+        height: 14px;
+        border-radius: 50%;
+        display: inline-block;
+        box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.18);
+      }
       .count {
         background: var(--item-bg);
         border: 1px solid var(--item-border);
@@ -184,6 +201,7 @@
         font-weight: 900;
         color: var(--good);
         font-size: 0.95rem;
+        margin-top: 16px;
       }
       .hint {
         text-align: center;
@@ -315,7 +333,7 @@
       }
       .grid {
         display: grid;
-        grid-template-columns: repeat(7, 96px);
+        grid-template-columns: repeat(8, 96px);
         grid-template-rows: repeat(5, 84px);
         gap: 10px;
         padding: 12px;
@@ -440,20 +458,28 @@
     </button>
     <div id="gamepadCursor"></div>
     <h1>Grid Shift</h1>
-    <p class="instructions">Turn the top card to reveal it, then drag it onto any empty square.</p>
+    <p class="instructions">Two decks of 20. Turn your top card, then drag it onto any empty square. Fill all 40 to win!</p>
 
     <main class="stage">
-      <section class="deckPanel">
-        <div class="deckHead"><span>Cards</span><span class="count" id="count">0</span></div>
-        <div class="deck" id="deck"></div>
-        <div class="statusText" id="status" hidden>Grid complete!</div>
-        <div class="hint">Tap the top card to turn it over.</div>
-      </section>
+      <div class="deckPair">
+        <section class="deckPanel">
+          <div class="deckHead"><span class="dot" style="background:#ef4444"></span><span>Red</span><span class="count" id="countA">0</span></div>
+          <div class="deck" id="deckA"></div>
+          <div class="hint">Tap the top card to turn it over.</div>
+        </section>
+        <section class="deckPanel">
+          <div class="deckHead"><span class="dot" style="background:#f97316"></span><span>Orange</span><span class="count" id="countB">0</span></div>
+          <div class="deck" id="deckB"></div>
+          <div class="hint">Tap the top card to turn it over.</div>
+        </section>
+      </div>
 
       <div class="gridWrap">
         <section class="grid" id="grid"></section>
       </div>
     </main>
+
+    <div class="statusText" id="status" hidden>Grid complete!</div>
 
     <script>
       // Theme toggle (dark mode). Defaults to system preference.
@@ -490,12 +516,18 @@
         "https://english-explorer-tracker.mkmueller-mission.workers.dev/airtable?table=GridShift";
       var PAGE = "/junior/minigames/mb-grid-shift.html";
 
-      var deckEl = document.getElementById("deck");
+      var deckEls = [
+        document.getElementById("deckA"),
+        document.getElementById("deckB"),
+      ];
+      var countEls = [
+        document.getElementById("countA"),
+        document.getElementById("countB"),
+      ];
       var gridEl = document.getElementById("grid");
-      var countEl = document.getElementById("count");
       var statusEl = document.getElementById("status");
 
-      var COLS = 7;
+      var COLS = 8;
       var ROWS = 5;
 
       // Lucide icon paths for the Rooms category (self-contained, no CDN).
@@ -518,14 +550,20 @@
         }
       }
 
-      // Empty drop cells (7 x 5).
+      // Empty drop cells (8 x 5).
       for (var c = 0; c < COLS * ROWS; c++) {
         var cell = document.createElement("div");
         cell.className = "cell";
         gridEl.appendChild(cell);
       }
 
-      var remaining = [];
+      var remaining = [[], []];
+      // Assign a deck's shared back art onto one of its cards.
+      function setCardBack(card, url) {
+        if (!url) return;
+        var bf = card.querySelector(".backFace");
+        if (bf) bf.style.backgroundImage = "url('" + url + "')";
+      }
 
       function buildCard(rec) {
         var f = (rec && rec.fields) || {};
@@ -533,7 +571,7 @@
         var mode = f.RenderMode || "cloudinary-img";
         var label = f.Display || f.TileName || id;
         var front = f.TileFront || "";
-        var back = f.TileBack || "";
+        var back = f.TileBackA || f.TileBack || "";
         var fill = f.Fill || f.PrimaryColour || "";
         var primary = f.PrimaryColour || "#060606";
 
@@ -590,17 +628,24 @@
         return card;
       }
 
-      function refreshDeck() {
-        while (deckEl.firstChild) deckEl.removeChild(deckEl.firstChild);
-        countEl.textContent = String(remaining.length);
-        for (var i = 0; i < remaining.length; i++) {
-          var card = remaining[i];
+      function renderDeck(idx, list) {
+        var el = deckEls[idx];
+        while (el.firstChild) el.removeChild(el.firstChild);
+        countEls[idx].textContent = String(list.length);
+        for (var i = 0; i < list.length; i++) {
+          var card = list[i];
           card.style.top = i * 3 + "px";
           card.style.left = i * 3 + "px";
           card.style.zIndex = String(i + 1);
-          deckEl.appendChild(card);
+          el.appendChild(card);
         }
-        if (!remaining.length) {
+      }
+
+      function refreshDecks() {
+        renderDeck(0, remaining[0]);
+        renderDeck(1, remaining[1]);
+        var done = remaining[0].length === 0 && remaining[1].length === 0;
+        if (done) {
           gridEl.classList.add("done");
           statusEl.hidden = false;
         } else {
@@ -720,10 +765,11 @@
         if (overCell && !overCell.querySelector(".flipCard")) {
           overCell.appendChild(card);
           overCell.classList.add("filled");
-          var idx = remaining.indexOf(card);
-          if (idx > -1) remaining.splice(idx, 1);
+          var rem = card.dataset.deck === "B" ? remaining[1] : remaining[0];
+          var idx = rem.indexOf(card);
+          if (idx > -1) rem.splice(idx, 1);
           track("Place", card.dataset.id);
-          refreshDeck();
+          refreshDecks();
         }
         clearOverCell();
         activeItem = null;
@@ -749,20 +795,41 @@
         })
         .then(function (data) {
           var records = (data && data.records) || [];
+          var all = [];
+          var backA = "";
+          var backB = "";
           records.forEach(function (rec) {
+            var f = (rec && rec.fields) || {};
+            if (!backA) backA = f.TileBackA || f.TileBack || "";
+            if (!backB) backB = f.TileBackB || "";
             var card = buildCard(rec);
-            if (card) remaining.push(card);
+            if (card) all.push(card);
           });
-          shuffle(remaining);
-          refreshDeck();
-          if (!remaining.length) {
-            deckEl.textContent = "No cards yet.";
-            countEl.textContent = "0";
+          // Shuffle all cards, then deal them 20/20: the first half goes to
+          // the Red deck (left, TileBackA backs), the rest to the Orange deck
+          // (right, TileBackB backs) — every card of a deck shares its back.
+          shuffle(all);
+          var half = Math.ceil(all.length / 2);
+          all.forEach(function (card, i) {
+            var toA = i < half;
+            card.dataset.deck = toA ? "A" : "B";
+            setCardBack(card, toA ? backA : backB);
+          });
+          remaining[0] = all.slice(0, half);
+          remaining[1] = all.slice(half);
+          refreshDecks();
+          if (!all.length) {
+            deckEls.forEach(function (el, i) {
+              el.textContent = "No cards yet.";
+              countEls[i].textContent = "0";
+            });
           }
         })
         .catch(function () {
-          deckEl.textContent = "Couldn't load cards.";
-          countEl.textContent = "!";
+          deckEls.forEach(function (el, i) {
+            el.textContent = "Couldn't load cards.";
+            countEls[i].textContent = "!";
+          });
         });
 
       // ---- PS4 controller -> pointer bridge ----
@@ -971,12 +1038,18 @@
             padDispatch("pointermove", padX, padY, 1);
           }
 
-          // Circle (button 1): cancel a drag and snap the card back onto
-          // the deck instead of dropping it onto the grid.
+          // Circle (button 1): cancel a drag and snap the card back onto its
+          // own deck instead of dropping it onto the grid.
           if (padBtnDown(gp, 1) && padGrabbing) {
             padGrabbing = false;
             padCursor.classList.remove("grabbing");
-            var dr = deckEl.getBoundingClientRect();
+            var srcEl = null;
+            if (activeItem && activeItem.parentNode) {
+              if (activeItem.parentNode === deckEls[0]) srcEl = deckEls[0];
+              else if (activeItem.parentNode === deckEls[1]) srcEl = deckEls[1];
+            }
+            if (!srcEl) srcEl = deckEls[0];
+            var dr = srcEl.getBoundingClientRect();
             if (dr.width && dr.height) {
               padX = dr.left + dr.width / 2;
               padY = dr.top + dr.height / 2;
