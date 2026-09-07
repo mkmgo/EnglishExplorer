@@ -4771,41 +4771,97 @@ if (idx < 0) return;
         var yyyy = now.getFullYear();
         var dateStr = dd + "/" + mm + "/" + yyyy;
         var weekday = ["sun","mon","tue","wed","thu","fri","sat"][now.getDay()];
+        function mdSectionItemHtml(indent, item) {
+          var pad = new Array(indent + 1).join("  ");
+          if (item.t === "p") {
+            return pad + '<p>' + mdStripInline(item.text) + '</p>\n';
+          } else if (item.t === "h3") {
+            return pad + '<h3>' + mdEscapeHtml(mdStripInline(item.text)) + '</h3>\n';
+          } else if (item.t === "ol" || item.t === "ul") {
+            var tag = item.t;
+            var out = pad + '<' + tag + '>\n';
+            for (var k = 0; k < item.items.length; k++) {
+              out += pad + '  <li>' + mdStripInline(item.items[k]) + '</li>\n';
+            }
+            out += pad + '</' + tag + '>\n';
+            return out;
+          } else if (item.t === "bq") {
+            return pad + '<p class="example">' + mdStripInline(item.text) + '</p>\n';
+          } else if (item.t === "table") {
+            var t = pad + '<table class="vocab-table">\n';
+            if (item.header && item.header.length) {
+              t += pad + '  <thead><tr>';
+              for (var hh = 0; hh < item.header.length; hh++) {
+                t += '<th>' + mdEscapeHtml(mdStripInline(item.header[hh])) + '</th>';
+              }
+              t += '</tr></thead>\n';
+            }
+            t += pad + '  <tbody>\n';
+            for (var rr = 0; rr < item.rows.length; rr++) {
+              t += pad + '    <tr>';
+              for (var cc = 0; cc < item.rows[rr].length; cc++) {
+                t += '<td>' + mdEscapeHtml(mdStripInline(item.rows[rr][cc])) + '</td>';
+              }
+              t += '</tr>\n';
+            }
+            t += pad + '  </tbody>\n';
+            t += pad + '</table>\n';
+            return t;
+          }
+          return "";
+        }
+
+        function mdSectionHtml(title, items) {
+          var out = '      <h2>' + mdEscapeHtml(mdStripInline(title)) + '</h2>\n';
+          out += '      <div class="story-section">\n';
+          for (var j = 0; j < items.length; j++) {
+            out += mdSectionItemHtml(3, items[j]);
+          }
+          out += '      </div>\n';
+          return out;
+        }
+
         var sections = [];
+        var introItems = [];
         var currentSection = null;
         for (var i = 0; i < blocks.length; i++) {
           var b = blocks[i];
           if (b.t === "h" && b.level === 2) {
             if (currentSection) sections.push(currentSection);
-            currentSection = { title: mdStripInline(b.text), items: [] };
-          } else if (currentSection) {
-            if (b.t === "p") currentSection.items.push({ t: "p", text: b.text });
-            else if (b.t === "list") currentSection.items.push({ t: b.ordered ? "ol" : "ul", items: b.items });
-            else if (b.t === "bq") currentSection.items.push({ t: "bq", text: b.text });
+            currentSection = { title: b.text, items: [] };
+          } else if (b.t === "h" && b.level === 3) {
+            var it3 = { t: "h3", text: b.text };
+            if (currentSection) currentSection.items.push(it3);
+            else introItems.push(it3);
+          } else if (b.t === "p") {
+            var itp = { t: "p", text: b.text };
+            if (currentSection) currentSection.items.push(itp);
+            else introItems.push(itp);
+          } else if (b.t === "list") {
+            var itl = { t: b.ordered ? "ol" : "ul", items: b.items };
+            if (currentSection) currentSection.items.push(itl);
+            else introItems.push(itl);
+          } else if (b.t === "bq") {
+            var itb = { t: "bq", text: b.text };
+            if (currentSection) currentSection.items.push(itb);
+            else introItems.push(itb);
+          } else if (b.t === "table") {
+            var ita = { t: "table", header: b.header, rows: b.rows, align: b.align };
+            if (currentSection) currentSection.items.push(ita);
+            else introItems.push(ita);
           }
         }
         if (currentSection) sections.push(currentSection);
         var sectionHtml = "";
-        for (var s = 0; s < sections.length; s++) {
-          var sec = sections[s];
-          sectionHtml += '      <h2>' + mdEscapeHtml(sec.title) + '</h2>\n';
+        if (introItems.length) {
           sectionHtml += '      <div class="story-section">\n';
-          for (var j = 0; j < sec.items.length; j++) {
-            var item = sec.items[j];
-            if (item.t === "p") {
-              sectionHtml += '        <p>' + mdStripInline(item.text) + '</p>\n';
-            } else if (item.t === "ol" || item.t === "ul") {
-              var tag = item.t;
-              sectionHtml += '        <' + tag + '>\n';
-              for (var k = 0; k < item.items.length; k++) {
-                sectionHtml += '          <li>' + mdStripInline(item.items[k]) + '</li>\n';
-              }
-              sectionHtml += '        </' + tag + '>\n';
-            } else if (item.t === "bq") {
-              sectionHtml += '        <p class="example">' + mdStripInline(item.text) + '</p>\n';
-            }
+          for (var it = 0; it < introItems.length; it++) {
+            sectionHtml += mdSectionItemHtml(3, introItems[it]);
           }
           sectionHtml += '      </div>\n';
+        }
+        for (var s = 0; s < sections.length; s++) {
+          sectionHtml += mdSectionHtml(sections[s].title, sections[s].items);
         }
         var vocabRows = "";
         for (var v = 0; v < clipHistory.length; v++) {

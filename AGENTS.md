@@ -212,8 +212,16 @@ CSS colour variable arrives in `PrimaryColour` (not `Fill`) — the game accepts
 | `TileBackB` | URL *(optional)* | Back art for the **Orange** deck (right). |
 | `Lucide` | Single line text *(optional)* | Any Lucide icon name for `lucide-icon` mode (e.g. `corner-right-down`, `rotate-cw`). Loaded at runtime from the CDN — no per-icon code needed. |
 | `Stroke` | Number *(optional)* | Icon stroke width (2). |
-| `IconSize` | Single line text *(optional)* | `Medium` etc. |
+| `IconSize` | Single line text *(optional)* | Icon size preset: `Small` (22px) / `Medium` (28px, default) / `Large` (36px) or a px value. Wired via a `--icon-size` CSS var on `.round`. |
 | `PrimaryColour` | Single line text *(optional)* | Icon stroke colour (`#060606`) **or** the CSS colour var for `colour-only` (`var(--color-red)`). |
+| `Frame` | Single line text *(optional)* | Shape of the asset frame (`.round`): `round` (default), `square`, `r10` (10px radius), a px/rem/% value, or empty. |
+| `FrameSize` | Number *(optional)* | Frame diameter in px; empty = 48. |
+| `FrameBorder` | Single line text *(optional)* | Full CSS border shorthand (e.g. `3px solid #ef4444`); empty = theme border (`lucide-icon` keeps a 0 border). Column not yet in Airtable — supported in code if added. |
+| `FrameColour` | Single line text *(optional)* | Explicit frame fill background, overrides the mode default (incl. invert neutral); empty = auto. |
+| `TextColour` | Single line text *(optional)* | Word colour on the brick front; empty = `var(--text)`. |
+| `TextSize` | Single line text *(optional)* | Word size: `Small` / `Medium` (0.85rem, default) / `Large`, or a px/rem value. |
+| `ColourOutsideFrame` | Checkbox *(optional)* | Invert colour placement: the frame stays neutral and the **card face** fills with `PrimaryColour` (colour-only / lucide-icon). Empty = colour stays inside the frame (current behaviour). |
+| `FillTile` | Checkbox *(optional)* | Full-tile mode: the asset fills the whole brick face edge-to-edge and the word label is hidden (icon boosts to 52px). Works with all three render modes; overrides `Frame`/`FrameSize`/`FrameBorder` for that card. Empty = framed asset + label (default). |
 | `SecondColour`/`Fill`/`Subtext` | *optional* | Reserved; `Fill` is accepted as a colour-only fallback. |
 
 - To add bricks: they already fill a 40-cell board; add/remove rows in Airtable

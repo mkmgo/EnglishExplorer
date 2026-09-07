@@ -261,6 +261,10 @@
         color: var(--text);
         border: 1px solid var(--item-border);
       }
+      /* Full-tile bricks: the asset fills the whole face, edge to edge. */
+      .frontFace.fulltile {
+        padding: 0;
+      }
       .backFace {
         background: var(--item-bg) center center / cover no-repeat;
         border: 1px solid var(--item-border);
@@ -288,8 +292,8 @@
         pointer-events: none;
       }
       .round svg {
-        width: 28px;
-        height: 28px;
+        width: var(--icon-size, 28px);
+        height: var(--icon-size, 28px);
       }
       .cardName {
         font-weight: bold;
@@ -558,6 +562,45 @@
         if (bf) bf.style.backgroundImage = "url('" + url + "')";
       }
 
+      // ---- Per-card styling from Airtable -------------------------------
+      // Optional fields on the GridShift table let a brick override the
+      // default .round / .cardName look per card (see AGENTS.md). Empty
+      // fields keep today's defaults, so existing cards are unchanged.
+      function shapeRadius(frame) {
+        var s = String(frame || "").trim().toLowerCase();
+        if (!s || s === "round") return "50%";
+        if (s === "square") return "0";
+        var r = /^r(\d+)$/.exec(s);
+        if (r) return r[1] + "px";
+        if (/^\d+(\.\d+)?$/.test(s)) return parseFloat(s) + "px";
+        if (/^\d+(\.\d+)?(px|rem|em|%|vmin|vw)$/.test(s)) return s;
+        return "50%";
+      }
+
+      function isChecked(val) {
+        var v = String(val === undefined || val === null ? "" : val).trim().toLowerCase();
+        return v === "true" || v === "1" || v === "checked" || v === "on" || v === "yes";
+      }
+
+      function iconSizeCss(size) {
+        var s = String(size || "").trim().toLowerCase();
+        if (!s || s === "medium") return "28px";
+        if (s === "small") return "22px";
+        if (s === "large") return "36px";
+        if (/^\d+(\.\d+)?$/.test(s)) return parseFloat(s) + "px";
+        return "28px";
+      }
+
+      function textSizeCss(size) {
+        var s = String(size || "").trim().toLowerCase();
+        if (!s || s === "medium") return "";
+        if (s === "small") return "0.72rem";
+        if (s === "large") return "1.05rem";
+        if (/^\d+(\.\d+)?$/.test(s)) return parseFloat(s) + "px";
+        if (/^\d+(\.\d+)?(px|rem|em)$/.test(s)) return s;
+        return "";
+      }
+
       function buildCard(rec) {
         var f = (rec && rec.fields) || {};
         var id = f.GridShiftID || f.TileName || "";
@@ -567,6 +610,8 @@
         var back = f.TileBackA || f.TileBack || "";
         var fill = f.Fill || f.PrimaryColour || "";
         var primary = f.PrimaryColour || "#060606";
+        var invert = isChecked(f.ColourOutsideFrame);
+        var fulltile = isChecked(f.FillTile);
 
         var card = document.createElement("div");
         card.className = "flipCard draggable-item";
@@ -583,10 +628,25 @@
         var frontFace = document.createElement("div");
         frontFace.className = "face frontFace";
 
+        // Invert colour placement: the frame stays neutral and the card face
+        // fills with PrimaryColour instead (colour-only / lucide-icon only).
+        if (invert && primary && (mode === "colour-only" || mode === "lucide-icon")) {
+          frontFace.style.background = primary;
+        }
+
         var round = document.createElement("div");
         round.className = "round";
+        var frameSize = parseFloat(f.FrameSize);
+        if (isFinite(frameSize) && frameSize > 0) {
+          round.style.width = frameSize + "px";
+          round.style.height = frameSize + "px";
+        }
+        round.style.borderRadius = shapeRadius(f.Frame);
+        var iconSize = fulltile ? "52px" : iconSizeCss(f.IconSize);
+        round.style.setProperty("--icon-size", iconSize);
+
         if (mode === "colour-only" && fill) {
-          round.style.background = fill;
+          round.style.background = invert ? "var(--item-bg)" : fill;
         } else if (mode === "lucide-icon") {
           var name = String(f.Lucide || "").toLowerCase();
           round.style.background = "transparent";
@@ -604,12 +664,28 @@
           round.textContent = "?";
           round.style.background = "var(--item-bg)";
         }
+        // FrameColour / FrameBorder are explicit overrides for any mode.
+        if (f.FrameColour) round.style.background = String(f.FrameColour);
+        if (f.FrameBorder) round.style.border = String(f.FrameBorder);
+
+        // Full-tile mode (Airtable `FillTile` checkbox): the asset fills the
+        // whole brick face edge-to-edge and the word label is hidden.
+        if (fulltile) {
+          frontFace.classList.add("fulltile");
+          round.style.width = "100%";
+          round.style.height = "100%";
+          round.style.borderRadius = "10px";
+          round.style.border = "0";
+        }
         frontFace.appendChild(round);
 
         var nameEl = document.createElement("span");
         nameEl.className = "cardName";
         nameEl.textContent = label || id;
-        frontFace.appendChild(nameEl);
+        if (f.TextColour) nameEl.style.color = String(f.TextColour);
+        var textSize = textSizeCss(f.TextSize);
+        if (textSize) nameEl.style.fontSize = textSize;
+        if (!fulltile) frontFace.appendChild(nameEl);
 
         inner.appendChild(backFace);
         inner.appendChild(frontFace);
