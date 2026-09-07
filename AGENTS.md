@@ -205,7 +205,7 @@ CSS colour variable arrives in `PrimaryColour` (not `Fill`) — the game accepts
 | `TileFront` | URL *(optional)* | Front asset for `cloudinary-img` (absolute Cloudinary URL). |
 | `TileBackA` | URL *(optional)* | Back art for the **Red** deck (left). Falls back to legacy `TileBack`. |
 | `TileBackB` | URL *(optional)* | Back art for the **Orange** deck (right). |
-| `Lucide` | Single line text *(optional)* | Icon name for `lucide-icon` mode (`cooking-pot`, `sun`, `sofa`, `tent-tree`, `library-big`). |
+| `Lucide` | Single line text *(optional)* | Icon name for `lucide-icon` mode (`cooking-pot`, `sun`, `sofa`, `tent-tree`, `library-big`, `corner-right-down`, `corner-right-up`, `corner-left-down`, `corner-up-right`, `rotate-cw`). |
 | `Stroke` | Number *(optional)* | Icon stroke width (2). |
 | `IconSize` | Single line text *(optional)* | `Medium` etc. |
 | `PrimaryColour` | Single line text *(optional)* | Icon stroke colour (`#060606`) **or** the CSS colour var for `colour-only` (`var(--color-red)`). |
