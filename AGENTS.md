@@ -214,6 +214,7 @@ CSS colour variable arrives in `PrimaryColour` (not `Fill`) — the game accepts
 | `Stroke` | Number *(optional)* | Icon stroke width (2). |
 | `IconSize` | Single line text *(optional)* | Icon size preset: `Small` (22px) / `Medium` (28px, default) / `Large` (36px) or a px value. Wired via a `--icon-size` CSS var on `.round`. |
 | `PrimaryColour` | Single line text *(optional)* | Icon stroke colour (`#060606`) **or** the CSS colour var for `colour-only` (`var(--color-red)`). |
+| `SecondColour` | Single line text *(optional)* | Lucide-only: second stroke colour rendered as a soft drop-shadow glow behind the icon stroke (any CSS colour, e.g. `#f97316` or `var(--color-orange)`). Empty = no glow. |
 | `Frame` | Single line text *(optional)* | Shape of the asset frame (`.round`): `round` (default), `square`, `r10` (10px radius), a px/rem/% value, or empty. |
 | `FrameSize` | Number *(optional)* | Frame diameter in px; empty = 48. |
 | `FrameBorder` | Single line text *(optional)* | Full CSS border shorthand (e.g. `3px solid #ef4444`); empty = theme border (`lucide-icon` keeps a 0 border). Column not yet in Airtable — supported in code if added. |
@@ -222,8 +223,11 @@ CSS colour variable arrives in `PrimaryColour` (not `Fill`) — the game accepts
 | `TextSize` | Single line text *(optional)* | Word size: `Small` / `Medium` (0.85rem, default) / `Large`, or a px/rem value. |
 | `ColourOutsideFrame` | Checkbox *(optional)* | Invert colour placement: the frame stays neutral and the **card face** fills with `PrimaryColour` (colour-only / lucide-icon). Empty = colour stays inside the frame (current behaviour). |
 | `FillTile` | Checkbox *(optional)* | Full-tile mode: the asset fills the whole brick face edge-to-edge and the word label is hidden (icon boosts to 52px). Works with all three render modes; overrides `Frame`/`FrameSize`/`FrameBorder` for that card. Empty = framed asset + label (default). |
-| `SecondColour`/`Fill`/`Subtext` | *optional* | Reserved; `Fill` is accepted as a colour-only fallback. |
+| `Fill` | Single line text *(optional)* | Colour-only frame background — any CSS colour (hex `#ef4444`, name `red`, or palette var `var(--color-red)`). Empty = falls back to `PrimaryColour`. |
 
+- Shared CSS colour palette available to `Fill` / `PrimaryColour` (theme-aware vars):
+  `--color-blue`, `--color-yellow`, `--color-green`, `--color-red`, `--color-orange`,
+  `--color-purple`. Deck badges are Red `#ef4444` (left) and Orange `#f97316` (right).
 - To add bricks: they already fill a 40-cell board; add/remove rows in Airtable
   and the decks + grid self-size (`COLS`/`ROWS` in the file are fixed while the grid
   is 8×5; padding/empty cells are fine if fewer).

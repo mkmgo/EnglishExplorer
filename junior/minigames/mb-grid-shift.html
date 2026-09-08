@@ -295,6 +295,10 @@
         width: var(--icon-size, 28px);
         height: var(--icon-size, 28px);
       }
+      /* Optional SecondColour glow: soft drop-shadow around the icon stroke. */
+      .round.glow svg {
+        filter: drop-shadow(0 0 2px var(--second-colour, rgba(0, 0, 0, 0.4)));
+      }
       .cardName {
         font-weight: bold;
         font-size: 0.85rem;
@@ -653,6 +657,10 @@
           round.style.border = "0";
           round.style.color = primary;
           round.innerHTML = '<i data-lucide="' + name + '"></i>';
+          if (f.SecondColour) {
+            round.classList.add("glow");
+            round.style.setProperty("--second-colour", String(f.SecondColour));
+          }
         } else if (front) {
           var img = document.createElement("img");
           img.src = front;
