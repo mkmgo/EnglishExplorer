@@ -139,7 +139,7 @@
       /* ---------- Deck (stacked mystery bricks) ---------- */
       .deckPanel {
         flex: none;
-        width: 120px;
+        width: 148px;
         background: var(--card-bg);
         border: 2px solid var(--border);
         border-radius: 14px;
@@ -157,9 +157,9 @@
         gap: 8px;
         font-weight: 800;
         color: var(--muted);
-        font-size: clamp(0.9rem, 1.6vw, 1.05rem);
+        font-size: clamp(0.82rem, 1.5vw, 0.95rem);
         text-transform: uppercase;
-        letter-spacing: 0.05em;
+        letter-spacing: 0.03em;
       }
       /* Deck colour badge (Red / Orange). */
       .deckHead .dot {
@@ -173,16 +173,20 @@
         background: var(--item-bg);
         border: 1px solid var(--item-border);
         border-radius: 999px;
-        padding: 2px 10px;
-        font-size: 0.9em;
+        padding: 1px 8px;
+        font-size: 0.85em;
         color: var(--text);
       }
       .deck {
         position: relative;
-        width: 96px;
-        height: 84px;
+        width: 104px;
+        height: 92px;
         border-radius: 10px;
         overflow: hidden;
+        box-sizing: border-box;
+        outline: 2px dashed var(--border-strong);
+        outline-offset: -2px;
+        background: var(--item-bg);
       }
       .statusText {
         text-align: center;
@@ -694,7 +698,7 @@
         countEls[idx].textContent = String(list.length);
         for (var i = 0; i < list.length; i++) {
           var card = list[i];
-          var off = Math.min(i * 3, 12);
+          var off = 4 + Math.min(i * 3, 12);
           card.style.top = off + "px";
           card.style.left = off + "px";
           card.style.zIndex = String(i + 1);
