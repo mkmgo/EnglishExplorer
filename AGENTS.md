@@ -23,6 +23,7 @@ EnglishExplorer/
 │   │   ├── in-on-under.html            <-- Prepositions: in, on, under
 │   │   ├── my-family-my-classroom.html
 │   │   ├── numbers.html
+│   │   ├── signs-directions.html            <-- Signs & Directions lesson deck
 │   │   ├── toys-things.html
 │   ├── others/                  <-- Standalone classroom activity games (formerly empty placeholder)
 │   │   ├── indoor-outdoor-quest.html  <-- QR quest: scan, find something inside/outside the house
