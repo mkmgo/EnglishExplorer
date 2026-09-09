@@ -284,16 +284,16 @@
         padding: 2px;
       }
       .icardbas {
-        min-width: 160px;
-        min-height: 80px;
-        border-radius: 28px;
+        min-width: 120px;
+        min-height: 60px;
+        border-radius: 21px;
         border: 0;
-        font-size: clamp(1.2rem, 2.2vw, 2.2rem);
+        font-size: clamp(0.9rem, 1.65vw, 1.65rem);
         box-shadow: var(--shadow);
         display: inline-flex;
         align-items: center;
         justify-content: center;
-        padding: 0.5em 1em;
+        padding: 0.375em 0.75em;
         transition: 0.15s transform;
       }
       .icardbas:active {
@@ -306,14 +306,14 @@
         letter-spacing: 0.05em;
       }
       .clipcard {
-        font-size: clamp(1.1rem, 2vw, 1.8rem);
+        font-size: clamp(0.825rem, 1.5vw, 1.35rem);
         font-weight: 700;
         font-family: Verdana, "Trebuchet MS", sans-serif;
         color: var(--ink);
         background: var(--muted);
-        padding: 0.35em 1.2em;
-        border-radius: 20px;
-        border: 2pt solid var(--ink);
+        padding: 0.26em 0.9em;
+        border-radius: 15px;
+        border: 1.5pt solid var(--ink);
         box-shadow: 0 6px 18px rgba(138, 138, 138, 0.35);
         display: inline-flex;
         align-items: center;
@@ -344,6 +344,7 @@
         overflow-y: auto;
         word-break: break-word;
         white-space: pre-wrap;
+        flex-shrink: 0;
       }
       .translateBox .translatePlaceholder {
         font-size: clamp(2.2rem, 4.5vw, 3.6rem);
@@ -407,8 +408,8 @@
         position: absolute;
         top: clamp(6px, 1vw, 12px);
         right: clamp(6px, 1vw, 12px);
-        width: clamp(36px, 4vw, 48px);
-        height: clamp(36px, 4vw, 48px);
+        width: clamp(27px, 3vw, 36px);
+        height: clamp(27px, 3vw, 36px);
         border-radius: 50%;
         background: rgba(0, 0, 0, 0.55);
         color: #fff;
@@ -439,8 +440,8 @@
         display: flex;
       }
       .mediaThumbs .thumb {
-        width: 80px;
-        height: 80px;
+        width: 60px;
+        height: 60px;
         border: none;
         padding: 0;
         cursor: pointer;
@@ -474,19 +475,19 @@
       }
       .mediaThumbs .thumb .thumbClose {
         position: absolute;
-        top: -6px;
-        right: -6px;
-        width: 22px;
-        height: 22px;
+        top: -5px;
+        right: -5px;
+        width: 16.5px;
+        height: 16.5px;
         border-radius: 50%;
         background: var(--bad);
         color: #fff;
-        font-size: 13px;
+        font-size: 10px;
         font-weight: 900;
         display: flex;
         align-items: center;
         justify-content: center;
-        border: 2px solid #fff;
+        border: 1.5px solid #fff;
         cursor: pointer;
         z-index: 2;
         line-height: 1;
@@ -505,7 +506,7 @@
       }
       .mediaThumbs .collectionTitle {
         width: 100%;
-        font-size: clamp(0.85rem, 1.3vw, 1.1rem);
+        font-size: clamp(0.64rem, 0.975vw, 0.825rem);
         font-weight: 900;
         color: var(--accent);
         letter-spacing: 0.04em;
@@ -560,8 +561,8 @@
         position: absolute;
         top: clamp(6px, 1vw, 12px);
         left: clamp(6px, 1vw, 12px);
-        width: clamp(36px, 4vw, 48px);
-        height: clamp(36px, 4vw, 48px);
+        width: clamp(27px, 3vw, 36px);
+        height: clamp(27px, 3vw, 36px);
         border-radius: 50%;
         background: rgba(0, 0, 0, 0.55);
         color: #fff;
@@ -573,7 +574,7 @@
         z-index: 6;
         transition: 0.15s background, 0.15s transform;
         padding: 0;
-        font-size: clamp(1.4rem, 2vw, 1.9rem);
+        font-size: clamp(1.05rem, 1.5vw, 1.425rem);
         font-weight: 900;
         line-height: 1;
       }
@@ -652,7 +653,7 @@
         max-width: 800px;
       }
       .playRow .choice {
-        min-width: 180px;
+        min-width: 135px;
       }
       .lessonVideo {
         width: 100%;
@@ -663,26 +664,26 @@
         background: #f0f0f0;
       }
       .choice {
-        min-width: 160px;
-        min-height: 80px;
-        border-radius: 28px;
+        min-width: 120px;
+        min-height: 60px;
+        border-radius: 21px;
         background: var(--panel);
         box-shadow: var(--shadow);
-        font-size: clamp(1.2rem, 2.2vw, 2.2rem);
+        font-size: clamp(0.9rem, 1.65vw, 1.65rem);
         font-weight: 900;
         display: inline-flex;
         align-items: center;
         justify-content: center;
-        padding: 0.5em 1em;
+        padding: 0.375em 0.75em;
         transition: 0.15s transform;
       }
       .choice:active {
         transform: scale(0.95);
       }
       .tabs {
-        min-width: 160px;
-        min-height: 80px;
-        border-radius: 6px;
+        min-width: 120px;
+        min-height: 60px;
+        border-radius: 5px;
         color: var(--ink);
         display: inline-flex;
         align-items: center;
@@ -767,11 +768,11 @@
         }
       }
       .month-btn {
-        font-size: clamp(0.85rem, 1.5vw, 1.4rem);
+        font-size: clamp(0.64rem, 1.125vw, 1.05rem);
       }
       .word-btn {
-        min-height: 52px;
-        font-size: clamp(0.9rem, 1.4vw, 1.3rem);
+        min-height: 39px;
+        font-size: clamp(0.675rem, 1.05vw, 0.975rem);
         background: #eef1f7;
         color: var(--ink);
       }
@@ -867,6 +868,7 @@
         gap: 0.4em;
         width: 100%;
         overflow: hidden;
+        flex: 0 0 auto;
       }
       .clipRow .clip {
         flex: 1 1 auto;
@@ -880,9 +882,9 @@
       }
       .clipMove,
       .clipDel {
-        width: clamp(30px, 5vw, 44px);
-        height: clamp(16px, 2.5vh, 22px);
-        border-radius: 8px;
+        width: clamp(22.5px, 3.75vw, 33px);
+        height: clamp(12px, 1.875vh, 16.5px);
+        border-radius: 6px;
         background: #eef1f7;
         color: var(--accent);
         border: 1px solid rgba(96, 112, 141, 0.4);
@@ -910,8 +912,8 @@
       .downloadCsvBtn {
         display: flex;
         margin: 0.7em auto 0;
-        font-size: clamp(0.92rem, 1.56vw, 1.38rem);
-        padding: 0.45em 1em;
+        font-size: clamp(0.69rem, 1.17vw, 1.035rem);
+        padding: 0.34em 0.75em;
       }
       .csvBtns {
         display: flex;
@@ -928,13 +930,13 @@
         width: 100%;
         display: flex;
         align-items: center;
-        gap: 0.6em;
+        gap: 0.45em;
         background: #eef1f7;
         color: var(--accent);
         border: 1px solid var(--accent);
-        border-radius: 12px;
-        padding: 0.5em 0.9em;
-        font-size: clamp(0.85rem, 1.3vw, 1.15rem);
+        border-radius: 9px;
+        padding: 0.375em 0.675em;
+        font-size: clamp(0.64rem, 0.975vw, 0.8625rem);
         text-align: left;
         transition: 0.15s transform;
       }
@@ -1011,9 +1013,9 @@
         align-items: center;
         justify-content: center;
         gap: 0.4em;
-        min-height: 120px;
-        padding: 0.7em;
-        border-radius: 26px;
+        min-height: 90px;
+        padding: 0.525em;
+        border-radius: 19.5px;
         background: var(--panel);
         box-shadow: var(--shadow);
         transition: 0.15s transform;
@@ -1059,15 +1061,15 @@
         gap: 0.5em;
         background: #eef1f7;
         color: var(--ink);
-        border: 2px solid rgba(96, 112, 141, 0.35);
+        border: 1.5px solid rgba(96, 112, 141, 0.35);
         border-radius: 999px;
-        padding: 0.5em 1.1em;
-        font-size: clamp(1rem, 1.7vw, 1.5rem);
+        padding: 0.375em 0.825em;
+        font-size: clamp(0.75rem, 1.275vw, 1.125rem);
         font-weight: 800;
         transition: transform 0.45s cubic-bezier(0.22, 0.61, 0.36, 1);
       }
       #toysIntroScreen .miniChip {
-        font-size: clamp(0.88rem, 1.5vw, 1.3rem);
+        font-size: clamp(0.66rem, 1.125vw, 0.975rem);
       }
       .miniChip:active {
         transform: scale(0.95);
@@ -1211,15 +1213,15 @@
         align-items: center;
         gap: 0.5em;
         background: #fff;
-        border: 3px solid rgba(96, 112, 141, 0.35);
-        border-radius: 18px;
-        padding: 0.6em 0.9em;
+        border: 2.25px solid rgba(96, 112, 141, 0.35);
+        border-radius: 13.5px;
+        padding: 0.45em 0.675em;
         cursor: pointer;
         transition: 0.15s transform;
         box-shadow: var(--shadow);
         font-family: inherit;
         font-weight: 800;
-        font-size: clamp(0.95rem, 1.6vw, 1.3rem);
+        font-size: clamp(0.71rem, 1.2vw, 0.975rem);
         color: var(--ink);
       }
       .toySizeBtn:active {
@@ -1245,7 +1247,7 @@
         max-width: 640px;
       }
       .gameRow .choice {
-        min-width: 170px;
+        min-width: 127.5px;
       }
       .gameHint {
         font-size: clamp(1rem, 1.8vw, 1.6rem);
@@ -1331,12 +1333,12 @@
         white-space: nowrap;
       }
       .ctrl {
-        height: 1.9rem;
-        padding: 0 0.6em;
+        height: 1.425rem;
+        padding: 0 0.45em;
         border-radius: 999px;
         background: var(--panel);
         box-shadow: 0 5px 18px rgba(0, 0, 0, 0.12);
-        font-size: 0.95rem;
+        font-size: 0.71rem;
         display: inline-flex;
         align-items: center;
         justify-content: center;
@@ -1358,7 +1360,7 @@
         }
       }
       .navCtrl {
-        width: 1.9rem;
+        width: 1.425rem;
         padding: 0;
         background: var(--accent2);
         color: var(--accent);
@@ -1369,8 +1371,8 @@
         color: var(--accent2);
       }
       #soundBtn {
-        width: 1.5rem;
-        height: 1.5rem;
+        width: 1.125rem;
+        height: 1.125rem;
         border: 0;
       }
       #soundBtn.muted {
@@ -1378,8 +1380,8 @@
         color: var(--accent);
       }
       #themeBtn {
-        width: 1.5rem;
-        height: 1.5rem;
+        width: 1.125rem;
+        height: 1.125rem;
         border: 0;
       }
       #themeBtn.dark {
@@ -1394,9 +1396,9 @@
         z-index: 100;
         background: var(--ink);
         color: white;
-        padding: 0.8em 1.5em;
+        padding: 0.6em 1.125em;
         border-radius: 999px;
-        font-size: 1.4rem;
+        font-size: 1.05rem;
         opacity: 0;
         pointer-events: none;
         transition: 0.25s;
@@ -1454,10 +1456,10 @@
         gap: 1rem;
       }
       .inputBtns button {
-        min-width: 120px;
-        min-height: 56px;
+        min-width: 90px;
+        min-height: 42px;
         border-radius: 999px;
-        font-size: clamp(1.1rem, 2vw, 1.6rem);
+        font-size: clamp(0.825rem, 1.5vw, 1.2rem);
         font-weight: 900;
       }
       .inputBtns .okBtn {
@@ -1790,8 +1792,8 @@
         display: none;
       }
       .mdSuggestEmpty {
-        padding: 0.55em;
-        font-size: clamp(0.8rem, 1.3vw, 1.05rem);
+        padding: 0.41em;
+        font-size: clamp(0.6rem, 0.975vw, 0.7875rem);
         color: var(--muted);
         text-align: center;
       }
@@ -1800,11 +1802,11 @@
         align-items: center;
         gap: 0.55em;
         width: 100%;
-        padding: 0.4em 0.5em;
-        border-radius: 10px;
+        padding: 0.3em 0.375em;
+        border-radius: 7.5px;
         cursor: pointer;
         transition: background 0.12s;
-        font-size: clamp(0.8rem, 1.3vw, 1.05rem);
+        font-size: clamp(0.6rem, 0.975vw, 0.7875rem);
         font-weight: 800;
         color: var(--ink);
         border: 0;
@@ -1817,21 +1819,21 @@
         background: #eef1f7;
       }
       .mdSuggestThumb {
-        width: 34px;
-        height: 34px;
+        width: 25.5px;
+        height: 25.5px;
         object-fit: cover;
-        border-radius: 8px;
+        border-radius: 6px;
         background: #ddd;
         flex: 0 0 auto;
       }
       .mdSuggestIcon {
-        width: 34px;
-        height: 34px;
-        border-radius: 8px;
+        width: 25.5px;
+        height: 25.5px;
+        border-radius: 6px;
         display: inline-flex;
         align-items: center;
         justify-content: center;
-        font-size: 1rem;
+        font-size: 0.75rem;
         background: var(--accent2);
         color: var(--accent);
         flex: 0 0 auto;
@@ -1942,8 +1944,8 @@
         position: absolute;
         top: clamp(8px, 2vh, 16px);
         right: clamp(8px, 2vw, 20px);
-        width: clamp(40px, 5vw, 56px);
-        height: clamp(40px, 5vw, 56px);
+        width: clamp(30px, 3.75vw, 42px);
+        height: clamp(30px, 3.75vw, 42px);
         border-radius: 50%;
         background: rgba(255, 255, 255, 0.15);
         color: #fff;
@@ -1952,7 +1954,7 @@
         align-items: center;
         justify-content: center;
         cursor: pointer;
-        font-size: clamp(1.6rem, 3vw, 2.6rem);
+        font-size: clamp(1.2rem, 2.25vw, 1.95rem);
         font-weight: 900;
         transition: background 0.15s, transform 0.15s;
         z-index: 91;
@@ -3111,6 +3113,7 @@ Tap a word to hear it — SpotlightPro turns your notes into a live lesson.
           appendClipRow(c.time, c.en, c.zh);
         }
         updateClipMoveButtons();
+        clipList.scrollTop = clipList.scrollHeight;
       }
 
       function updateClipMoveButtons() {

@@ -534,7 +534,8 @@
       var cycles=[0,0,0];
       var spins=Math.floor(Math.random()*3)+5;
       var symbols=["arrow-up","arrow-down","arrow-left","arrow-right","x","square","triangle","circle","plus","minus","ban","arrow-up-down","4","6","8","A","C","E"];
-      var ivar=window.setInterval(function(){
+      if(spinTimer){ window.clearInterval(spinTimer); spinTimer=null; }
+      spinTimer=window.setInterval(function(){
         var done=0;
         for(var i=0;i<3;i++){
           if(cycles[i]>=spins){ done++; continue; }
@@ -545,13 +546,14 @@
           el.innerHTML=(/^[0-9A-Z]$/.test(pick))?pick:licon(pick,3);
         }
         if(done>=3){
-          window.clearInterval(ivar);
+          window.clearInterval(spinTimer);
+          spinTimer=null;
           revealReels();
         }
       },110);
     }
 
-    function revealReels(){
+    function settleReels(){
       var machine=document.getElementById("slotMachine");
       for(var i=0;i<3;i++){
         var el=machine.children[i];
@@ -564,12 +566,20 @@
         else slot.innerHTML='<span class="reelWord" style="font-size:2.2em;">'+sym+'</span>';
       }
       document.getElementById("slotGoalHint").textContent="Tap the reel with the correct sign!";
-      say("Find the sign for "+document.getElementById("slotGoalWord").textContent+".");
+    }
+
+    function revealReels(){
+      settleReels();
+      var slotScr=document.getElementById("slotScreen");
+      if(slotScr&&slotScr.classList.contains("active")){
+        say("Find the sign for "+document.getElementById("slotGoalWord").textContent+".");
+      }
     }
 
     function slotReelTap(reelIndex,target){
       if(slotBusy) return;
       slotBusy=true;
+      if(spinTimer){ window.clearInterval(spinTimer); spinTimer=null; settleReels(); }
       var machine=document.getElementById("slotMachine");
       var reelEl=machine.children[reelIndex];
       var isCorrect=(reelEl.getAttribute("data-icon")===target.icon);
@@ -578,7 +588,7 @@
         slot.classList.add("slotDone");
         slotResults.push("good");
         toast("CORRECT!");
-        say("Correct! That's the "+target.word+" sign!");
+        say("Correct! That's the "+target.word+" sign!",step);
         logIt("SlotMachine","Correct",target.word);
       } else {
         slot.classList.add("slotWrong");
@@ -591,17 +601,24 @@
         }
         slotResults.push("bad");
         toast("It was the "+target.word+" sign.");
-        say("It's the "+target.word+" sign.");
+        say("It's the "+target.word+" sign.",step);
         logIt("SlotMachine","Wrong",target.word);
       }
-      var gen=++pvGen;
-      setTimeout(function(){
-        if(gen!==pvGen) return;
+      var fallback=window.setTimeout(step,4500);
+      var t0=Date.now();
+      function step(){
+        window.clearTimeout(fallback);
+        var wait=Math.max(0,600-(Date.now()-t0));
+        window.setTimeout(advance,wait);
+      }
+      function advance(){
+        var slotScr=document.getElementById("slotScreen");
+        if(!slotScr||!slotScr.classList.contains("active")){ slotBusy=false; return; }
         slotBusy=false;
         slotIdx++;
         setPips("slotPips",slotResults,slotIdx,SLOT_ROUNDS);
         slotStart();
-      },2200);
+      }
     }
 
     function finishSlotGame(){
@@ -612,9 +629,19 @@
       else if(gCount>=SLOT_ROUNDS-2 && bCount<=2) stars=1;
       totalStars+=stars;
       document.getElementById("slotTitle").textContent="GAME 1 COMPLETE!";
-      say("Game one complete! Well done!");
       setPips("slotPips",slotResults,slotResults.length,SLOT_ROUNDS);
-      setTimeout(function(){ showListenGame(); },2000);
+      var advanced=false;
+      var fallback=null;
+      function advance(){
+        if(advanced) return;
+        advanced=true;
+        if(fallback) window.clearTimeout(fallback);
+        var slotScr=document.getElementById("slotScreen");
+        if(!slotScr||!slotScr.classList.contains("active")) return;
+        showListenGame();
+      }
+      say("Game one complete! Well done!",advance);
+      fallback=window.setTimeout(advance,5000);
     }
 
     /* =========================================================
@@ -666,13 +693,21 @@
       if(listenIdx>=listenRounds.length){ finishListenGame(); return; }
       cancelSpeech();
       var w=listenRounds[listenIdx];
+      var round=listenIdx;
       document.getElementById("listenTitle").textContent="Hear and Understand";
       document.getElementById("hearBtn").style.display="inline-block";
       document.getElementById("listenGrid").innerHTML="";
       setPips("listenPips",listenResults,listenIdx,LISTEN_ROUNDS);
       buildListenOptions(w);
       /* auto play the word after a short beat */
-      setTimeout(function(){ hearWord(w); },700);
+      if(listenAutoTimer){ window.clearTimeout(listenAutoTimer); listenAutoTimer=null; }
+      listenAutoTimer=window.setTimeout(function(){
+        listenAutoTimer=null;
+        var lScr=document.getElementById("listenScreen");
+        if(round===listenIdx && lScr&&lScr.classList.contains("active")){
+          hearWord(w);
+        }
+      },700);
     }
 
     function hearWord(w){
@@ -698,13 +733,14 @@
     function listenAnswer(chosen,w,btn){
       if(listenBusy) return;
       listenBusy=true;
+      if(listenAutoTimer){ window.clearTimeout(listenAutoTimer); listenAutoTimer=null; }
       var btns=document.querySelectorAll("#listenGrid .listenOption");
       for(var i=0;i<btns.length;i++) btns[i].disabled=true;
       if(chosen===w.icon){
         btn.classList.add("correct");
         listenResults.push("good");
         toast("CORRECT!");
-        say("Correct!");
+        say("Correct!",step);
         logIt("Listening","Correct",w.word);
       } else {
         btn.classList.add("wrong");
@@ -713,15 +749,23 @@
         }
         listenResults.push("bad");
         toast("It's "+w.word+"!");
-        say("It's "+w.word+"!");
+        say("It's "+w.word+"!",step);
         logIt("Listening","Wrong",w.word);
       }
-      setTimeout(function(){
-        cancelSpeech();
+      var fallback=window.setTimeout(step,4000);
+      var t0=Date.now();
+      function step(){
+        window.clearTimeout(fallback);
+        var wait=Math.max(0,400-(Date.now()-t0));
+        window.setTimeout(advance,wait);
+      }
+      function advance(){
         listenBusy=false;
+        var lScr=document.getElementById("listenScreen");
+        if(!lScr||!lScr.classList.contains("active")) return;
         listenIdx++;
-        setTimeout(function(){ listenStart(); },150);
-      },2000);
+        listenStart();
+      }
     }
 
     function finishListenGame(){
@@ -732,9 +776,19 @@
       else if(gCount>=LISTEN_ROUNDS-2 && bCount<=2) stars=1;
       totalStars+=stars;
       document.getElementById("listenTitle").textContent="GAME 2 COMPLETE!";
-      say("Game two complete! Well done!");
       setPips("listenPips",listenResults,listenResults.length,LISTEN_ROUNDS);
-      setTimeout(function(){ showResults(); },2000);
+      var advanced=false;
+      var fallback=null;
+      function advance(){
+        if(advanced) return;
+        advanced=true;
+        if(fallback) window.clearTimeout(fallback);
+        var lScr=document.getElementById("listenScreen");
+        if(!lScr||!lScr.classList.contains("active")) return;
+        showResults();
+      }
+      say("Game two complete! Well done!",advance);
+      fallback=window.setTimeout(advance,5000);
     }
 
     /* =========================================================
@@ -832,6 +886,8 @@
        ========================================================= */
     function restartAll(){
       totalStars=0;
+      if(spinTimer){ window.clearInterval(spinTimer); spinTimer=null; }
+      if(listenAutoTimer){ window.clearTimeout(listenAutoTimer); listenAutoTimer=null; }
       setupSlotRounds(); slotIdx=0; slotResults=[]; slotBusy=false;
       setupListenRounds(); listenIdx=0; listenResults=[]; listenBusy=false;
       show(0);
@@ -893,35 +949,52 @@
     var ICON_VOLUME_ON='<svg xmlns="http://www.w3.org/2000/svg" width="1.2em" height="1.2em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-0.2em"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/></svg>';
     var ICON_VOLUME_OFF='<svg xmlns="http://www.w3.org/2000/svg" width="1.2em" height="1.2em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-0.2em"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><line x1="22" x2="16" y1="9" y2="15"/><line x1="16" x2="22" y1="9" y2="15"/></svg>';
 
-    var currentUtterance=null;
-    var pvGen=0;
+    var speakGen=0;
+    var spinTimer=null;
+    var listenAutoTimer=null;
 
     function cancelSpeech(){
+      speakGen++;
       if(synth&&typeof synth.cancel==="function"){
         try{ synth.cancel(); }catch(e){}
       }
+      if(window.tizen&&window.tizen.tts&&typeof window.tizen.tts.stop==="function"){
+        try{ tizen.tts.stop(); }catch(e){}
+      }
     }
 
-    function say(text){
-      if(!soundOn) return;
+    function say(text,doneCb){
+      var gen=++speakGen;
+      var finishDone=doneCb||function(){};
+      var fired=false;
+      function finish(){
+        if(fired||gen!==speakGen) return;
+        fired=true;
+        try{ finishDone(); }catch(e){}
+      }
+      if(!soundOn){ finish(); return; }
       if(window.tizen&&window.tizen.tts){
         try{
           tizen.tts.speak(String(text),{
             locale:"en-US",rate:0.85,pitch:1.0,
             type:"TTS_TYPE_SCREEN_READER"
-          },{ onfinish:function(){} });
+          },function(){ finish(); },function(){ finish(); });
           return;
         }catch(e){}
       }
       if(synth&&typeof SpeechSynthesisUtterance!=="undefined"){
-        cancelSpeech();
-        var u=new SpeechSynthesisUtterance(text);
-        u.lang="en-US"; u.rate=0.82; u.pitch=1.08;
-        if(altVoice) u.voice=altVoice;
-        currentUtterance=u;
-        u.onend=function(){};
-        synth.speak(u);
+        try{
+          if(synth.speaking||synth.pending){ synth.cancel(); }
+          var u=new SpeechSynthesisUtterance(text);
+          u.lang="en-US"; u.rate=0.82; u.pitch=1.08;
+          if(altVoice) u.voice=altVoice;
+          u.onend=function(){ finish(); };
+          u.onerror=function(){ finish(); };
+          synth.speak(u);
+          return;
+        }catch(e){}
       }
+      finish();
     }
 
     function show(i){
@@ -1059,6 +1132,7 @@
     /* LISTEN button replays the current listening question */
     document.getElementById("hearBtn").onclick=function(){
       if(listenRounds.length>0 && listenIdx<listenRounds.length){
+        if(listenAutoTimer){ window.clearTimeout(listenAutoTimer); listenAutoTimer=null; }
         hearWord(listenRounds[listenIdx]);
       }
     };
