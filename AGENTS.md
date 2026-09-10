@@ -173,7 +173,40 @@ existing document-level drag-and-drop handlers.
 
 ## Daily Protocols
 
-When creating a new protocol, first read `breakthrough/protocols/README.md` for the required template and section order. Save the file as `breakthrough/protocols/YYYY-MM-DD.html`.
+Protocols are generated from the **Markdown tab** (screen 3) of
+`breakthrough/tools/bt-spotlight-pro.html` via the **Protocol** button
+(`generateProtocol()`). The function takes the Markdown source (story text) and
+the current word list (`clipHistory`) and builds a self-contained protocol HTML
+file. Steps:
+
+1. Write the story in the Markdown pane (screen 3). Each `##` heading becomes a
+   story section; `###` headings and paragraphs become the scene content. The
+   first `#` heading is auto-detected as the story title.
+2. Collect vocabulary in the **Translator** tab (screen 2) — each word/phrase
+   translated is added to `clipHistory` and will appear in the Vocabulary table.
+3. Tap **Protocol** → enter/confirm the story title → the file is generated and
+   downloaded as `YYYY-MM-DD.html`.
+
+### File placement & overwrite rule
+
+- Save (or overwrite) the downloaded file as
+  `breakthrough/protocols/YYYY-MM-DD.html` — always use **today's date**.
+- If a second protocol is created on the same day, it **overwrites** the
+  existing file for that date (the file name is the same).
+
+### Nimza entry in updates.html
+
+After placing the protocol file, add (or update) a row in the **Nimza** (left)
+column table of `updates.html`:
+
+- **Date**: today in `DD/MM/YYYY` format.
+- **File**: link text `Lesson Protocol DD/MM/YYYY`, href
+  `https://mkmgo.github.io/EnglishExplorer/breakthrough/protocols/YYYY-MM-DD.html`,
+  class `nima-col`, `target="_blank"`.
+- **Note**: `For tomorrow`.
+- Place the row **at the top** of Nimza's `<tbody>`, above any existing rows.
+- If a protocol was already added today, **overwrite** that row (same date)
+  rather than creating a duplicate.
 
 ## Grid Shift minigame (Airtable-powered)
 
