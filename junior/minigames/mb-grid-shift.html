@@ -528,6 +528,8 @@
 
       var COLS = 8;
       var ROWS = 5;
+      // COLS and ROWS are reassigned dynamically after the Airtable fetch
+      // based on the number of active cards (see gridDimensions).
 
       // Lucide loads at runtime from the CDN (same as mystery-base); this
       // replaces every <i data-lucide> placeholder with its real SVG.
@@ -542,11 +544,23 @@
         }
       }
 
-      // Empty drop cells (8 x 5).
-      for (var c = 0; c < COLS * ROWS; c++) {
-        var cell = document.createElement("div");
-        cell.className = "cell";
-        gridEl.appendChild(cell);
+      // Dynamic grid sizing based on active card count.
+      // 20 → 5 cols × 4 rows, 30 → 6 cols × 5 rows, 40 → 8 cols × 5 rows.
+      function gridDimensions(count) {
+        if (count <= 20) return { cols: 5, rows: 4 };
+        if (count <= 30) return { cols: 6, rows: 5 };
+        return { cols: 8, rows: 5 };
+      }
+
+      function buildGrid(cols, rows) {
+        gridEl.innerHTML = "";
+        gridEl.style.gridTemplateColumns = "repeat(" + cols + ", 104px)";
+        gridEl.style.gridTemplateRows = "repeat(" + rows + ", 92px)";
+        for (var c = 0; c < cols * rows; c++) {
+          var cell = document.createElement("div");
+          cell.className = "cell";
+          gridEl.appendChild(cell);
+        }
       }
 
       var remaining = [[], []];
@@ -873,17 +887,27 @@
         })
         .then(function (data) {
           var records = (data && data.records) || [];
+          // Only include cards where the Active checkbox is checked.
+          var active = records.filter(function (rec) {
+            var f = (rec && rec.fields) || {};
+            return f.Active === true;
+          });
           var all = [];
           var backA = "";
           var backB = "";
-          records.forEach(function (rec) {
+          active.forEach(function (rec) {
             var f = (rec && rec.fields) || {};
             if (!backA) backA = f.TileBackA || f.TileBack || "";
             if (!backB) backB = f.TileBackB || "";
             var card = buildCard(rec);
             if (card) all.push(card);
           });
-          // Shuffle all cards, then deal them 20/20: the first half goes to
+          // Size the grid to match the active card count.
+          var dim = gridDimensions(all.length);
+          COLS = dim.cols;
+          ROWS = dim.rows;
+          buildGrid(COLS, ROWS);
+          // Shuffle all cards, then deal them evenly: the first half goes to
           // the Red deck (left, TileBackA backs), the rest to the Orange deck
           // (right, TileBackB backs) — every card of a deck shares its back.
           shuffle(all);

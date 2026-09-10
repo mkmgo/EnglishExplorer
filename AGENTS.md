@@ -212,20 +212,36 @@ column table of `updates.html`:
 
 `junior/minigames/mb-grid-shift.html` is a mystery-base-derived game: **two** player
 stacks of 96×84 bricks with **front + back** faces (3D flip), played on one shared
-8×5 grid (40 cells, sized to fit an iPad landscape board). The 40 Airtable bricks
-are **shuffled and dealt 20/20**: the Red deck (left) shows `TileBackA` backs, the
+grid (sized to fit an iPad landscape board). The active Airtable bricks are
+**shuffled and dealt evenly**: the Red deck (left) shows `TileBackA` backs, the
 Orange deck (right) shows `TileBackB` backs — every card in a deck shares its back
 art. Bricks start backs-up; tapping a deck's top card turns it, and the revealed
 front can be dragged onto any empty cell. No placement rules yet — any card may go
 in any empty square.
 
+### Grid sizing (dynamic, driven by active card count)
+
+The grid **self-sizes from the number of `Active` cards**, not a fixed 8×5. Valid
+card counts are **20 / 30 / 40** (steps of 10 — 25 and 35 are skipped on purpose):
+
+| Active cards | Grid | Cells |
+|---|---|---|
+| 20 | 5 columns × 4 rows | 20 |
+| 30 | 6 columns × 5 rows | 30 |
+| 40 | 8 columns × 5 rows | 40 |
+
+`gridDimensions(count)` picks the size and `buildGrid(cols, rows)` rebuilds the
+cells after the fetch (the old fixed 40-cell grid is gone). Cards are dealt evenly
+across the two decks (`Math.ceil(count / 2)`) — e.g. 20 → 10/10, 30 → 15/15,
+40 → 20/20.
+
 - Built minimal (only the code needed): theme toggle, pointer drag & drop (ghost +
   drop-zone highlight + edge auto-scroll), and `logActivity` (Turn / Place) via
   the shared `tracker.js` (`../../tracker.js`).
 - Each deck **randomises** its deal on load (`shuffle`, Fisher–Yates) and both decks
-  self-size from the Airtable fetch (`COLS`/`ROWS` are fixed; if fewer than 40 rows,
-  the second deck gets the remainder). When a card is placed the next one is revealed
-  for turning. "Grid complete!" fires only when **both** decks are empty.
+  self-size from the Airtable fetch — only cards with the `Active` checkbox checked
+  are used. When a card is placed the next one is revealed for turning.
+  "Grid complete!" fires only when **both** decks are empty.
 - The game fetches `GET /airtable?table=GridShift` (allowlisted in the worker).
 
 ### Airtable `GridShift` table schema
@@ -236,6 +252,7 @@ CSS colour variable arrives in `PrimaryColour` (not `Fill`) — the game accepts
 | Field | Type | Purpose |
 |---|---|---|
 | `GridShiftID` | Autonumber | Stable per-brick id (also logs Turn/Place actions). |
+| `Active` | Checkbox | Whether this brick is included in the game. Only checked cards are fetched, shuffled and dealt; the grid self-sizes to the checked count (see "Grid sizing" above). |
 | `TileName` | Single line text | Internal machine name (e.g. `Living-Room`). |
 | `Display` | Single line text | Word shown on the brick front (e.g. `Lounge`) — falls back to `TileName`. |
 | `Category` | Single line text | Grouping (Numbers, Clothes, Animals, Colours, Rooms, Directions) — currently unused by the UI. |
@@ -263,8 +280,8 @@ CSS colour variable arrives in `PrimaryColour` (not `Fill`) — the game accepts
   `--color-blue`, `--color-yellow`, `--color-green`, `--color-red`, `--color-orange`,
   `--color-purple`. Deck badges are Red `#ef4444` (left) and Orange `#f97316` (right).
 - To add bricks: they already fill a 40-cell board; add/remove rows in Airtable
-  and the decks + grid self-size (`COLS`/`ROWS` in the file are fixed while the grid
-  is 8×5; padding/empty cells are fine if fewer).
+  and the decks + grid self-size (see "Grid sizing" above — valid counts are
+  20 / 30 / 40 and the grid matches).
 - The worker fetch is capped at 200 records — ample for the current 40.
 
 ## Nimza's Reading List (Airtable-powered)
