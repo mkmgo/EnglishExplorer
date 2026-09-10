@@ -173,7 +173,7 @@
       }
       .reelSlot svg { width: clamp(42px,7vw,72px); height: clamp(42px,7vw,72px); }
       .reelSlot .reelWord {
-        font-size: clamp(0.6rem,1vw,0.9rem); font-weight: 800; opacity: 0.85;
+        font-size: clamp(2.2rem, 4.5vw, 4rem); font-weight: 800; opacity: 0.85;
       }
       .reelSlot.slotActive {
         border-color: var(--mediocre);
@@ -292,39 +292,7 @@
         </div>
       </div>
 
-      <!-- ===== SCREEN 1: INTRO ===== -->
-      <section class="screen active" id="introScreen">
-        <div class="content">
-          <span class="banner">SIGNS &amp; DIRECTIONS</span>
-          <h1 class="ribbon">Signs &amp; Directions</h1>
-          <div class="stage">
-            <div class="panel">
-              <p style="font-size:clamp(1rem,1.7vw,1.5rem);margin:0 0 0.8em;font-weight:700;color:var(--muted);">
-                Signs and symbols tell us where to <strong style="color:var(--accent)">go</strong>, what is <strong style="color:var(--accent)">allowed</strong>, and what is <strong style="color:var(--accent)">forbidden</strong>.
-              </p>
-              <p style="font-size:clamp(0.9rem,1.4vw,1.25rem);margin:0 0 0.8em;color:var(--muted);font-weight:700;">
-                We will learn <strong style="color:var(--accent)">forwards</strong>, <strong style="color:var(--accent)">backwards</strong>, <strong style="color:var(--accent)">left</strong>, <strong style="color:var(--accent)">right</strong>, the <strong style="color:var(--accent)">shapes</strong>, and the little <strong style="color:var(--accent)">maths signs</strong> on the road and in town.
-              </p>
-              <div class="dialogue" style="margin-top:0.8em;">
-                <div class="dline left" onclick="say('Forward means the arrow pointing up.')">
-                  <span class="who">Sam:</span> Forward means the arrow pointing <span class="lucide" id="icUp"></span>.
-                </div>
-                <div class="dline right" onclick="say('And backwards means the arrow pointing down.')">
-                  <span class="who">Onza:</span> And backwards means the arrow pointing <span class="lucide" id="icDown"></span>.
-                </div>
-                <div class="dline left" onclick="say('Now let us learn the traffic signs and shapes!')">
-                  <span class="who">Sam:</span> Now let's learn the traffic signs and shapes!
-                </div>
-                <div class="dline right" onclick="say('Great idea! Let us go and find them!')">
-                  <span class="who">Onza:</span> Great idea! Let's go and find them!
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <!-- ===== SCREEN 2: VOCABULARY ===== -->
+      <!-- ===== SCREEN 1: VOCABULARY ===== -->
       <section class="screen" id="vocabScreen">
         <div class="content">
           <span class="banner">WORDS</span>
@@ -416,9 +384,11 @@
     /* ---- Vocabulary: word -> icon ---- */
     var VOCAB = [
       { word: "Forwards", icon: "arrow-up", hint: "go ahead ↑" },
+      { word: "Up", icon: "arrow-up", hint: "up ↑" },
       { word: "One Way", icon: "arrow-up", hint: "only this way" },
       { word: "Oncoming traffic", icon: "arrow-up-down", hint: "both ways" },
       { word: "Backwards", icon: "arrow-down", hint: "go back ↓" },
+      { word: "Down", icon: "arrow-down", hint: "down ↓" },
       { word: "Left", icon: "arrow-left", hint: "to the left" },
       { word: "Right", icon: "arrow-right", hint: "to the right" },
       { word: "Wrong way", icon: "ban", hint: "never go here" },
@@ -517,7 +487,7 @@
         (function(i,r,target){
           var reel=document.createElement("div");
           reel.className="reel";
-          reel.innerHTML='<div class="reelLabel">Reel '+(i+1)+'</div>'
+          reel.innerHTML='<div class="reelLabel">Slot '+(i+1)+'</div>'
             +'<div class="reelSlot" id="reel'+i+'"></div>';
           reel.setAttribute("data-type",r.type);
           reel.setAttribute("data-icon",r.icon||"");
@@ -563,7 +533,7 @@
         var slot=el.querySelector(".reelSlot");
         if(!slot) continue;
         if(type==="icon") slot.innerHTML=licon(icon,3);
-        else slot.innerHTML='<span class="reelWord" style="font-size:2.2em;">'+sym+'</span>';
+        else slot.innerHTML='<span class="reelWord">'+sym+'</span>';
       }
       document.getElementById("slotGoalHint").textContent="Tap the reel with the correct sign!";
     }
@@ -1009,22 +979,22 @@
       document.getElementById("nextBtn").innerHTML='<span class="tag">'+(idx===lastCounted?ICON_RESTART:ICON_ARROW_RIGHT)+'</span>';
       document.getElementById("nextBtn").style.visibility="visible";
       cancelSpeech();
-      if(idx===1){
+      if(idx===0){
         setTimeout(function(){
-          if(idx===1){ renderVocab(); }
+          if(idx===0){ renderVocab(); }
         },400);
       }
-      if(idx===2){
+      if(idx===1){
         setTimeout(function(){
-          if(idx===2){
+          if(idx===1){
             if(slotRounds.length===0){ setupSlotRounds(); slotIdx=0; slotResults=[]; slotBusy=false; }
             slotStart();
           }
         },400);
       }
-      if(idx===3){
+      if(idx===2){
         setTimeout(function(){
-          if(idx===3){
+          if(idx===2){
             if(listenRounds.length===0){ setupListenRounds(); listenIdx=0; listenResults=[]; listenBusy=false; }
             listenStart();
           }
@@ -1124,10 +1094,6 @@
         }
       },{passive:true});
     }
-
-    /* Fill the little inline icons on the intro dialogue */
-    document.getElementById("icUp").innerHTML=licon("arrow-up",3);
-    document.getElementById("icDown").innerHTML=licon("arrow-down",3);
 
     /* LISTEN button replays the current listening question */
     document.getElementById("hearBtn").onclick=function(){
