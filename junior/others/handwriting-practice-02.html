@@ -409,33 +409,68 @@
         buildWord();
       }
 
-      // Offscreen context reused for glyph metric measurement (never drawn
-      // into the visible pads).
+      // Offscreen context reused for glyph width measurement (never drawn into
+      // the visible pads). Width metrics work everywhere, incl. Tizen.
       var MEASURE = document.createElement("canvas").getContext("2d");
       var GHOST_FONT = "900 100px 'Segoe UI', Arial, sans-serif";
 
-      // Font size (CSS px) for one ghost letter, sized from its OWN glyph
-      // metrics so caps/ascenders and dotted letters land inside their
-      // handwriting zone instead of overshooting it.
+      // Fixed per-letter ascent/descent ratios (fractions of the font size),
+      // taken from real 900-weight Segoe UI / Arial measurements. A cache of
+      // maxi values so that on EVERY device the ghost letter's OWN ink stays
+      // inside its handwriting zone: short letters (incl. the dot of "i" and
+      // the tall stem of "t" in fonts like Arial) never rise above the middle
+      // line. Tizen has no bounding-box metrics, so we never rely on them.
+      var GLYPH_METRICS = (function () {
+        var cap = 0.72, x = 0.53, x2 = 0.52, asc = 0.74, fAsc = 0.75, dot = 0.73, tee = 0.72;
+        var T = {}, ch, i;
+        for (i = 65; i <= 90; i++) {
+          ch = String.fromCharCode(i);
+          T[ch] = { a: cap, d: ch === "Q" ? 0.09 : 0.01 };
+        }
+        "acemnors".split("").forEach(function (c) { T[c] = { a: x, d: 0.01 }; });
+        "uvwxz".split("").forEach(function (c) { T[c] = { a: x2, d: 0.01 }; });
+        "bhdkl".split("").forEach(function (c) { T[c] = { a: asc, d: 0.01 }; });
+        T.f = { a: fAsc, d: 0.01 };
+        T.i = { a: dot, d: 0.01 };
+        T.t = { a: tee, d: 0.01 };
+        T.j = { a: dot, d: 0.24 };
+        T.g = { a: x, d: 0.24 };
+        T.p = { a: x, d: 0.24 };
+        T.q = { a: x, d: 0.24 };
+        T.y = { a: x2, d: 0.24 };
+        return T;
+      })();
+
+      function ghostMetrics(ghost) {
+        var m = GLYPH_METRICS[ghost];
+        if (m) return m;
+        var type = letterType(ghost);
+        if (type === "tall") return { a: 0.72, d: 0.01 };
+        if (type === "descender") return { a: 0.52, d: 0.24 };
+        return { a: 0.52, d: 0.01 };
+      }
+
+      // Font size (CSS px) for one ghost letter, sized so the letter's own
+      // ink fills its handwriting zone: tall letters span top line to
+      // baseline, short letters span middle line to baseline (their highest
+      // ink — "t" stem, "i" dot — stops exactly at the middle line).
       function ghostSize(ghost, cw, ch) {
         var type = letterType(ghost);
-        MEASURE.font = GHOST_FONT;
-        var mt = MEASURE.measureText(ghost);
-        var rA = (mt.actualBoundingBoxAscent > 0 ? mt.actualBoundingBoxAscent : (type === "tall" ? 72 : 52)) / 100;
-        var rD = (mt.actualBoundingBoxDescent > 0 ? mt.actualBoundingBoxDescent : (type === "descender" ? 26 : 6)) / 100;
+        var m = ghostMetrics(ghost);
         var topLine = ch * 0.09;
         var midLine = ch * 0.42;
         var baseline = ch * 0.78;
         var tailMax = ch * 0.97;
-        var fs = (type === "tall") ? (baseline - topLine) / rA : (baseline - midLine) / rA;
+        var fs = (type === "tall") ? (baseline - topLine) / m.a : (baseline - midLine) / m.a;
+        MEASURE.font = GHOST_FONT;
         var w100 = MEASURE.measureText(ghost).width;
         var fsMaxW = (cw * 0.88) * 100 / w100;
         if (fs > fsMaxW) fs = fsMaxW;
         if (type === "descender") {
-          var tailLen = rD * fs;
-          if (tailLen > tailMax - baseline) fs = (tailMax - baseline) / rD;
+          var tailLen = m.d * fs;
+          if (tailLen > tailMax - baseline) fs = (tailMax - baseline) / m.d;
         }
-        return { fs: fs, rA: rA, rD: rD, inkTop: baseline - rA * fs, baseline: baseline };
+        return { fs: fs, rA: m.a, rD: m.d, inkTop: baseline - m.a * fs, baseline: baseline };
       }
 
       // Faint traceable letter shown inside each blank pad before/while the
