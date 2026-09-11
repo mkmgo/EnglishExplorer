@@ -27,7 +27,8 @@ EnglishExplorer/
 │   │   ├── toys-things.html
 │   ├── others/                  <-- Standalone classroom activity games (formerly empty placeholder)
 │   │   ├── indoor-outdoor-quest.html  <-- QR quest: scan, find something inside/outside the house
-│   │   └── handwriting-practice-01.html  <-- iPad handwriting: fill the word on help lines
+│   │   ├── handwriting-practice-01.html  <-- iPad handwriting: fill the word on help lines
+│   │   └── handwriting-practice-02.html  <-- Airtable-powered writing practice (fetches from HandWriting table)
 │   └── minigames/              <-- Highly gamified mini-games (formerly /Features)
 │       ├── abc-world.html
 │       ├── mb-grid-shift.html  <-- Grid Shift: flip bricks (front/back) from two 20-card stacks onto a shared 8x5 grid; Airtable table GridShift
@@ -283,6 +284,33 @@ CSS colour variable arrives in `PrimaryColour` (not `Fill`) — the game accepts
   and the decks + grid self-size (see "Grid sizing" above — valid counts are
   20 / 30 / 40 and the grid matches).
 - The worker fetch is capped at 200 records — ample for the current 40.
+
+## Handwriting Practice 02 (Airtable-powered)
+
+`junior/others/handwriting-practice-02.html` is the Airtable-driven sibling of
+`handwriting-practice-01.html`: the words and pictures are pulled from Airtable
+at runtime instead of a hardcoded array. The writing check is the **same relaxed
+algorithm** (max 6 strokes, 5% min coverage, word passes when at most one letter
+is imperfect).
+
+- The page fetches `GET /airtable?table=HandWriting` (allowlisted in the worker)
+  and renders one writing pad per letter. Records without a `Text` value are
+  skipped; words are shuffled (Fisher–Yates) at runtime.
+- A word with a missing `Asset` shows a blank (neutral) picture block instead of
+  a broken image.
+- Loading and error states are in-page (`#loadingMsg` / `#errorMsg`) — Tizen-safe,
+  no dialogs.
+
+### Airtable `HandWriting` table schema
+
+| Field | Type | Purpose |
+|---|---|---|
+| `WritingID` | Autonumber | Stable per-row id — not used by the app. |
+| `Text` | Single line text | The word to write (e.g. `tree`). Required — rows without it are skipped. |
+| `Asset` | URL *(optional)* | Picture hint (any absolute image URL, e.g. Cloudinary). Empty = blank placeholder. |
+
+- Every row is included (no `Active` checkbox). Natural Airtable row order —
+  the page shuffles anyway.
 
 ## Nimza's Reading List (Airtable-powered)
 

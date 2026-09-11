@@ -6,13 +6,13 @@
       name="viewport"
       content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
     />
-    <title>Show Your Best Writing! — Handwriting Practice</title>
+    <title>Show Your Best Writing! — Writing Practice</title>
     <meta name="theme-color" content="#2B0603" />
     <meta name="description" content="EnglishExplorer — Handwriting word practice on help lines" />
-    <meta property="og:title" content="Show Your Best Writing! — Handwriting Practice" />
+    <meta property="og:title" content="Show Your Best Writing! — Writing Practice" />
     <meta property="og:description" content="Fill in the missing word on the help lines." />
     <meta property="og:image" content="https://res.cloudinary.com/dmkhsyfzf/image/upload/v1787858367/house-heart_dutvpy.png" />
-    <meta name="twitter:title" content="Show Your Best Writing! — Handwriting Practice" />
+    <meta name="twitter:title" content="Show Your Best Writing! — Writing Practice" />
     <meta name="twitter:description" content="Fill in the missing word on the help lines." />
     <meta name="twitter:image" content="https://res.cloudinary.com/dmkhsyfzf/image/upload/v1787858367/house-heart_dutvpy.png" />
     <style>
@@ -102,6 +102,8 @@
       .picture {
         width: min(38vh, 300px);
         max-width: 80vw;
+        min-height: 90px;
+        background: var(--panel);
         border-radius: 12px;
         box-shadow: var(--shadow);
         object-fit: cover;
@@ -277,7 +279,10 @@
         <span class="word-count" id="countLabel"></span>
       </div>
 
-      <img id="picture" class="picture" alt="Word picture" />
+      <img id="picture" class="picture hidden" alt="Word picture" />
+
+      <p id="loadingMsg" class="hint">Loading words…</p>
+      <p id="errorMsg" class="hint hidden"></p>
 
       <div class="word-row" id="wordRow"></div>
 
@@ -301,15 +306,11 @@
     </div>
 
     <script>
-      // ---- Word list (quest vocab: inside & outside the house) ----
-      // Each word: the full lowercase word + a picture hint.
-      var WORDS = [
-        { w: "tree", img: "https://res.cloudinary.com/dqwm4pdbz/image/upload/c_crop,w_189,h_188,x_378,y_20/v1786861646/260811_lesson7ee_01_jzlmlp.png" },
-        { w: "kite", img: "https://res.cloudinary.com/dqwm4pdbz/image/upload/c_crop,w_421,h_424,x_842,y_424/v1786599929/260813_toys_01_txjh3y.png" },
-        { w: "bike", img: "https://res.cloudinary.com/dqwm4pdbz/image/upload/c_crop,w_421,h_424,x_421,y_424/v1786599929/260813_toys_01_txjh3y.png" },
-        { w: "barn", img: "https://res.cloudinary.com/dmkhsyfzf/image/upload/c_crop,w_189,h_188,x_567,y_0/v1787863265/260811_lesson7ee_01_qjkgbc.png" },
-        { w: "robot", img: "https://res.cloudinary.com/dqwm4pdbz/image/upload/c_crop,w_421,h_424,x_0,y_424/v1786599929/260813_toys_01_txjh3y.png" }
-      ];
+      // ---- Words are loaded from Airtable (table "HandWriting") ----
+      var WORKER =
+        "https://english-explorer-tracker.mkmueller-mission.workers.dev/airtable?table=HandWriting";
+
+      var WORDS = []; // filled by fetchWords()
 
       // ---- Pen stroke shape signature per letter.
       // We cannot run OCR, so we compare the pupil's stroke(s) to a rough
@@ -350,11 +351,62 @@
       var passed = false; // the current word has passed its Check
 
       var $ = function (id) { return document.getElementById(id); };
-      $("countLabel").textContent = "1/" + WORDS.length;
+
       function setNextEnabled(enabled) {
         var b = $("nextBtn");
         b.disabled = !enabled;
         b.title = enabled ? "Go to the next word" : "Check your word first";
+      }
+
+      // Fisher–Yates shuffle
+      function shuffle(arr) {
+        for (var i = arr.length - 1; i > 0; i--) {
+          var j = Math.floor(Math.random() * (i + 1));
+          var t = arr[i];
+          arr[i] = arr[j];
+          arr[j] = t;
+        }
+        return arr;
+      }
+
+      // ---- Load words from Airtable ----
+      function fetchWords() {
+        $("errorMsg").classList.add("hidden");
+        fetch(WORKER)
+          .then(function (r) {
+            if (!r.ok) throw new Error("HTTP " + r.status);
+            return r.json();
+          })
+          .then(function (data) {
+            var records = (data && data.records) || [];
+            var words = [];
+            records.forEach(function (rec) {
+              var f = (rec && rec.fields) || {};
+              var text = (f.Text || "").trim();
+              if (!text) return;
+              words.push({ w: text, img: f.Asset || "" });
+            });
+            if (!words.length) {
+              showError("No words yet \u2014 add them in Airtable and try again.");
+              return;
+            }
+            WORDS = shuffle(words);
+            resetGame();
+          })
+          .catch(function (err) {
+            showError("Couldn't load the words. Check your connection and try again.");
+          });
+      }
+      function showError(msg) {
+        $("loadingMsg").classList.add("hidden");
+        $("errorMsg").textContent = msg;
+        $("errorMsg").classList.remove("hidden");
+      }
+      function resetGame() {
+        current = 0;
+        $("loadingMsg").classList.add("hidden");
+        $("countLabel").textContent = "1/" + WORDS.length;
+        buildWord();
       }
 
       // Offscreen context reused for glyph metric measurement (never drawn
@@ -431,8 +483,16 @@
       var pads = []; // {canvas, ctx, strokes:[[{x,y},...],...], drawing}
       function buildWord() {
         var word = WORDS[current];
-        $("picture").src = word.img;
-        $("picture").alt = word.w;
+        var pic = $("picture");
+        if (word.img) {
+          pic.src = word.img;
+          pic.alt = word.w;
+          pic.classList.remove("hidden");
+        } else {
+          pic.removeAttribute("src");
+          pic.alt = "";
+          pic.classList.remove("hidden");
+        }
         var row = $("wordRow");
         row.innerHTML = "";
         pads = [];
@@ -652,11 +712,10 @@
       $("nextBtn").addEventListener("click", next);
       $("againBtn").addEventListener("click", function () {
         $("done").classList.remove("show");
-        current = 0;
-        buildWord();
+        resetGame();
       });
 
-      buildWord();
+      fetchWords();
     </script>
 
     <script src="../../tracker.js"></script>

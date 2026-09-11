@@ -12,6 +12,7 @@ const CORS_HEADERS = {
 const ALLOWED_AIRTABLE_TABLES = {
 	ReadingList: 'DisplayOrder',
 	GridShift: null,
+	HandWriting: null,
 };
 
 function json(data, status = 200) {
