@@ -336,7 +336,7 @@
         b2: { strokes: 2, foot: 0.1 }
       };
 
-      var ASCENDERS = "bdfhkl";
+      var ASCENDERS = "bdfhklit";
       var DESCENDERS = "gjpqy";
       function letterType(ch) {
         if (ch !== ch.toLowerCase()) return "tall";
@@ -417,9 +417,11 @@
       // Fixed per-letter ascent/descent ratios (fractions of the font size),
       // taken from real 900-weight Segoe UI / Arial measurements. A cache of
       // maxi values so that on EVERY device the ghost letter's OWN ink stays
-      // inside its handwriting zone: short letters (incl. the dot of "i" and
-      // the tall stem of "t" in fonts like Arial) never rise above the middle
-      // line. Tizen has no bounding-box metrics, so we never rely on them.
+      // inside its handwriting zone: tall letters (b d f h k l AND t) fill the
+      // whole top-line-to-baseline band, the dot of "i" rides in the upper
+      // zone, short letters sit between the middle line and the baseline, and
+      // descender tails stay above the lower edge. Tizen has no bounding-box
+      // metrics, so we never rely on them.
       var GLYPH_METRICS = (function () {
         var cap = 0.72, x = 0.53, x2 = 0.52, asc = 0.74, fAsc = 0.75, dot = 0.73, tee = 0.72;
         var T = {}, ch, i;
