@@ -253,14 +253,14 @@
         color: var(--text);
         border: 1px solid var(--item-border);
       }
-      /* Full-tile bricks (Airtable `FillTile`): the asset fills the whole face,
-         edge to edge — the face's default 1px border and padding are removed
-         so no edge line remains, and the radius + overflow clip the asset
-         cleanly at the corners. */
+      /* Full-tile bricks (Airtable `FillTile`): the asset covers the whole
+         face edge to edge with no rounded corners left exposed — the face's
+         default 1px border and padding are removed and the radius is zeroed
+         so no edge line or corner sliver of background remains. */
       .frontFace.fulltile {
         padding: 0;
         border: 0;
-        border-radius: 10px;
+        border-radius: 0;
         overflow: hidden;
       }
       .backFace {
@@ -693,7 +693,7 @@
           frontFace.classList.add("fulltile");
           round.style.width = "100%";
           round.style.height = "100%";
-          round.style.borderRadius = "10px";
+          round.style.borderRadius = "0";
           round.style.border = "0";
         }
         frontFace.appendChild(round);
