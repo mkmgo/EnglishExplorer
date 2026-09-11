@@ -253,9 +253,15 @@
         color: var(--text);
         border: 1px solid var(--item-border);
       }
-      /* Full-tile bricks: the asset fills the whole face, edge to edge. */
+      /* Full-tile bricks (Airtable `FillTile`): the asset fills the whole face,
+         edge to edge — the face's default 1px border and padding are removed
+         so no edge line remains, and the radius + overflow clip the asset
+         cleanly at the corners. */
       .frontFace.fulltile {
         padding: 0;
+        border: 0;
+        border-radius: 10px;
+        overflow: hidden;
       }
       .backFace {
         background: var(--item-bg) center center / cover no-repeat;
