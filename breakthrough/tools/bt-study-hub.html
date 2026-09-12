@@ -104,13 +104,13 @@
         right: 2.5vw;
         top: 50%;
         transform: translateY(-50%);
-        width: 2.1rem;
-        height: 2.1rem;
+        width: 1.68rem;
+        height: 1.68rem;
         border-radius: 999px;
         border: 2px solid rgba(255, 255, 255, 0.7);
         background: transparent;
         color: #fff;
-        font-size: 1.15rem;
+        font-size: 0.92rem;
         display: inline-flex;
         align-items: center;
         justify-content: center;
@@ -192,7 +192,7 @@
         border-color: var(--onAccentLine);
         color: var(--onAccent);
       }
-      .card.feature-bg .openBtn {
+      .card.feature-bg .readBtn {
         background: var(--onAccent);
         color: var(--accent);
       }
@@ -245,8 +245,8 @@
       }
       .speakBtn {
         flex: none;
-        width: 1.9em;
-        height: 1.9em;
+        width: 1.52em;
+        height: 1.52em;
         border-radius: 999px;
         border: 2px solid var(--accent);
         background: transparent;
@@ -277,55 +277,21 @@
         gap: 0.5em;
         align-items: stretch;
       }
-      .openBtn {
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        gap: 0.45em;
-        min-width: 120px;
-        border: 0;
-        border-radius: 999px;
-        padding: 0.6em 1.1em;
-        font-size: clamp(0.85rem, 1.4vw, 1rem);
-        font-weight: 900;
-        color: #fff;
-        background: var(--accent);
-        cursor: pointer;
-        text-decoration: none;
-        transition: transform 0.15s ease, opacity 0.3s ease;
-      }
-      .openBtn:active {
-        transform: scale(0.95);
-      }
-      .openBtn:disabled {
-        opacity: 0.45;
-        cursor: default;
-        transform: none;
-      }
-      .openBtn.disabled {
-        opacity: 0.45;
-        cursor: default;
-        pointer-events: none;
-      }
-      .openBtn svg {
-        width: 1em;
-        height: 1em;
-      }
       .readBtn {
         display: inline-flex;
         align-items: center;
         justify-content: center;
         gap: 0.45em;
-        min-width: 120px;
-        border: 2px solid var(--accent);
-        border-radius: 999px;
-        padding: 0.55em 1.1em;
-        font-size: clamp(0.85rem, 1.4vw, 1rem);
+        min-width: 96px;
+        border: 0;
+        border-radius: 14px;
+        padding: 0.48em 0.88em;
+        font-size: clamp(0.75rem, 1.3vw, 0.9rem);
         font-weight: 900;
-        color: var(--accent);
-        background: transparent;
+        color: #fff;
+        background: var(--accent);
         cursor: pointer;
-        transition: transform 0.15s ease, background 0.3s ease, color 0.3s ease;
+        transition: transform 0.15s ease, opacity 0.3s ease;
       }
       .readBtn:active {
         transform: scale(0.95);
@@ -368,11 +334,49 @@
         letter-spacing: -0.01em;
         line-height: 1.25;
       }
-      .readBody {
+      .readSub {
+        margin: 0.25em 0 0.9em;
+        color: var(--muted);
+        font-size: clamp(0.85rem, 1.4vw, 1rem);
+        font-weight: 600;
+      }
+      .readScroll {
         flex: 1;
         min-height: 0;
         overflow-y: auto;
         -webkit-overflow-scrolling: touch;
+      }
+      .readAsset {
+        margin-bottom: 0.9em;
+      }
+      .readAsset img {
+        width: 50%;
+        height: auto;
+        max-height: 18vh;
+        object-fit: contain;
+        display: block;
+        margin: 0 auto;
+        border-radius: 12px;
+        background: #fff;
+      }
+      .readAsset video {
+        width: 50%;
+        height: auto;
+        max-height: 18vh;
+        display: block;
+        margin: 0 auto;
+        border-radius: 12px;
+        background: #000;
+      }
+      .readAsset iframe {
+        width: 100%;
+        height: 24vh;
+        border: 0;
+        border-radius: 12px;
+        background: #fff;
+        display: block;
+      }
+      .readBody {
         font-size: clamp(1.05rem, 2vw, 1.35rem);
         line-height: 1.7;
         white-space: pre-wrap;
@@ -385,16 +389,16 @@
         gap: 0.8rem;
       }
       .modalBtn {
-        min-width: 128px;
-        min-height: 52px;
-        border-radius: 999px;
-        font-size: clamp(1rem, 1.8vw, 1.3rem);
+        min-width: 96px;
+        border-radius: 14px;
+        padding: 0.48em 0.88em;
+        font-size: clamp(0.75rem, 1.3vw, 0.9rem);
         font-weight: 900;
         cursor: pointer;
         display: inline-flex;
         align-items: center;
         justify-content: center;
-        gap: 0.5em;
+        gap: 0.45em;
         transition: transform 0.15s ease;
       }
       .modalBtn:active {
@@ -411,8 +415,8 @@
         color: var(--accent);
       }
       .modalBtn svg {
-        width: 1.1em;
-        height: 1.1em;
+        width: 1em;
+        height: 1em;
       }
 
       @media (max-width: 520px) {
@@ -423,7 +427,6 @@
           width: 100%;
           flex-direction: row;
         }
-        .openBtn,
         .readBtn {
           flex: 1;
         }
@@ -435,7 +438,6 @@
         .card.feature-bg:hover {
           border-color: var(--onAccentLine);
         }
-        .openBtn:hover,
         .readBtn:hover,
         .speakBtn:hover {
           transform: translateY(-2px);
@@ -480,7 +482,11 @@
     <div id="readModal">
       <div class="readBox">
         <h2 id="readTitle"></h2>
-        <div class="readBody" id="readBody"></div>
+        <div class="readSub" id="readSub"></div>
+        <div class="readScroll">
+          <div id="readAsset"></div>
+          <div class="readBody" id="readBody"></div>
+        </div>
         <div class="readBtns">
           <button class="modalBtn ghost" onclick="closeRead()">CLOSE</button>
           <button class="modalBtn accent" onclick="speakReading()">
@@ -701,10 +707,35 @@
         }
       }
 
-      var readModal, readTitle, readBody;
+      var readModal, readTitle, readSub, readBody, readAsset;
       var activeReading = "";
-      function openRead(title, text) {
+      function isVideo(url) {
+        return /\.(mp4|webm|ogv|m4v)(\?.*)?$/i.test(String(url));
+      }
+      function openRead(title, sub, text, link) {
         readTitle.textContent = title || "Reading";
+        readSub.textContent = sub || "";
+        readAsset.innerHTML = "";
+        if (link) {
+          if (isImage(link)) {
+            var img = document.createElement("img");
+            img.src = link;
+            img.alt = title || "Reading";
+            img.loading = "lazy";
+            readAsset.appendChild(img);
+          } else if (isVideo(link)) {
+            var vid = document.createElement("video");
+            vid.src = link;
+            vid.controls = true;
+            vid.preload = "metadata";
+            readAsset.appendChild(vid);
+          } else {
+            var frm = document.createElement("iframe");
+            frm.src = link;
+            frm.loading = "lazy";
+            readAsset.appendChild(frm);
+          }
+        }
         readBody.textContent = text || "";
         activeReading = text || "";
         readModal.classList.add("show");
@@ -722,7 +753,9 @@
       var statusEl = document.getElementById("status");
       readModal = document.getElementById("readModal");
       readTitle = document.getElementById("readTitle");
+      readSub = document.getElementById("readSub");
       readBody = document.getElementById("readBody");
+      readAsset = document.getElementById("readAsset");
 
       function isImage(url) {
         return /\.(png|jpe?g|gif|webp|avif)(\?.*)?$/i.test(String(url));
@@ -814,30 +847,20 @@
 
           var actions = document.createElement("div");
           actions.className = "cardActions";
-          if (text) {
+          if (text || link) {
             var read = document.createElement("button");
             read.type = "button";
             read.className = "readBtn";
             read.innerHTML =
-              '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>READ';
+              '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>Content';
             read.onclick = function () {
-              openRead(title, text);
+              openRead(title, sub, text, link);
               logActivity("Nimza", "/breakthrough/tools/bt-study-hub.html", "BTStudyHub", "Read", title);
+              if (link) {
+                logActivity("Nimza", "/breakthrough/tools/bt-study-hub.html", "BTStudyHub", "OpenAsset", title);
+              }
             };
             actions.appendChild(read);
-          }
-          var open = document.createElement("a");
-          open.className = "openBtn";
-          open.innerHTML =
-            '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h6v6"/><path d="M10 14 21 3"/><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/></svg>OPEN';
-          if (link) {
-            open.href = link;
-            open.target = "_blank";
-            open.rel = "noopener";
-            open.onclick = function () {
-              logActivity("Nimza", "/breakthrough/tools/bt-study-hub.html", "BTStudyHub", "OpenAsset", title);
-            };
-            actions.appendChild(open);
           }
           card.appendChild(actions);
 
