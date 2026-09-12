@@ -187,10 +187,13 @@
       .card.feature-bg .cardSub {
         color: var(--onAccentMuted);
       }
-      .card.feature-bg .speakBtn,
       .card.feature-bg .readBtn {
         border-color: var(--onAccentLine);
         color: var(--onAccent);
+      }
+      .card.feature-bg .speakBtn {
+        background: var(--onAccent);
+        color: var(--accent);
       }
       .card.feature-bg .readBtn {
         background: var(--onAccent);
@@ -245,24 +248,27 @@
       }
       .speakBtn {
         flex: none;
-        width: 1.52em;
-        height: 1.52em;
+        width: 2.05em;
+        height: 2.05em;
         border-radius: 999px;
-        border: 2px solid var(--accent);
-        background: transparent;
-        color: var(--accent);
+        border: 0;
+        background: var(--accent);
+        color: #fff;
         display: inline-flex;
         align-items: center;
         justify-content: center;
         cursor: pointer;
+        flex-shrink: 0;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.18);
         transition: transform 0.15s ease, background 0.3s ease, color 0.3s ease;
       }
       .speakBtn:active {
         transform: scale(0.9);
       }
       .speakBtn svg {
-        width: 1em;
-        height: 1em;
+        width: 1.25em;
+        height: 1.25em;
+        stroke-width: 2.6;
       }
       .cardSub {
         margin: 0.3em 0 0;
@@ -789,15 +795,17 @@
 
           var card = document.createElement("div");
           card.className = "card";
-          var feature = String(f.Visual || f.Feature || "").trim().toLowerCase();
-          if (feature.indexOf("accent2") >= 0 || feature.indexOf("bg2") >= 0) {
-            card.classList.add("feature-bg2");
-          } else if (feature.indexOf("accent") >= 0 || feature.indexOf("bg1") >= 0) {
+          var bg = String(f.Background || "").trim().toLowerCase();
+          var bd = String(f.Border || "").trim().toLowerCase();
+          if (bg.indexOf("strong") >= 0) {
             card.classList.add("feature-bg");
-          } else if (feature.indexOf("border2") >= 0) {
-            card.classList.add("feature-border2");
-          } else if (feature.indexOf("border") >= 0) {
+          } else if (bg.indexOf("subtle") >= 0) {
+            card.classList.add("feature-bg2");
+          }
+          if (bd.indexOf("strong") >= 0) {
             card.classList.add("feature-border");
+          } else if (bd.indexOf("subtle") >= 0) {
+            card.classList.add("feature-border2");
           }
 
           var thumb = document.createElement("div");
@@ -828,7 +836,7 @@
             speak.className = "speakBtn";
             speak.setAttribute("aria-label", "Speak " + title);
             speak.innerHTML =
-              '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/></svg>';
+              '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/></svg>';
             speak.onclick = function () {
               say(sub ? title + ". " + sub : title);
               logActivity("Nimza", "/breakthrough/tools/bt-study-hub.html", "BTStudyHub", "Speak", title);

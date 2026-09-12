@@ -330,10 +330,13 @@ Simple, content-agnostic table. Column order in Airtable (autonumber first) is c
 | `BTStudyHubID` | Autonumber | First column; only Airtable seems to require a unique first field. Not used by the reader. |
 | `Title` | Single line text | Reading name shown on the card (also spoken via TTS). |
 | `Subtitle` | Single line text *(optional)* | Short note under the title (scene label, programme theme, etc.). |
-| `Visual` | Single select *(optional)* | Card emphasis, read while matching the older `Feature` field name as a fallback. `BG1` fills the card with the strong Nimza-purple accent (`var(--accent)`) with contrast-aware text — the "spotlight" card; `BG2` fills the card with the soft violet tint (`var(--accent2)`); `Border` gives the card a visible accent-coloured border; `Border2` gives the card a soft violet-coloured border (`var(--accent2)`). Left empty for the default flat card. |
+| `Background` | Single select *(optional)* | Card background fill (`Strong` / `Subtle` / `None`). `Strong` fills the card with the Nimza-purple accent (`var(--accent)`) with contrast-aware text — the "spotlight" card; `Subtle` fills the card with the soft violet tint (`var(--accent2)`). `None` or empty = default flat card. |
+| `Border` | Single select *(optional)* | Card border (`Strong` / `Subtle` / `None`). `Strong` gives an accent-coloured border (3px `var(--accent)`); `Subtle` gives a soft violet-coloured border (3px `var(--accent2)`). `None` or empty = no border. |
 | `Text` | Long text *(optional)* | Passage/paragraph. Cards with text get a **READ** button that opens the passage in an in-page modal (Tizen-safe) with a LISTEN button (chunked TTS). Used for story passages, the monthly programme overviews, and the profile template. |
 | `Link` | URL *(optional)* | Asset link — Cloudinary image/video, PDF, or external page. If it's an image, it's shown as a thumbnail; becomes the card's **OPEN** button. |
 | `DisplayOrder` | Number *(optional)* | Sort order (ascending, via the worker). Rows **without** a value sort to the **top** (Airtable orders empty numbers first); set it on every new row to control position. |
+
+Both fields are independent and composable — any combination is supported (e.g. `Background: Strong` + `Border: Strong` = spotlight card with an accent ring). The retired legacy `Visual`/`Feature` field is no longer read.
 
 - Only `Title` is required (`Text`/`Link` optional, at least one recommended). The reader also accepts `Name`/`URL`/`Note`/`Passage` aliases.
 - To add a reading: create a new row in the `BTStudyHub` table (same base as visitor tracking) with the title and the asset URL. No code change needed — the page updates on reload (meta tags force no-cache).
