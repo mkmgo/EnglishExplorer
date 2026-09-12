@@ -187,16 +187,22 @@
       .card.feature-bg .cardSub {
         color: var(--onAccentMuted);
       }
-      .card.feature-bg .readBtn {
-        border-color: var(--onAccentLine);
-        color: var(--onAccent);
-      }
       .card.feature-bg .speakBtn {
         background: var(--onAccent);
         color: var(--accent);
       }
       .card.feature-bg .readBtn {
         background: var(--onAccent);
+        color: var(--accent);
+      }
+      .card.readBtn-soft .readBtn {
+        background: var(--accent2);
+        border: 0;
+        color: var(--accent);
+      }
+      .card.readBtn-outline .readBtn {
+        background: transparent;
+        border: 2px solid var(--accent);
         color: var(--accent);
       }
       .card.feature-border {
@@ -283,6 +289,9 @@
         gap: 0.5em;
         align-items: stretch;
       }
+      .card.subchapter {
+        margin-left: clamp(14px, 2.5vw, 28px);
+      }
       .readBtn {
         display: inline-flex;
         align-items: center;
@@ -305,6 +314,7 @@
       .readBtn svg {
         width: 1em;
         height: 1em;
+        transform: translateY(0.05em);
       }
 
       #readModal {
@@ -807,6 +817,15 @@
           } else if (bd.indexOf("subtle") >= 0) {
             card.classList.add("feature-border2");
           }
+          if (bg.indexOf("subtle") >= 0) {
+            card.classList.add("readBtn-outline");
+          } else if (bd.indexOf("strong") >= 0) {
+            card.classList.add("readBtn-outline");
+          } else if (bd.indexOf("subtle") >= 0) {
+            card.classList.add("readBtn-soft");
+          }
+          var ord = Number(f.DisplayOrder);
+          if (!isNaN(ord) && ord % 1 !== 0) card.classList.add("subchapter");
 
           var thumb = document.createElement("div");
           thumb.className = "thumb";
