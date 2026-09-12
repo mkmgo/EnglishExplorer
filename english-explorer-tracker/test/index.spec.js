@@ -62,7 +62,7 @@ describe("English Explorer Tracker worker", () => {
 		globalThis.fetch = inner;
 		try {
 			const response = await worker.fetch(
-				new Request("https://tracker.dev/airtable?table=ReadingList"),
+				new Request("https://tracker.dev/airtable?table=BTStudyHub"),
 				{ AIRTABLE_BASE_ID: "base1", AIRTABLE_PAT: "pat-test" },
 				ctx,
 			);

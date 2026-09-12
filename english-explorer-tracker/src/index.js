@@ -10,7 +10,7 @@ const CORS_HEADERS = {
 // Airtable's default row order (a table that has no DisplayOrder field
 // would otherwise make the sort query fail).
 const ALLOWED_AIRTABLE_TABLES = {
-	ReadingList: 'DisplayOrder',
+	BTStudyHub: 'DisplayOrder',
 	GridShift: null,
 	HandWriting: null,
 };

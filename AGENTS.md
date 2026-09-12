@@ -111,7 +111,7 @@ There is **no `config.js`** — all secrets live server-side in the Cloudflare W
   - `GET /github?url=...` — GitHub API proxy (Bearer token added server-side).
   - `GET /airtable?table=<TableName>` — read-only Airtable reader (PAT stays server-side).
     Only **allowlisted** tables are readable. Each table is sorted by its own field (or its
-    natural Airtable order when it has no sort field): `ReadingList` (sorted by `DisplayOrder`,
+    natural Airtable order when it has no sort field): `BTStudyHub` (sorted by `DisplayOrder`,
     used by `bt-study-hub.html`) and `GridShift` (natural order, used by `mb-grid-shift.html`).
     Returns `{ records: [...] }`.
   - `POST /` — Airtable visitor tracking.
@@ -316,18 +316,18 @@ is imperfect).
 
 `breakthrough/tools/bt-study-hub.html` renders a reading list for the Breakthrough tutee, pulling content from Airtable at runtime (no hardcoded content).
 
-- The page fetches `GET /airtable?table=ReadingList` from the tracker worker and renders one tappable card per record.
+- The page fetches `GET /airtable?table=BTStudyHub` from the tracker worker and renders one tappable card per record.
 - It is responsive, has a dark-mode toggle (persisted in `localStorage["eebt-theme"]`, matching `updates.html`), and speaks each reading title via TTS (Tizen + Web Speech), consistent with the rest of the platform.
 - Voice selection prefers smooth **female/natural** voices (Samantha, Google US English, Natural, Hazel, Aria…) via a scoring heuristic (`voiceScore()`), instead of blind `en-GB` first-match. Tizen uses OS TTS and ignores this.
 - Not currently linked from `updates.html` (the Reading List row was removed until the page is confirmed working on-device). Re-add the link (class `nima-col`) once verified.
 
-### Airtable `ReadingList` table schema
+### Airtable `BTStudyHub` table schema
 
 Simple, content-agnostic table. Column order in Airtable (autonumber first) is cosmetics-driven — the reader reads fields **by name**, not position:
 
 | Field | Type | Purpose |
 |---|---|---|
-| `ReadingListID` | Autonumber | First column; only Airtable seems to require a unique first field. Not used by the reader. |
+| `BTStudyHubID` | Autonumber | First column; only Airtable seems to require a unique first field. Not used by the reader. |
 | `Title` | Single line text | Reading name shown on the card (also spoken via TTS). |
 | `Subtitle` | Single line text *(optional)* | Short note under the title (scene label, programme theme, etc.). |
 | `Feature` | Single select *(optional)* | Card emphasis. `Background (Accent)` fills the card with the subtle accent (Nimza purple); `Border` gives the card a visible accent-coloured border. Left empty for the default flat card. |
@@ -336,9 +336,9 @@ Simple, content-agnostic table. Column order in Airtable (autonumber first) is c
 | `DisplayOrder` | Number *(optional)* | Sort order (ascending, via the worker). Rows **without** a value sort to the **top** (Airtable orders empty numbers first); set it on every new row to control position. |
 
 - Only `Title` is required (`Text`/`Link` optional, at least one recommended). The reader also accepts `Name`/`URL`/`Note`/`Passage` aliases.
-- To add a reading: create a new row in the `ReadingList` table (same base as visitor tracking) with the title and the asset URL. No code change needed — the page updates on reload (meta tags force no-cache).
+- To add a reading: create a new row in the `BTStudyHub` table (same base as visitor tracking) with the title and the asset URL. No code change needed — the page updates on reload (meta tags force no-cache).
 - The worker fetch is capped at 200 records (`maxRecords=200&pageSize=100`) — plenty for the current ~21, but paginate if it ever grows.
 
 ### Blocked Cloudinary assets
 
-The `dp455m4rk` Cloudinary account requires **signed delivery** and returns `401` for anonymous image/video URLs (see `asset-cloud-issues.MD`). When adding asset links to `ReadingList`, use a working account (`dqwm4pdbz` / `dmkhsyfzf`) — i.e. re-upload any blocked assets to one of those and paste the working URL. The reader renders whatever `Link` points to, so valid URLs just work.
+The `dp455m4rk` Cloudinary account requires **signed delivery** and returns `401` for anonymous image/video URLs (see `asset-cloud-issues.MD`). When adding asset links to `BTStudyHub`, use a working account (`dqwm4pdbz` / `dmkhsyfzf`) — i.e. re-upload any blocked assets to one of those and paste the working URL. The reader renders whatever `Link` points to, so valid URLs just work.
