@@ -1470,6 +1470,30 @@
         background: #eef1f7;
         color: var(--ink);
       }
+      .inputChoices {
+        display: none;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 0.7em;
+      }
+      .inputChoice {
+        min-width: 120px;
+        min-height: 52px;
+        border-radius: 999px;
+        font-size: clamp(0.9rem, 1.6vw, 1.3rem);
+        font-weight: 900;
+        background: var(--accent);
+        color: var(--accent2);
+        box-shadow: var(--shadow);
+        padding: 0.5em 1.1em;
+        transition: 0.15s transform;
+      }
+      .inputChoice:active {
+        transform: scale(0.95);
+      }
+      :root[data-theme="dark"] .inputChoice {
+        color: var(--accent2);
+      }
       #reward {
         position: absolute;
         inset: 0;
@@ -1717,16 +1741,37 @@
         margin: 0.5em 0;
       }
       .mdCanvas h1 {
-        font-size: clamp(1.5rem, 3.2vw, 2.8rem);
-        margin: 0.25em 0;
+        font-size: clamp(1.4rem, 2.6vw, 2.1rem);
+        margin: 0.65em 0 0.35em;
+        font-weight: 900;
+        letter-spacing: -0.01em;
       }
       .mdCanvas h2 {
-        font-size: clamp(1.2rem, 2.4vw, 2.2rem);
-        margin: 0.25em 0;
+        font-size: clamp(1.25rem, 2.2vw, 1.8rem);
+        margin: 0.55em 0 0.3em;
+        font-weight: 800;
       }
       .mdCanvas h3 {
-        font-size: clamp(1rem, 1.9vw, 1.7rem);
-        margin: 0.2em 0;
+        font-size: clamp(1.1rem, 1.85vw, 1.5rem);
+        margin: 0.5em 0 0.25em;
+        font-weight: 800;
+      }
+      .mdCanvas h4 {
+        font-size: clamp(1rem, 1.6vw, 1.3rem);
+        margin: 0.45em 0 0.2em;
+        font-weight: 800;
+      }
+      .mdCanvas h5,
+      .mdCanvas h6 {
+        font-size: clamp(0.95rem, 1.45vw, 1.15rem);
+        margin: 0.4em 0 0.2em;
+        font-weight: 800;
+      }
+      .mdCanvas hr {
+        border: 0;
+        border-top: 2px solid rgba(96, 112, 141, 0.35);
+        margin: 1.4em auto;
+        width: min(60%, 320px);
       }
       .mdCanvas ul,
       .mdCanvas ol {
@@ -2172,6 +2217,7 @@
       <div id="inputModal">
         <div class="inputBox">
           <h2 id="inputTitle">Type or paste your input</h2>
+          <div id="inputChoices" class="inputChoices"></div>
           <textarea id="inputField" placeholder="Type here or paste from clipboard…"></textarea>
           <div class="inputBtns">
             <button class="cancelBtn" onclick="closeInputModal()">Cancel</button>
@@ -2389,7 +2435,7 @@
                 <button
                   type="button"
                   class="miniChip voiceChip downloadCsvBtn"
-                  onclick="downloadCsv()"
+                  onclick="downloadWords()"
                 >
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -2407,7 +2453,7 @@
                     <polyline points="7 10 12 15 17 10" />
                     <line x1="12" x2="12" y1="15" y2="3" />
                   </svg>
-                  <span>Download CSV</span>
+                  <span>Save words</span>
                 </button>
                 <button
                   type="button"
@@ -2430,7 +2476,7 @@
                     <polyline points="17 8 12 3 7 8" />
                     <line x1="12" x2="12" y1="3" y2="15" />
                   </svg>
-                  <span>Load CSV</span>
+                  <span>Load words</span>
                 </button>
                 <button
                   type="button"
@@ -2459,7 +2505,7 @@
               <input
                 type="file"
                 id="csvFileInput"
-                accept=".csv,text/csv"
+                accept=".json,.csv,.txt,application/json,text/csv,text/plain,text/markdown"
                 style="display: none"
               />
             </div>
@@ -2471,21 +2517,17 @@
         <div class="content">
           <div class="stage mdStage">
             <div class="mdBar">
-              <button class="miniChip mdChip" id="mdRenderBtn" onclick="mdRender()">
-                <svg xmlns="http://www.w3.org/2000/svg" width="1.1em" height="1.1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-0.2em"><path d="M21 12a9 9 0 1 1-6.219-8.56"/></svg>
-                Render
-              </button>
               <button class="miniChip mdChip" id="mdSpeakBtn" onclick="mdSay()">
                 <svg xmlns="http://www.w3.org/2000/svg" width="1.1em" height="1.1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-0.2em"><path d="M11 5 6 9H2v6h4l5 4z"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/></svg>
                 Read
               </button>
-              <button class="miniChip mdChip mdAccent" id="mdTranslateBtn" onclick="mdTranslate()">
-                <svg xmlns="http://www.w3.org/2000/svg" width="1.1em" height="1.1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-0.2em"><path d="m5 8 6 6"/><path d="m4 14 6-6 2-3"/><path d="M2 5h12"/><path d="M7 2h1"/><path d="m22 22-5-10-5 10"/><path d="M14 18h6"/></svg>
-                Translate
-              </button>
               <button class="miniChip mdChip" id="mdClearBtn" onclick="mdClear()">
                 <svg xmlns="http://www.w3.org/2000/svg" width="1.1em" height="1.1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-0.2em"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/></svg>
                 Clear
+              </button>
+              <button class="miniChip mdChip mdAccent" id="mdTranslateBtn" onclick="mdTranslate()">
+                <svg xmlns="http://www.w3.org/2000/svg" width="1.1em" height="1.1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-0.2em"><path d="m5 8 6 6"/><path d="m4 14 6-6 2-3"/><path d="M2 5h12"/><path d="M7 2h1"/><path d="m22 22-5-10-5 10"/><path d="M14 18h6"/></svg>
+                Translate
               </button>
               <button class="miniChip mdChip mdAccent" id="mdSaveBtn" onclick="mdSave()">
                 <svg xmlns="http://www.w3.org/2000/svg" width="1.1em" height="1.1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-0.2em"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" x2="12" y1="15" y2="3"/></svg>
@@ -2495,9 +2537,9 @@
                 <svg xmlns="http://www.w3.org/2000/svg" width="1.1em" height="1.1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-0.2em"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" x2="12" y1="3" y2="15"/></svg>
                 Load
               </button>
-              <button class="miniChip mdChip mdAccent" id="mdProtocolBtn" onclick="generateProtocol()">
+              <button class="miniChip mdChip mdAccent" id="mdGenerateBtn" onclick="generateOutput()">
                 <svg xmlns="http://www.w3.org/2000/svg" width="1.1em" height="1.1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-0.2em"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/><path d="M10 9H8"/><path d="M16 13H8"/><path d="M16 17H8"/></svg>
-                Protocol
+                Generate
               </button>
               <span class="mdHint" id="mdHint">Tap a word to hear &amp; select it · Translate sends it to the translator</span>
             </div>
@@ -2718,14 +2760,38 @@ Tap a word to hear it — SpotlightPro turns your notes into a live lesson.
 
       var inputCallback = null;
 
-      function openInputModal(title, cb, initial) {
+      function openInputModal(title, cb, initial, choices) {
         inputCallback = cb || null;
         var t = document.getElementById("inputTitle");
         if (t) t.textContent = title;
+        var has = choices && choices.length;
         var f = document.getElementById("inputField");
         if (f) {
           f.value = initial || "";
+          f.style.display = has ? "none" : "";
           f.focus();
+        }
+        var cc = document.getElementById("inputChoices");
+        if (cc) {
+          cc.innerHTML = "";
+          if (has) {
+            for (var i = 0; i < choices.length; i++) {
+              (function (choice) {
+                var b = document.createElement("button");
+                b.type = "button";
+                b.className = "inputChoice";
+                b.textContent = choice.label;
+                b.onclick = function () {
+                  var c = inputCallback;
+                  inputCallback = null;
+                  closeInputModal();
+                  if (c) c(choice.value);
+                };
+                cc.appendChild(b);
+              })(choices[i]);
+            }
+          }
+          cc.style.display = has ? "flex" : "none";
         }
         document.getElementById("inputModal").classList.add("show");
       }
@@ -3226,42 +3292,42 @@ if (idx < 0) return;
         toast("Word list cleared");
       }
 
-      function csvCell(v) {
-        v = String(v == null ? "" : v);
-        return '"' + v.replace(/"/g, '""') + '"';
+      function fileStamp() {
+        var now = new Date();
+        return (
+          now.getFullYear().toString() +
+          String(now.getMonth() + 1).padStart(2, "0") +
+          String(now.getDate()).padStart(2, "0") +
+          "_" +
+          String(now.getHours()).padStart(2, "0") +
+          String(now.getMinutes()).padStart(2, "0") +
+          String(now.getSeconds()).padStart(2, "0")
+        );
       }
 
-      function downloadCsv() {
-        if (!clipHistory.length) return;
-        var rows = [];
-        rows.push(
-          [csvCell("time"), csvCell("english"), csvCell("chinese")].join(","),
-        );
-        for (var i = 0; i < clipHistory.length; i++) {
-          var c = clipHistory[i];
-          rows.push(
-            [csvCell(c.time), csvCell(c.en), csvCell(c.zh)].join(","),
-          );
-        }
-        var csv = "\uFEFF" + rows.join("\r\n");
-        var blob = new Blob([csv], { type: "text/csv;charset=utf-8" });
+      function downloadBlob(content, mime, name) {
+        var blob = new Blob([content], { type: mime });
         var url = URL.createObjectURL(blob);
         var a = document.createElement("a");
         a.href = url;
-        var now = new Date();
-        var dt = now.getFullYear().toString() +
-          String(now.getMonth() + 1).padStart(2, "0") +
-          String(now.getDate()).padStart(2, "0") + "_" +
-          String(now.getHours()).padStart(2, "0") +
-          String(now.getMinutes()).padStart(2, "0") +
-          String(now.getSeconds()).padStart(2, "0");
-        a.download = "vocasofdate_" + dt + ".csv";
+        a.download = name;
         document.body.appendChild(a);
         a.click();
         document.body.removeChild(a);
         setTimeout(function () {
           URL.revokeObjectURL(url);
         }, 1000);
+      }
+
+      function downloadWords() {
+        if (!clipHistory.length) { toast("Nothing to save yet"); return; }
+        var bundle = { type: "spotlight-words", words: clipHistory };
+        downloadBlob(
+          JSON.stringify(bundle, null, 2),
+          "application/json;charset=utf-8",
+          "words_" + fileStamp() + ".json"
+        );
+        toast("Saved " + clipHistory.length + " word(s)");
       }
 
       function parseCsv(text) {
@@ -3303,96 +3369,111 @@ if (idx < 0) return;
         return rows;
       }
 
-      function decodeCsvFile(file, cb) {
-        if (typeof TextDecoder === "undefined" || !window.Uint8Array) {
-          var fr = new FileReader();
-          fr.onload = function () {
-            cb(String(fr.result || ""));
-          };
-          fr.readAsText(file);
-          return;
+      function hasClip(en, zh) {
+        for (var j = 0; j < clipHistory.length; j++) {
+          if (clipHistory[j].en === en && clipHistory[j].zh === zh) return true;
         }
-        var reader = new FileReader();
-        reader.onload = function () {
-          var u8 = new Uint8Array(reader.result || 0);
-          var label = null;
-          if (u8.length >= 2 && u8[0] === 0xff && u8[1] === 0xfe)
-            label = "utf-16le";
-          else if (u8.length >= 2 && u8[0] === 0xfe && u8[1] === 0xff)
-            label = "utf-16be";
-          if (!label) {
-            try {
-              new TextDecoder("utf-8", { fatal: true }).decode(u8);
-              label = "utf-8";
-            } catch (e) {
-              label = "gb18030";
-            }
-          }
-          var text = "";
-          try {
-            text = new TextDecoder(label).decode(u8);
-          } catch (e) {}
-          if (!text && u8.length) {
-            try {
-              text = new TextDecoder("utf-8").decode(u8);
-            } catch (e2) {}
-          }
-          cb(String(text).replace(/^[\uFEFF\uFFFE]/, ""));
-        };
-        reader.readAsArrayBuffer(file);
+        return false;
       }
 
-      function loadCsv(input) {
+      function normalizeWordArr(arr) {
+        return arr.map(function (w) {
+          if (!w || typeof w !== "object") return { time: "", en: "", zh: "" };
+          return {
+            time: w.time != null ? String(w.time) : "",
+            en: w.en != null ? String(w.en) : "",
+            zh: w.zh != null ? String(w.zh) : ""
+          };
+        });
+      }
+
+      function mergeWordsArray(list) {
+        var count = 0;
+        var skipped = 0;
+        var garbled = 0;
+        for (var i = 0; i < list.length; i++) {
+          var en = String(list[i].en != null ? list[i].en : "").trim();
+          var zh = String(list[i].zh != null ? list[i].zh : "").trim();
+          if (!en && !zh) continue;
+          if (hasClip(en, zh)) {
+            skipped++;
+            continue;
+          }
+          if (en.indexOf("\uFFFD") >= 0 || zh.indexOf("\uFFFD") >= 0)
+            garbled++;
+          clipHistory.push({ time: list[i].time || "", en: en, zh: zh });
+          appendClipRow(list[i].time || "", en, zh);
+          count++;
+        }
+        updateClipMoveButtons();
+        saveWords();
+        var msg;
+        if (count && skipped) {
+          msg = "Loaded " + count + " word(s), " + skipped + " duplicate(s) skipped";
+        } else if (count) {
+          msg = "Loaded " + count + " word(s)";
+        } else if (skipped) {
+          msg = "All " + skipped + " entries already loaded \u2014 use Clear to start fresh";
+        } else {
+          msg = "No new words found";
+        }
+        if (garbled)
+          msg += " \u2014 " + garbled + " garbled";
+        toast(msg);
+      }
+
+      function wordsFromRawText(text) {
+        var rows = parseCsv(text);
+        var list = [];
+        for (var i = 0; i < rows.length; i++) {
+          var cells = rows[i];
+          if (!cells.length) continue;
+          var time = "";
+          var en = "";
+          var zh = "";
+          if (cells.length === 1 && cells[0].indexOf(" | ") >= 0) {
+            var p = cells[0].split(" | ");
+            cells = [p[0].trim(), (p[1] || "").trim()];
+          }
+          if (cells.length >= 3) {
+            time = (cells[0] || "").trim();
+            en = (cells[1] || "").trim();
+            zh = (cells[2] || "").trim();
+          } else {
+            en = (cells[0] || "").trim();
+            zh = (cells[1] || "").trim();
+          }
+          if (time.toLowerCase() === "time" && en.toLowerCase() === "english")
+            continue;
+          if (!en && !zh) continue;
+          list.push({ time: time, en: en, zh: zh });
+        }
+        return list;
+      }
+
+      function loadWordsInput(input) {
         var file = input.files && input.files[0];
         input.value = "";
         if (!file) return;
-        decodeCsvFile(file, function (text) {
-          var rows = parseCsv(text);
-          var count = 0;
-          var garbled = 0;
-          var skipped = 0;
-          for (var i = 0; i < rows.length; i++) {
-            var cells = rows[i];
-            while (cells.length < 3) cells.push("");
-            var t = cells[0].trim();
-            var en = cells[1].trim();
-            var zh = cells[2].trim();
-            if (t.toLowerCase() === "time" && en.toLowerCase() === "english")
-              continue;
-            if (!en && !zh) continue;
-            var dup = false;
-            for (var j = 0; j < clipHistory.length; j++) {
-              if (clipHistory[j].en === en && clipHistory[j].zh === zh) {
-                dup = true;
-                break;
-              }
-            }
-            if (dup) {
-              skipped++;
-              continue;
-            }
-            if (en.indexOf("\uFFFD") >= 0 || zh.indexOf("\uFFFD") >= 0)
-              garbled++;
-            clipHistory.push({ time: t, en: en, zh: zh });
-            appendClipRow(t, en, zh);
-            count++;
-          }
-          updateClipMoveButtons();
-          saveWords();
-          var msg;
-          if (count && skipped) {
-            msg = "Loaded " + count + " word(s), " + skipped + " duplicate(s) skipped";
-          } else if (count) {
-            msg = "Loaded " + count + " word(s)";
-          } else if (skipped) {
-            msg = "All " + skipped + " entries already loaded \u2014 use Clear to start fresh";
+        var reader = new FileReader();
+        reader.onload = function () {
+          var text = String(reader.result || "");
+          if (/^\uFEFF/.test(text)) text = text.slice(1);
+          var bundle = null;
+          try {
+            bundle = JSON.parse(text);
+          } catch (e) {}
+          if (bundle && bundle.type === "spotlight-words" && Array.isArray(bundle.words)) {
+            mergeWordsArray(normalizeWordArr(bundle.words));
+          } else if (bundle && (bundle.type === "spotlight-presentation" || bundle.media || typeof bundle.md === "string") && Array.isArray(bundle.words)) {
+            mergeWordsArray(normalizeWordArr(bundle.words));
+          } else if (bundle && Array.isArray(bundle)) {
+            mergeWordsArray(normalizeWordArr(bundle));
           } else {
-            msg = "No new words found";
+            mergeWordsArray(wordsFromRawText(text));
           }
-          if (garbled)
-            msg += " \u2014 " + garbled + " garbled, re-save CSV as UTF-8";
-          toast(msg);
-        });
+        };
+        reader.readAsText(file);
       }
 
       function restoreClip(en, zh) {
@@ -4402,7 +4483,7 @@ if (idx < 0) return;
       var csvFileInput = document.getElementById("csvFileInput");
       if (csvFileInput) {
         csvFileInput.addEventListener("change", function () {
-          loadCsv(csvFileInput);
+          loadWordsInput(csvFileInput);
         });
       }
       var mediaFileInput = document.getElementById("mediaFileInput");
@@ -4643,6 +4724,8 @@ if (idx < 0) return;
             continue;
           }
           flushTable();
+          var hrM = trimmed.match(/^(?:-{3,}|\*{3,}|_{3,})$/);
+          if (hrM) { flushPara(); flushList(); blocks.push({ t: "hr" }); continue; }
           var h = trimmed.match(/^(#{1,6})\s+(.*)$/);
           if (h) { flushPara(); flushList(); blocks.push({ t: "h", level: h[1].length, text: h[2] }); continue; }
           var bq = trimmed.match(/^>\s?(.*)$/);
@@ -4731,17 +4814,53 @@ if (idx < 0) return;
             }
             el.appendChild(tbody);
           }
+          else if (blk.t === "hr") { el = document.createElement("hr"); }
           else { el = document.createElement("p"); mdFillText(el, blk.text, false); }
           out.appendChild(el);
         }
         updateMdHint();
       }
 
-      function generateProtocol() {
-        if (!clipHistory.length) {
-          toast("Add words in the translator first");
-          return;
-        }
+      function generateOutput() {
+        openInputModal(
+          "What should I create?",
+          function (type) { generateAskRecipient(type); },
+          "",
+          [
+            { label: "Lesson Protocol", value: "protocol" },
+            { label: "Message sheet", value: "message" }
+          ]
+        );
+      }
+
+      function generateAskRecipient(type) {
+        openInputModal(
+          "For whom?",
+          function (r) {
+            if (r === "email") {
+              openInputModal(
+                "Type the recipient email address:",
+                function (email) {
+                  email = String(email || "").trim();
+                  if (!email) { toast("Email address required"); return; }
+                  generateAskTitle(type, email);
+                },
+                ""
+              );
+            } else {
+              generateAskTitle(type, r);
+            }
+          },
+          "Onza",
+          [
+            { label: "Onza", value: "Onza" },
+            { label: "Nimza", value: "Nimza" },
+            { label: "Email\u2026", value: "email" }
+          ]
+        );
+      }
+
+      function generateAskTitle(type, recipient) {
         var input = document.getElementById("mdSourceInput");
         var src = input ? input.value : "";
         var blocks = parseMd(src);
@@ -4752,28 +4871,33 @@ if (idx < 0) return;
             break;
           }
         }
+        if (type === "protocol" && !clipHistory.length) {
+          toast("Add words in the translator first");
+          return;
+        }
+        var label = type === "protocol" ? "Lesson Protocol" : "Message sheet";
         openInputModal(
-          "Story title for today's protocol:" + (firstH1 ? "\n(detected: " + firstH1 + ")" : ""),
+          "Title for the " + label + " for " + recipient + ":" + (firstH1 ? "\n(detected: " + firstH1 + ")" : ""),
           function (title) {
             if (!title && firstH1) title = firstH1;
             if (!title) { toast("Title required"); return; }
-            buildProtocolHtml(title, blocks);
-          }
+            buildDocHtml({ type: type, title: title, recipient: recipient }, blocks);
+          },
+          firstH1
         );
-        var field = document.getElementById("inputField");
-        if (field && firstH1) {
-          field.value = firstH1;
-          field.select();
-        }
       }
 
-      function buildProtocolHtml(title, blocks) {
+      function buildDocHtml(opts, blocks) {
+        var isMsg = opts.type !== "protocol";
+        var title = opts.title;
+        var recipient = String(opts.recipient || "Onza").trim();
         var now = new Date();
         var dd = String(now.getDate()).padStart(2, "0");
         var mm = String(now.getMonth() + 1).padStart(2, "0");
         var yyyy = now.getFullYear();
         var dateStr = dd + "/" + mm + "/" + yyyy;
         var weekday = ["sun","mon","tue","wed","thu","fri","sat"][now.getDay()];
+        var kindWord = isMsg ? "Message" : "Protocol";
         function mdSectionItemHtml(indent, item) {
           var pad = new Array(indent + 1).join("  ");
           if (item.t === "p") {
@@ -4790,6 +4914,8 @@ if (idx < 0) return;
             return out;
           } else if (item.t === "bq") {
             return pad + '<p class="example">' + mdStripInline(item.text) + '</p>\n';
+          } else if (item.t === "hr") {
+            return pad + '<hr>\n';
           } else if (item.t === "table") {
             var t = pad + '<table class="vocab-table">\n';
             if (item.header && item.header.length) {
@@ -4848,6 +4974,10 @@ if (idx < 0) return;
             var itb = { t: "bq", text: b.text };
             if (currentSection) currentSection.items.push(itb);
             else introItems.push(itb);
+          } else if (b.t === "hr") {
+            var ihr = { t: "hr" };
+            if (currentSection) currentSection.items.push(ihr);
+            else introItems.push(ihr);
           } else if (b.t === "table") {
             var ita = { t: "table", header: b.header, rows: b.rows, align: b.align };
             if (currentSection) currentSection.items.push(ita);
@@ -4866,34 +4996,55 @@ if (idx < 0) return;
         for (var s = 0; s < sections.length; s++) {
           sectionHtml += mdSectionHtml(sections[s].title, sections[s].items);
         }
-        var vocabRows = "";
-        for (var v = 0; v < clipHistory.length; v++) {
-          var w = clipHistory[v];
-          vocabRows += '          <tr><td>' + mdEscapeHtml(w.en) + '</td><td>' + mdEscapeHtml(w.zh) + '</td></tr>\n';
+        var vocabSection = "";
+        if (clipHistory.length) {
+          var vocabRows = "";
+          for (var v = 0; v < clipHistory.length; v++) {
+            var w = clipHistory[v];
+            vocabRows += '          <tr><td>' + mdEscapeHtml(w.en) + '</td><td>' + mdEscapeHtml(w.zh) + '</td></tr>\n';
+          }
+          vocabSection =
+            '      <h2>Vocabulary \u2014 ' + dateStr + '</h2>\n' +
+            '      <table class="vocab-table">\n' +
+            '        <thead><tr><th>English</th><th>Chinese</th></tr></thead>\n' +
+            '        <tbody>\n' +
+            vocabRows +
+            '        </tbody>\n' +
+            '      </table>\n';
         }
+        var introEn = isMsg
+          ? "Please read this message sheet and rehearse the phrases below. Make sure every word and expression is fully understood and can be reused."
+          : "Please study the following structures and sentences well. Words and expressions must be fully understood and memorised. The last section shows today's new vocabulary. Please carefully repeat these as well.";
+        var introZh = isMsg
+          ? "\u8BF7\u5927\u58F0\u6717\u8BFB\u8FD9\u5C01\u6D88\u606F\u5E76\u719F\u6089\u4E0B\u9762\u7684\u53E5\u5B50\u3002\u786E\u4FDD\u6240\u6709\u5355\u8BCD\u548C\u8868\u8FBE\u65B9\u5F0F\u90FD\u5DF2\u5B8C\u5168\u7406\u89E3\u5E76\u80FD\u8FD0\u7528\u3002"
+          : "\u8BF7\u5C06\u8FD9\u4E9B\u53E5\u5B50\u6284\u5230\u7EC3\u4E60\u672C\u7684\u8BCD\u6C47\u8868\u4E0B\u65B9\u3002\u6240\u6709\u5355\u8BCD\u548C\u8868\u8FBE\u65B9\u5F0F\u90FD\u5FC5\u987B\u5B8C\u5168\u7406\u89E3\u548C\u8BB0\u5FC6\u3002";
         var protocolHtml =
           '<!doctype html>\n' +
           '<html lang="en">\n' +
           '  <head>\n' +
           '    <meta charset="utf-8" />\n' +
           '    <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no" />\n' +
-          '    <title>Protocol ' + dateStr + '</title>\n' +
-          '    <meta name="description" content="English Explorer — Protocol ' + dateStr + '" />\n' +
+          '    <title>' + kindWord + ' ' + dateStr + '</title>\n' +
+          '    <meta name="description" content="English Explorer — ' + kindWord + ' ' + dateStr + '" />\n' +
           '    <meta property="og:image" content="https://res.cloudinary.com/dmkhsyfzf/image/upload/q_auto/f_auto/v1781698464/protocol_r392x1.png" />\n' +
           '    <link rel="icon" type="image/png" href="https://res.cloudinary.com/dmkhsyfzf/image/upload/q_auto/f_auto/v1781698464/protocol_r392x1.png" />\n' +
           '    <link rel="apple-touch-icon" href="https://res.cloudinary.com/dmkhsyfzf/image/upload/q_auto/f_auto/v1781698464/protocol_r392x1.png" />\n' +
           '    <style>\n' +
           '      :root { --bg: #FAF7F2; --ink: #14213d; --muted: #60708d; --accent: #e43703; --accent2: #ffb866; --panel: #fcfcfc; --shadow: 0 18px 50px rgba(20,33,61,0.14); }\n' +
+          '      html[data-theme="dark"] { --bg: #161a24; --ink: #e8ecf4; --muted: #93a1b8; --panel: #1f2530; --shadow: 0 18px 50px rgba(0,0,0,0.55); }\n' +
           '      .container[data-weekday="mon"]{--accent:#2563eb} .container[data-weekday="tue"]{--accent:#e43703} .container[data-weekday="wed"]{--accent:#0d9488} .container[data-weekday="thu"]{--accent:#7c3aed} .container[data-weekday="fri"]{--accent:#dc2626} .container[data-weekday="sat"]{--accent:#d97706} .container[data-weekday="sun"]{--accent:#475569}\n' +
           '      *{box-sizing:border-box} html,body{margin:0;width:100%;min-height:100%;background:var(--bg);font-family:Arial,Helvetica,sans-serif;color:var(--ink);touch-action:manipulation;line-height:1.6}\n' +
           '      .container{max-width:900px;margin:0 auto;padding:clamp(16px,4vw,40px) clamp(12px,3vw,24px)}\n' +
           '      h1{font-size:clamp(1.8rem,5vw,3rem);margin:0 0 .2em;font-weight:900;letter-spacing:-.03em;color:var(--accent)}\n' +
-          '      .date-sub{font-size:clamp(.9rem,1.6vw,1.2rem);color:var(--muted);font-weight:700;letter-spacing:.1em;margin:0 0 2em}\n' +
+          '      .date-sub{font-size:clamp(.9rem,1.6vw,1.2rem);color:var(--muted);font-weight:700;letter-spacing:.1em;margin:0 0 .4em}\n' +
+          '      .to-line{font-size:clamp(.95rem,1.7vw,1.15rem);color:var(--muted);font-weight:800;letter-spacing:.06em;text-transform:uppercase;margin:0 0 2em}\n' +
+          '      .to-line b{color:var(--accent)}\n' +
           '      .intro{background:var(--panel);border-radius:24px;padding:clamp(1rem,2.5vw,1.8em);box-shadow:var(--shadow);margin-bottom:2em;font-size:clamp(1rem,1.8vw,1.2rem);line-height:1.7}\n' +
           '      .zh{display:block;margin-top:.6em;color:var(--muted);font-size:.92em}\n' +
           '      h2{font-size:clamp(1.3rem,3.2vw,2rem);margin:2em 0 .6em;font-weight:900;color:var(--ink);letter-spacing:-.02em}\n' +
           '      h3{font-size:clamp(1.1rem,2.2vw,1.5rem);margin:1.6em 0 .4em;font-weight:800;color:var(--accent)}\n' +
           '      p{font-size:clamp(1rem,1.8vw,1.15rem);margin:.4em 0}\n' +
+          '      hr{border:0;border-top:2px solid rgba(96,112,141,.35);margin:1.4em 0}\n' +
           '      .story-section{background:var(--panel);border-radius:24px;padding:clamp(1rem,2.5vw,1.6em);box-shadow:var(--shadow);margin-bottom:1.4em}\n' +
           '      .story-section h3{margin-top:0} .story-section p{margin:.3em 0}\n' +
           '      .example{background:#fdf3e7;border-left:5px solid var(--accent);border-radius:8px;padding:.7em 1em;margin:.8em 0 !important;font-style:italic}\n' +
@@ -4902,39 +5053,57 @@ if (idx < 0) return;
           '      .vocab-table td{padding:.7em 1em;font-size:clamp(.9rem,1.6vw,1.05rem);border-top:1px solid #eae5db;vertical-align:top;word-break:break-word}\n' +
           '      .vocab-table tr:nth-child(even) td{background:#fdf9f3}\n' +
           '      .vocab-table td:last-child{color:var(--muted);font-weight:600}\n' +
+          '      html[data-theme="dark"] .example{background:#232a36}\n' +
+          '      html[data-theme="dark"] hr{border-top-color:#333c4e}\n' +
+          '      html[data-theme="dark"] .vocab-table th{background:#0e1220}\n' +
+          '      html[data-theme="dark"] .vocab-table tr:nth-child(even) td{background:#232a36}\n' +
+          '      html[data-theme="dark"] .vocab-table td{border-top-color:#333c4e}\n' +
+          '      #themeToggle{position:fixed;top:clamp(10px,2vw,16px);right:clamp(10px,2vw,16px);z-index:50;width:clamp(38px,5vw,46px);height:clamp(38px,5vw,46px);border-radius:50%;background:var(--panel);color:var(--accent);border:2px solid var(--accent);font-size:20px;cursor:pointer;box-shadow:var(--shadow);line-height:1}\n' +
           '    </style>\n' +
           '  </head>\n' +
           '  <body>\n' +
+          '    <button id="themeToggle" type="button" aria-label="Toggle dark mode">&#x263E;</button>\n' +
           '    <div class="container" data-weekday="' + weekday + '">\n' +
-          '      <h1>Protocol ' + dateStr + '</h1>\n' +
+          '      <h1>' + kindWord + ' ' + dateStr + '</h1>\n' +
           '      <p class="date-sub">English Explorer | Breakthrough</p>\n' +
+          '      <p class="to-line">For: <b>' + mdEscapeHtml(recipient) + '</b></p>\n' +
           '      <div class="intro">\n' +
-          '        Please study the following structures and sentences well. Words and expressions must be fully understood and memorised. The last section shows today\'s new vocabulary. Please carefully repeat these as well.\n' +
-          '        <span class="zh">\u8BF7\u5C06\u8FD9\u4E9B\u53E5\u5B50\u6284\u5230\u7EC3\u4E60\u672C\u7684\u8BCD\u6C47\u8868\u4E0B\u65B9\u3002\u6240\u6709\u5355\u8BCD\u548C\u8868\u8FBE\u65B9\u5F0F\u90FD\u5FC5\u987B\u5B8C\u5168\u7406\u89E3\u548C\u8BB0\u5FC6\u3002</span>\n' +
+          '        ' + introEn + '\n' +
+          '        <span class="zh">' + introZh + '</span>\n' +
           '      </div>\n' +
           '      <h2>' + mdEscapeHtml(title) + '</h2>\n' +
           sectionHtml +
-          '      <h2>Vocabulary \u2014 ' + dateStr + '</h2>\n' +
-          '      <table class="vocab-table">\n' +
-          '        <thead><tr><th>English</th><th>Chinese</th></tr></thead>\n' +
-          '        <tbody>\n' +
-          vocabRows +
-          '        </tbody>\n' +
-          '      </table>\n' +
+          vocabSection +
           '    </div>\n' +
+          '    <script>\n' +
+          '      (function () {\n' +
+          '        var d = document.documentElement;\n' +
+          '        var K = "eebt-theme";\n' +
+          '        function apply() {\n' +
+          '          var dt = d.getAttribute("data-theme") === "dark";\n' +
+          '          var b = document.getElementById("themeToggle");\n' +
+          '          if (b) b.textContent = dt ? "\\u2600" : "\\u263E";\n' +
+          '        }\n' +
+          '        var t = null;\n' +
+          '        try { t = localStorage.getItem(K); } catch (e) {}\n' +
+          '        if (t === "dark" || t === "light") d.setAttribute("data-theme", t);\n' +
+          '        else if (window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches) d.setAttribute("data-theme", "dark");\n' +
+          '        else d.setAttribute("data-theme", "light");\n' +
+          '        apply();\n' +
+          '        var b = document.getElementById("themeToggle");\n' +
+          '        if (b) b.onclick = function () {\n' +
+          '          var n = d.getAttribute("data-theme") === "dark" ? "light" : "dark";\n' +
+          '          d.setAttribute("data-theme", n);\n' +
+          '          apply();\n' +
+          '          try { localStorage.setItem(K, n); } catch (e) {}\n' +
+          '        };\n' +
+          '      })();\n' +
+          '    <\/script>\n' +
           '  </body>\n' +
           '</html>';
-        var blob = new Blob([protocolHtml], { type: "text/html;charset=utf-8" });
-        var url = URL.createObjectURL(blob);
-        var a = document.createElement("a");
-        a.href = url;
         var dt = yyyy + "-" + mm + "-" + dd;
-        a.download = dt + ".html";
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
-        setTimeout(function () { URL.revokeObjectURL(url); }, 1000);
-        toast("Protocol " + dateStr + " downloaded");
+        downloadBlob(protocolHtml, "text/html;charset=utf-8", (isMsg ? "message_" : "") + dt + ".html");
+        toast(kindWord + " " + dateStr + " downloaded · For " + recipient);
       }
 
       function mdEscapeHtml(s) {
@@ -4996,6 +5165,7 @@ if (idx < 0) return;
         var bundle = {
           type: "spotlight-presentation",
           md: "" + (input.value || ""),
+          words: clipHistory,
           media: mediaHistory.map(function (it) {
             return {
               url: it.url,
@@ -5004,29 +5174,12 @@ if (idx < 0) return;
             };
           })
         };
-        var blob = new Blob([JSON.stringify(bundle, null, 2)], {
-          type: "application/json;charset=utf-8"
-        });
-        var url = URL.createObjectURL(blob);
-        var a = document.createElement("a");
-        a.href = url;
-        var now = new Date();
-        var dt =
-          now.getFullYear().toString() +
-          String(now.getMonth() + 1).padStart(2, "0") +
-          String(now.getDate()).padStart(2, "0") +
-          "_" +
-          String(now.getHours()).padStart(2, "0") +
-          String(now.getMinutes()).padStart(2, "0") +
-          String(now.getSeconds()).padStart(2, "0");
-        a.download = "presentation_" + dt + ".json";
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
-        setTimeout(function () {
-          URL.revokeObjectURL(url);
-        }, 1000);
-        toast("Saved presentation (" + (mediaHistory.length || 0) + " media)");
+        downloadBlob(
+          JSON.stringify(bundle, null, 2),
+          "application/json;charset=utf-8",
+          "presentation_" + fileStamp() + ".json"
+        );
+        toast("Saved presentation (" + (mediaHistory.length || 0) + " media, " + clipHistory.length + " words)");
       }
 
       function mdLoad(input) {
@@ -5041,46 +5194,59 @@ if (idx < 0) return;
           try {
             bundle = JSON.parse(text);
           } catch (e) {}
-          if (bundle && (bundle.type === "spotlight-presentation" || bundle.media)) {
-            if (bundle.md != null) {
-              var el = document.getElementById("mdSourceInput");
-              if (el) {
-                el.value = bundle.md;
-                try {
-                  el.dispatchEvent(new Event("input"));
-                } catch (e2) {
-                  mdRender();
+          if (bundle && typeof bundle === "object") {
+            var isPreso = bundle.type === "spotlight-presentation" || bundle.media || typeof bundle.md === "string";
+            var isWords = bundle.type === "spotlight-words";
+            if (isWords || isPreso) {
+              var hasWords = Array.isArray(bundle.words) && bundle.words.length;
+              var hasMd = typeof bundle.md === "string";
+              var hasMedia = Array.isArray(bundle.media) && bundle.media.length;
+              if (hasWords) mergeWordsArray(normalizeWordArr(bundle.words));
+              if (hasMd) {
+                var el = document.getElementById("mdSourceInput");
+                if (el) {
+                  el.value = bundle.md;
+                  try {
+                    el.dispatchEvent(new Event("input"));
+                  } catch (e2) {
+                    mdRender();
+                  }
                 }
               }
-            }
-            if (Array.isArray(bundle.media)) {
-              mediaHistory = bundle.media
-                .filter(function (m) { return m && typeof m.url === "string"; })
-                .map(function (m) {
-                  return {
-                    url: m.url,
-                    type: m.type === "video" || m.type === "audio" ? m.type : "image",
-                    collection: m.collection || null
-                  };
-                });
-              activeMediaIdx = -1;
-              viewingCollection = null;
-              renderMediaThumbs();
-              renderMedia();
-            }
-            toast("Loaded presentation (" + (bundle.media ? bundle.media.length : 0) + " media)");
-          } else {
-            var el2 = document.getElementById("mdSourceInput");
-            if (el2) {
-              el2.value = text;
-              try {
-                el2.dispatchEvent(new Event("input"));
-              } catch (e3) {
-                mdRender();
+              if (hasMedia) {
+                mediaHistory = bundle.media
+                  .filter(function (m) { return m && typeof m.url === "string"; })
+                  .map(function (m) {
+                    return {
+                      url: m.url,
+                      type: m.type === "video" || m.type === "audio" ? m.type : "image",
+                      collection: m.collection || null
+                    };
+                  });
+                activeMediaIdx = -1;
+                viewingCollection = null;
+                renderMediaThumbs();
+                renderMedia();
               }
+              var bits = [];
+              if (hasMd) bits.push("markdown");
+              if (hasMedia) bits.push(bundle.media.length + " media");
+              if (hasWords) bits.push("words merged");
+              if (!bits.length) bits.push("nothing new");
+              if (hasMd || hasMedia) toast("Loaded " + file.name + " · " + bits.join(", "));
+              return;
             }
-            toast("Loaded " + file.name + " (markdown)");
           }
+          var el2 = document.getElementById("mdSourceInput");
+          if (el2) {
+            el2.value = text;
+            try {
+              el2.dispatchEvent(new Event("input"));
+            } catch (e3) {
+              mdRender();
+            }
+          }
+          toast("Loaded " + file.name + " (markdown)");
         };
         reader.readAsText(file);
       }

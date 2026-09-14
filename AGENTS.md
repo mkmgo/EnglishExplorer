@@ -174,26 +174,41 @@ existing document-level drag-and-drop handlers.
 
 ## Daily Protocols
 
-Protocols are generated from the **Markdown tab** (screen 3) of
-`breakthrough/tools/bt-spotlight-pro.html` via the **Protocol** button
-(`generateProtocol()`). The function takes the Markdown source (story text) and
-the current word list (`clipHistory`) and builds a self-contained protocol HTML
-file. Steps:
+Protocols and message sheets are generated from the **Markdown tab** (screen 3)
+of `breakthrough/tools/bt-spotlight-pro.html` via the **Generate** button
+(`generateOutput()`). The flow takes the Markdown source (story text), the current
+word list (`clipHistory`) and a recipient choice, then builds a self-contained
+HTML document. Steps:
 
 1. Write the story in the Markdown pane (screen 3). Each `##` heading becomes a
    story section; `###` headings and paragraphs become the scene content. The
    first `#` heading is auto-detected as the story title.
 2. Collect vocabulary in the **Translator** tab (screen 2) — each word/phrase
-   translated is added to `clipHistory` and will appear in the Vocabulary table.
-3. Tap **Protocol** → enter/confirm the story title → the file is generated and
-   downloaded as `YYYY-MM-DD.html`.
+   translated is added to `clipHistory` and will appear in the Vocabulary table
+   (only when the list isn't empty).
+3. Tap **Generate** → choose a document type (**Protocol** or **Message sheet**)
+   → choose a recipient (**Onza** / **Nimza** / typed **email**) → enter/confirm
+   the title. The document downloads as `YYYY-MM-DD.html` for protocols and
+   `message_YYYY-MM-DD.html` for message sheets.
+
+Generated documents are fully self-contained with a **dark-mode toggle** (top-right
+button, persists via `localStorage["eebt-theme"]` with a `prefers-color-scheme`
+fallback) and a `For: <recipient>` line. The Vocabulary table renders `English |
+Chinese` from `clipHistory`.
+
+Translator and presenter documents (screen 2/3) use **Save words / Load words /
+Save / Load** instead of CSV: bundles are JSON files (`spotlight-words` for the
+translator, `spotlight-presentation` for the presenter — the latter embeds the
+current `words` too). Loading **merges** (appends, skipping exact `en`+`zh`
+duplicates) rather than replacing, so you can accumulate words across sessions.
 
 ### File placement & overwrite rule
 
-- Save (or overwrite) the downloaded file as
+- Save (or overwrite) the downloaded protocol file as
   `breakthrough/protocols/YYYY-MM-DD.html` — always use **today's date**.
 - If a second protocol is created on the same day, it **overwrites** the
   existing file for that date (the file name is the same).
+- Message sheets (`message_YYYY-MM-DD.html`) are not tracked in `updates.html`.
 
 ### Nimza entry in updates.html
 
