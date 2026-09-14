@@ -46,7 +46,8 @@ EnglishExplorer/
 │   ├── develop.html
 │   └── eebt-translator.html    <-- Retired EEBT Translator tool
 └── template/                   <-- Reusable layouts (see "template/" below)
-    └── thematic-layout.html    <-- Base thematic lesson deck scaffold
+    ├── thematic-layout.html    <-- Base thematic lesson deck scaffold
+    └── edupuzzle-layout.html   <-- EduPuzzle showroom deck scaffold: no banner under the ribbon; banner (inverted) lives in the topbar left, stage fills the freed space
 ```
 
 ### template/

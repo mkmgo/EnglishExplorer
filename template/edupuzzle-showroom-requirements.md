@@ -8,8 +8,8 @@ The English Explorer platform embeds third-party interactive content (codename
 **EduPuzzle**) inside a "showroom" panel on the thematic lesson decks. The host
 page provides the container; the provider supplies the content logic.
 
-- Host container: the `.panel` box in `template/thematic-layout.html`
-  (and its copied lesson decks). Light amber background `#ffd54f`, rounded
+- Host container: the `.panel` box in `template/edupuzzle-layout.html`
+  (and its copied lesson decks). Amber fill, thin accent border, rounded
   corners, `max-width: 900px`, centered, grows with content.
 - Embedding mechanism: **injectable bundle** (self-contained HTML + CSS + JS
   delivered by the provider, mounted into the host page — not an iframe).
@@ -42,9 +42,14 @@ page provides the container; the provider supplies the content logic.
 
 ## Styling & layout
 
-- Background the widget sits on: **`#ffd54f`** (light amber / yellow).
+- Background the widget sits on: **`#ffd54f`** (light amber / yellow) — the
+  **example** of the theme's `--accent2` fill. The exact hue varies per lesson
+  deck, so design to hold on any warm amber tint, not a fixed exact value.
 - Default text colour: **`#14213d`**.
-- Accent colour available: **`#b8860b`**.
+- Accent colour available: **`#b8860b`** — the **example** `--accent`; it too
+  varies per deck (thin container border, headings, controls). Both arrive as
+  CSS custom properties that *do* inherit into the Shadow root, but the
+  bundle must declare fallbacks for them.
 - White/neutral cards with borders are fine; assume nothing about the page
   background; no dark-mode dependency.
 - Responsive from **~320px to 900px+** wide.
@@ -85,7 +90,8 @@ page provides the container; the provider supplies the content logic.
 
 ## Showroom boundaries (memo for the host, not part of the provider contract)
 
-- Lives in the copied lesson deck, not in `template/thematic-layout.html`.
+- Lives in the copied lesson deck, built from `template/edupuzzle-layout.html`
+  (not `template/thematic-layout.html`).
 - Mount point: a `<div class="ep-host">` inside `.panel` with a "Start activity"
   button; bundle mounted into a Shadow root.
 - Bridge stubbed as `window.EduPuzzleBridge = { mount, result }`.
