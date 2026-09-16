@@ -1,0 +1,274 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no" />
+    <title>Protocol 16/09/2026</title>
+    <meta name="description" content="English Explorer — Protocol 16/09/2026" />
+    <meta property="og:image" content="https://res.cloudinary.com/dmkhsyfzf/image/upload/q_auto/f_auto/v1781698464/protocol_r392x1.png" />
+    <link rel="icon" type="image/png" href="https://res.cloudinary.com/dmkhsyfzf/image/upload/q_auto/f_auto/v1781698464/protocol_r392x1.png" />
+    <link rel="apple-touch-icon" href="https://res.cloudinary.com/dmkhsyfzf/image/upload/q_auto/f_auto/v1781698464/protocol_r392x1.png" />
+    <style>
+      :root { --bg: #FAF7F2; --ink: #14213d; --muted: #60708d; --accent: #e43703; --accent2: #ffb866; --panel: #fcfcfc; --shadow: 0 18px 50px rgba(20,33,61,0.14); }
+      html[data-theme="dark"] { --bg: #161a24; --ink: #e8ecf4; --muted: #93a1b8; --panel: #1f2530; --shadow: 0 18px 50px rgba(0,0,0,0.55); }
+      .container[data-weekday="mon"]{--accent:#2563eb} .container[data-weekday="tue"]{--accent:#e43703} .container[data-weekday="wed"]{--accent:#0d9488} .container[data-weekday="thu"]{--accent:#7c3aed} .container[data-weekday="fri"]{--accent:#dc2626} .container[data-weekday="sat"]{--accent:#d97706} .container[data-weekday="sun"]{--accent:#475569}
+      *{box-sizing:border-box} html,body{margin:0;width:100%;min-height:100%;background:var(--bg);font-family:Arial,Helvetica,sans-serif;color:var(--ink);touch-action:manipulation;line-height:1.6}
+      .container{max-width:900px;margin:0 auto;padding:clamp(16px,4vw,40px) clamp(12px,3vw,24px)}
+      h1{font-size:clamp(1.8rem,5vw,3rem);margin:0 0 .2em;font-weight:900;letter-spacing:-.03em;color:var(--accent)}
+      .date-sub{font-size:clamp(.9rem,1.6vw,1.2rem);color:var(--muted);font-weight:700;letter-spacing:.1em;margin:0 0 .4em}
+      .to-line{font-size:clamp(.95rem,1.7vw,1.15rem);color:var(--muted);font-weight:800;letter-spacing:.06em;text-transform:uppercase;margin:0 0 2em}
+      .to-line b{color:var(--accent)}
+      .intro{background:var(--panel);border-radius:24px;padding:clamp(1rem,2.5vw,1.8em);box-shadow:var(--shadow);margin-bottom:2em;font-size:clamp(1rem,1.8vw,1.2rem);line-height:1.7}
+      .zh{display:block;margin-top:.6em;color:var(--muted);font-size:.92em}
+      h2{font-size:clamp(1.3rem,3.2vw,2rem);margin:2em 0 .6em;font-weight:900;color:var(--ink);letter-spacing:-.02em}
+      h3{font-size:clamp(1.1rem,2.2vw,1.5rem);margin:1.6em 0 .4em;font-weight:800;color:var(--accent)}
+      p{font-size:clamp(1rem,1.8vw,1.15rem);margin:.4em 0}
+      hr{border:0;border-top:2px solid rgba(96,112,141,.35);margin:1.4em 0}
+      .story-section{background:var(--panel);border-radius:24px;padding:clamp(1rem,2.5vw,1.6em);box-shadow:var(--shadow);margin-bottom:1.4em}
+      .story-section h3{margin-top:0} .story-section p{margin:.3em 0}
+      .example{background:#fdf3e7;border-left:5px solid var(--accent);border-radius:8px;padding:.7em 1em;margin:.8em 0 !important;font-style:italic}
+      .vocab-table{width:100%;border-collapse:separate;border-spacing:0;margin:1.6em 0 2em;background:var(--panel);border-radius:16px;box-shadow:var(--shadow);overflow:hidden}
+      .vocab-table th{background:var(--ink);color:var(--accent2);font-size:clamp(.85rem,1.5vw,1rem);font-weight:800;letter-spacing:.06em;padding:.8em 1em;text-align:left;white-space:nowrap}
+      .vocab-table td{padding:.7em 1em;font-size:clamp(.9rem,1.6vw,1.05rem);border-top:1px solid #eae5db;vertical-align:top;word-break:break-word}
+      .vocab-table tr:nth-child(even) td{background:#fdf9f3}
+      .vocab-table td:last-child{color:var(--muted);font-weight:600}
+      html[data-theme="dark"] .example{background:#232a36}
+      html[data-theme="dark"] hr{border-top-color:#333c4e}
+      html[data-theme="dark"] .vocab-table th{background:#0e1220}
+      html[data-theme="dark"] .vocab-table tr:nth-child(even) td{background:#232a36}
+      html[data-theme="dark"] .vocab-table td{border-top-color:#333c4e}
+      #themeToggle{position:fixed;top:clamp(10px,2vw,16px);right:clamp(10px,2vw,16px);z-index:50;width:clamp(38px,5vw,46px);height:clamp(38px,5vw,46px);border-radius:50%;background:var(--panel);color:var(--accent);border:2px solid var(--accent);font-size:20px;cursor:pointer;box-shadow:var(--shadow);line-height:1}
+    </style>
+  </head>
+  <body>
+    <button id="themeToggle" type="button" aria-label="Toggle dark mode">&#x263E;</button>
+    <div class="container" data-weekday="wed">
+      <h1>Protocol 16/09/2026</h1>
+      <p class="date-sub">English Explorer | Breakthrough</p>
+      <p class="to-line">For: <b>Nimza</b></p>
+      <div class="intro">
+        Please study the following structures and sentences well. Words and expressions must be fully understood and memorised. The last section shows today's new vocabulary. Please carefully repeat these as well.
+        <span class="zh">请将这些句子抄到练习本的词汇表下方。所有单词和表达方式都必须完全理解和记忆。</span>
+      </div>
+      <h2>Phrase &amp; Survival Card / &quot;Luck&quot; a Movie</h2>
+      <div class="story-section">
+      <p>Consolidated across Themes 1–10 · British English</p>
+      <p>This card gathers every phrase taught so far into one place, organised by theme, so nothing from earlier sessions gets lost as new themes are added. Keep it as her single reference copy — update it after each new theme rather than issuing a fresh card each time.</p>
+      </div>
+      <h2>Theme 1 · Greetings &amp; Personal Info</h2>
+      <div class="story-section">
+      <table class="vocab-table">
+        <thead><tr><th>Phrase</th><th>When to use it</th></tr></thead>
+        <tbody>
+          <tr><td>Hello, my name is Nimza.</td><td>Meeting someone new</td></tr>
+          <tr><td>Nice to meet you.</td><td>Meeting someone new</td></tr>
+          <tr><td>I am 15 years old.</td><td>Someone asks your age</td></tr>
+          <tr><td>I am from...</td><td>Someone asks where you're from</td></tr>
+          <tr><td>Can you repeat that, please?</td><td>You didn't hear or understand</td></tr>
+          <tr><td>I don't understand.</td><td>You need more help</td></tr>
+          <tr><td>How do you say...?</td><td>You want to know a word</td></tr>
+        </tbody>
+      </table>
+      </div>
+      <h2>Theme 1b · Likes, Dislikes &amp; Family</h2>
+      <div class="story-section">
+      <table class="vocab-table">
+        <thead><tr><th>Phrase</th><th>When to use it</th></tr></thead>
+        <tbody>
+          <tr><td>I like...</td><td>Talking about something you enjoy</td></tr>
+          <tr><td>I don't like...</td><td>Talking about something you don't enjoy</td></tr>
+          <tr><td>This is my mother / father.</td><td>Introducing a family member</td></tr>
+          <tr><td>This is my brother / sister.</td><td>Introducing a family member</td></tr>
+        </tbody>
+      </table>
+      </div>
+      <h2>Theme 2 · School Day Situations</h2>
+      <div class="story-section">
+      <table class="vocab-table">
+        <thead><tr><th>Phrase</th><th>When to use it</th></tr></thead>
+        <tbody>
+          <tr><td>Can I sit here?</td><td>Asking to join someone</td></tr>
+          <tr><td>Do you want to be partners?</td><td>Asking to work together</td></tr>
+          <tr><td>Can I borrow a pen, please?</td><td>Asking permission</td></tr>
+        </tbody>
+      </table>
+      </div>
+      <h2>Theme 3 · Shopping &amp; Café</h2>
+      <div class="story-section">
+      <table class="vocab-table">
+        <thead><tr><th>Phrase</th><th>When to use it</th></tr></thead>
+        <tbody>
+          <tr><td>How much is this/that?</td><td>Asking the price</td></tr>
+          <tr><td>What would you like?</td><td>Asked by the person serving you</td></tr>
+          <tr><td>What size?</td><td>Asked when choosing an item or portion</td></tr>
+          <tr><td>Anything else?</td><td>Asked before finishing an order</td></tr>
+          <tr><td>Here you are.</td><td>Handing something over</td></tr>
+        </tbody>
+      </table>
+      </div>
+      <h2>Theme 4 · Buying School Things</h2>
+      <div class="story-section">
+      <table class="vocab-table">
+        <thead><tr><th>Phrase</th><th>When to use it</th></tr></thead>
+        <tbody>
+          <tr><td>Do you have a...?</td><td>Asking if a shop has an item</td></tr>
+          <tr><td>I need a...</td><td>Saying what you require</td></tr>
+          <tr><td>That's expensive / That's cheap.</td><td>Giving an opinion on price</td></tr>
+          <tr><td>I like this one because...</td><td>Choosing between options, with a reason</td></tr>
+          <tr><td>I don't need this.</td><td>Politely declining an item</td></tr>
+        </tbody>
+      </table>
+      </div>
+      <h2>Theme 5 · Getting Around</h2>
+      <div class="story-section">
+      <table class="vocab-table">
+        <thead><tr><th>Phrase</th><th>When to use it</th></tr></thead>
+        <tbody>
+          <tr><td>How do I get to...?</td><td>Asking for directions</td></tr>
+          <tr><td>Turn left / Turn right / Go straight.</td><td>Giving directions</td></tr>
+          <tr><td>It's near / It's far.</td><td>Describing distance</td></tr>
+          <tr><td>Take the bus / Walk there.</td><td>Suggesting how to travel</td></tr>
+          <tr><td>I like walking / taking the bus.</td><td>Talking about travel preference</td></tr>
+          <tr><td>I don't like waiting for the bus.</td><td>Talking about travel dislikes</td></tr>
+        </tbody>
+      </table>
+      </div>
+      <h2>Theme 6 · Daily Routine</h2>
+      <div class="story-section">
+      <table class="vocab-table">
+        <thead><tr><th>Phrase</th><th>When to use it</th></tr></thead>
+        <tbody>
+          <tr><td>What time do you wake up?</td><td>Asking about someone's routine</td></tr>
+          <tr><td>I usually...</td><td>Describing a habit</td></tr>
+          <tr><td>I wake up at [time].</td><td>Stating a routine time</td></tr>
+          <tr><td>After that, I...</td><td>Sequencing your day</td></tr>
+          <tr><td>My favourite part of the day is...</td><td>Giving a preference</td></tr>
+          <tr><td>I don't like doing homework.</td><td>Talking about a routine dislike</td></tr>
+        </tbody>
+      </table>
+      </div>
+      <h2>Theme 7 · Meeting People at School</h2>
+      <div class="story-section">
+      <table class="vocab-table">
+        <thead><tr><th>Phrase</th><th>When to use it</th></tr></thead>
+        <tbody>
+          <tr><td>Hi, I'm Nimza. What's your name?</td><td>Meeting a classmate (peer register)</td></tr>
+          <tr><td>Where are you from?</td><td>Getting to know a classmate</td></tr>
+          <tr><td>I like working in a group.</td><td>Talking about work preference</td></tr>
+          <tr><td>I like sitting near the window / my friends.</td><td>Talking about seating preference</td></tr>
+          <tr><td>I don't like talking in front of the class.</td><td>Talking about a nervous point</td></tr>
+          <tr><td>I don't like sitting alone.</td><td>Talking about a social preference</td></tr>
+        </tbody>
+      </table>
+      </div>
+      <h2>Theme 8 · Food &amp; Eating Out</h2>
+      <div class="story-section">
+      <table class="vocab-table">
+        <thead><tr><th>Phrase</th><th>When to use it</th></tr></thead>
+        <tbody>
+          <tr><td>I want... / Can I have...?</td><td>Ordering or choosing food</td></tr>
+          <tr><td>What's for lunch?</td><td>Asking about the meal</td></tr>
+          <tr><td>Is there any...?</td><td>Asking if something is available</td></tr>
+          <tr><td>No, thank you.</td><td>Politely declining</td></tr>
+          <tr><td>My favourite food is...</td><td>Giving a preference</td></tr>
+          <tr><td>I don't like... / I don't eat...</td><td>Talking about a food dislike</td></tr>
+        </tbody>
+      </table>
+      </div>
+      <h2>Theme 9 · Feelings &amp; Emotions</h2>
+      <div class="story-section">
+      <table class="vocab-table">
+        <thead><tr><th>Phrase</th><th>When to use it</th></tr></thead>
+        <tbody>
+          <tr><td>I feel... / I'm feeling...</td><td>Describing how you feel</td></tr>
+          <tr><td>How do you feel?</td><td>Asking someone else how they feel</td></tr>
+          <tr><td>I feel nervous about...</td><td>Naming a worry</td></tr>
+          <tr><td>Are you okay?</td><td>Checking in on someone else</td></tr>
+          <tr><td>I feel happy when...</td><td>Connecting a feeling to an activity</td></tr>
+          <tr><td>I feel tired when...</td><td>Connecting a feeling to a situation</td></tr>
+        </tbody>
+      </table>
+      </div>
+      <h2>Useful Words by Theme</h2>
+      <div class="story-section">
+      <p>A quick-reference vocabulary list alongside the phrases above — not exhaustive, but the core words behind each theme.</p>
+      <table class="vocab-table">
+        <thead><tr><th>Category</th><th>Words</th></tr></thead>
+        <tbody>
+          <tr><td>Family</td><td>mother, father, brother, sister</td></tr>
+          <tr><td>Days of the week</td><td>Monday, Tuesday, Wednesday, Thursday, Friday, Saturday, Sunday</td></tr>
+          <tr><td>School supplies</td><td>backpack, pencil case, notebook, pen, pencil, ruler, eraser, book</td></tr>
+          <tr><td>Transport</td><td>bus, train, taxi, walk, car, street, corner, map</td></tr>
+          <tr><td>Daily routine</td><td>wake up, breakfast, school, homework, dinner, bed</td></tr>
+          <tr><td>Food</td><td>lunch, rice, bread, chicken, vegetables, fruit, water, juice</td></tr>
+          <tr><td>Feelings</td><td>happy, sad, tired, nervous, excited, confused</td></tr>
+          <tr><td>School people</td><td>classmate, friend, partner, teacher</td></tr>
+        </tbody>
+      </table>
+      </div>
+      <h2>Vocabulary — 16/09/2026</h2>
+      <table class="vocab-table">
+        <thead><tr><th>English</th><th>Chinese</th></tr></thead>
+        <tbody>
+          <tr><td>Luck</td><td>运气</td></tr>
+          <tr><td>Bad luck</td><td>厄运</td></tr>
+          <tr><td>Lucky</td><td>幸运的</td></tr>
+          <tr><td>Good Luck</td><td>祝你好运</td></tr>
+          <tr><td>A lucky charm</td><td>幸运符</td></tr>
+          <tr><td>Borrow</td><td>借</td></tr>
+          <tr><td>Anything else?</td><td>还要别的吗？</td></tr>
+          <tr><td>Here you are.</td><td>给你。</td></tr>
+          <tr><td>That's expensive</td><td>那很贵</td></tr>
+          <tr><td>That's cheap</td><td>那很便宜</td></tr>
+          <tr><td>I like this one because...</td><td>我喜欢这个，因为...</td></tr>
+          <tr><td>I don't need this.</td><td>我不需要这个。</td></tr>
+          <tr><td>Politely declining an item</td><td>礼貌地拒绝一件物品</td></tr>
+          <tr><td>It's near</td><td>已经近了</td></tr>
+          <tr><td>It's far</td><td>很远</td></tr>
+          <tr><td>I don't like waiting for the bus.</td><td>我不喜欢等公共汽车。</td></tr>
+          <tr><td>What time do you wake up?</td><td>你几点起床？</td></tr>
+          <tr><td>After that, I...</td><td>之后，我...</td></tr>
+          <tr><td>My favourite part of the day is...</td><td>一天中我最喜欢的部分是...</td></tr>
+          <tr><td>I don't like doing homework.</td><td>我不喜欢做作业。</td></tr>
+          <tr><td>Where are you from?</td><td>你从哪来？</td></tr>
+          <tr><td>I like working in a group.</td><td>我喜欢在团队中工作。</td></tr>
+          <tr><td>I don't like talking in front of the class</td><td>我不喜欢在全班同学面前讲话</td></tr>
+          <tr><td>I don't like sitting alone.</td><td>我不喜欢一个人坐着。</td></tr>
+          <tr><td>What's for lunch?</td><td>午餐吃什么？</td></tr>
+          <tr><td>Is there any...?</td><td>有没有...?</td></tr>
+          <tr><td>Politely declining</td><td>礼貌地拒绝</td></tr>
+          <tr><td>I feel tired when...</td><td>我感觉很累，当...</td></tr>
+          <tr><td>Corner,</td><td>角落，</td></tr>
+          <tr><td>Map</td><td>地图</td></tr>
+          <tr><td>Confused</td><td>使困惑</td></tr>
+          <tr><td>Excited,</td><td>兴奋的，</td></tr>
+          <tr><td>Classmate,</td><td>同学，</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <script>
+      (function () {
+        var d = document.documentElement;
+        var K = "eebt-theme";
+        function apply() {
+          var dt = d.getAttribute("data-theme") === "dark";
+          var b = document.getElementById("themeToggle");
+          if (b) b.textContent = dt ? "\u2600" : "\u263E";
+        }
+        var t = null;
+        try { t = localStorage.getItem(K); } catch (e) {}
+        if (t === "dark" || t === "light") d.setAttribute("data-theme", t);
+        else if (window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches) d.setAttribute("data-theme", "dark");
+        else d.setAttribute("data-theme", "light");
+        apply();
+        var b = document.getElementById("themeToggle");
+        if (b) b.onclick = function () {
+          var n = d.getAttribute("data-theme") === "dark" ? "light" : "dark";
+          d.setAttribute("data-theme", n);
+          apply();
+          try { localStorage.setItem(K, n); } catch (e) {}
+        };
+      })();
+    </script>
+  </body>
+</html>

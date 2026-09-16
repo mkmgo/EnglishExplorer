@@ -1,0 +1,143 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no" />
+    <title>Protocol 15/09/2026</title>
+    <meta name="description" content="English Explorer — Protocol 15/09/2026" />
+    <meta property="og:image" content="https://res.cloudinary.com/dmkhsyfzf/image/upload/q_auto/f_auto/v1781698464/protocol_r392x1.png" />
+    <link rel="icon" type="image/png" href="https://res.cloudinary.com/dmkhsyfzf/image/upload/q_auto/f_auto/v1781698464/protocol_r392x1.png" />
+    <link rel="apple-touch-icon" href="https://res.cloudinary.com/dmkhsyfzf/image/upload/q_auto/f_auto/v1781698464/protocol_r392x1.png" />
+    <style>
+      :root { --bg: #FAF7F2; --ink: #14213d; --muted: #60708d; --accent: #e43703; --accent2: #ffb866; --panel: #fcfcfc; --shadow: 0 18px 50px rgba(20,33,61,0.14); }
+      html[data-theme="dark"] { --bg: #161a24; --ink: #e8ecf4; --muted: #93a1b8; --panel: #1f2530; --shadow: 0 18px 50px rgba(0,0,0,0.55); }
+      .container[data-weekday="mon"]{--accent:#2563eb} .container[data-weekday="tue"]{--accent:#e43703} .container[data-weekday="wed"]{--accent:#0d9488} .container[data-weekday="thu"]{--accent:#7c3aed} .container[data-weekday="fri"]{--accent:#dc2626} .container[data-weekday="sat"]{--accent:#d97706} .container[data-weekday="sun"]{--accent:#475569}
+      *{box-sizing:border-box} html,body{margin:0;width:100%;min-height:100%;background:var(--bg);font-family:Arial,Helvetica,sans-serif;color:var(--ink);touch-action:manipulation;line-height:1.6}
+      .container{max-width:900px;margin:0 auto;padding:clamp(16px,4vw,40px) clamp(12px,3vw,24px)}
+      h1{font-size:clamp(1.8rem,5vw,3rem);margin:0 0 .2em;font-weight:900;letter-spacing:-.03em;color:var(--accent)}
+      .date-sub{font-size:clamp(.9rem,1.6vw,1.2rem);color:var(--muted);font-weight:700;letter-spacing:.1em;margin:0 0 .4em}
+      .to-line{font-size:clamp(.95rem,1.7vw,1.15rem);color:var(--muted);font-weight:800;letter-spacing:.06em;text-transform:uppercase;margin:0 0 2em}
+      .to-line b{color:var(--accent)}
+      .intro{background:var(--panel);border-radius:24px;padding:clamp(1rem,2.5vw,1.8em);box-shadow:var(--shadow);margin-bottom:2em;font-size:clamp(1rem,1.8vw,1.2rem);line-height:1.7}
+      .zh{display:block;margin-top:.6em;color:var(--muted);font-size:.92em}
+      h2{font-size:clamp(1.3rem,3.2vw,2rem);margin:2em 0 .6em;font-weight:900;color:var(--ink);letter-spacing:-.02em}
+      h3{font-size:clamp(1.1rem,2.2vw,1.5rem);margin:1.6em 0 .4em;font-weight:800;color:var(--accent)}
+      p{font-size:clamp(1rem,1.8vw,1.15rem);margin:.4em 0}
+      hr{border:0;border-top:2px solid rgba(96,112,141,.35);margin:1.4em 0}
+      .story-section{background:var(--panel);border-radius:24px;padding:clamp(1rem,2.5vw,1.6em);box-shadow:var(--shadow);margin-bottom:1.4em}
+      .story-section h3{margin-top:0} .story-section p{margin:.3em 0}
+      .example{background:#fdf3e7;border-left:5px solid var(--accent);border-radius:8px;padding:.7em 1em;margin:.8em 0 !important;font-style:italic}
+      .vocab-table{width:100%;border-collapse:separate;border-spacing:0;margin:1.6em 0 2em;background:var(--panel);border-radius:16px;box-shadow:var(--shadow);overflow:hidden}
+      .vocab-table th{background:var(--ink);color:var(--accent2);font-size:clamp(.85rem,1.5vw,1rem);font-weight:800;letter-spacing:.06em;padding:.8em 1em;text-align:left;white-space:nowrap}
+      .vocab-table td{padding:.7em 1em;font-size:clamp(.9rem,1.6vw,1.05rem);border-top:1px solid #eae5db;vertical-align:top;word-break:break-word}
+      .vocab-table tr:nth-child(even) td{background:#fdf9f3}
+      .vocab-table td:last-child{color:var(--muted);font-weight:600}
+      html[data-theme="dark"] .example{background:#232a36}
+      html[data-theme="dark"] hr{border-top-color:#333c4e}
+      html[data-theme="dark"] .vocab-table th{background:#0e1220}
+      html[data-theme="dark"] .vocab-table tr:nth-child(even) td{background:#232a36}
+      html[data-theme="dark"] .vocab-table td{border-top-color:#333c4e}
+      #themeToggle{position:fixed;top:clamp(10px,2vw,16px);right:clamp(10px,2vw,16px);z-index:50;width:clamp(38px,5vw,46px);height:clamp(38px,5vw,46px);border-radius:50%;background:var(--panel);color:var(--accent);border:2px solid var(--accent);font-size:20px;cursor:pointer;box-shadow:var(--shadow);line-height:1}
+    </style>
+  </head>
+  <body>
+    <button id="themeToggle" type="button" aria-label="Toggle dark mode">&#x263E;</button>
+    <div class="container" data-weekday="tue">
+      <h1>Protocol 15/09/2026</h1>
+      <p class="date-sub">English Explorer | Breakthrough</p>
+      <p class="to-line">For: <b>Nimza</b></p>
+      <div class="intro">
+        Please study the following structures and sentences well. Words and expressions must be fully understood and memorised. The last section shows today's new vocabulary. Please carefully repeat these as well.
+        <span class="zh">请将这些句子抄到练习本的词汇表下方。所有单词和表达方式都必须完全理解和记忆。</span>
+      </div>
+      <h2>Lisa's New School</h2>
+      <div class="story-section">
+      <h3>Lisa's New School</h3>
+      <p>On Monday morning, Lisa woke up early because she felt both excited and a little nervous. It was her first day at her new school, and although she had practised her English every week for months, she still worried that she might forget the right words. Lisa only recently moved here from Germany.</p>
+      <p>After breakfast, her mother drove her to school. When they arrived, Lisa saw hundreds of students walking through the gates, laughing and chatting in groups. She took a deep breath and told herself that everything would be fine.</p>
+      <p>In the classroom, a girl with a friendly smile turned around and said, "Hi, I'm Sophie. What's your name?" Lisa answered quietly, "I'm Lisa. Nice to meet you." Sophie asked if Lisa would like to sit next to her, and Lisa happily agreed.</p>
+      <p>At lunchtime, they walked to the cafeteria together. Lisa wasn't sure what to choose, so Sophie helped her read the menu. "If you like chicken, you should try this one," Sophie suggested, pointing at a tray. Lisa smiled and said she would.</p>
+      <p>While they were eating, Sophie asked Lisa about her hobbies. Lisa explained that she loved tennis and reading, especially short stories. Sophie's eyes lit up — she liked the same books! They talked for the rest of the lunch, discovering that they had more in common than Lisa had expected.</p>
+      <p>By the end of the day, Lisa felt tired but proud. She had spoken English all day, made a new friend, and survived her first lunch in the cafeteria. As she walked home, she thought about how nervous she had felt that morning — and how much better she felt now.</p>
+      <p>That evening, she wrote in her journal: "Today was hard, but I did it. Tomorrow, I will try to speak even more."</p>
+      <hr>
+      <p>Structures:</p>
+      <ul>
+        <li>Past perfect — "she had practised", "more than she had expected" — quietly modelling that an earlier action can sit behind a past-simple story</li>
+        <li>Past continuous — "while they were eating" — background action alongside a main event</li>
+        <li>First-conditional-style advice — "If you like chicken, you should try this one" — a natural, low-pressure exposure to conditional advice</li>
+        <li>Reported/indirect speech — "asked if Lisa would like to...", "explained that she loved..." — the shift from direct to indirect question and statement</li>
+        <li>Modals of possibility and advice — might, would, should, will</li>
+        <li>Connectors — because, although, so, while, when, especially</li>
+      </ul>
+      </div>
+      <h2>Vocabulary — 15/09/2026</h2>
+      <table class="vocab-table">
+        <thead><tr><th>English</th><th>Chinese</th></tr></thead>
+        <tbody>
+          <tr><td>Early</td><td>早期的</td></tr>
+          <tr><td>She felt both excited and a little nervous</td><td>她感到既兴奋又有点紧张</td></tr>
+          <tr><td>Although</td><td>虽然</td></tr>
+          <tr><td>She had practised</td><td>她曾经练习过</td></tr>
+          <tr><td>She still worried that she might forget the right words.</td><td>她还是担心自己会忘记正确的用词。</td></tr>
+          <tr><td>Recently</td><td>最近</td></tr>
+          <tr><td>Lisa only recently moved here from Germany.</td><td>丽莎最近才从德国搬到这里。</td></tr>
+          <tr><td>When they arrived, Lisa saw hundreds of students walking through the gates</td><td>当他们到达时，丽莎看到数百名学生走进大门</td></tr>
+          <tr><td>Laughing and chatting</td><td>有说有笑</td></tr>
+          <tr><td>In groups</td><td>分组</td></tr>
+          <tr><td>She took a deep breath</td><td>她深吸了一口气</td></tr>
+          <tr><td>She told herself that everything would be fine.</td><td>她告诉自己，一切都会好起来的。</td></tr>
+          <tr><td>A friendly smile</td><td>友善的微笑</td></tr>
+          <tr><td>Lisa answered quietly</td><td>丽莎轻声回答</td></tr>
+          <tr><td>Sophie asked if Lisa would like to sit next to her, and Lisa happily agreed.</td><td>索菲问丽莎是否愿意坐在她旁边，丽莎高兴地答应了。</td></tr>
+          <tr><td>Lisa wasn't sure what to choose</td><td>丽莎不知道该选择什么</td></tr>
+          <tr><td>So Sophie helped her read the menu.</td><td>于是索菲帮她看菜单。</td></tr>
+          <tr><td>If you like chicken, you should try this one</td><td>如果你喜欢吃鸡肉，你应该尝试一下这个</td></tr>
+          <tr><td>Sophie suggested</td><td>苏菲建议</td></tr>
+          <tr><td>Lisa smiled and said she would.</td><td>丽莎微笑着说她会的。</td></tr>
+          <tr><td>While they were eating, Sophie asked Lisa about her hobbies.</td><td>他们吃饭的时候，索菲询问丽莎的爱好。</td></tr>
+          <tr><td>To explain</td><td>解释一下</td></tr>
+          <tr><td>Especially short stories.</td><td>尤其是短篇小说。</td></tr>
+          <tr><td>Discovering</td><td>发现</td></tr>
+          <tr><td>They had more in common than Lisa had expected.</td><td>他们的共同点比丽莎预想的要多。</td></tr>
+          <tr><td>Sophie's eyes lit up</td><td>苏菲的眼睛亮了起来</td></tr>
+          <tr><td>They had more in common</td><td>他们有更多共同点</td></tr>
+          <tr><td>By the end of the day, Lisa felt tired but proud.</td><td>一天结束时，丽莎感到疲倦但很自豪。</td></tr>
+          <tr><td>To survive</td><td>为了生存</td></tr>
+          <tr><td>She had spoken English all day, made a new friend, and survived her first lunch in the cafeteria.</td><td>她一整天都在说英语，结识了一个新朋友，并在自助餐厅度过了第一顿午餐。</td></tr>
+          <tr><td>She thought about how nervous she had felt that morning</td><td>她回想起那天早上她有多紧张</td></tr>
+          <tr><td>Journal:</td><td>杂志：</td></tr>
+          <tr><td>Today was hard, but I did it.</td><td>今天很艰难，但我做到了。</td></tr>
+          <tr><td>Tomorrow, I will try to speak even more.</td><td>明天，我会尝试讲得更多。</td></tr>
+          <tr><td>Background action alongside a main event</td><td>主要活动的背景动作</td></tr>
+          <tr><td>While,</td><td>尽管，</td></tr>
+          <tr><td>Especially</td><td>尤其</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <script>
+      (function () {
+        var d = document.documentElement;
+        var K = "eebt-theme";
+        function apply() {
+          var dt = d.getAttribute("data-theme") === "dark";
+          var b = document.getElementById("themeToggle");
+          if (b) b.textContent = dt ? "\u2600" : "\u263E";
+        }
+        var t = null;
+        try { t = localStorage.getItem(K); } catch (e) {}
+        if (t === "dark" || t === "light") d.setAttribute("data-theme", t);
+        else if (window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches) d.setAttribute("data-theme", "dark");
+        else d.setAttribute("data-theme", "light");
+        apply();
+        var b = document.getElementById("themeToggle");
+        if (b) b.onclick = function () {
+          var n = d.getAttribute("data-theme") === "dark" ? "light" : "dark";
+          d.setAttribute("data-theme", n);
+          apply();
+          try { localStorage.setItem(K, n); } catch (e) {}
+        };
+      })();
+    </script>
+  </body>
+</html>
