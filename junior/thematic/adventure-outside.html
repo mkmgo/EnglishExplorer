@@ -1,0 +1,1086 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no"
+    />
+    <title>EnglishExplorer — Adventure / Outside</title>
+    <meta
+      name="description"
+      content="EnglishExplorer — Adventure / Outside treasure map"
+    />
+    <meta name="theme-color" content="#B8860B" />
+    <meta property="og:title" content="Adventure / Outside" />
+    <meta property="og:description" content="The Treasure Map" />
+    <meta property="og:image" content="https://res.cloudinary.com/dqwm4pdbz/image/upload/v1766700880/my-express-uploads/vii2nhjxitkmcoet6jbg.png" />
+    <meta name="twitter:title" content="Adventure / Outside" />
+    <meta name="twitter:description" content="The Treasure Map" />
+    <meta name="twitter:image" content="https://res.cloudinary.com/dqwm4pdbz/image/upload/v1766700880/my-express-uploads/vii2nhjxitkmcoet6jbg.png" />
+    <link
+      rel="icon"
+      type="image/png"
+      href="https://res.cloudinary.com/dqwm4pdbz/image/upload/v1766700880/my-express-uploads/vii2nhjxitkmcoet6jbg.png"
+    />
+    <link
+      rel="apple-touch-icon"
+      href="https://res.cloudinary.com/dqwm4pdbz/image/upload/v1766700880/my-express-uploads/vii2nhjxitkmcoet6jbg.png"
+    />
+    <style>
+      :root {
+        --bg: #faf7f2;
+        --ink: #14213d;
+        --muted: #60708d;
+        --accent: #b8860b;
+        --accent2: #ffd54f;
+        --good: #19a974;
+        --bad: #e05252;
+        --panel: #fcfcfc;
+        --shadow: 0 18px 50px rgba(20, 33, 61, 0.14);
+      }
+      * {
+        box-sizing: border-box;
+      }
+      html,
+      body {
+        margin: 0;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+        background: var(--bg);
+        font-family: Arial, Helvetica, sans-serif;
+        color: var(--ink);
+        touch-action: manipulation;
+      }
+      button {
+        font: inherit;
+        border: 0;
+        cursor: pointer;
+        transition: transform 0.3s ease, filter 0.3s ease;
+      }
+      #app {
+        width: 100%;
+        height: 100vh;
+        height: 100dvh;
+        position: relative;
+        overflow: hidden;
+      }
+      .screen {
+        position: absolute;
+        inset: 0;
+        background: var(--bg);
+        display: flex;
+        align-items: flex-start;
+        justify-content: center;
+        padding: clamp(56px, 7.5vh, 64px) clamp(10px, 2vw, 24px)
+          clamp(10px, 2vh, 24px);
+      }
+      .content {
+        width: min(1400px, 100%);
+        max-height: 100%;
+        position: relative;
+        text-align: center;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: flex-start;
+        gap: 1em;
+        padding-bottom: clamp(10px, 2vh, 20px);
+        overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
+        overscroll-behavior: contain;
+        scrollbar-width: none;
+      }
+      .content::-webkit-scrollbar {
+        display: none;
+      }
+      .ribbon {
+        font-size: clamp(1.4rem, 2.8vw, 2.2rem);
+        font-weight: 800;
+        color: var(--accent);
+        margin: 0 0 0.15em 0;
+        position: relative;
+        display: inline-block;
+        padding: 0 0.3em;
+      }
+      .ribbon::after {
+        content: "";
+        position: absolute;
+        bottom: -4px;
+        left: 10%;
+        right: 10%;
+        height: 3px;
+        background: var(--accent2);
+        border-radius: 2px;
+      }
+      .stage {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        flex: 1;
+        gap: 1.4em;
+        width: 100%;
+      }
+      .panel {
+        position: relative;
+        background: var(--accent2);
+        border: 2px solid var(--accent);
+        border-radius: 14px;
+        padding: clamp(8px, 1.2vw, 16px);
+        box-shadow: var(--shadow);
+        width: 100%;
+        max-width: min(1120px, 100%);
+        flex: 1;
+        min-height: 0;
+        color: var(--ink);
+        font-size: clamp(1rem, 1.8vw, 1.3rem);
+        line-height: 1.6;
+      }
+      button:focus-visible {
+        outline: 3px solid var(--accent2);
+        outline-offset: 3px;
+      }
+      @media (hover: hover) {
+        button:hover {
+          transform: translateY(-2px);
+        }
+      }
+      .topbar {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        height: clamp(48px, 7vh, 56px);
+        padding: 0 clamp(12px, 3vw, 28px);
+        background: var(--accent);
+        z-index: 20;
+        overflow: hidden;
+      }
+      .banner {
+        display: inline-block;
+        background: var(--accent2);
+        color: var(--accent);
+        padding: 0.2em 0.8em;
+        border-radius: 8px;
+        font-size: clamp(0.85rem, 1.8vw, 1.05rem);
+        font-weight: 800;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        max-width: 62vw;
+        box-shadow: 0 3px 8px rgba(0, 0, 0, 0.2);
+      }
+      .topbarRight {
+        display: flex;
+        align-items: center;
+        gap: 4px;
+      }
+      .ctrl {
+        min-width: 44px;
+        min-height: 44px;
+        padding: 0 4px;
+        background: transparent;
+        border: 0;
+        font-size: 0.95rem;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        line-height: 1;
+        -webkit-tap-highlight-color: transparent;
+      }
+      .tag {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        height: 30px;
+        min-width: 34px;
+        padding: 0 8px;
+        background: var(--accent2);
+        color: var(--accent);
+        border-radius: 8px;
+        filter: drop-shadow(0 3px 4px rgba(0, 0, 0, 0.22));
+        transition: transform 0.3s ease, filter 0.3s ease;
+      }
+      .ctrl:active .tag {
+        transform: scale(0.94);
+        filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.22));
+      }
+      .ctrl:hover .tag {
+        transform: scale(1.06);
+        filter: brightness(1.15) drop-shadow(0 4px 6px rgba(0, 0, 0, 0.3));
+      }
+      .ep-host {
+        width: 100%;
+        min-height: clamp(240px, 46vh, 420px);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 1em;
+      }
+      @media (max-width: 480px) {
+        .topbar {
+          padding: 0 8px;
+        }
+        .banner {
+          font-size: 0.78rem;
+          padding: 0.2em 0.6em;
+        }
+        .tag {
+          height: 28px;
+          min-width: 30px;
+          padding: 0 8px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div id="app">
+      <div class="topbar">
+        <span class="banner">Adventure / Outside</span>
+        <div class="topbarRight">
+          <button class="ctrl" id="soundBtn" aria-label="Sound">
+            <span class="tag">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="1.2em"
+                height="1.2em"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                style="vertical-align: -0.2em"
+              >
+                <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" />
+                <path d="M15.54 8.46a5 5 0 0 1 0 7.07" />
+                <path d="M19.07 4.93a10 10 0 0 1 0 14.14" />
+              </svg>
+            </span>
+          </button>
+        </div>
+      </div>
+
+      <section class="screen active" id="puzzleScreen">
+        <div class="content">
+          <h1 class="ribbon">The Treasure Map</h1>
+          <div class="stage">
+            <div class="panel">
+              <div class="ep-host"></div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <script>
+/*!
+ * EduPuzzle bundle — "Adventure / Outside" treasure map
+ * Single injectable payload: HTML + CSS + JS, no external runtime requests.
+ *
+ * Host usage:
+ *     const handle = Elpz.mount(containerEl, options);
+ *     handle.destroy();  handle.reset();
+ *
+ * Contract notes (see requirements doc):
+ *   C1 no html/body overrides   C2 all ids prefixed elpz- (in practice: none used)
+ *   C3 exactly one global: Elpz C4 no window/document event hijacking
+ *   C5 Shadow-root safe        C6 no redirects / window.top
+ *   C7 https-only externals (images are optional + pre-agreed, with offline fallback)
+ *   Storage namespace: elpz.*
+ */
+(function (global) {
+  "use strict";
+
+  /* ------------------------------------------------------------------ *
+   * Artwork: pre-agreed https crops (row-major, one per noun).
+   * The widget NEVER blocks on these — if a crop is unavailable the tile
+   * falls back to bundled line art, so the activity runs fully offline.
+   * ------------------------------------------------------------------ */
+  var CLOUD = "https://res.cloudinary.com/dmkhsyfzf/image/upload/";
+  var DEFAULT_IMAGES = [
+    CLOUD + "c_crop,w_281,h_384,x_12,y_16/v1789587647/adventure_sgbv5s.jpg",
+    CLOUD + "c_crop,w_281,h_384,x_281,y_16/v1789587647/adventure_sgbv5s.jpg",
+    CLOUD + "c_crop,w_281,h_384,x_562,y_16/v1789587647/adventure_sgbv5s.jpg",
+    CLOUD + "c_crop,w_281,h_384,x_837,y_16/v1789587647/adventure_sgbv5s.jpg",
+    CLOUD + "c_crop,w_281,h_384,x_1112,y_16/v1789587647/adventure_sgbv5s.jpg",
+    CLOUD + "c_crop,w_281,h_384,x_12,y_368/v1789587647/adventure_sgbv5s.jpg",
+    CLOUD + "c_crop,w_281,h_384,x_281,y_368/v1789587647/adventure_sgbv5s.jpg",
+    CLOUD + "c_crop,w_281,h_384,x_562,y_368/v1789587647/adventure_sgbv5s.jpg",
+    CLOUD + "c_crop,w_281,h_384,x_837,y_368/v1789587647/adventure_sgbv5s.jpg",
+    CLOUD + "c_crop,w_281,h_384,x_1112,y_368/v1789587647/adventure_sgbv5s.jpg"
+  ];
+
+  /* Tile order = noun order = crop order. Override with options.nouns if the
+     sprite sheet is arranged differently. */
+  var NOUNS = ["bridge", "river", "mountain", "tree", "forest",
+               "path", "map", "backpack", "tent", "treasure"];
+
+  /* ------------------------------------------------------------------ *
+   * Bundled line art (lucide idiom: 24×24, stroke 2, round joins)
+   * ------------------------------------------------------------------ */
+  var ART = {
+    bridge: 'M2 16h20M5 16v4M19 16v4M12 16v-5M7.5 16v-3M16.5 16v-3M4 12a8 8 0 0 1 16 0',
+    river: 'M2 8c3-2 5 2 8 0s5-2 8 0M2 13c3-2 5 2 8 0s5-2 8 0M2 18c3-2 5 2 8 0s5-2 8 0',
+    mountain: 'M2 20 9 7l4 6 2-3 5 10Z M9 7l2 3',
+    tree: 'M12 3 6 12h3l-4 6h14l-4-6h3ZM12 18v3',
+    forest: 'M8 3 3 11h2.5L2 17h12l-3.5-6H13ZM8 17v4M17 6l-4 7h2.5L12 18h10l-3.5-5H21ZM17 18v3',
+    path: 'M8 21c0-5 9-4 9-9 0-3-2.5-4-4.5-4S8 9 8 11M16 3l-2 2 2 2',
+    map: 'm3 6 6-3 6 3 6-3v15l-6 3-6-3-6 3ZM9 3v15M15 6v15',
+    backpack: 'M6 21V10a6 6 0 0 1 12 0v11ZM9 6V4.5a3 3 0 0 1 6 0V6M9 13h6v4H9Z',
+    tent: 'M12 3 3 21h18ZM12 3v18M8 21l4-7 4 7',
+    treasure: 'M3 10h18v10H3ZM3 10l2-4h14l2 4M11 10h2v4h-2ZM3 15h18',
+    stop: 'M12 3 3 8v8l9 5 9-5V8ZM8 12h8',
+    wait: 'M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18ZM12 7v5l3 2',
+    go: 'M4 12h14M13 6l6 6-6 6',
+    compass: 'M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18ZM15.5 8.5l-2 5-5 2 2-5Z',
+    check: 'M4 12.5 9 18 20 6',
+    sound: 'M11 5 6 9H3v6h3l5 4ZM15.5 9a4 4 0 0 1 0 6M18.5 6.5a8 8 0 0 1 0 11',
+    muted: 'M11 5 6 9H3v6h3l5 4ZM16 10l5 5M21 10l-5 5',
+    again: 'M3 12a9 9 0 1 0 3-6.7L3 8M3 3v5h5',
+    seal: 'M12 2.5 14.6 8l6 .9-4.3 4.2 1 6-5.3-2.8L6.7 19l1-6L3.4 8.9 9.4 8Z'
+  };
+
+  function svg(name, extra) {
+    var d = ART[name] || ART.compass;
+    return '<svg class="elpz-ico ' + (extra || '') + '" viewBox="0 0 24 24" fill="none" ' +
+      'stroke="currentColor" stroke-width="2" stroke-linecap="round" ' +
+      'stroke-linejoin="round" aria-hidden="true" focusable="false">' +
+      d.split(/(?=M)/).map(function (p) { return '<path d="' + p.trim() + '"/>'; }).join('') +
+      '</svg>';
+  }
+
+  /* ------------------------------------------------------------------ *
+   * Puzzles — ten distinct tasks, easiest first, each unlocking one tile.
+   * Mechanics: pick (one answer) · collect (several answers) ·
+   *            build (assemble from word tiles) · link (match pairs)
+   * ------------------------------------------------------------------ */
+  var PUZZLES = [
+    { tile: 4, kind: "pick", stage: "Edge of the wood",
+      ask: "Tap the forest.",
+      options: [{ art: "river", label: "river" }, { art: "forest", label: "forest" }, { art: "mountain", label: "mountain" }],
+      answer: "forest", hint: "Look for many trees together.", showLabels: false },
+
+    { tile: 3, kind: "pick", stage: "One tall shape",
+      ask: "Which word is this?", figure: "tree",
+      options: [{ label: "tent" }, { label: "tree" }, { label: "treasure" }],
+      answer: "tree", hint: "It is green and it grows." },
+
+    { tile: 2, kind: "pick", stage: "Far away",
+      ask: "I can see a ___.", figure: "mountain",
+      options: [{ art: "backpack", label: "backpack" }, { art: "mountain", label: "mountain" }, { art: "path", label: "path" }],
+      answer: "mountain", hint: "It is high and grey.", showLabels: true },
+
+    { tile: 1, kind: "build", stage: "Cold water",
+      ask: "Make the sentence.",
+      figure: "river",
+      words: ["a", "There", "river", "is"], answer: "There is a river",
+      hint: "Start with the word that has a big letter." },
+
+    { tile: 0, kind: "collect", stage: "Crossing",
+      ask: "Tap the two things you can walk on.",
+      options: [{ art: "bridge", label: "bridge" }, { art: "river", label: "river" },
+                { art: "path", label: "path" }, { art: "mountain", label: "mountain" }],
+      answer: ["bridge", "path"], showLabels: true,
+      hint: "Your feet stay dry on both of them." },
+
+    { tile: 5, kind: "link", stage: "Which way?",
+      ask: "Match the question and the answer.",
+      pairs: [["Where are we?", "We are on the path."],
+              ["Can you see the bridge?", "Yes, I can."]],
+      hint: "One answer tells a place. One answer says yes." },
+
+    { tile: 6, kind: "build", stage: "The old chart",
+      ask: "Make the sentence.", figure: "map",
+      words: ["see", "I", "the", "can", "map", "old"],
+      answer: "I can see the old map",
+      hint: "I  can  see … then say which map." },
+
+    { tile: 7, kind: "collect", stage: "Packing",
+      ask: "Tap the three things you can carry.",
+      options: [{ art: "map", label: "map" }, { art: "river", label: "river" },
+                { art: "tent", label: "tent" }, { art: "mountain", label: "mountain" },
+                { art: "backpack", label: "backpack" }, { art: "bridge", label: "bridge" }],
+      answer: ["map", "tent", "backpack"], showLabels: true,
+      hint: "Three of them fit in your hands." },
+
+    { tile: 8, kind: "link", stage: "Camp before dark",
+      ask: "Match what you say.",
+      pairs: [["A bear is on the path!", "Stop!"],
+              ["Anna is slow today.", "Wait!"],
+              ["The tent is ready.", "Let's go!"]],
+      hint: "Danger, then a slow friend, then good news." },
+
+    { tile: 9, kind: "order", stage: "The last step",
+      ask: "Put the story in order.",
+      words: ["Where are we?", "We are in the forest.", "I can see a mountain.",
+              "There is a river.", "Let's go!", "Stop! The treasure!"],
+      answer: "Where are we?|We are in the forest.|I can see a mountain.|There is a river.|Let's go!|Stop! The treasure!",
+      hint: "First you ask. Then you look. Then you move." }
+  ];
+
+  var STORY = [
+    "Where are we? We are in the forest.",
+    "I can see a mountain. There is a river.",
+    "Look — a bridge! Let's go!",
+    "We walk on the path with the map and the backpack.",
+    "Wait! Here is a good place for the tent.",
+    "Stop! Under the tree — the treasure!"
+  ];
+
+  /* ------------------------------------------------------------------ *
+   * Styles (scoped to .elpz-root; safe inside a Shadow root)
+   * ------------------------------------------------------------------ */
+  var CSS = [
+    '.elpz-root{',
+    '  --elpz-accent: var(--accent, #b8860b);',
+    '  --elpz-fill: var(--accent2, #ffd54f);',
+    '  --elpz-ink:#14213d; --elpz-parch:#f3e2b8; --elpz-parch-2:#e5cf9c;',
+    '  --elpz-wax:#a4322c; --elpz-moss:#2f6b4f; --elpz-line:#8a5a2b;',
+    '  box-sizing:border-box; position:relative; width:100%;',
+    '  display:flex; flex-direction:column; gap:.75rem;',
+    '  font-family:system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;',
+    '  font-size:clamp(16px,1.15vw + 13px,20px); line-height:1.35;',
+    '  color:var(--elpz-ink); -webkit-tap-highlight-color:transparent;',
+    '  container-type:inline-size;',
+    '}',
+    '.elpz-root *,.elpz-root *::before,.elpz-root *::after{box-sizing:inherit}',
+    '.elpz-ico{width:1em;height:1em;display:block}',
+
+    /* header ------------------------------------------------------- */
+    '.elpz-bar{display:flex;align-items:center;gap:.6rem;flex-wrap:wrap}',
+    '.elpz-title{font-family:"Iowan Old Style","Palatino Linotype",Palatino,Georgia,serif;',
+    '  font-size:1.15em;font-weight:600;letter-spacing:.01em;margin:0;flex:1 1 8rem}',
+    '.elpz-title span{display:block;font-family:inherit;font-size:.72em;font-weight:400;opacity:.72}',
+    '.elpz-trail{display:flex;gap:.28rem;align-items:center}',
+    '.elpz-bead{width:.6rem;height:.6rem;border-radius:50%;border:2px solid var(--elpz-line);opacity:.5}',
+    '.elpz-bead.is-done{background:var(--elpz-wax);border-color:var(--elpz-wax);opacity:1}',
+    '.elpz-bead.is-now{background:var(--elpz-ink);border-color:var(--elpz-ink);opacity:1;transform:scale(1.25)}',
+    '.elpz-btn{font:inherit;font-size:.82em;color:var(--elpz-ink);background:rgba(255,255,255,.72);',
+    '  border:2px solid var(--elpz-line);border-radius:999px;padding:.4rem .7rem;cursor:pointer;',
+    '  display:inline-flex;align-items:center;gap:.35rem;min-height:44px;min-width:44px;justify-content:center}',
+    '.elpz-btn:active{transform:translateY(1px)}',
+    '.elpz-btn:focus-visible{outline:3px solid var(--elpz-ink);outline-offset:2px}',
+
+    /* map ---------------------------------------------------------- */
+    '.elpz-stage{position:relative;flex:1 1 auto;min-height:0;display:flex}',
+    '.elpz-map{flex:1 1 auto;min-height:0;display:grid;gap:clamp(3px,.6cqw,7px);',
+    '  grid-template-columns:repeat(5,1fr);grid-template-rows:repeat(2,1fr);',
+    '  padding:clamp(6px,1cqw,12px);background:',
+    '   radial-gradient(120% 120% at 50% 0%,rgba(255,255,255,.35),rgba(138,90,43,.18)),var(--elpz-parch-2);',
+    '  border:2px solid var(--elpz-line);border-radius:10px;',
+    '  box-shadow:inset 0 0 0 4px rgba(255,255,255,.35)}',
+    '.elpz-cell{position:relative;overflow:hidden;border-radius:6px;background:var(--elpz-parch);',
+    '  border:1px solid rgba(138,90,43,.55);display:grid;place-items:center}',
+    '.elpz-cell img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;',
+    '  opacity:0;transition:opacity .5s ease}',
+    '.elpz-cell.is-open img{opacity:1}',
+    '.elpz-fallback{position:absolute;inset:0;display:grid;place-items:center;gap:.2rem;',
+    '  color:var(--elpz-line);opacity:0;transition:opacity .5s ease;padding:8%}',
+    '.elpz-cell.is-open .elpz-fallback{opacity:.9}',
+    '.elpz-fallback .elpz-ico{width:44%;height:auto;aspect-ratio:1;max-width:72px}',
+    '.elpz-fallback b{font-weight:600;font-size:clamp(11px,1.5cqw,15px)}',
+    '.elpz-fog{position:absolute;inset:0;display:grid;place-items:center;color:var(--elpz-wax);',
+    '  background:repeating-linear-gradient(135deg,rgba(138,90,43,.20) 0 6px,rgba(138,90,43,.06) 6px 12px),var(--elpz-parch);',
+    '  transition:opacity .45s ease,transform .45s ease}',
+    '.elpz-fog .elpz-ico{width:32%;height:auto;aspect-ratio:1;max-width:42px;opacity:.8}',
+    '.elpz-cell.is-open .elpz-fog{opacity:0;transform:scale(1.35) rotate(-4deg);pointer-events:none}',
+    '.elpz-cell.is-next .elpz-fog{color:var(--elpz-ink);box-shadow:inset 0 0 0 3px var(--elpz-ink)}',
+    '@media (prefers-reduced-motion:no-preference){',
+    '  .elpz-cell.is-next .elpz-fog{animation:elpz-pulse 1.9s ease-in-out infinite}',
+    '  @keyframes elpz-pulse{50%{box-shadow:inset 0 0 0 5px var(--elpz-ink)}}}',
+
+    /* task card ----------------------------------------------------- */
+    '.elpz-card{background:var(--elpz-parch);',
+    '  border:2px solid var(--elpz-line);border-radius:12px;padding:clamp(.6rem,1.4cqw,1.1rem);',
+    '  display:flex;flex-direction:column;gap:.55rem}',
+    '.elpz-card[hidden]{display:none}',
+    '.elpz-stagename{font-size:.72em;color:var(--elpz-line);margin:0;font-weight:600}',
+    '.elpz-ask{margin:0;font-size:1.02em;font-weight:600;display:flex;align-items:center;gap:.5rem}',
+    '.elpz-ask .elpz-ico{width:1.5em;height:1.5em;color:var(--elpz-line);flex:none}',
+    '.elpz-opts{display:flex;flex-wrap:wrap;gap:.5rem}',
+    '.elpz-opt{font:inherit;cursor:pointer;background:#fffdf6;border:2px solid var(--elpz-line);',
+    '  border-radius:10px;padding:.45rem .7rem;min-height:44px;display:flex;align-items:center;',
+    '  gap:.45rem;color:var(--elpz-ink)}',
+    '.elpz-opt .elpz-ico{width:1.6em;height:1.6em}',
+    '.elpz-opt.is-picked{background:var(--elpz-fill);border-color:var(--elpz-ink)}',
+    '.elpz-opt.is-right{background:#dff0e3;border-color:var(--elpz-moss)}',
+    '.elpz-opt.is-wrong{background:#f7ded9;border-color:var(--elpz-wax)}',
+    '.elpz-opt:focus-visible,.elpz-slotline:focus-visible{outline:3px solid var(--elpz-ink);outline-offset:2px}',
+    '.elpz-opt[disabled]{cursor:default;opacity:.85}',
+    '.elpz-slotline{min-height:52px;display:flex;flex-wrap:wrap;gap:.4rem;align-items:center;',
+    '  padding:.35rem;border:2px dashed var(--elpz-line);border-radius:10px;background:rgba(255,255,255,.55)}',
+    '.elpz-slotline.is-over{background:var(--elpz-fill);border-style:solid}',
+    '.elpz-empty{color:var(--elpz-line);font-size:.8em;padding:0 .3rem}',
+    '.elpz-links{display:grid;grid-template-columns:1fr 1fr;gap:.5rem}',
+    '.elpz-links .elpz-opt{width:100%;text-align:left;justify-content:flex-start}',
+    '.elpz-foot{display:flex;align-items:center;gap:.5rem;flex-wrap:wrap}',
+    '.elpz-say{margin:0;flex:1 1 8rem;font-size:.85em;min-height:1.4em}',
+    '.elpz-say.is-good{color:var(--elpz-moss);font-weight:600}',
+    '.elpz-say.is-bad{color:var(--elpz-wax)}',
+    '@media (prefers-reduced-motion:no-preference){.elpz-shake{animation:elpz-shake .3s}',
+    '  @keyframes elpz-shake{25%{transform:translateX(-5px)}75%{transform:translateX(5px)}}}',
+
+    /* intro / finish ------------------------------------------------ */
+    '.elpz-sheet{position:absolute;inset:0;display:flex;flex-direction:column;justify-content:center;',
+    '  gap:.6rem;padding:clamp(.8rem,3cqw,2rem);background:rgba(243,226,184,.97);',
+    '  border:2px solid var(--elpz-line);border-radius:10px;overflow:auto}',
+    '.elpz-sheet[hidden]{display:none}',
+    '.elpz-sheet h3{font-family:"Iowan Old Style","Palatino Linotype",Palatino,Georgia,serif;',
+    '  margin:0;font-size:clamp(1.2em,3cqw,1.8em)}',
+    '.elpz-sheet p{margin:0;max-width:60ch}',
+    '.elpz-story{margin:0;padding-left:1.1em;display:flex;flex-direction:column;gap:.25rem;',
+    '  font-size:clamp(.9em,2cqw,1.05em)}',
+    '.elpz-story li::marker{color:var(--elpz-wax)}',
+
+    /* landscape fills the panel, no inner scrolling ------------------ */
+    /* landscape: map and task sit side by side inside a fixed-height stage */
+    '@container (min-width:620px){',
+    '  .elpz-stage{height:min(78svh,660px)}',
+    '  .elpz-stage{flex-direction:row;gap:.75rem}',
+    '  .elpz-map{flex:3 1 0;min-width:0}',
+    '  .elpz-card{flex:2 1 0;min-width:0;max-width:440px;overflow:auto}',
+    '  .elpz-sheet{position:absolute;inset:0}',
+    '  .elpz-links{grid-template-columns:1fr}',
+    '}',
+    /* portrait: stack, let the host page scroll */
+    '@container (max-width:619px){',
+    '  .elpz-stage{flex-direction:column;gap:.7rem}',
+    '  .elpz-map{aspect-ratio:5/3}',
+    '  .elpz-sheet{position:static}',
+    '  .elpz-links{grid-template-columns:1fr}',
+    '}'
+  ].join("\n");
+
+  /* ------------------------------------------------------------------ *
+   * small helpers
+   * ------------------------------------------------------------------ */
+  function el(tag, cls, html) {
+    var n = document.createElement(tag);
+    if (cls) n.className = cls;
+    if (html != null) n.innerHTML = html;
+    return n;
+  }
+  function shuffle(list) {
+    var a = list.slice(), i, j, t;
+    for (i = a.length - 1; i > 0; i--) {
+      j = Math.floor(Math.random() * (i + 1)); t = a[i]; a[i] = a[j]; a[j] = t;
+    }
+    return a.join("|") === list.join("|") && a.length > 1 ? shuffle(list) : a;
+  }
+  function store(key, value) {
+    try {
+      if (value === undefined) return global.localStorage.getItem("elpz." + key);
+      global.localStorage.setItem("elpz." + key, value);
+    } catch (e) { /* storage blocked — run without it */ }
+    return null;
+  }
+
+  /* tiny synthesised sounds; the AudioContext is created on first gesture */
+  function Sound() {
+    var ctx = null, muted = store("muted") === "1";
+    function ensure() {
+      if (!ctx && global.AudioContext) ctx = new global.AudioContext();
+      if (ctx && ctx.state === "suspended") ctx.resume();
+      return ctx;
+    }
+    return {
+      unlock: ensure,
+      isMuted: function () { return muted; },
+      toggle: function () { muted = !muted; store("muted", muted ? "1" : "0"); return muted; },
+      play: function (kind) {
+        if (muted || !ensure()) return;
+        var now = ctx.currentTime;
+        var notes = kind === "good" ? [523.25, 783.99] : kind === "win" ? [523.25, 659.25, 783.99, 1046.5] : [196, 165];
+        notes.forEach(function (f, i) {
+          var o = ctx.createOscillator(), g = ctx.createGain();
+          o.type = "sine"; o.frequency.value = f;
+          g.gain.setValueAtTime(0.0001, now + i * 0.11);
+          g.gain.exponentialRampToValueAtTime(0.16, now + i * 0.11 + 0.02);
+          g.gain.exponentialRampToValueAtTime(0.0001, now + i * 0.11 + 0.22);
+          o.connect(g); g.connect(ctx.destination);
+          o.start(now + i * 0.11); o.stop(now + i * 0.11 + 0.26);
+        });
+      }
+    };
+  }
+
+  /* pointer drag with tap fallback: elements marked data-elpz-drag can be
+     dragged onto [data-elpz-drop]; a plain tap fires onTap instead. */
+  function draggable(root, node, onTap, onDrop) {
+    var ghost = null, sx = 0, sy = 0, moved = false, id = null, lastTap = 0;
+    node.style.touchAction = "manipulation";
+    node.addEventListener("pointerdown", function (ev) {
+      if (node.disabled) return;
+      id = ev.pointerId; sx = ev.clientX; sy = ev.clientY; moved = false;
+      try { node.setPointerCapture(id); } catch (e) { /* capture unsupported */ }
+    });
+    node.addEventListener("pointermove", function (ev) {
+      if (ev.pointerId !== id) return;
+      var dx = ev.clientX - sx, dy = ev.clientY - sy;
+      if (!moved && Math.abs(dx) + Math.abs(dy) < 8) return;
+      moved = true;
+      if (!ghost) {
+        var r = node.getBoundingClientRect();
+        ghost = node.cloneNode(true);
+        ghost.style.cssText = "position:fixed;pointer-events:none;z-index:2147483000;margin:0;" +
+          "opacity:.9;left:" + r.left + "px;top:" + r.top + "px;width:" + r.width + "px;" +
+          "height:" + r.height + "px;background:#fffdf6;border:2px solid #8a5a2b;border-radius:10px;" +
+          "display:flex;align-items:center;justify-content:center;gap:.45rem;font:inherit;color:#14213d";
+        document.body.appendChild(ghost);
+      }
+      ghost.style.transform = "translate(" + dx + "px," + dy + "px)";
+      highlight(ev.clientX, ev.clientY);
+    });
+    function target(x, y) {
+      var scope = node.getRootNode();
+      var hit = (scope.elementFromPoint ? scope : document).elementFromPoint(x, y);
+      return hit && hit.closest ? hit.closest("[data-elpz-drop]") : null;
+    }
+    function highlight(x, y) {
+      var t = target(x, y);
+      root.querySelectorAll("[data-elpz-drop]").forEach(function (d) {
+        d.classList.toggle("is-over", d === t);
+      });
+    }
+    function end(ev) {
+      if (ev.pointerId !== id) return;
+      id = null;
+      root.querySelectorAll("[data-elpz-drop]").forEach(function (d) { d.classList.remove("is-over"); });
+      if (ghost) { ghost.remove(); ghost = null; }
+      if (!moved) { lastTap = Date.now(); onTap(); return; }
+      var t = target(ev.clientX, ev.clientY);
+      if (t) onDrop(t);
+    }
+    node.addEventListener("pointerup", end);
+    node.addEventListener("pointercancel", end);
+    /* keyboard, assistive tech and any environment without pointer events */
+    node.addEventListener("click", function () {
+      if (node.disabled || moved || Date.now() - lastTap < 500) return;
+      onTap();
+    });
+  }
+
+  /* ------------------------------------------------------------------ *
+   * mount
+   * ------------------------------------------------------------------ */
+  function mount(container, options) {
+    if (!container) throw new Error("Elpz.mount: no container element");
+    var opts = options || {};
+    var images = opts.images || DEFAULT_IMAGES;
+    var nouns = opts.nouns || NOUNS;
+    var sound = Sound();
+    var live = null, cells = [], step = 0, tries = 0, ro = null;
+
+    var style = el("style"); style.textContent = CSS;
+    var root = el("div", "elpz-root");
+    container.appendChild(style);
+    container.appendChild(root);
+
+    /* header */
+    var bar = el("div", "elpz-bar");
+    var title = el("h2", "elpz-title", "The Treasure Map<span>Ten seals. Ten pictures. One story.</span>");
+    var trail = el("div", "elpz-trail");
+    PUZZLES.forEach(function () { trail.appendChild(el("i", "elpz-bead")); });
+    var soundBtn = el("button", "elpz-btn");
+    soundBtn.type = "button";
+    var againBtn = el("button", "elpz-btn", svg("again") + "Start again");
+    againBtn.type = "button";
+    bar.append(title, trail, soundBtn, againBtn);
+
+    function paintSound() {
+      soundBtn.innerHTML = svg(sound.isMuted() ? "muted" : "sound") +
+        (sound.isMuted() ? "Sound off" : "Sound on");
+      soundBtn.setAttribute("aria-pressed", sound.isMuted() ? "true" : "false");
+    }
+    soundBtn.addEventListener("click", function () { sound.toggle(); paintSound(); sound.unlock(); });
+    paintSound();
+
+    /* map */
+    var stage = el("div", "elpz-stage");
+    var map = el("div", "elpz-map");
+    map.setAttribute("role", "img");
+    map.setAttribute("aria-label", "Treasure map with ten covered pieces");
+    nouns.forEach(function (noun, i) {
+      var cell = el("div", "elpz-cell");
+      if (images[i]) {
+        var img = el("img");
+        img.alt = ""; img.loading = "lazy"; img.decoding = "async";
+        img.addEventListener("error", function () { img.remove(); });
+        img.src = images[i];
+        cell.appendChild(img);
+      }
+      cell.appendChild(el("div", "elpz-fallback", svg(noun) + "<b>" + noun + "</b>"));
+      cell.appendChild(el("div", "elpz-fog", svg("seal")));
+      map.appendChild(cell);
+      cells.push(cell);
+    });
+    stage.appendChild(map);
+
+    /* task card + sheets */
+    var card = el("div", "elpz-card"); card.hidden = true;
+    var sheet = el("div", "elpz-sheet");
+    stage.append(card, sheet);
+    root.append(bar, stage);
+
+    function say(text, tone) {
+      if (!live) return;
+      live.textContent = text || "";
+      live.className = "elpz-say" + (tone ? " is-" + tone : "");
+    }
+
+    function paintTrail() {
+      trail.childNodes.forEach(function (bead, i) {
+        bead.className = "elpz-bead" + (i < step ? " is-done" : i === step ? " is-now" : "");
+      });
+      cells.forEach(function (c, i) {
+        c.classList.toggle("is-next", !c.classList.contains("is-open") &&
+          step < PUZZLES.length && PUZZLES[step].tile === i);
+      });
+    }
+
+    function intro() {
+      card.hidden = true;
+      sheet.hidden = false;
+      sheet.innerHTML = "";
+      sheet.append(
+        el("h3", null, "An old map, still sealed"),
+        el("p", null, "Ten pieces of the map are hidden under wax seals. " +
+          "Answer a question and one seal breaks. Break them all and you can read the whole adventure."),
+        el("p", null, "Tap the words and pictures. You can also drag them.")
+      );
+      var go = el("button", "elpz-btn", svg("go") + "Open the map");
+      go.type = "button";
+      go.addEventListener("click", function () { sound.unlock(); next(); });
+      sheet.appendChild(go);
+      paintTrail();
+    }
+
+    function solved(pz) {
+      cells[pz.tile].classList.add("is-open");
+      cells[pz.tile].classList.remove("is-next");
+      sound.play("good");
+      step += 1;
+      store("adventure.step", String(step));
+      report({ type: "elpz:progress", step: step, of: PUZZLES.length, tile: pz.tile, noun: nouns[pz.tile] });
+      setTimeout(next, 900);
+    }
+
+    function wrong(node) {
+      tries += 1;
+      sound.play("bad");
+      if (node) {
+        node.classList.add("elpz-shake");
+        setTimeout(function () { node.classList.remove("elpz-shake"); }, 320);
+      }
+      var pz = PUZZLES[step];
+      say(tries >= 2 && pz.hint ? pz.hint : "Not this one. Try again.", "bad");
+    }
+
+    /* ---- puzzle renderers --------------------------------------- */
+    function frame(pz) {
+      card.hidden = false;
+      sheet.hidden = true;
+      card.innerHTML = "";
+      card.append(
+        el("p", "elpz-stagename", "Piece " + (step + 1) + " of " + PUZZLES.length + " · " + pz.stage),
+        el("h3", "elpz-ask", (pz.figure ? svg(pz.figure) : "") + "<span>" + pz.ask + "</span>")
+      );
+      var body = el("div", "elpz-body");
+      var foot = el("div", "elpz-foot");
+      live = el("p", "elpz-say");
+      live.setAttribute("role", "status");
+      live.setAttribute("aria-live", "polite");
+      foot.appendChild(live);
+      card.append(body, foot);
+      return { body: body, foot: foot };
+    }
+
+    function optionButton(text, art) {
+      var b = el("button", "elpz-opt", (art ? svg(art) : "") + (text ? "<span>" + text + "</span>" : ""));
+      b.type = "button";
+      if (!text) b.setAttribute("aria-label", art);
+      return b;
+    }
+
+    function renderPick(pz, ui) {
+      var opts = el("div", "elpz-opts");
+      shuffle(pz.options.map(function (_, i) { return String(i); })).forEach(function (idx) {
+        var o = pz.options[+idx];
+        var b = optionButton(pz.showLabels === false ? "" : o.label, o.art);
+        b.addEventListener("click", function () {
+          if (o.label === pz.answer) {
+            b.classList.add("is-right");
+            opts.querySelectorAll("button").forEach(function (x) { x.disabled = true; });
+            say("Yes — " + pz.answer + ".", "good");
+            solved(pz);
+          } else { b.classList.add("is-wrong"); wrong(b);
+            setTimeout(function(){ b.classList.remove("is-wrong"); }, 600); }
+        });
+        opts.appendChild(b);
+      });
+      ui.body.appendChild(opts);
+    }
+
+    function renderCollect(pz, ui) {
+      var picked = [];
+      var opts = el("div", "elpz-opts");
+      pz.options.forEach(function (o) {
+        var b = optionButton(pz.showLabels === false ? "" : o.label, o.art);
+        b.addEventListener("click", function () {
+          var at = picked.indexOf(o.label);
+          if (at > -1) { picked.splice(at, 1); b.classList.remove("is-picked"); }
+          else { picked.push(o.label); b.classList.add("is-picked"); }
+          say(picked.length + " of " + pz.answer.length + " chosen.");
+          check();
+        });
+        opts.appendChild(b);
+      });
+      function check() {
+        if (picked.length !== pz.answer.length) return;
+        var ok = pz.answer.every(function (w) { return picked.indexOf(w) > -1; });
+        if (ok) {
+          opts.querySelectorAll("button").forEach(function (x) {
+            x.disabled = true;
+            if (x.classList.contains("is-picked")) x.classList.add("is-right");
+          });
+          say("That's the set.", "good");
+          solved(pz);
+        } else {
+          wrong(opts);
+          picked = [];
+          opts.querySelectorAll("button").forEach(function (x) { x.classList.remove("is-picked"); });
+        }
+      }
+      ui.body.appendChild(opts);
+    }
+
+    function renderBuild(pz, ui, asStory) {
+      var chosen = [];
+      var slot = el("div", "elpz-slotline");
+      slot.setAttribute("data-elpz-drop", "");
+      slot.tabIndex = 0;
+      var bank = el("div", "elpz-opts");
+      var empty = el("span", "elpz-empty", asStory ? "Tap the lines in story order." : "Tap the words in order.");
+      slot.appendChild(empty);
+
+      shuffle(pz.words).forEach(function (w) {
+        var b = optionButton(w);
+        function take() {
+          if (b.disabled) return;
+          b.disabled = true; b.style.opacity = ".35";
+          chosen.push(w);
+          var inSlot = optionButton(w);
+          inSlot.addEventListener("click", function () {
+            var i = chosen.indexOf(w);
+            if (i > -1) chosen.splice(i, 1);
+            inSlot.remove(); b.disabled = false; b.style.opacity = "";
+            if (!chosen.length) slot.appendChild(empty);
+            say("");
+          });
+          empty.remove();
+          slot.appendChild(inSlot);
+          check();
+        }
+        draggable(root, b, take, function (dropTarget) { if (dropTarget === slot) take(); });
+        bank.appendChild(b);
+      });
+
+      function check() {
+        if (chosen.length !== pz.words.length) return;
+        var made = chosen.join(asStory ? "|" : " ");
+        if (made === pz.answer) {
+          slot.querySelectorAll("button").forEach(function (x) { x.classList.add("is-right"); x.disabled = true; });
+          say(asStory ? "That's the story." : "Correct: " + pz.answer + ".", "good");
+          solved(pz);
+        } else {
+          wrong(slot);
+          chosen = [];
+          slot.querySelectorAll("button").forEach(function (x) { x.remove(); });
+          slot.appendChild(empty);
+          bank.querySelectorAll("button").forEach(function (x) { x.disabled = false; x.style.opacity = ""; });
+        }
+      }
+      if (asStory) { slot.style.flexDirection = "column"; slot.style.alignItems = "stretch"; }
+      ui.body.append(slot, el("div", null, ""), bank);
+      ui.body.style.display = "flex";
+      ui.body.style.flexDirection = "column";
+      ui.body.style.gap = ".5rem";
+    }
+
+    function renderLink(pz, ui) {
+      var left = pz.pairs.map(function (p) { return p[0]; });
+      var right = shuffle(pz.pairs.map(function (p) { return p[1]; }));
+      var done = 0, active = null, grid = el("div", "elpz-links");
+      var leftCol = el("div", "elpz-opts"), rightCol = el("div", "elpz-opts");
+      leftCol.style.flexDirection = "column"; rightCol.style.flexDirection = "column";
+
+      left.forEach(function (q) {
+        var b = optionButton(q);
+        b.setAttribute("data-elpz-drop", "");
+        b.addEventListener("click", function () {
+          if (b.disabled) return;
+          if (!active) { say("Now tap the answer."); return; }
+          settle(q, active.value, b, active.node);
+        });
+        leftCol.appendChild(b);
+      });
+      right.forEach(function (a) {
+        var b = optionButton(a);
+        function pick() {
+          if (b.disabled) return;
+          rightCol.querySelectorAll("button").forEach(function (x) { x.classList.remove("is-picked"); });
+          b.classList.add("is-picked");
+          active = { value: a, node: b };
+          say("Now tap the question it belongs to.");
+        }
+        draggable(root, b, pick, function (target) {
+          var q = target.textContent.trim();
+          if (left.indexOf(q) > -1) settle(q, a, target, b);
+        });
+        rightCol.appendChild(b);
+      });
+
+      function settle(q, a, qNode, aNode) {
+        var isPair = pz.pairs.some(function (p) { return p[0] === q && p[1] === a; });
+        if (!isPair) { wrong(aNode); aNode.classList.remove("is-picked"); active = null; return; }
+        [qNode, aNode].forEach(function (n) {
+          n.disabled = true; n.classList.remove("is-picked"); n.classList.add("is-right");
+        });
+        active = null; done += 1;
+        say("Matched.", "good");
+        if (done === pz.pairs.length) solved(pz);
+      }
+      grid.append(leftCol, rightCol);
+      ui.body.appendChild(grid);
+    }
+
+    function next() {
+      tries = 0;
+      paintTrail();
+      if (step >= PUZZLES.length) return finish();
+      var pz = PUZZLES[step];
+      var ui = frame(pz);
+      if (pz.kind === "pick") renderPick(pz, ui);
+      else if (pz.kind === "collect") renderCollect(pz, ui);
+      else if (pz.kind === "build") renderBuild(pz, ui, false);
+      else if (pz.kind === "order") renderBuild(pz, ui, true);
+      else renderLink(pz, ui);
+      measure();
+    }
+
+    function finish() {
+      card.hidden = true;
+      sheet.hidden = false;
+      sheet.innerHTML = "";
+      sound.play("win");
+      var list = el("ol", "elpz-story");
+      STORY.forEach(function (line) { list.appendChild(el("li", null, line)); });
+      sheet.append(
+        el("h3", null, "The map is yours"),
+        el("p", null, "Every seal is broken. Here is the whole adventure:"),
+        list
+      );
+      var again = el("button", "elpz-btn", svg("again") + "Read it again from the start");
+      again.type = "button";
+      again.addEventListener("click", reset);
+      sheet.appendChild(again);
+      report({ type: "elpz:result", done: true, pieces: PUZZLES.length, story: STORY });
+      measure();
+    }
+
+    function reset() {
+      step = 0; tries = 0;
+      store("adventure.step", "0");
+      cells.forEach(function (c) { c.classList.remove("is-open"); });
+      intro();
+    }
+    againBtn.addEventListener("click", reset);
+
+    /* optional bridge: height + results */
+    function report(payload) {
+      if (typeof opts.onResult === "function") { try { opts.onResult(payload); } catch (e) {} }
+      if (opts.postMessage && global.parent && global.parent !== global) {
+        try { global.parent.postMessage(payload, opts.postMessageOrigin || "*"); } catch (e) {}
+      }
+    }
+    function measure() {
+      if (typeof opts.onHeight !== "function") return;
+      try { opts.onHeight(Math.ceil(root.getBoundingClientRect().height)); } catch (e) {}
+    }
+    if (typeof opts.onHeight === "function" && global.ResizeObserver) {
+      ro = new global.ResizeObserver(measure);
+      ro.observe(root);
+    }
+
+    intro();
+
+    return {
+      reset: reset,
+      element: root,
+      destroy: function () {
+        if (ro) ro.disconnect();
+        root.remove(); style.remove();
+      }
+    };
+  }
+
+  /* one global name, as per C3 */
+  global.Elpz = { mount: mount, version: "1.0.0", nouns: NOUNS, images: DEFAULT_IMAGES };
+})(window);
+    </script>
+
+    <script>
+      var iconVolumeOn =
+        '<svg xmlns="http://www.w3.org/2000/svg" width="1.2em" height="1.2em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: -0.2em"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/></svg>';
+      var iconVolumeOff =
+        '<svg xmlns="http://www.w3.org/2000/svg" width="1.2em" height="1.2em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: -0.2em"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><line x1="22" x2="16" y1="9" y2="15"/><line x1="16" x2="22" y1="9" y2="15"/></svg>';
+      var soundOn = true;
+      var soundTag = document.getElementById("soundBtn").querySelector(".tag");
+      var hostEl = document.querySelector(".ep-host");
+      var handle = null;
+
+      document.getElementById("soundBtn").onclick = function () {
+        soundOn = !soundOn;
+        soundTag.innerHTML = soundOn ? iconVolumeOn : iconVolumeOff;
+      };
+
+      window.addEventListener("DOMContentLoaded", function () {
+        try {
+          var shadow = hostEl.shadowRoot || hostEl.attachShadow({ mode: "open" });
+          handle = window.Elpz.mount(shadow, {
+            onHeight: function (px) { hostEl.style.minHeight = px + "px"; },
+            onResult: function (payload) {
+              var path = window.location.pathname;
+              try {
+                if (payload.type === "elpz:result") {
+                  logActivity("Student_Default", path, "EduPuzzle", "Result", "Completed " + payload.pieces + " pieces");
+                } else {
+                  logActivity("Student_Default", path, "EduPuzzle", "Progress", "step " + payload.step + "/" + payload.of + " (" + payload.noun + ")");
+                }
+              } catch (e) {}
+            }
+          });
+          var elpzSoundBtn = handle.element.querySelector(".elpz-bar button[aria-pressed]");
+          if (elpzSoundBtn) {
+            soundOn = elpzSoundBtn.getAttribute("aria-pressed") !== "true";
+            soundTag.innerHTML = soundOn ? iconVolumeOn : iconVolumeOff;
+            elpzSoundBtn.addEventListener("click", function () {
+              soundOn = elpzSoundBtn.getAttribute("aria-pressed") !== "true";
+              soundTag.innerHTML = soundOn ? iconVolumeOn : iconVolumeOff;
+            });
+          }
+        } catch (e) {}
+      });
+    </script>
+    <script src="../../tracker.js"></script>
+  </body>
+</html>
