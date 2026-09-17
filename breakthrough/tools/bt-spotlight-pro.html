@@ -1457,8 +1457,8 @@
       }
       .inputBtns button {
         min-width: 90px;
-        min-height: 42px;
-        border-radius: 999px;
+        min-height: 40px;
+        border-radius: 10px;
         font-size: clamp(0.825rem, 1.5vw, 1.2rem);
         font-weight: 900;
       }
@@ -1472,20 +1472,23 @@
       }
       .inputChoices {
         display: none;
-        flex-wrap: wrap;
+        flex-wrap: nowrap;
         justify-content: center;
-        gap: 0.7em;
+        align-items: stretch;
+        gap: 0.5em;
       }
       .inputChoice {
-        min-width: 120px;
-        min-height: 52px;
-        border-radius: 999px;
-        font-size: clamp(0.9rem, 1.6vw, 1.3rem);
+        flex: 1 1 0;
+        min-width: 0;
+        min-height: 40px;
+        border-radius: 10px;
+        font-size: clamp(0.78rem, 1.3vw, 1.05rem);
         font-weight: 900;
+        line-height: 1.15;
         background: var(--accent);
         color: var(--accent2);
         box-shadow: var(--shadow);
-        padding: 0.5em 1.1em;
+        padding: 0.45em 0.7em;
         transition: 0.15s transform;
       }
       .inputChoice:active {
@@ -1676,7 +1679,7 @@
         gap: 0.6em;
       }
       .mdChip {
-        border-radius: 999px;
+        border-radius: 10px;
       }
       .mdChip.mdAccent {
         background: var(--accent);
@@ -1693,7 +1696,7 @@
       }
       .mdPane {
         background: var(--panel);
-        border-radius: 26px;
+        border-radius: 18px;
         box-shadow: var(--shadow);
         display: flex;
         flex-direction: column;
@@ -2620,7 +2623,7 @@ Tap a word to hear it — SpotlightPro turns your notes into a live lesson.
             </div>
             <div class="mdPane mdOutput">
               <div class="mdPaneHead">Live</div>
-              <div class="mdOutputWrap">
+              <div class="mdOutputWrap" id="mdOutputWrap">
                 <div id="mdOutput" class="mdCanvas"></div>
                 <button
                   id="mdFullscreenBtn"
