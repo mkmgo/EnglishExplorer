@@ -58,6 +58,29 @@ Check `FillTile` on some cards (full-bleed images) and leave others as default (
 
 ---
 
+## Territory zones (pre-defined cell colours)
+
+Two optional tables alongside `GridShift` — the card table stays unchanged, and each optional table is fetched only if it exists:
+
+| Table | Row = | Purpose |
+|---|---|---|
+| `GridShiftVariants` | A game mode | `Name`, `Active`, `GridSize` (overrides the auto grid), `CardLimit`, `ColourCells` |
+| `GridShiftCells` | A pre-coloured cell | `CellID`, `Group`, `Colour`, `Active` |
+
+`CellID` is a **virtual column address** — letter = column, digit = row (`A1` = col 0 / row 0, `C3` = col 2 / row 2) — so the same row set maps onto any grid size (5×4 / 6×5 / 8×5).
+
+**Two-player territory rules:**
+- Open board: any card may land in any empty cell.
+- A player only **scores** when their card lands in a cell of their own zone (`Group 1` ↔ Red deck, `Group 2` ↔ Orange deck).
+- The cell tints with its zone colour on a scored placement.
+- Grid completes when both decks are empty → higher score wins (tie = draw).
+
+No active variant or no cells configured → current behaviour (auto-sized grid, neutral colouring) is preserved.
+
+**Why a second table is necessary (cards stay in one):** the cards are one table, but zone data is **per-cell, not per-card** — a `GridShift` row is a card, and there is no clean place on a card row to say "A1 is red". Avoiding a second table means either cramming cell→colour pairs into a long-text field (`"A1:red,A2:red,..."`) — fragile and un-Airtable — or deriving zones from a formula, which loses the arbitrary "this exact cell is red". A dedicated `GridShiftCells` table (one row per cell) is the natural fit. The variant config (`GridShiftVariants`) is the only piece that could realistically be folded away (it could be a handful of fields on a single "settings" row), but a small third table keeps it clean and extensible — so the floor is **1 card table + 1 cells table**.
+
+---
+
 ## Code-Change Variations
 
 ### 1. Flexible grid breakpoints
@@ -73,8 +96,34 @@ Currently anything > 40 falls into 8×5 — would need a cap or larger grid.
 ### 2. Single-deck mode
 Collapse UI to one stack. Simpler for younger players or quick rounds. One deck badge, one count.
 
+### 2b. Single vs two card sets — where the switch lives
+Keep **one** `GridShift` card table; the variant declares the deck count:
+
+| Field | 1-player | 2-player (today) |
+|---|---|---|
+| `DeckCount` | `1` | `2` |
+| `DeckName` / `DeckColour` | `Red` / `#ef4444` | `Red` + `Orange` |
+| `GridSize` | `20` | `40` |
+| `ColourCells` | off | on |
+
+The page renders 1 or 2 deck panels from the active `GridShiftVariants` row. Deal: `DeckCount = 2` → today's random even split (`Math.ceil(count / 2)`); `DeckCount = 1` → all cards to deck A.
+
+**Deck arrangement options:**
+- **A. Random shuffle + even split (today)** — both decks mix every category.
+- **B. Fixed assignment** — optional `Deck` field on card rows (`A` / `B` / blank = whichever); pins a card to a deck, useful for crafted match-ups (e.g. the fox's deck visibly different).
+
+Lean: keep random split as the default; treat a filled `Deck` field as an **override**, never a break.
+
 ### 3. Category zones
 Use `Category` + `CategoryColour` to color grid regions. E.g. first 10 cells green (animals), next 10 blue (food). Players learn to group by category.
+
+### 3b. Encoding "cell A1 is red" — four options
+1. **Grid reference in `CellID`** (`A1`, `Group`, `Colour`) — one row per cell, portable across grid sizes, needs authoring per cell.
+2. **Named zones + membership** — a `Zone` row with colour; cells belong to a zone. Ambiguous without a rule (contiguous? every other?).
+3. **Claim-at-runtime** — neutral grid; cells get colour from whoever places there. No cell data, but not pre-defined zones.
+4. **Formula zones** — zone by rule: `Columns A–D → Red`, `Rows 3–5 → Orange`. One row defines a whole territory; weakest for irregular layouts.
+
+Preference: **1** now, **4** later if authoring dozens of cell rows proves tedious.
 
 ### 4. Placement rules
 Require cards to land in matching-category cells. Wrong placement → card snaps back. Adds puzzle logic on top of the flip mechanic.
@@ -139,3 +188,13 @@ Category, CategoryColour
 ```
 
 These two are free for new features — no backwards-compat risk.
+
+---
+
+## Open Decisions
+
+Still to be settled before territory zones are implemented:
+
+1. **Deck arrangement** — random split (today) / fixed `Deck` override / both?
+2. **1-player win condition** — complete grid / fill all own-zone cells / reach a `TargetScore` from the variant?
+3. **Zone layout symmetry** — does the second player get a mirror zone, or an asymmetric layout (e.g. Red spans the middle, Orange cornered)?
