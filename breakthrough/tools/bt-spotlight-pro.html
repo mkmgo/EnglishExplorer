@@ -4872,7 +4872,7 @@ if (idx < 0) return;
             break;
           }
         }
-        if ((type === "protocol" || type === "test") && !clipHistory.length) {
+        if (type === "protocol" && !clipHistory.length) {
           toast("Add words in the translator first");
           return;
         }
@@ -5019,47 +5019,14 @@ if (idx < 0) return;
             '        </tbody>\n' +
             '      </table>\n';
         }
-        var bodySection = "";
-        if (isTest) {
-          var part1Rows = "";
-          var part2Rows = "";
-          var keyRows = "";
-          for (var tv = 0; tv < clipHistory.length; tv++) {
-            var tw = clipHistory[tv];
-            part1Rows += '          <li>' + mdEscapeHtml(tw.en) + ' <span class="blank"></span></li>\n';
-            part2Rows += '          <li>' + mdEscapeHtml(tw.zh) + ' <span class="blank"></span></li>\n';
-            keyRows += '          <tr><td>' + mdEscapeHtml(tw.en) + '</td><td>' + mdEscapeHtml(tw.zh) + '</td></tr>\n';
-          }
-          bodySection =
-            '      <h2>Part 1 \u2014 Write the Chinese meaning</h2>\n' +
-            '      <div class="story-section">\n' +
-            '        <ol class="test-list">\n' +
-            part1Rows +
-            '        </ol>\n' +
-            '      </div>\n' +
-            '      <h2>Part 2 \u2014 Write the English word</h2>\n' +
-            '      <div class="story-section">\n' +
-            '        <ol class="test-list">\n' +
-            part2Rows +
-            '        </ol>\n' +
-            '      </div>\n' +
-            '      <h2>Answer key</h2>\n' +
-            '      <table class="vocab-table">\n' +
-            '        <thead><tr><th>English</th><th>Chinese</th></tr></thead>\n' +
-            '        <tbody>\n' +
-            keyRows +
-            '        </tbody>\n' +
-            '      </table>\n';
-        } else {
-          bodySection = sectionHtml + vocabSection;
-        }
+        var bodySection = isTest ? sectionHtml : sectionHtml + vocabSection;
         var introEn;
         var introZh;
         if (isTest) {
           introEn =
-            "Please complete this test on your own, without looking at your notes. Write the Chinese meaning for each English word, then write the English word for each Chinese meaning. Check your answers with the key at the end.";
+            "Please complete this test on your own, without looking at your notes. Answer every question fully before checking your work.";
           introZh =
-            "\u8BF7\u72EC\u7ACB\u5B8C\u6210\u8FD9\u4EFD\u6D4B\u8BD5\uFF0C\u4E0D\u8981\u770B\u7B14\u8BB0\u3002\u5148\u5199\u51FA\u6BCF\u4E2A\u82F1\u8BED\u5355\u8BCD\u7684\u4E2D\u6587\u610F\u601D\uFF0C\u518D\u5199\u51FA\u6BCF\u4E2A\u4E2D\u6587\u8BCD\u5BF9\u5E94\u7684\u82F1\u8BED\u5355\u8BCD\u3002\u6700\u540E\u7528\u7B54\u6848\u6838\u5BF9\u3002";
+            "\u8BF7\u72EC\u7ACB\u5B8C\u6210\u8FD9\u4EFD\u6D4B\u8BD5\uFF0C\u4E0D\u8981\u770B\u7B14\u8BB0\u3002\u8BA4\u771F\u56DE\u7B54\u6BCF\u4E00\u4E2A\u95EE\u9898\uFF0C\u6700\u540E\u518D\u6838\u5BF9\u4F60\u7684\u7B54\u6848\u3002";
         } else if (isMsg) {
           introEn =
             "Please read this message sheet and rehearse the phrases below. Make sure every word and expression is fully understood and can be reused.";
@@ -5106,10 +5073,6 @@ if (idx < 0) return;
           '      .vocab-table td{padding:.7em 1em;font-size:clamp(.9rem,1.6vw,1.05rem);border-top:1px solid #eae5db;vertical-align:top;word-break:break-word}\n' +
           '      .vocab-table tr:nth-child(even) td{background:#fdf9f3}\n' +
           '      .vocab-table td:last-child{color:var(--muted);font-weight:600}\n' +
-          '      .test-list{list-style:none;counter-reset:test;padding:0;margin:0}\n' +
-          '      .test-list li{counter-increment:test;font-size:clamp(1rem,1.8vw,1.15rem);margin:.55em 0;line-height:1.9}\n' +
-          '      .test-list li::before{content:counter(test) ".";font-weight:800;color:var(--accent);margin-right:.7em}\n' +
-          '      .blank{display:inline-block;min-width:clamp(90px,20vw,200px);border-bottom:2px solid var(--muted);height:1.3em;margin:0 .4em;vertical-align:baseline}\n' +
           '      html[data-theme="dark"] .example{background:#232a36}\n' +
           '      html[data-theme="dark"] hr{border-top-color:#333c4e}\n' +
           '      html[data-theme="dark"] .vocab-table th{background:#0e1220}\n' +
