@@ -151,7 +151,7 @@
         height: 48vh;
         max-width: 36vw;
         object-fit: contain;
-        border-radius: 24px;
+        border-radius: 18px;
         filter: drop-shadow(0 20px 25px rgba(160, 30, 30, 0.22));
       }
       .icardst {
@@ -160,7 +160,7 @@
         color: #8a6d00;
         background: #fff6d6;
         padding: 0.45em 1.1em;
-        border-radius: 22px 22px 22px 8px;
+        border-radius: 16px 16px 16px 6px;
         box-shadow: 0 8px 20px rgba(138, 109, 0, 0.18);
         display: inline-flex;
         align-items: center;
@@ -206,7 +206,7 @@
         color: #a35a00;
         background: #ffe9ce;
         padding: 0.45em 1.1em;
-        border-radius: 22px 22px 8px 22px;
+        border-radius: 16px 16px 6px 16px;
         box-shadow: 0 8px 20px rgba(163, 90, 0, 0.18);
         display: inline-flex;
         align-items: center;
@@ -280,13 +280,13 @@
         height: auto;
         object-fit: contain;
         background: #fff;
-        border-radius: 10px;
+        border-radius: 8px;
         padding: 2px;
       }
       .icardbas {
         min-width: 120px;
         min-height: 60px;
-        border-radius: 21px;
+        border-radius: 16px;
         border: 0;
         font-size: clamp(0.9rem, 1.65vw, 1.65rem);
         box-shadow: var(--shadow);
@@ -312,7 +312,7 @@
         color: var(--ink);
         background: var(--muted);
         padding: 0.26em 0.9em;
-        border-radius: 15px;
+        border-radius: 11px;
         border: 1.5pt solid var(--ink);
         box-shadow: 0 6px 18px rgba(138, 138, 138, 0.35);
         display: inline-flex;
@@ -334,7 +334,7 @@
         align-items: center;
         justify-content: center;
         background: var(--panel);
-        border-radius: 24px;
+        border-radius: 18px;
         border: 1.5pt solid var(--accent2);
         box-shadow: var(--shadow);
         padding: 1.2em;
@@ -364,7 +364,7 @@
         align-items: center;
         justify-content: center;
         background: #f0f0f0;
-        border-radius: 28px;
+        border-radius: 20px;
         box-shadow: var(--shadow);
         overflow: hidden;
         padding: 0.5em;
@@ -386,7 +386,7 @@
         width: auto;
         height: auto;
         object-fit: contain;
-        border-radius: 20px;
+        border-radius: 14px;
       }
       .mediaWrap audio {
         width: min(60vw, 640px);
@@ -1737,6 +1737,63 @@
       .mdCanvas::-webkit-scrollbar {
         display: none;
       }
+      .mdOutputWrap {
+        position: relative;
+        flex: 1 1 auto;
+        min-height: 0;
+        display: flex;
+      }
+      .mdFullscreenBtn {
+        position: absolute;
+        top: clamp(6px, 1vw, 12px);
+        right: clamp(6px, 1vw, 12px);
+        z-index: 12;
+        width: clamp(32px, 3vw, 42px);
+        height: clamp(32px, 3vw, 42px);
+        border-radius: 50%;
+        background: var(--accent);
+        color: var(--accent2);
+        border: 2px solid rgba(255, 255, 255, 0.55);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        padding: 0;
+        box-shadow: var(--shadow);
+        transition: transform 0.15s ease;
+      }
+      .mdFullscreenBtn:active {
+        transform: scale(0.9);
+      }
+      .mdFullscreenBtn svg {
+        width: 1.2em;
+        height: 1.2em;
+      }
+      .mdOutputWrap.md-fs,
+      .mdOutputWrap:fullscreen {
+        position: fixed;
+        inset: 0;
+        z-index: 200;
+        width: 100%;
+        max-width: none;
+        height: 100vh;
+        height: 100dvh;
+        background: var(--bg);
+        overflow: hidden;
+      }
+      .mdOutputWrap.md-fs .mdCanvas,
+      .mdOutputWrap:fullscreen .mdCanvas {
+        min-height: 0;
+        max-height: none;
+        height: 100%;
+        padding: clamp(28px, 6vh, 72px) clamp(18px, 6vw, 84px);
+        font-size: clamp(1.05rem, 2.6vw, 2.1rem);
+        line-height: 1.55;
+      }
+      .mdOutputWrap.md-fs .mdMedia,
+      .mdOutputWrap:fullscreen .mdMedia {
+        max-height: 74vh;
+      }
       .mdCanvas p {
         margin: 0.5em 0;
       }
@@ -2277,7 +2334,7 @@
             onclick="next()"
           ></button>
         </div>
-        <span class="versionText">SpotlightPro V1.5</span>
+        <span class="versionText">SpotlightPro V1.6</span>
       </div>
 
       <!-- 1: Media clipper (paste Cloudinary asset link) -->
@@ -2563,7 +2620,17 @@ Tap a word to hear it — SpotlightPro turns your notes into a live lesson.
             </div>
             <div class="mdPane mdOutput">
               <div class="mdPaneHead">Live</div>
-              <div id="mdOutput" class="mdCanvas"></div>
+              <div class="mdOutputWrap">
+                <div id="mdOutput" class="mdCanvas"></div>
+                <button
+                  id="mdFullscreenBtn"
+                  class="mdFullscreenBtn"
+                  type="button"
+                  aria-label="Toggle full screen"
+                  title="Full screen"
+                  onclick="mdFullscreen()"
+                ></button>
+              </div>
             </div>
             <input
               type="file"
@@ -2673,6 +2740,11 @@ Tap a word to hear it — SpotlightPro turns your notes into a live lesson.
         '<svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 9 6-9"/></svg>';
       var ICON_DELETE =
         '<svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/></svg>';
+
+      var ICON_MAXIMIZE =
+        '<svg xmlns="http://www.w3.org/2000/svg" width="1.2em" height="1.2em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: -0.2em"><path d="M8 3H5a2 2 0 0 0-2 2v3"/><path d="M21 8V5a2 2 0 0 0-2-2h-3"/><path d="M3 16v3a2 2 0 0 0 2 2h3"/><path d="M16 21h3a2 2 0 0 0 2-2v-3"/></svg>';
+      var ICON_MINIMIZE =
+        '<svg xmlns="http://www.w3.org/2000/svg" width="1.2em" height="1.2em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: -0.2em"><path d="M8 3v3a2 2 0 0 1-2 2H3"/><path d="M21 8h-3a2 2 0 0 1-2-2V3"/><path d="M3 16h3a2 2 0 0 1 2 2v3"/><path d="M16 21v-3a2 2 0 0 1 2-2h3"/></svg>';
 
       function show(i) {
         idx = Math.max(0, Math.min(screens.length - 1, i));
@@ -4820,6 +4892,47 @@ if (idx < 0) return;
         }
         updateMdHint();
       }
+
+      function mdFsActive() {
+        var d = document;
+        return !!(d.fullscreenElement || d.webkitFullscreenElement || d.mozFullScreenElement);
+      }
+      function mdFsSync() {
+        var wrap = document.getElementById("mdOutputWrap");
+        var btn = document.getElementById("mdFullscreenBtn");
+        if (!wrap || !btn) return;
+        btn.innerHTML = mdFsActive() || wrap.classList.contains("md-fs") ? ICON_MINIMIZE : ICON_MAXIMIZE;
+      }
+      function mdFullscreen() {
+        var wrap = document.getElementById("mdOutputWrap");
+        if (!wrap) return;
+        var d = document;
+        if (mdFsActive() || wrap.classList.contains("md-fs")) {
+          wrap.classList.remove("md-fs");
+          var exitFn = d.exitFullscreen || d.webkitExitFullscreen || d.mozCancelFullScreen;
+          if (exitFn) { try { exitFn.call(d); } catch (e) {} }
+        } else {
+          wrap.classList.add("md-fs");
+          var reqFn = wrap.requestFullscreen || wrap.webkitRequestFullscreen || wrap.mozRequestFullScreen;
+          if (reqFn) {
+            try {
+              var p = reqFn.call(wrap);
+              if (p && typeof p.catch === "function") p.catch(function () {});
+            } catch (e) {}
+          }
+        }
+        mdFsSync();
+      }
+      if (document.addEventListener) {
+        ["fullscreenchange", "webkitfullscreenchange", "mozfullscreenchange", "MSFullscreenChange"].forEach(function (ev) {
+          document.addEventListener(ev, function () {
+            var wrap = document.getElementById("mdOutputWrap");
+            if (wrap && !mdFsActive()) wrap.classList.remove("md-fs");
+            mdFsSync();
+          });
+        });
+      }
+      mdFsSync();
 
       function generateOutput() {
         openInputModal(
