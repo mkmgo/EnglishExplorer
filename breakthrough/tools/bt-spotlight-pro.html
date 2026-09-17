@@ -2277,7 +2277,7 @@
             onclick="next()"
           ></button>
         </div>
-        <span class="versionText">SpotlightPro V1.4</span>
+        <span class="versionText">SpotlightPro V1.5</span>
       </div>
 
       <!-- 1: Media clipper (paste Cloudinary asset link) -->
@@ -4828,7 +4828,8 @@ if (idx < 0) return;
           "",
           [
             { label: "Lesson Protocol", value: "protocol" },
-            { label: "Message sheet", value: "message" }
+            { label: "Message sheet", value: "message" },
+            { label: "Test", value: "test" }
           ]
         );
       }
@@ -4871,11 +4872,16 @@ if (idx < 0) return;
             break;
           }
         }
-        if (type === "protocol" && !clipHistory.length) {
+        if ((type === "protocol" || type === "test") && !clipHistory.length) {
           toast("Add words in the translator first");
           return;
         }
-        var label = type === "protocol" ? "Lesson Protocol" : "Message sheet";
+        var label =
+          type === "protocol"
+            ? "Lesson Protocol"
+            : type === "message"
+              ? "Message sheet"
+              : "Test";
         openInputModal(
           "Title for the " + label + " for " + recipient + ":" + (firstH1 ? "\n(detected: " + firstH1 + ")" : ""),
           function (title) {
@@ -4888,7 +4894,8 @@ if (idx < 0) return;
       }
 
       function buildDocHtml(opts, blocks) {
-        var isMsg = opts.type !== "protocol";
+        var isTest = opts.type === "test";
+        var isMsg = opts.type === "message";
         var title = opts.title;
         var recipient = String(opts.recipient || "Onza").trim();
         var now = new Date();
@@ -4897,7 +4904,7 @@ if (idx < 0) return;
         var yyyy = now.getFullYear();
         var dateStr = dd + "/" + mm + "/" + yyyy;
         var weekday = ["sun","mon","tue","wed","thu","fri","sat"][now.getDay()];
-        var kindWord = isMsg ? "Message" : "Protocol";
+        var kindWord = isTest ? "Test" : isMsg ? "Message" : "Protocol";
         function mdSectionItemHtml(indent, item) {
           var pad = new Array(indent + 1).join("  ");
           if (item.t === "p") {
@@ -5012,12 +5019,58 @@ if (idx < 0) return;
             '        </tbody>\n' +
             '      </table>\n';
         }
-        var introEn = isMsg
-          ? "Please read this message sheet and rehearse the phrases below. Make sure every word and expression is fully understood and can be reused."
-          : "Please study the following structures and sentences well. Words and expressions must be fully understood and memorised. The last section shows today's new vocabulary. Please carefully repeat these as well.";
-        var introZh = isMsg
-          ? "\u8BF7\u5927\u58F0\u6717\u8BFB\u8FD9\u5C01\u6D88\u606F\u5E76\u719F\u6089\u4E0B\u9762\u7684\u53E5\u5B50\u3002\u786E\u4FDD\u6240\u6709\u5355\u8BCD\u548C\u8868\u8FBE\u65B9\u5F0F\u90FD\u5DF2\u5B8C\u5168\u7406\u89E3\u5E76\u80FD\u8FD0\u7528\u3002"
-          : "\u8BF7\u5C06\u8FD9\u4E9B\u53E5\u5B50\u6284\u5230\u7EC3\u4E60\u672C\u7684\u8BCD\u6C47\u8868\u4E0B\u65B9\u3002\u6240\u6709\u5355\u8BCD\u548C\u8868\u8FBE\u65B9\u5F0F\u90FD\u5FC5\u987B\u5B8C\u5168\u7406\u89E3\u548C\u8BB0\u5FC6\u3002";
+        var bodySection = "";
+        if (isTest) {
+          var part1Rows = "";
+          var part2Rows = "";
+          var keyRows = "";
+          for (var tv = 0; tv < clipHistory.length; tv++) {
+            var tw = clipHistory[tv];
+            part1Rows += '          <li>' + mdEscapeHtml(tw.en) + ' <span class="blank"></span></li>\n';
+            part2Rows += '          <li>' + mdEscapeHtml(tw.zh) + ' <span class="blank"></span></li>\n';
+            keyRows += '          <tr><td>' + mdEscapeHtml(tw.en) + '</td><td>' + mdEscapeHtml(tw.zh) + '</td></tr>\n';
+          }
+          bodySection =
+            '      <h2>Part 1 \u2014 Write the Chinese meaning</h2>\n' +
+            '      <div class="story-section">\n' +
+            '        <ol class="test-list">\n' +
+            part1Rows +
+            '        </ol>\n' +
+            '      </div>\n' +
+            '      <h2>Part 2 \u2014 Write the English word</h2>\n' +
+            '      <div class="story-section">\n' +
+            '        <ol class="test-list">\n' +
+            part2Rows +
+            '        </ol>\n' +
+            '      </div>\n' +
+            '      <h2>Answer key</h2>\n' +
+            '      <table class="vocab-table">\n' +
+            '        <thead><tr><th>English</th><th>Chinese</th></tr></thead>\n' +
+            '        <tbody>\n' +
+            keyRows +
+            '        </tbody>\n' +
+            '      </table>\n';
+        } else {
+          bodySection = sectionHtml + vocabSection;
+        }
+        var introEn;
+        var introZh;
+        if (isTest) {
+          introEn =
+            "Please complete this test on your own, without looking at your notes. Write the Chinese meaning for each English word, then write the English word for each Chinese meaning. Check your answers with the key at the end.";
+          introZh =
+            "\u8BF7\u72EC\u7ACB\u5B8C\u6210\u8FD9\u4EFD\u6D4B\u8BD5\uFF0C\u4E0D\u8981\u770B\u7B14\u8BB0\u3002\u5148\u5199\u51FA\u6BCF\u4E2A\u82F1\u8BED\u5355\u8BCD\u7684\u4E2D\u6587\u610F\u601D\uFF0C\u518D\u5199\u51FA\u6BCF\u4E2A\u4E2D\u6587\u8BCD\u5BF9\u5E94\u7684\u82F1\u8BED\u5355\u8BCD\u3002\u6700\u540E\u7528\u7B54\u6848\u6838\u5BF9\u3002";
+        } else if (isMsg) {
+          introEn =
+            "Please read this message sheet and rehearse the phrases below. Make sure every word and expression is fully understood and can be reused.";
+          introZh =
+            "\u8BF7\u5927\u58F0\u6717\u8BFB\u8FD9\u5C01\u6D88\u606F\u5E76\u719F\u6089\u4E0B\u9762\u7684\u53E5\u5B50\u3002\u786E\u4FDD\u6240\u6709\u5355\u8BCD\u548C\u8868\u8FBE\u65B9\u5F0F\u90FD\u5DF2\u5B8C\u5168\u7406\u89E3\u5E76\u80FD\u8FD0\u7528\u3002";
+        } else {
+          introEn =
+            "Please study the following structures and sentences well. Words and expressions must be fully understood and memorised. The last section shows today's new vocabulary. Please carefully repeat these as well.";
+          introZh =
+            "\u8BF7\u5C06\u8FD9\u4E9B\u53E5\u5B50\u6284\u5230\u7EC3\u4E60\u672C\u7684\u8BCD\u6C47\u8868\u4E0B\u65B9\u3002\u6240\u6709\u5355\u8BCD\u548C\u8868\u8FBE\u65B9\u5F0F\u90FD\u5FC5\u987B\u5B8C\u5168\u7406\u89E3\u548C\u8BB0\u5FC6\u3002";
+        }
         var protocolHtml =
           '<!doctype html>\n' +
           '<html lang="en">\n' +
@@ -5053,6 +5106,10 @@ if (idx < 0) return;
           '      .vocab-table td{padding:.7em 1em;font-size:clamp(.9rem,1.6vw,1.05rem);border-top:1px solid #eae5db;vertical-align:top;word-break:break-word}\n' +
           '      .vocab-table tr:nth-child(even) td{background:#fdf9f3}\n' +
           '      .vocab-table td:last-child{color:var(--muted);font-weight:600}\n' +
+          '      .test-list{list-style:none;counter-reset:test;padding:0;margin:0}\n' +
+          '      .test-list li{counter-increment:test;font-size:clamp(1rem,1.8vw,1.15rem);margin:.55em 0;line-height:1.9}\n' +
+          '      .test-list li::before{content:counter(test) ".";font-weight:800;color:var(--accent);margin-right:.7em}\n' +
+          '      .blank{display:inline-block;min-width:clamp(90px,20vw,200px);border-bottom:2px solid var(--muted);height:1.3em;margin:0 .4em;vertical-align:baseline}\n' +
           '      html[data-theme="dark"] .example{background:#232a36}\n' +
           '      html[data-theme="dark"] hr{border-top-color:#333c4e}\n' +
           '      html[data-theme="dark"] .vocab-table th{background:#0e1220}\n' +
@@ -5072,8 +5129,7 @@ if (idx < 0) return;
           '        <span class="zh">' + introZh + '</span>\n' +
           '      </div>\n' +
           '      <h2>' + mdEscapeHtml(title) + '</h2>\n' +
-          sectionHtml +
-          vocabSection +
+          bodySection +
           '    </div>\n' +
           '    <script>\n' +
           '      (function () {\n' +
@@ -5102,7 +5158,8 @@ if (idx < 0) return;
           '  </body>\n' +
           '</html>';
         var dt = yyyy + "-" + mm + "-" + dd;
-        downloadBlob(protocolHtml, "text/html;charset=utf-8", (isMsg ? "message_" : "") + dt + ".html");
+        var filePrefix = isTest ? "test_" : isMsg ? "message_" : "";
+        downloadBlob(protocolHtml, "text/html;charset=utf-8", filePrefix + dt + ".html");
         toast(kindWord + " " + dateStr + " downloaded · For " + recipient);
       }
 

@@ -176,7 +176,7 @@ existing document-level drag-and-drop handlers.
 
 ## Daily Protocols
 
-Protocols and message sheets are generated from the **Markdown tab** (screen 3)
+Protocols, message sheets and tests are generated from the **Markdown tab** (screen 3)
 of `breakthrough/tools/bt-spotlight-pro.html` via the **Generate** button
 (`generateOutput()`). The flow takes the Markdown source (story text), the current
 word list (`clipHistory`) and a recipient choice, then builds a self-contained
@@ -188,15 +188,20 @@ HTML document. Steps:
 2. Collect vocabulary in the **Translator** tab (screen 2) — each word/phrase
    translated is added to `clipHistory` and will appear in the Vocabulary table
    (only when the list isn't empty).
-3. Tap **Generate** → choose a document type (**Protocol** or **Message sheet**)
-   → choose a recipient (**Onza** / **Nimza** / typed **email**) → enter/confirm
-   the title. The document downloads as `YYYY-MM-DD.html` for protocols and
-   `message_YYYY-MM-DD.html` for message sheets.
+3. Tap **Generate** → choose a document type (**Protocol** / **Message sheet** /
+   **Test**) → choose a recipient (**Onza** / **Nimza** / typed **email**) →
+   enter/confirm the title. The document downloads as `YYYY-MM-DD.html` for
+   protocols, `message_YYYY-MM-DD.html` for message sheets and
+   `test_YYYY-MM-DD.html` for tests. Protocols and tests require words from the
+   Translator (they're blank without them); message sheets don't.
 
 Generated documents are fully self-contained with a **dark-mode toggle** (top-right
 button, persists via `localStorage["eebt-theme"]` with a `prefers-color-scheme`
 fallback) and a `For: <recipient>` line. The Vocabulary table renders `English |
-Chinese` from `clipHistory`.
+Chinese` from `clipHistory`. A **Test** document skips the story and vocabulary
+sections and instead builds a two-part fill-in-the-blank quiz from `clipHistory`
+(Part 1: write the Chinese meaning for the English word; Part 2: write the English
+word for the Chinese meaning) followed by an Answer key table.
 
 Translator and presenter documents (screen 2/3) use **Save words / Load words /
 Save / Load** instead of CSV: bundles are JSON files (`spotlight-words` for the
@@ -210,7 +215,8 @@ duplicates) rather than replacing, so you can accumulate words across sessions.
   `breakthrough/protocols/YYYY-MM-DD.html` — always use **today's date**.
 - If a second protocol is created on the same day, it **overwrites** the
   existing file for that date (the file name is the same).
-- Message sheets (`message_YYYY-MM-DD.html`) are not tracked in `updates.html`.
+- Message sheets (`message_YYYY-MM-DD.html`) and tests
+  (`test_YYYY-MM-DD.html`) are not tracked in `updates.html`.
 
 ### Nimza entry in updates.html
 
