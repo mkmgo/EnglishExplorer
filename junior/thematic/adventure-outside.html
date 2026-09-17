@@ -9,14 +9,14 @@
     <title>EnglishExplorer — Adventure / Outside</title>
     <meta
       name="description"
-      content="EnglishExplorer — Adventure / Outside treasure map"
+      content="EnglishExplorer — Adventure / Outside"
     />
     <meta name="theme-color" content="#B8860B" />
-    <meta property="og:title" content="Adventure / Outside" />
-    <meta property="og:description" content="The Treasure Map" />
+    <meta property="og:title" content="English Tasks" />
+    <meta property="og:description" content="Adventure / Outside" />
     <meta property="og:image" content="https://res.cloudinary.com/dqwm4pdbz/image/upload/v1766700880/my-express-uploads/vii2nhjxitkmcoet6jbg.png" />
-    <meta name="twitter:title" content="Adventure / Outside" />
-    <meta name="twitter:description" content="The Treasure Map" />
+    <meta name="twitter:title" content="English Tasks" />
+    <meta name="twitter:description" content="Adventure / Outside" />
     <meta name="twitter:image" content="https://res.cloudinary.com/dqwm4pdbz/image/upload/v1766700880/my-express-uploads/vii2nhjxitkmcoet6jbg.png" />
     <link
       rel="icon"
@@ -36,6 +36,7 @@
         --accent2: #ffd54f;
         --good: #19a974;
         --bad: #e05252;
+        --mediocre: #f39c12;
         --panel: #fcfcfc;
         --shadow: 0 18px 50px rgba(20, 33, 61, 0.14);
       }
@@ -70,11 +71,14 @@
         position: absolute;
         inset: 0;
         background: var(--bg);
-        display: flex;
+        display: none;
         align-items: flex-start;
         justify-content: center;
-        padding: clamp(56px, 7.5vh, 64px) clamp(10px, 2vw, 24px)
+        padding: clamp(60px, 8.5vh, 80px) clamp(10px, 2vw, 24px)
           clamp(10px, 2vh, 24px);
+      }
+      .screen.active {
+        display: flex;
       }
       .content {
         width: min(1400px, 100%);
@@ -85,8 +89,8 @@
         flex-direction: column;
         align-items: center;
         justify-content: flex-start;
-        gap: 1em;
-        padding-bottom: clamp(10px, 2vh, 20px);
+        gap: 1.4em;
+        padding-bottom: clamp(60px, 8vh, 80px);
         overflow-y: auto;
         -webkit-overflow-scrolling: touch;
         overscroll-behavior: contain;
@@ -99,7 +103,7 @@
         font-size: clamp(1.4rem, 2.8vw, 2.2rem);
         font-weight: 800;
         color: var(--accent);
-        margin: 0 0 0.15em 0;
+        margin: 0 0 0.4em 0;
         position: relative;
         display: inline-block;
         padding: 0 0.3em;
@@ -114,29 +118,396 @@
         background: var(--accent2);
         border-radius: 2px;
       }
+      .banner {
+        display: inline-block;
+        background: var(--accent);
+        color: #fff;
+        padding: 0.15em 0.8em;
+        border-radius: 8px;
+        font-size: clamp(0.9rem, 1.6vw, 1.3rem);
+        font-weight: 700;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        margin-bottom: 0.1em;
+      }
       .stage {
         display: flex;
         flex-direction: column;
         align-items: center;
         justify-content: center;
-        flex: 1;
         gap: 1.4em;
         width: 100%;
       }
       .panel {
         position: relative;
         background: var(--accent2);
-        border: 2px solid var(--accent);
-        border-radius: 14px;
-        padding: clamp(8px, 1.2vw, 16px);
+        border: 3px solid var(--accent2);
+        border-radius: 22px;
+        padding: clamp(1.2rem, 2.2vw, 2.6rem);
         box-shadow: var(--shadow);
         width: 100%;
-        max-width: min(1120px, 100%);
-        flex: 1;
-        min-height: 0;
+        max-width: 900px;
+      }
+      .toyGrid {
+        --cols: 3;
+        display: grid;
+        grid-template-columns: repeat(var(--cols), minmax(0, 1fr));
+        gap: clamp(10px, 1.5vw, 20px);
+        width: 100%;
+        max-width: 760px;
+        margin: 0 auto;
+      }
+      .toyBtn {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 0.4em;
+        min-height: 120px;
+        padding: 0.7em;
+        border-radius: 26px;
+        border: 3px solid var(--accent2);
+        background: var(--panel);
+        box-shadow: var(--shadow);
+        transition: transform 0.3s ease, filter 0.3s ease;
+      }
+      .toyBtn:active {
+        transform: scale(0.95);
+      }
+      .toyBtn .toyName {
+        font-size: clamp(0.95rem, 1.6vw, 1.5rem);
+        font-weight: 900;
+        letter-spacing: 0.02em;
         color: var(--ink);
-        font-size: clamp(1rem, 1.8vw, 1.3rem);
-        line-height: 1.6;
+      }
+      .toyImg {
+        width: clamp(74px, 10vw, 140px);
+        height: clamp(74px, 10vw, 140px);
+        object-fit: contain;
+        background: #fff;
+        border-radius: 18px;
+      }
+      .choice {
+        min-width: 160px;
+        min-height: 80px;
+        border-radius: 20px;
+        background: var(--panel);
+        box-shadow: var(--shadow);
+        font-size: clamp(1.2rem, 2.2vw, 2.2rem);
+        font-weight: 900;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: 0.5em 1em;
+        transition: transform 0.3s ease, filter 0.3s ease;
+      }
+      .choice:active {
+        transform: scale(0.95);
+      }
+      .yes {
+        background: #dff7ec;
+        color: #087443;
+      }
+      .gameArea {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 1.2em;
+        width: 100%;
+      }
+      .gameVisual {
+        width: min(300px, 60vw);
+        height: min(240px, 46vh);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: var(--panel);
+        border-radius: 20px;
+        box-shadow: var(--shadow);
+        overflow: hidden;
+      }
+      .gameVisual img {
+        width: 62%;
+        height: auto;
+        object-fit: contain;
+        transition: width 0.25s ease;
+      }
+      .gameVisual img.big {
+        width: 76%;
+        height: auto;
+      }
+      .gameVisual img.small {
+        width: 38%;
+        height: auto;
+      }
+      .roundPips {
+        display: flex;
+        gap: 0.5em;
+        justify-content: center;
+        margin-bottom: clamp(1.4em, 4vh, 2.4em);
+      }
+      .pip {
+        width: 22px;
+        height: 22px;
+        border-radius: 50%;
+        background: #eef1f7;
+        box-shadow: inset 0 0 0 2px rgba(20, 33, 61, 0.15);
+      }
+      .pip.pip-good {
+        background: var(--good);
+        box-shadow: 0 0 0 2px #fff, inset 0 0 0 2px #0f8a60;
+      }
+      .pip.pip-med {
+        background: var(--mediocre);
+        box-shadow: 0 0 0 2px #fff, inset 0 0 0 2px #c07800;
+      }
+      .pip.pip-bad {
+        background: var(--bad);
+        box-shadow: 0 0 0 2px #fff, inset 0 0 0 2px #b03a3a;
+      }
+      .pip.pip-current {
+        box-shadow: 0 0 0 3px var(--accent2),
+          inset 0 0 0 2px rgba(20, 33, 61, 0.25);
+      }
+      .slotPanel {
+        width: 100%;
+        max-width: 380px;
+        margin: 0 auto;
+        padding: 0.9em;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 0.6em;
+        background: var(--panel);
+        border-radius: 18px;
+        box-shadow: var(--shadow);
+      }
+      .slotWindow {
+        position: relative;
+        width: min(210px, 46vw);
+        height: min(210px, 32vh);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: #fff;
+        border-radius: 18px;
+        overflow: hidden;
+      }
+      .slotImg {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+      .slotVoiceIcon {
+        position: absolute;
+        top: 8px;
+        right: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 32px;
+        height: 32px;
+        background: rgba(255, 255, 255, 0.7);
+        border-radius: 50%;
+        color: var(--muted);
+        pointer-events: none;
+        opacity: 0.5;
+      }
+      .slotRepeatHint {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.45em;
+        margin: 0.1em 0 0;
+        color: var(--ink);
+        font-size: clamp(0.8rem, 1.4vw, 1rem);
+        font-weight: 800;
+      }
+      .slotRepeatHint svg {
+        flex: 0 0 auto;
+        color: var(--accent);
+      }
+      .slotAnswers {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: clamp(8px, 1.2vw, 14px);
+        width: 100%;
+        max-width: 480px;
+        margin: 0.5em auto 0;
+      }
+      .slotAnswers .choice {
+        min-width: 0;
+        min-height: 52px;
+        padding: 0.35em 0.6em;
+        font-size: clamp(0.85rem, 1.6vw, 1.35rem);
+        border-radius: 18px;
+      }
+      .slotYes {
+        background: var(--good);
+        color: #fff;
+      }
+      .slotNo {
+        background: var(--bad);
+        color: #fff;
+      }
+      #outdoorSlotScreen .slotPanel {
+        background: var(--panel);
+        border: 2px solid var(--accent2);
+        border-radius: 14px;
+        padding: clamp(0.8em, 2vw, 1.2em);
+      }
+      #outdoorSlotScreen .slotWindow {
+        width: min(210px, 42vw);
+        height: min(210px, 42vw);
+        background: #fff;
+        border: 3px solid #666;
+        border-radius: 12px;
+        box-shadow: inset 0 0 0 3px rgba(20, 33, 61, 0.08),
+          0 5px 0 rgba(20, 33, 61, 0.15);
+      }
+      #outdoorSlotScreen .slotImg {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        background: #fff;
+        padding: 0;
+        transform: scale(1.08);
+      }
+      #outdoorSlotScreen .outdoorSlotReplay {
+        top: 50%;
+        right: -3.75rem;
+        width: 3rem;
+        height: 3.4rem;
+        transform: translateY(-50%);
+        background: #fff;
+        border: 2px solid #666;
+        border-radius: 8px;
+        color: var(--ink);
+        opacity: 1;
+        pointer-events: auto;
+        box-shadow: 0 3px 0 rgba(20, 33, 61, 0.15);
+        flex-direction: column;
+      }
+      #outdoorSlotScreen .outdoorSlotReplay:active {
+        transform: translateY(calc(-50% + 2px));
+        box-shadow: 0 1px 0 rgba(20, 33, 61, 0.15);
+      }
+      #outdoorSlotScreen .slotRepeatHint {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.45em;
+        margin: 0.1em 0 0;
+        color: var(--ink);
+        font-size: clamp(0.8rem, 1.4vw, 1rem);
+        font-weight: 800;
+      }
+      #outdoorSlotScreen .slotRepeatHint svg {
+        flex: 0 0 auto;
+        color: var(--accent);
+      }
+      #outdoor1Screen .whereStart {
+        transition: background 0.35s ease, color 0.35s ease;
+      }
+      #outdoor1Screen .whereStart.whereStateRed {
+        background: var(--bad);
+        color: #fff;
+      }
+      #outdoor1Screen .outdoorGameArea {
+        gap: 0;
+      }
+      #outdoor1Screen .outdoorGrid {
+        max-width: 760px;
+        background: var(--panel);
+        border: 2px solid var(--accent2);
+        border-radius: 14px;
+        padding: clamp(0.8em, 2vw, 1.2em);
+      }
+      #outdoor1Screen .outdoorGrid .toyBtn {
+        min-height: 0;
+        aspect-ratio: 1;
+        padding: clamp(0.35em, 1vw, 0.7em);
+        border-radius: 12px;
+        background: #fff;
+        border-color: #666;
+        box-shadow: 0 4px 0 rgba(20, 33, 61, 0.14);
+        overflow: hidden;
+      }
+      #outdoor1Screen .outdoorGrid .toyImg {
+        width: 100%;
+        height: 100%;
+        aspect-ratio: 1;
+        border-radius: 8px;
+        background: #fff;
+        object-fit: cover;
+        transform: scale(1.1);
+      }
+      #outdoor1Screen #outdoor1StartBtn {
+        min-width: 150px;
+        min-height: 58px;
+        align-self: center;
+        margin-top: 1em;
+        border-radius: 14px;
+        font-size: clamp(1rem, 1.8vw, 1.4rem);
+      }
+      #toast {
+        position: absolute;
+        left: 50%;
+        top: 12%;
+        transform: translateX(-50%);
+        z-index: 100;
+        background: #000;
+        color: #fff;
+        padding: 0.8em 1.5em;
+        border-radius: 8px;
+        font-size: 1.4rem;
+        font-weight: 900;
+        box-shadow: 0 8px 22px rgba(0, 0, 0, 0.38);
+        opacity: 0;
+        pointer-events: none;
+        transition: 0.25s;
+      }
+      #toast.show {
+        opacity: 1;
+      }
+      #reward {
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+        overflow: hidden;
+        z-index: 50;
+      }
+      .confetti {
+        position: absolute;
+        font-size: 2rem;
+        animation: fall 2.2s linear forwards;
+      }
+      @keyframes fall {
+        0% {
+          transform: translateY(-10vh) rotate(0);
+          opacity: 1;
+        }
+        100% {
+          transform: translateY(110vh) rotate(720deg);
+          opacity: 0;
+        }
+      }
+      .burst {
+        position: absolute;
+        font-size: 1.7rem;
+        pointer-events: none;
+        z-index: 60;
+        animation: burstFly 1.1s ease-out forwards;
+      }
+      @keyframes burstFly {
+        0% {
+          transform: translate(0, 0) scale(1);
+          opacity: 1;
+        }
+        100% {
+          transform: translate(var(--bx), var(--by)) scale(0.25);
+          opacity: 0;
+        }
       }
       button:focus-visible {
         outline: 3px solid var(--accent2);
@@ -161,21 +532,14 @@
         z-index: 20;
         overflow: hidden;
       }
-      .banner {
-        display: inline-block;
-        background: var(--accent2);
-        color: var(--accent);
-        padding: 0.2em 0.8em;
-        border-radius: 8px;
-        font-size: clamp(0.85rem, 1.8vw, 1.05rem);
+      .topbarTitle {
+        font-size: clamp(0.85rem, 2vw, 1.2rem);
         font-weight: 800;
-        letter-spacing: 0.06em;
-        text-transform: uppercase;
+        color: #fff;
+        letter-spacing: 0.04em;
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
-        max-width: 62vw;
-        box-shadow: 0 3px 8px rgba(0, 0, 0, 0.2);
       }
       .topbarRight {
         display: flex;
@@ -216,35 +580,44 @@
         transform: scale(1.06);
         filter: brightness(1.15) drop-shadow(0 4px 6px rgba(0, 0, 0, 0.3));
       }
-      .ep-host {
-        width: 100%;
-        min-height: clamp(240px, 46vh, 420px);
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        gap: 1em;
-      }
       @media (max-width: 480px) {
         .topbar {
           padding: 0 8px;
-        }
-        .banner {
-          font-size: 0.78rem;
-          padding: 0.2em 0.6em;
         }
         .tag {
           height: 28px;
           min-width: 30px;
           padding: 0 8px;
         }
+        .topbarTitle {
+          font-size: 0.78rem;
+        }
+      }
+      @media (max-aspect-ratio: 1/1) {
+        .toyGrid {
+          --cols: 3;
+        }
+        .toyBtn .toyName {
+          font-size: clamp(0.75rem, 3vw, 1rem);
+        }
+        .toyImg {
+          width: clamp(60px, 18vw, 96px);
+          height: clamp(60px, 18vw, 96px);
+        }
+        .gameVisual.ynVisual {
+          width: min(260px, 52vw);
+          height: min(210px, 40vh);
+        }
       }
     </style>
   </head>
   <body>
     <div id="app">
+      <div id="toast"></div>
+      <div id="reward"></div>
+
       <div class="topbar">
-        <span class="banner">Adventure / Outside</span>
+        <span class="topbarTitle">Adventure / Outside</span>
         <div class="topbarRight">
           <button class="ctrl" id="soundBtn" aria-label="Sound">
             <span class="tag">
@@ -269,818 +642,616 @@
         </div>
       </div>
 
-      <section class="screen active" id="puzzleScreen">
+      <!-- ADVENTURE: Where Is It? -->
+      <section class="screen active" id="outdoor1Screen">
         <div class="content">
-          <h1 class="ribbon">The Treasure Map</h1>
+          <span class="banner">Adventure / Outside</span>
+          <h1 class="ribbon" id="outdoorWhereTitle">Where Is...?</h1>
           <div class="stage">
             <div class="panel">
-              <div class="ep-host"></div>
+              <div class="roundPips" id="outdoorWherePips"></div>
+              <div class="gameArea outdoorGameArea">
+                <div
+                  class="toyGrid outdoorGrid"
+                  id="outdoorWhereGrid"
+                  style="display: none"
+                ></div>
+              </div>
+              <button
+                class="choice yes whereStart whereStateRed"
+                id="outdoor1StartBtn"
+                onclick="outdoorWhereStart()"
+              >
+                &#9654; START
+              </button>
             </div>
           </div>
         </div>
       </section>
+
+      <!-- ADVENTURE: vocabulary check (slot machine) -->
+      <section class="screen" id="outdoorSlotScreen">
+        <div class="content">
+          <span class="banner">Adventure / Outside</span>
+          <h1 class="ribbon">Look And Listen Well.</h1>
+          <div class="stage">
+            <div class="panel">
+              <div class="roundPips" id="outdoorSlotPips"></div>
+              <div class="slotPanel">
+                <div
+                  class="slotWindow"
+                  onclick="outdoorSlotSpeakAgain()"
+                  style="cursor: pointer"
+                >
+                  <img class="slotImg" id="outdoorSlotImg" alt="" />
+                  <button
+                    class="slotVoiceIcon outdoorSlotReplay"
+                    type="button"
+                    aria-label="Hear the word again"
+                    onclick="event.stopPropagation(); outdoorSlotSpeakAgain();"
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="1.4em"
+                      height="1.4em"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    >
+                      <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" />
+                      <path d="M15.54 8.46a5 5 0 0 1 0 7.07" />
+                    </svg>
+                  </button>
+                </div>
+                <div class="slotRepeatHint">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="1.1em"
+                    height="1.1em"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    aria-hidden="true"
+                  >
+                    <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" />
+                    <path d="M15.54 8.46a5 5 0 0 1 0 7.07" />
+                  </svg>
+                  <span>Tap the picture to hear it again</span>
+                </div>
+              </div>
+              <div class="slotAnswers">
+                <button
+                  class="choice slotAnswer slotYes"
+                  onclick="outdoorSlotAnswer('yes')"
+                >
+                  YES
+                </button>
+                <button
+                  class="choice slotAnswer slotNo"
+                  onclick="outdoorSlotAnswer('no')"
+                >
+                  NO
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
     </div>
 
     <script>
-/*!
- * EduPuzzle bundle — "Adventure / Outside" treasure map
- * Single injectable payload: HTML + CSS + JS, no external runtime requests.
- *
- * Host usage:
- *     const handle = Elpz.mount(containerEl, options);
- *     handle.destroy();  handle.reset();
- *
- * Contract notes (see requirements doc):
- *   C1 no html/body overrides   C2 all ids prefixed elpz- (in practice: none used)
- *   C3 exactly one global: Elpz C4 no window/document event hijacking
- *   C5 Shadow-root safe        C6 no redirects / window.top
- *   C7 https-only externals (images are optional + pre-agreed, with offline fallback)
- *   Storage namespace: elpz.*
- */
-(function (global) {
-  "use strict";
-
-  /* ------------------------------------------------------------------ *
-   * Artwork: pre-agreed https crops (row-major, one per noun).
-   * The widget NEVER blocks on these — if a crop is unavailable the tile
-   * falls back to bundled line art, so the activity runs fully offline.
-   * ------------------------------------------------------------------ */
-  var CLOUD = "https://res.cloudinary.com/dmkhsyfzf/image/upload/";
-  var DEFAULT_IMAGES = [
-    CLOUD + "c_crop,w_281,h_384,x_12,y_16/v1789587647/adventure_sgbv5s.jpg",
-    CLOUD + "c_crop,w_281,h_384,x_281,y_16/v1789587647/adventure_sgbv5s.jpg",
-    CLOUD + "c_crop,w_281,h_384,x_562,y_16/v1789587647/adventure_sgbv5s.jpg",
-    CLOUD + "c_crop,w_281,h_384,x_837,y_16/v1789587647/adventure_sgbv5s.jpg",
-    CLOUD + "c_crop,w_281,h_384,x_1112,y_16/v1789587647/adventure_sgbv5s.jpg",
-    CLOUD + "c_crop,w_281,h_384,x_12,y_368/v1789587647/adventure_sgbv5s.jpg",
-    CLOUD + "c_crop,w_281,h_384,x_281,y_368/v1789587647/adventure_sgbv5s.jpg",
-    CLOUD + "c_crop,w_281,h_384,x_562,y_368/v1789587647/adventure_sgbv5s.jpg",
-    CLOUD + "c_crop,w_281,h_384,x_837,y_368/v1789587647/adventure_sgbv5s.jpg",
-    CLOUD + "c_crop,w_281,h_384,x_1112,y_368/v1789587647/adventure_sgbv5s.jpg"
-  ];
-
-  /* Tile order = noun order = crop order. Override with options.nouns if the
-     sprite sheet is arranged differently. */
-  var NOUNS = ["bridge", "river", "mountain", "tree", "forest",
-               "path", "map", "backpack", "tent", "treasure"];
-
-  /* ------------------------------------------------------------------ *
-   * Bundled line art (lucide idiom: 24×24, stroke 2, round joins)
-   * ------------------------------------------------------------------ */
-  var ART = {
-    bridge: 'M2 16h20M5 16v4M19 16v4M12 16v-5M7.5 16v-3M16.5 16v-3M4 12a8 8 0 0 1 16 0',
-    river: 'M2 8c3-2 5 2 8 0s5-2 8 0M2 13c3-2 5 2 8 0s5-2 8 0M2 18c3-2 5 2 8 0s5-2 8 0',
-    mountain: 'M2 20 9 7l4 6 2-3 5 10Z M9 7l2 3',
-    tree: 'M12 3 6 12h3l-4 6h14l-4-6h3ZM12 18v3',
-    forest: 'M8 3 3 11h2.5L2 17h12l-3.5-6H13ZM8 17v4M17 6l-4 7h2.5L12 18h10l-3.5-5H21ZM17 18v3',
-    path: 'M8 21c0-5 9-4 9-9 0-3-2.5-4-4.5-4S8 9 8 11M16 3l-2 2 2 2',
-    map: 'm3 6 6-3 6 3 6-3v15l-6 3-6-3-6 3ZM9 3v15M15 6v15',
-    backpack: 'M6 21V10a6 6 0 0 1 12 0v11ZM9 6V4.5a3 3 0 0 1 6 0V6M9 13h6v4H9Z',
-    tent: 'M12 3 3 21h18ZM12 3v18M8 21l4-7 4 7',
-    treasure: 'M3 10h18v10H3ZM3 10l2-4h14l2 4M11 10h2v4h-2ZM3 15h18',
-    stop: 'M12 3 3 8v8l9 5 9-5V8ZM8 12h8',
-    wait: 'M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18ZM12 7v5l3 2',
-    go: 'M4 12h14M13 6l6 6-6 6',
-    compass: 'M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18ZM15.5 8.5l-2 5-5 2 2-5Z',
-    check: 'M4 12.5 9 18 20 6',
-    sound: 'M11 5 6 9H3v6h3l5 4ZM15.5 9a4 4 0 0 1 0 6M18.5 6.5a8 8 0 0 1 0 11',
-    muted: 'M11 5 6 9H3v6h3l5 4ZM16 10l5 5M21 10l-5 5',
-    again: 'M3 12a9 9 0 1 0 3-6.7L3 8M3 3v5h5',
-    seal: 'M12 2.5 14.6 8l6 .9-4.3 4.2 1 6-5.3-2.8L6.7 19l1-6L3.4 8.9 9.4 8Z'
-  };
-
-  function svg(name, extra) {
-    var d = ART[name] || ART.compass;
-    return '<svg class="elpz-ico ' + (extra || '') + '" viewBox="0 0 24 24" fill="none" ' +
-      'stroke="currentColor" stroke-width="2" stroke-linecap="round" ' +
-      'stroke-linejoin="round" aria-hidden="true" focusable="false">' +
-      d.split(/(?=M)/).map(function (p) { return '<path d="' + p.trim() + '"/>'; }).join('') +
-      '</svg>';
-  }
-
-  /* ------------------------------------------------------------------ *
-   * Puzzles — ten distinct tasks, easiest first, each unlocking one tile.
-   * Mechanics: pick (one answer) · collect (several answers) ·
-   *            build (assemble from word tiles) · link (match pairs)
-   * ------------------------------------------------------------------ */
-  var PUZZLES = [
-    { tile: 4, kind: "pick", stage: "Edge of the wood",
-      ask: "Tap the forest.",
-      options: [{ art: "river", label: "river" }, { art: "forest", label: "forest" }, { art: "mountain", label: "mountain" }],
-      answer: "forest", hint: "Look for many trees together.", showLabels: false },
-
-    { tile: 3, kind: "pick", stage: "One tall shape",
-      ask: "Which word is this?", figure: "tree",
-      options: [{ label: "tent" }, { label: "tree" }, { label: "treasure" }],
-      answer: "tree", hint: "It is green and it grows." },
-
-    { tile: 2, kind: "pick", stage: "Far away",
-      ask: "I can see a ___.", figure: "mountain",
-      options: [{ art: "backpack", label: "backpack" }, { art: "mountain", label: "mountain" }, { art: "path", label: "path" }],
-      answer: "mountain", hint: "It is high and grey.", showLabels: true },
-
-    { tile: 1, kind: "build", stage: "Cold water",
-      ask: "Make the sentence.",
-      figure: "river",
-      words: ["a", "There", "river", "is"], answer: "There is a river",
-      hint: "Start with the word that has a big letter." },
-
-    { tile: 0, kind: "collect", stage: "Crossing",
-      ask: "Tap the two things you can walk on.",
-      options: [{ art: "bridge", label: "bridge" }, { art: "river", label: "river" },
-                { art: "path", label: "path" }, { art: "mountain", label: "mountain" }],
-      answer: ["bridge", "path"], showLabels: true,
-      hint: "Your feet stay dry on both of them." },
-
-    { tile: 5, kind: "link", stage: "Which way?",
-      ask: "Match the question and the answer.",
-      pairs: [["Where are we?", "We are on the path."],
-              ["Can you see the bridge?", "Yes, I can."]],
-      hint: "One answer tells a place. One answer says yes." },
-
-    { tile: 6, kind: "build", stage: "The old chart",
-      ask: "Make the sentence.", figure: "map",
-      words: ["see", "I", "the", "can", "map", "old"],
-      answer: "I can see the old map",
-      hint: "I  can  see … then say which map." },
-
-    { tile: 7, kind: "collect", stage: "Packing",
-      ask: "Tap the three things you can carry.",
-      options: [{ art: "map", label: "map" }, { art: "river", label: "river" },
-                { art: "tent", label: "tent" }, { art: "mountain", label: "mountain" },
-                { art: "backpack", label: "backpack" }, { art: "bridge", label: "bridge" }],
-      answer: ["map", "tent", "backpack"], showLabels: true,
-      hint: "Three of them fit in your hands." },
-
-    { tile: 8, kind: "link", stage: "Camp before dark",
-      ask: "Match what you say.",
-      pairs: [["A bear is on the path!", "Stop!"],
-              ["Anna is slow today.", "Wait!"],
-              ["The tent is ready.", "Let's go!"]],
-      hint: "Danger, then a slow friend, then good news." },
-
-    { tile: 9, kind: "order", stage: "The last step",
-      ask: "Put the story in order.",
-      words: ["Where are we?", "We are in the forest.", "I can see a mountain.",
-              "There is a river.", "Let's go!", "Stop! The treasure!"],
-      answer: "Where are we?|We are in the forest.|I can see a mountain.|There is a river.|Let's go!|Stop! The treasure!",
-      hint: "First you ask. Then you look. Then you move." }
-  ];
-
-  var STORY = [
-    "Where are we? We are in the forest.",
-    "I can see a mountain. There is a river.",
-    "Look — a bridge! Let's go!",
-    "We walk on the path with the map and the backpack.",
-    "Wait! Here is a good place for the tent.",
-    "Stop! Under the tree — the treasure!"
-  ];
-
-  /* ------------------------------------------------------------------ *
-   * Styles (scoped to .elpz-root; safe inside a Shadow root)
-   * ------------------------------------------------------------------ */
-  var CSS = [
-    '.elpz-root{',
-    '  --elpz-accent: var(--accent, #b8860b);',
-    '  --elpz-fill: var(--accent2, #ffd54f);',
-    '  --elpz-ink:#14213d; --elpz-parch:#f3e2b8; --elpz-parch-2:#e5cf9c;',
-    '  --elpz-wax:#a4322c; --elpz-moss:#2f6b4f; --elpz-line:#8a5a2b;',
-    '  box-sizing:border-box; position:relative; width:100%;',
-    '  display:flex; flex-direction:column; gap:.75rem;',
-    '  font-family:system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;',
-    '  font-size:clamp(16px,1.15vw + 13px,20px); line-height:1.35;',
-    '  color:var(--elpz-ink); -webkit-tap-highlight-color:transparent;',
-    '  container-type:inline-size;',
-    '}',
-    '.elpz-root *,.elpz-root *::before,.elpz-root *::after{box-sizing:inherit}',
-    '.elpz-ico{width:1em;height:1em;display:block}',
-
-    /* header ------------------------------------------------------- */
-    '.elpz-bar{display:flex;align-items:center;gap:.6rem;flex-wrap:wrap}',
-    '.elpz-title{font-family:"Iowan Old Style","Palatino Linotype",Palatino,Georgia,serif;',
-    '  font-size:1.15em;font-weight:600;letter-spacing:.01em;margin:0;flex:1 1 8rem}',
-    '.elpz-title span{display:block;font-family:inherit;font-size:.72em;font-weight:400;opacity:.72}',
-    '.elpz-trail{display:flex;gap:.28rem;align-items:center}',
-    '.elpz-bead{width:.6rem;height:.6rem;border-radius:50%;border:2px solid var(--elpz-line);opacity:.5}',
-    '.elpz-bead.is-done{background:var(--elpz-wax);border-color:var(--elpz-wax);opacity:1}',
-    '.elpz-bead.is-now{background:var(--elpz-ink);border-color:var(--elpz-ink);opacity:1;transform:scale(1.25)}',
-    '.elpz-btn{font:inherit;font-size:.82em;color:var(--elpz-ink);background:rgba(255,255,255,.72);',
-    '  border:2px solid var(--elpz-line);border-radius:999px;padding:.4rem .7rem;cursor:pointer;',
-    '  display:inline-flex;align-items:center;gap:.35rem;min-height:44px;min-width:44px;justify-content:center}',
-    '.elpz-btn:active{transform:translateY(1px)}',
-    '.elpz-btn:focus-visible{outline:3px solid var(--elpz-ink);outline-offset:2px}',
-
-    /* map ---------------------------------------------------------- */
-    '.elpz-stage{position:relative;flex:1 1 auto;min-height:0;display:flex}',
-    '.elpz-map{flex:1 1 auto;min-height:0;display:grid;gap:clamp(3px,.6cqw,7px);',
-    '  grid-template-columns:repeat(5,1fr);grid-template-rows:repeat(2,1fr);',
-    '  padding:clamp(6px,1cqw,12px);background:',
-    '   radial-gradient(120% 120% at 50% 0%,rgba(255,255,255,.35),rgba(138,90,43,.18)),var(--elpz-parch-2);',
-    '  border:2px solid var(--elpz-line);border-radius:10px;',
-    '  box-shadow:inset 0 0 0 4px rgba(255,255,255,.35)}',
-    '.elpz-cell{position:relative;overflow:hidden;border-radius:6px;background:var(--elpz-parch);',
-    '  border:1px solid rgba(138,90,43,.55);display:grid;place-items:center}',
-    '.elpz-cell img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;',
-    '  opacity:0;transition:opacity .5s ease}',
-    '.elpz-cell.is-open img{opacity:1}',
-    '.elpz-fallback{position:absolute;inset:0;display:grid;place-items:center;gap:.2rem;',
-    '  color:var(--elpz-line);opacity:0;transition:opacity .5s ease;padding:8%}',
-    '.elpz-cell.is-open .elpz-fallback{opacity:.9}',
-    '.elpz-fallback .elpz-ico{width:44%;height:auto;aspect-ratio:1;max-width:72px}',
-    '.elpz-fallback b{font-weight:600;font-size:clamp(11px,1.5cqw,15px)}',
-    '.elpz-fog{position:absolute;inset:0;display:grid;place-items:center;color:var(--elpz-wax);',
-    '  background:repeating-linear-gradient(135deg,rgba(138,90,43,.20) 0 6px,rgba(138,90,43,.06) 6px 12px),var(--elpz-parch);',
-    '  transition:opacity .45s ease,transform .45s ease}',
-    '.elpz-fog .elpz-ico{width:32%;height:auto;aspect-ratio:1;max-width:42px;opacity:.8}',
-    '.elpz-cell.is-open .elpz-fog{opacity:0;transform:scale(1.35) rotate(-4deg);pointer-events:none}',
-    '.elpz-cell.is-next .elpz-fog{color:var(--elpz-ink);box-shadow:inset 0 0 0 3px var(--elpz-ink)}',
-    '@media (prefers-reduced-motion:no-preference){',
-    '  .elpz-cell.is-next .elpz-fog{animation:elpz-pulse 1.9s ease-in-out infinite}',
-    '  @keyframes elpz-pulse{50%{box-shadow:inset 0 0 0 5px var(--elpz-ink)}}}',
-
-    /* task card ----------------------------------------------------- */
-    '.elpz-card{background:var(--elpz-parch);',
-    '  border:2px solid var(--elpz-line);border-radius:12px;padding:clamp(.6rem,1.4cqw,1.1rem);',
-    '  display:flex;flex-direction:column;gap:.55rem}',
-    '.elpz-card[hidden]{display:none}',
-    '.elpz-stagename{font-size:.72em;color:var(--elpz-line);margin:0;font-weight:600}',
-    '.elpz-ask{margin:0;font-size:1.02em;font-weight:600;display:flex;align-items:center;gap:.5rem}',
-    '.elpz-ask .elpz-ico{width:1.5em;height:1.5em;color:var(--elpz-line);flex:none}',
-    '.elpz-opts{display:flex;flex-wrap:wrap;gap:.5rem}',
-    '.elpz-opt{font:inherit;cursor:pointer;background:#fffdf6;border:2px solid var(--elpz-line);',
-    '  border-radius:10px;padding:.45rem .7rem;min-height:44px;display:flex;align-items:center;',
-    '  gap:.45rem;color:var(--elpz-ink)}',
-    '.elpz-opt .elpz-ico{width:1.6em;height:1.6em}',
-    '.elpz-opt.is-picked{background:var(--elpz-fill);border-color:var(--elpz-ink)}',
-    '.elpz-opt.is-right{background:#dff0e3;border-color:var(--elpz-moss)}',
-    '.elpz-opt.is-wrong{background:#f7ded9;border-color:var(--elpz-wax)}',
-    '.elpz-opt:focus-visible,.elpz-slotline:focus-visible{outline:3px solid var(--elpz-ink);outline-offset:2px}',
-    '.elpz-opt[disabled]{cursor:default;opacity:.85}',
-    '.elpz-slotline{min-height:52px;display:flex;flex-wrap:wrap;gap:.4rem;align-items:center;',
-    '  padding:.35rem;border:2px dashed var(--elpz-line);border-radius:10px;background:rgba(255,255,255,.55)}',
-    '.elpz-slotline.is-over{background:var(--elpz-fill);border-style:solid}',
-    '.elpz-empty{color:var(--elpz-line);font-size:.8em;padding:0 .3rem}',
-    '.elpz-links{display:grid;grid-template-columns:1fr 1fr;gap:.5rem}',
-    '.elpz-links .elpz-opt{width:100%;text-align:left;justify-content:flex-start}',
-    '.elpz-foot{display:flex;align-items:center;gap:.5rem;flex-wrap:wrap}',
-    '.elpz-say{margin:0;flex:1 1 8rem;font-size:.85em;min-height:1.4em}',
-    '.elpz-say.is-good{color:var(--elpz-moss);font-weight:600}',
-    '.elpz-say.is-bad{color:var(--elpz-wax)}',
-    '@media (prefers-reduced-motion:no-preference){.elpz-shake{animation:elpz-shake .3s}',
-    '  @keyframes elpz-shake{25%{transform:translateX(-5px)}75%{transform:translateX(5px)}}}',
-
-    /* intro / finish ------------------------------------------------ */
-    '.elpz-sheet{position:absolute;inset:0;display:flex;flex-direction:column;justify-content:center;',
-    '  gap:.6rem;padding:clamp(.8rem,3cqw,2rem);background:rgba(243,226,184,.97);',
-    '  border:2px solid var(--elpz-line);border-radius:10px;overflow:auto}',
-    '.elpz-sheet[hidden]{display:none}',
-    '.elpz-sheet h3{font-family:"Iowan Old Style","Palatino Linotype",Palatino,Georgia,serif;',
-    '  margin:0;font-size:clamp(1.2em,3cqw,1.8em)}',
-    '.elpz-sheet p{margin:0;max-width:60ch}',
-    '.elpz-story{margin:0;padding-left:1.1em;display:flex;flex-direction:column;gap:.25rem;',
-    '  font-size:clamp(.9em,2cqw,1.05em)}',
-    '.elpz-story li::marker{color:var(--elpz-wax)}',
-
-    /* landscape fills the panel, no inner scrolling ------------------ */
-    /* landscape: map and task sit side by side inside a fixed-height stage */
-    '@container (min-width:620px){',
-    '  .elpz-stage{height:min(78svh,660px)}',
-    '  .elpz-stage{flex-direction:row;gap:.75rem}',
-    '  .elpz-map{flex:3 1 0;min-width:0}',
-    '  .elpz-card{flex:2 1 0;min-width:0;max-width:440px;overflow:auto}',
-    '  .elpz-sheet{position:absolute;inset:0}',
-    '  .elpz-links{grid-template-columns:1fr}',
-    '}',
-    /* portrait: stack, let the host page scroll */
-    '@container (max-width:619px){',
-    '  .elpz-stage{flex-direction:column;gap:.7rem}',
-    '  .elpz-map{aspect-ratio:5/3}',
-    '  .elpz-sheet{position:static}',
-    '  .elpz-links{grid-template-columns:1fr}',
-    '}'
-  ].join("\n");
-
-  /* ------------------------------------------------------------------ *
-   * small helpers
-   * ------------------------------------------------------------------ */
-  function el(tag, cls, html) {
-    var n = document.createElement(tag);
-    if (cls) n.className = cls;
-    if (html != null) n.innerHTML = html;
-    return n;
-  }
-  function shuffle(list) {
-    var a = list.slice(), i, j, t;
-    for (i = a.length - 1; i > 0; i--) {
-      j = Math.floor(Math.random() * (i + 1)); t = a[i]; a[i] = a[j]; a[j] = t;
-    }
-    return a.join("|") === list.join("|") && a.length > 1 ? shuffle(list) : a;
-  }
-  function store(key, value) {
-    try {
-      if (value === undefined) return global.localStorage.getItem("elpz." + key);
-      global.localStorage.setItem("elpz." + key, value);
-    } catch (e) { /* storage blocked — run without it */ }
-    return null;
-  }
-
-  /* tiny synthesised sounds; the AudioContext is created on first gesture */
-  function Sound() {
-    var ctx = null, muted = store("muted") === "1";
-    function ensure() {
-      if (!ctx && global.AudioContext) ctx = new global.AudioContext();
-      if (ctx && ctx.state === "suspended") ctx.resume();
-      return ctx;
-    }
-    return {
-      unlock: ensure,
-      isMuted: function () { return muted; },
-      toggle: function () { muted = !muted; store("muted", muted ? "1" : "0"); return muted; },
-      play: function (kind) {
-        if (muted || !ensure()) return;
-        var now = ctx.currentTime;
-        var notes = kind === "good" ? [523.25, 783.99] : kind === "win" ? [523.25, 659.25, 783.99, 1046.5] : [196, 165];
-        notes.forEach(function (f, i) {
-          var o = ctx.createOscillator(), g = ctx.createGain();
-          o.type = "sine"; o.frequency.value = f;
-          g.gain.setValueAtTime(0.0001, now + i * 0.11);
-          g.gain.exponentialRampToValueAtTime(0.16, now + i * 0.11 + 0.02);
-          g.gain.exponentialRampToValueAtTime(0.0001, now + i * 0.11 + 0.22);
-          o.connect(g); g.connect(ctx.destination);
-          o.start(now + i * 0.11); o.stop(now + i * 0.11 + 0.26);
-        });
-      }
-    };
-  }
-
-  /* pointer drag with tap fallback: elements marked data-elpz-drag can be
-     dragged onto [data-elpz-drop]; a plain tap fires onTap instead. */
-  function draggable(root, node, onTap, onDrop) {
-    var ghost = null, sx = 0, sy = 0, moved = false, id = null, lastTap = 0;
-    node.style.touchAction = "manipulation";
-    node.addEventListener("pointerdown", function (ev) {
-      if (node.disabled) return;
-      id = ev.pointerId; sx = ev.clientX; sy = ev.clientY; moved = false;
-      try { node.setPointerCapture(id); } catch (e) { /* capture unsupported */ }
-    });
-    node.addEventListener("pointermove", function (ev) {
-      if (ev.pointerId !== id) return;
-      var dx = ev.clientX - sx, dy = ev.clientY - sy;
-      if (!moved && Math.abs(dx) + Math.abs(dy) < 8) return;
-      moved = true;
-      if (!ghost) {
-        var r = node.getBoundingClientRect();
-        ghost = node.cloneNode(true);
-        ghost.style.cssText = "position:fixed;pointer-events:none;z-index:2147483000;margin:0;" +
-          "opacity:.9;left:" + r.left + "px;top:" + r.top + "px;width:" + r.width + "px;" +
-          "height:" + r.height + "px;background:#fffdf6;border:2px solid #8a5a2b;border-radius:10px;" +
-          "display:flex;align-items:center;justify-content:center;gap:.45rem;font:inherit;color:#14213d";
-        document.body.appendChild(ghost);
-      }
-      ghost.style.transform = "translate(" + dx + "px," + dy + "px)";
-      highlight(ev.clientX, ev.clientY);
-    });
-    function target(x, y) {
-      var scope = node.getRootNode();
-      var hit = (scope.elementFromPoint ? scope : document).elementFromPoint(x, y);
-      return hit && hit.closest ? hit.closest("[data-elpz-drop]") : null;
-    }
-    function highlight(x, y) {
-      var t = target(x, y);
-      root.querySelectorAll("[data-elpz-drop]").forEach(function (d) {
-        d.classList.toggle("is-over", d === t);
-      });
-    }
-    function end(ev) {
-      if (ev.pointerId !== id) return;
-      id = null;
-      root.querySelectorAll("[data-elpz-drop]").forEach(function (d) { d.classList.remove("is-over"); });
-      if (ghost) { ghost.remove(); ghost = null; }
-      if (!moved) { lastTap = Date.now(); onTap(); return; }
-      var t = target(ev.clientX, ev.clientY);
-      if (t) onDrop(t);
-    }
-    node.addEventListener("pointerup", end);
-    node.addEventListener("pointercancel", end);
-    /* keyboard, assistive tech and any environment without pointer events */
-    node.addEventListener("click", function () {
-      if (node.disabled || moved || Date.now() - lastTap < 500) return;
-      onTap();
-    });
-  }
-
-  /* ------------------------------------------------------------------ *
-   * mount
-   * ------------------------------------------------------------------ */
-  function mount(container, options) {
-    if (!container) throw new Error("Elpz.mount: no container element");
-    var opts = options || {};
-    var images = opts.images || DEFAULT_IMAGES;
-    var nouns = opts.nouns || NOUNS;
-    var sound = Sound();
-    var live = null, cells = [], step = 0, tries = 0, ro = null;
-
-    var style = el("style"); style.textContent = CSS;
-    var root = el("div", "elpz-root");
-    container.appendChild(style);
-    container.appendChild(root);
-
-    /* header */
-    var bar = el("div", "elpz-bar");
-    var title = el("h2", "elpz-title", "The Treasure Map<span>Ten seals. Ten pictures. One story.</span>");
-    var trail = el("div", "elpz-trail");
-    PUZZLES.forEach(function () { trail.appendChild(el("i", "elpz-bead")); });
-    var soundBtn = el("button", "elpz-btn");
-    soundBtn.type = "button";
-    var againBtn = el("button", "elpz-btn", svg("again") + "Start again");
-    againBtn.type = "button";
-    bar.append(title, trail, soundBtn, againBtn);
-
-    function paintSound() {
-      soundBtn.innerHTML = svg(sound.isMuted() ? "muted" : "sound") +
-        (sound.isMuted() ? "Sound off" : "Sound on");
-      soundBtn.setAttribute("aria-pressed", sound.isMuted() ? "true" : "false");
-    }
-    soundBtn.addEventListener("click", function () { sound.toggle(); paintSound(); sound.unlock(); });
-    paintSound();
-
-    /* map */
-    var stage = el("div", "elpz-stage");
-    var map = el("div", "elpz-map");
-    map.setAttribute("role", "img");
-    map.setAttribute("aria-label", "Treasure map with ten covered pieces");
-    nouns.forEach(function (noun, i) {
-      var cell = el("div", "elpz-cell");
-      if (images[i]) {
-        var img = el("img");
-        img.alt = ""; img.loading = "lazy"; img.decoding = "async";
-        img.addEventListener("error", function () { img.remove(); });
-        img.src = images[i];
-        cell.appendChild(img);
-      }
-      cell.appendChild(el("div", "elpz-fallback", svg(noun) + "<b>" + noun + "</b>"));
-      cell.appendChild(el("div", "elpz-fog", svg("seal")));
-      map.appendChild(cell);
-      cells.push(cell);
-    });
-    stage.appendChild(map);
-
-    /* task card + sheets */
-    var card = el("div", "elpz-card"); card.hidden = true;
-    var sheet = el("div", "elpz-sheet");
-    stage.append(card, sheet);
-    root.append(bar, stage);
-
-    function say(text, tone) {
-      if (!live) return;
-      live.textContent = text || "";
-      live.className = "elpz-say" + (tone ? " is-" + tone : "");
-    }
-
-    function paintTrail() {
-      trail.childNodes.forEach(function (bead, i) {
-        bead.className = "elpz-bead" + (i < step ? " is-done" : i === step ? " is-now" : "");
-      });
-      cells.forEach(function (c, i) {
-        c.classList.toggle("is-next", !c.classList.contains("is-open") &&
-          step < PUZZLES.length && PUZZLES[step].tile === i);
-      });
-    }
-
-    function intro() {
-      card.hidden = true;
-      sheet.hidden = false;
-      sheet.innerHTML = "";
-      sheet.append(
-        el("h3", null, "An old map, still sealed"),
-        el("p", null, "Ten pieces of the map are hidden under wax seals. " +
-          "Answer a question and one seal breaks. Break them all and you can read the whole adventure."),
-        el("p", null, "Tap the words and pictures. You can also drag them.")
+      var screens = Array.prototype.slice.call(
+        document.querySelectorAll(".screen"),
       );
-      var go = el("button", "elpz-btn", svg("go") + "Open the map");
-      go.type = "button";
-      go.addEventListener("click", function () { sound.unlock(); next(); });
-      sheet.appendChild(go);
-      paintTrail();
-    }
-
-    function solved(pz) {
-      cells[pz.tile].classList.add("is-open");
-      cells[pz.tile].classList.remove("is-next");
-      sound.play("good");
-      step += 1;
-      store("adventure.step", String(step));
-      report({ type: "elpz:progress", step: step, of: PUZZLES.length, tile: pz.tile, noun: nouns[pz.tile] });
-      setTimeout(next, 900);
-    }
-
-    function wrong(node) {
-      tries += 1;
-      sound.play("bad");
-      if (node) {
-        node.classList.add("elpz-shake");
-        setTimeout(function () { node.classList.remove("elpz-shake"); }, 320);
-      }
-      var pz = PUZZLES[step];
-      say(tries >= 2 && pz.hint ? pz.hint : "Not this one. Try again.", "bad");
-    }
-
-    /* ---- puzzle renderers --------------------------------------- */
-    function frame(pz) {
-      card.hidden = false;
-      sheet.hidden = true;
-      card.innerHTML = "";
-      card.append(
-        el("p", "elpz-stagename", "Piece " + (step + 1) + " of " + PUZZLES.length + " · " + pz.stage),
-        el("h3", "elpz-ask", (pz.figure ? svg(pz.figure) : "") + "<span>" + pz.ask + "</span>")
-      );
-      var body = el("div", "elpz-body");
-      var foot = el("div", "elpz-foot");
-      live = el("p", "elpz-say");
-      live.setAttribute("role", "status");
-      live.setAttribute("aria-live", "polite");
-      foot.appendChild(live);
-      card.append(body, foot);
-      return { body: body, foot: foot };
-    }
-
-    function optionButton(text, art) {
-      var b = el("button", "elpz-opt", (art ? svg(art) : "") + (text ? "<span>" + text + "</span>" : ""));
-      b.type = "button";
-      if (!text) b.setAttribute("aria-label", art);
-      return b;
-    }
-
-    function renderPick(pz, ui) {
-      var opts = el("div", "elpz-opts");
-      shuffle(pz.options.map(function (_, i) { return String(i); })).forEach(function (idx) {
-        var o = pz.options[+idx];
-        var b = optionButton(pz.showLabels === false ? "" : o.label, o.art);
-        b.addEventListener("click", function () {
-          if (o.label === pz.answer) {
-            b.classList.add("is-right");
-            opts.querySelectorAll("button").forEach(function (x) { x.disabled = true; });
-            say("Yes — " + pz.answer + ".", "good");
-            solved(pz);
-          } else { b.classList.add("is-wrong"); wrong(b);
-            setTimeout(function(){ b.classList.remove("is-wrong"); }, 600); }
-        });
-        opts.appendChild(b);
-      });
-      ui.body.appendChild(opts);
-    }
-
-    function renderCollect(pz, ui) {
-      var picked = [];
-      var opts = el("div", "elpz-opts");
-      pz.options.forEach(function (o) {
-        var b = optionButton(pz.showLabels === false ? "" : o.label, o.art);
-        b.addEventListener("click", function () {
-          var at = picked.indexOf(o.label);
-          if (at > -1) { picked.splice(at, 1); b.classList.remove("is-picked"); }
-          else { picked.push(o.label); b.classList.add("is-picked"); }
-          say(picked.length + " of " + pz.answer.length + " chosen.");
-          check();
-        });
-        opts.appendChild(b);
-      });
-      function check() {
-        if (picked.length !== pz.answer.length) return;
-        var ok = pz.answer.every(function (w) { return picked.indexOf(w) > -1; });
-        if (ok) {
-          opts.querySelectorAll("button").forEach(function (x) {
-            x.disabled = true;
-            if (x.classList.contains("is-picked")) x.classList.add("is-right");
-          });
-          say("That's the set.", "good");
-          solved(pz);
-        } else {
-          wrong(opts);
-          picked = [];
-          opts.querySelectorAll("button").forEach(function (x) { x.classList.remove("is-picked"); });
-        }
-      }
-      ui.body.appendChild(opts);
-    }
-
-    function renderBuild(pz, ui, asStory) {
-      var chosen = [];
-      var slot = el("div", "elpz-slotline");
-      slot.setAttribute("data-elpz-drop", "");
-      slot.tabIndex = 0;
-      var bank = el("div", "elpz-opts");
-      var empty = el("span", "elpz-empty", asStory ? "Tap the lines in story order." : "Tap the words in order.");
-      slot.appendChild(empty);
-
-      shuffle(pz.words).forEach(function (w) {
-        var b = optionButton(w);
-        function take() {
-          if (b.disabled) return;
-          b.disabled = true; b.style.opacity = ".35";
-          chosen.push(w);
-          var inSlot = optionButton(w);
-          inSlot.addEventListener("click", function () {
-            var i = chosen.indexOf(w);
-            if (i > -1) chosen.splice(i, 1);
-            inSlot.remove(); b.disabled = false; b.style.opacity = "";
-            if (!chosen.length) slot.appendChild(empty);
-            say("");
-          });
-          empty.remove();
-          slot.appendChild(inSlot);
-          check();
-        }
-        draggable(root, b, take, function (dropTarget) { if (dropTarget === slot) take(); });
-        bank.appendChild(b);
-      });
-
-      function check() {
-        if (chosen.length !== pz.words.length) return;
-        var made = chosen.join(asStory ? "|" : " ");
-        if (made === pz.answer) {
-          slot.querySelectorAll("button").forEach(function (x) { x.classList.add("is-right"); x.disabled = true; });
-          say(asStory ? "That's the story." : "Correct: " + pz.answer + ".", "good");
-          solved(pz);
-        } else {
-          wrong(slot);
-          chosen = [];
-          slot.querySelectorAll("button").forEach(function (x) { x.remove(); });
-          slot.appendChild(empty);
-          bank.querySelectorAll("button").forEach(function (x) { x.disabled = false; x.style.opacity = ""; });
-        }
-      }
-      if (asStory) { slot.style.flexDirection = "column"; slot.style.alignItems = "stretch"; }
-      ui.body.append(slot, el("div", null, ""), bank);
-      ui.body.style.display = "flex";
-      ui.body.style.flexDirection = "column";
-      ui.body.style.gap = ".5rem";
-    }
-
-    function renderLink(pz, ui) {
-      var left = pz.pairs.map(function (p) { return p[0]; });
-      var right = shuffle(pz.pairs.map(function (p) { return p[1]; }));
-      var done = 0, active = null, grid = el("div", "elpz-links");
-      var leftCol = el("div", "elpz-opts"), rightCol = el("div", "elpz-opts");
-      leftCol.style.flexDirection = "column"; rightCol.style.flexDirection = "column";
-
-      left.forEach(function (q) {
-        var b = optionButton(q);
-        b.setAttribute("data-elpz-drop", "");
-        b.addEventListener("click", function () {
-          if (b.disabled) return;
-          if (!active) { say("Now tap the answer."); return; }
-          settle(q, active.value, b, active.node);
-        });
-        leftCol.appendChild(b);
-      });
-      right.forEach(function (a) {
-        var b = optionButton(a);
-        function pick() {
-          if (b.disabled) return;
-          rightCol.querySelectorAll("button").forEach(function (x) { x.classList.remove("is-picked"); });
-          b.classList.add("is-picked");
-          active = { value: a, node: b };
-          say("Now tap the question it belongs to.");
-        }
-        draggable(root, b, pick, function (target) {
-          var q = target.textContent.trim();
-          if (left.indexOf(q) > -1) settle(q, a, target, b);
-        });
-        rightCol.appendChild(b);
-      });
-
-      function settle(q, a, qNode, aNode) {
-        var isPair = pz.pairs.some(function (p) { return p[0] === q && p[1] === a; });
-        if (!isPair) { wrong(aNode); aNode.classList.remove("is-picked"); active = null; return; }
-        [qNode, aNode].forEach(function (n) {
-          n.disabled = true; n.classList.remove("is-picked"); n.classList.add("is-right");
-        });
-        active = null; done += 1;
-        say("Matched.", "good");
-        if (done === pz.pairs.length) solved(pz);
-      }
-      grid.append(leftCol, rightCol);
-      ui.body.appendChild(grid);
-    }
-
-    function next() {
-      tries = 0;
-      paintTrail();
-      if (step >= PUZZLES.length) return finish();
-      var pz = PUZZLES[step];
-      var ui = frame(pz);
-      if (pz.kind === "pick") renderPick(pz, ui);
-      else if (pz.kind === "collect") renderCollect(pz, ui);
-      else if (pz.kind === "build") renderBuild(pz, ui, false);
-      else if (pz.kind === "order") renderBuild(pz, ui, true);
-      else renderLink(pz, ui);
-      measure();
-    }
-
-    function finish() {
-      card.hidden = true;
-      sheet.hidden = false;
-      sheet.innerHTML = "";
-      sound.play("win");
-      var list = el("ol", "elpz-story");
-      STORY.forEach(function (line) { list.appendChild(el("li", null, line)); });
-      sheet.append(
-        el("h3", null, "The map is yours"),
-        el("p", null, "Every seal is broken. Here is the whole adventure:"),
-        list
-      );
-      var again = el("button", "elpz-btn", svg("again") + "Read it again from the start");
-      again.type = "button";
-      again.addEventListener("click", reset);
-      sheet.appendChild(again);
-      report({ type: "elpz:result", done: true, pieces: PUZZLES.length, story: STORY });
-      measure();
-    }
-
-    function reset() {
-      step = 0; tries = 0;
-      store("adventure.step", "0");
-      cells.forEach(function (c) { c.classList.remove("is-open"); });
-      intro();
-    }
-    againBtn.addEventListener("click", reset);
-
-    /* optional bridge: height + results */
-    function report(payload) {
-      if (typeof opts.onResult === "function") { try { opts.onResult(payload); } catch (e) {} }
-      if (opts.postMessage && global.parent && global.parent !== global) {
-        try { global.parent.postMessage(payload, opts.postMessageOrigin || "*"); } catch (e) {}
-      }
-    }
-    function measure() {
-      if (typeof opts.onHeight !== "function") return;
-      try { opts.onHeight(Math.ceil(root.getBoundingClientRect().height)); } catch (e) {}
-    }
-    if (typeof opts.onHeight === "function" && global.ResizeObserver) {
-      ro = new global.ResizeObserver(measure);
-      ro.observe(root);
-    }
-
-    intro();
-
-    return {
-      reset: reset,
-      element: root,
-      destroy: function () {
-        if (ro) ro.disconnect();
-        root.remove(); style.remove();
-      }
-    };
-  }
-
-  /* one global name, as per C3 */
-  global.Elpz = { mount: mount, version: "1.0.0", nouns: NOUNS, images: DEFAULT_IMAGES };
-})(window);
-    </script>
-
-    <script>
-      var iconVolumeOn =
-        '<svg xmlns="http://www.w3.org/2000/svg" width="1.2em" height="1.2em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: -0.2em"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/></svg>';
-      var iconVolumeOff =
-        '<svg xmlns="http://www.w3.org/2000/svg" width="1.2em" height="1.2em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: -0.2em"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><line x1="22" x2="16" y1="9" y2="15"/><line x1="16" x2="22" y1="9" y2="15"/></svg>';
+      var idx = 0;
       var soundOn = true;
-      var soundTag = document.getElementById("soundBtn").querySelector(".tag");
-      var hostEl = document.querySelector(".ep-host");
-      var handle = null;
 
+      var synth =
+        window.speechSynthesis ||
+        window.webkitSpeechSynthesis ||
+        window.mozSpeechSynthesis ||
+        null;
+      var altVoice = null;
+      var altVoice2 = null;
+
+      function setVoice() {
+        if (!synth) return;
+        var voices = synth.getVoices();
+        if (!voices || voices.length === 0) return;
+        var preferred = null;
+        var fallback = null;
+        for (var i = 0; i < voices.length; i++) {
+          var v = voices[i];
+          if (!v || !v.lang) continue;
+          if (v.lang.toLowerCase().indexOf("en") !== 0) continue;
+          if (!fallback) fallback = v;
+          if (v.lang.toLowerCase().indexOf("en-gb") === 0) {
+            preferred = v;
+            break;
+          }
+          if (v.name && v.name.indexOf("Zira") >= 0) preferred = v;
+        }
+        altVoice = preferred || fallback;
+        altVoice2 = null;
+        for (var j = 0; j < voices.length; j++) {
+          var w = voices[j];
+          if (!w || !w.lang) continue;
+          if (w.lang.toLowerCase().indexOf("en") !== 0) continue;
+          if (w === altVoice) continue;
+          altVoice2 = w;
+          break;
+        }
+        if (!altVoice2) altVoice2 = altVoice;
+      }
+      if (synth) {
+        setVoice();
+        if (typeof synth.addEventListener === "function") {
+          synth.addEventListener("voiceschanged", setVoice);
+        }
+        var voiceTimer = window.setInterval(function () {
+          if (altVoice) window.clearInterval(voiceTimer);
+          setVoice();
+        }, 500);
+        window.setTimeout(function () {
+          window.clearInterval(voiceTimer);
+        }, 4000);
+      }
+
+      var ICON_VOLUME_ON =
+        '<svg xmlns="http://www.w3.org/2000/svg" width="1.2em" height="1.2em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: -0.2em"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/></svg>';
+      var ICON_VOLUME_OFF =
+        '<svg xmlns="http://www.w3.org/2000/svg" width="1.2em" height="1.2em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: -0.2em"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><line x1="22" x2="16" y1="9" y2="15"/><line x1="16" x2="22" y1="9" y2="15"/></svg>';
+
+      function show(i) {
+        idx = Math.max(0, Math.min(screens.length - 1, i));
+        for (var j = 0; j < screens.length; j++) {
+          screens[j].classList.toggle("active", j === idx);
+        }
+        cancelSpeech();
+        if (typeof outdoorSlotTimer !== "undefined" && outdoorSlotTimer) {
+          clearTimeout(outdoorSlotTimer);
+          outdoorSlotTimer = null;
+        }
+        if (screens[idx].id === "outdoor1Screen") outdoorWhereReset();
+        else if (screens[idx].id === "outdoorSlotScreen")
+          outdoorSlotReset();
+      }
+
+      function cancelSpeech() {
+        if (synth && typeof synth.cancel === "function") {
+          try {
+            synth.cancel();
+          } catch (e) {}
+        }
+      }
+
+      function say(text, voice) {
+        if (!soundOn) return;
+        if (window.tizen && window.tizen.tts) {
+          try {
+            tizen.tts.speak(
+              String(text),
+              {
+                locale: "en-US",
+                rate: 0.85,
+                pitch: 1.0,
+                type: "TTS_TYPE_SCREEN_READER",
+              },
+              { onfinish: function () {} },
+            );
+            return;
+          } catch (e) {}
+        }
+        if (synth && typeof SpeechSynthesisUtterance !== "undefined") {
+          cancelSpeech();
+          var u = new SpeechSynthesisUtterance(text);
+          u.lang = "en-US";
+          u.rate = 0.82;
+          u.pitch = 1.08;
+          if (voice) u.voice = voice;
+          else if (altVoice) u.voice = altVoice;
+          synth.speak(u);
+        }
+      }
+
+      function sayOther(text) {
+        say(text, altVoice2);
+      }
+
+      function toast(t) {
+        var el = document.getElementById("toast");
+        el.textContent = t;
+        el.classList.add("show");
+        setTimeout(function () {
+          el.classList.remove("show");
+        }, 1100);
+      }
+
+      function confettiBurst() {
+        var r = document.getElementById("reward");
+        r.innerHTML = "";
+        for (var i = 0; i < 24; i++) {
+          var s = document.createElement("span");
+          s.className = "confetti";
+          s.textContent = ["⭐", "✨", "🎉", "👏"][i % 4];
+          s.style.left = Math.random() * 100 + "%";
+          s.style.top = -5 - Math.random() * 20 + "%";
+          s.style.animationDelay = Math.random() * 0.4 + "s";
+          r.appendChild(s);
+        }
+        setTimeout(function () {
+          r.innerHTML = "";
+        }, 2500);
+      }
+
+      function celebrate(t) {
+        toast(t);
+        confettiBurst();
+      }
+
+      function burst(el) {
+        var r = document.getElementById("reward");
+        var rect = el.getBoundingClientRect();
+        var cx = rect.left + rect.width / 2;
+        var cy = rect.top + rect.height / 2;
+        var frag = document.createDocumentFragment();
+        for (var i = 0; i < 18; i++) {
+          var s = document.createElement("span");
+          s.className = "burst";
+          s.textContent = ["⭐", "✨", "🎉", "👏"][i % 4];
+          var ang = Math.random() * Math.PI * 2;
+          var dist = 40 + Math.random() * 80;
+          s.style.setProperty("--bx", Math.cos(ang) * dist + "px");
+          s.style.setProperty("--by", Math.sin(ang) * dist + "px");
+          s.style.left = cx + "px";
+          s.style.top = cy + "px";
+          frag.appendChild(s);
+        }
+        r.appendChild(frag);
+        setTimeout(function () {
+          var list = r.querySelectorAll(".burst");
+          for (var j = 0; j < list.length; j++) {
+            if (list[j].parentNode) list[j].parentNode.removeChild(list[j]);
+          }
+        }, 1300);
+      }
+
+      function buildPips(id, n) {
+        var el = document.getElementById(id);
+        if (!el) return;
+        el.innerHTML = "";
+        for (var i = 0; i < n; i++) {
+          var s = document.createElement("span");
+          s.className = "pip";
+          el.appendChild(s);
+        }
+      }
+
+      function setPips(id, results, current) {
+        var el = document.getElementById(id);
+        if (!el) return;
+        for (var i = 0; i < el.children.length; i++) {
+          var p = el.children[i];
+          p.className = "pip";
+          if (i < results.length) {
+            p.classList.add(
+              results[i] === "good"
+                ? "pip-good"
+                : results[i] === "mediocre"
+                  ? "pip-med"
+                  : "pip-bad",
+            );
+          } else if (i === current) {
+            p.classList.add("pip-current");
+          }
+        }
+      }
+
+      function qualifies(results) {
+        var greens = 0;
+        var bad = 0;
+        for (var i = 0; i < results.length; i++) {
+          if (results[i] === "good") greens++;
+          else if (results[i] === "bad") bad++;
+        }
+        return bad === 0 && greens >= results.length - 1;
+      }
+
+      /* ── ADVENTURE / OUTSIDE ── */
+      var OUTDOOR = [
+        {
+          name: "bridge",
+          img: "https://res.cloudinary.com/dmkhsyfzf/image/upload/c_crop,w_281,h_384,x_12,y_16/v1789587647/adventure_sgbv5s.jpg",
+        },
+        {
+          name: "river",
+          img: "https://res.cloudinary.com/dmkhsyfzf/image/upload/c_crop,w_281,h_384,x_281,y_16/v1789587647/adventure_sgbv5s.jpg",
+        },
+        {
+          name: "mountain",
+          img: "https://res.cloudinary.com/dmkhsyfzf/image/upload/c_crop,w_281,h_384,x_562,y_16/v1789587647/adventure_sgbv5s.jpg",
+        },
+        {
+          name: "tree",
+          img: "https://res.cloudinary.com/dmkhsyfzf/image/upload/c_crop,w_281,h_384,x_837,y_16/v1789587647/adventure_sgbv5s.jpg",
+        },
+        {
+          name: "forest",
+          img: "https://res.cloudinary.com/dmkhsyfzf/image/upload/c_crop,w_281,h_384,x_1112,y_16/v1789587647/adventure_sgbv5s.jpg",
+        },
+        {
+          name: "path",
+          img: "https://res.cloudinary.com/dmkhsyfzf/image/upload/c_crop,w_281,h_384,x_12,y_368/v1789587647/adventure_sgbv5s.jpg",
+        },
+        {
+          name: "map",
+          img: "https://res.cloudinary.com/dmkhsyfzf/image/upload/c_crop,w_281,h_384,x_281,y_368/v1789587647/adventure_sgbv5s.jpg",
+        },
+        {
+          name: "backpack",
+          img: "https://res.cloudinary.com/dmkhsyfzf/image/upload/c_crop,w_281,h_384,x_562,y_368/v1789587647/adventure_sgbv5s.jpg",
+        },
+        {
+          name: "tent",
+          img: "https://res.cloudinary.com/dmkhsyfzf/image/upload/c_crop,w_281,h_384,x_837,y_368/v1789587647/adventure_sgbv5s.jpg",
+        },
+        {
+          name: "treasure",
+          img: "https://res.cloudinary.com/dmkhsyfzf/image/upload/c_crop,w_281,h_384,x_1112,y_368/v1789587647/adventure_sgbv5s.jpg",
+        },
+      ];
+
+      var outdoorWhereOrder = [];
+      var outdoorWhereIdx = 0;
+      var outdoorWhereResults = [];
+      var outdoorWhereTries = 0;
+      var outdoorWhereRewarded = false;
+      function outdoorCap(name) {
+        return name.replace(/\b\w/g, function (letter) {
+          return letter.toUpperCase();
+        });
+      }
+      function outdoorWherePrompt(name) {
+        return "Where Is The " + outdoorCap(name) + "?";
+      }
+      function outdoorWhereReset() {
+        outdoorWhereOrder = OUTDOOR.slice();
+        for (var i = outdoorWhereOrder.length - 1; i > 0; i--) {
+          var j = Math.floor(Math.random() * (i + 1));
+          var temp = outdoorWhereOrder[i];
+          outdoorWhereOrder[i] = outdoorWhereOrder[j];
+          outdoorWhereOrder[j] = temp;
+        }
+        outdoorWhereIdx = 0;
+        outdoorWhereResults = [];
+        outdoorWhereTries = 0;
+        buildPips("outdoorWherePips", outdoorWhereOrder.length);
+        var grid = document.getElementById("outdoorWhereGrid");
+        var startBtn = document.getElementById("outdoor1StartBtn");
+        var title = document.getElementById("outdoorWhereTitle");
+        if (grid) {
+          grid.innerHTML = "";
+          grid.style.display = "none";
+        }
+        if (startBtn) startBtn.style.display = "inline-flex";
+        if (title) title.textContent = "Where Is...?";
+      }
+      function outdoorWhereStart() {
+        var grid = document.getElementById("outdoorWhereGrid");
+        if (grid && grid.style.display !== "none") return;
+        if (grid) grid.style.display = "";
+        outdoorWhereRender();
+      }
+      function outdoorWhereRender() {
+        var grid = document.getElementById("outdoorWhereGrid");
+        var title = document.getElementById("outdoorWhereTitle");
+        if (!grid || !title) return;
+        if (outdoorWhereIdx >= outdoorWhereOrder.length) {
+          outdoorWhereDone();
+          return;
+        }
+        var target = outdoorWhereOrder[outdoorWhereIdx];
+        outdoorWhereTries = 0;
+        title.textContent = outdoorWherePrompt(target.name);
+        setPips("outdoorWherePips", outdoorWhereResults, outdoorWhereIdx);
+        var shuffled = OUTDOOR.slice();
+        for (var i = shuffled.length - 1; i > 0; i--) {
+          var j = Math.floor(Math.random() * (i + 1));
+          var temp = shuffled[i];
+          shuffled[i] = shuffled[j];
+          shuffled[j] = temp;
+        }
+        grid.innerHTML = "";
+        shuffled.forEach(function (item, itemIdx) {
+          var button = document.createElement("button");
+          button.className = "toyBtn";
+          var img = document.createElement("img");
+          img.className = "toyImg";
+          img.src = item.img;
+          img.alt = outdoorCap(item.name);
+          button.appendChild(img);
+          button.onclick = function () {
+            (itemIdx % 2 === 0 ? say : sayOther)(item.name);
+            if (item.name === target.name) {
+              outdoorWhereResults.push(
+                outdoorWhereTries === 0 ? "good" : "mediocre",
+              );
+              toast(outdoorCap(target.name) + " — WELL DONE!");
+              outdoorWhereIdx++;
+              setTimeout(outdoorWhereRender, 1000);
+            } else {
+              outdoorWhereTries++;
+              toast(outdoorCap(target.name) + " — NO");
+              button.style.opacity = "0.4";
+              button.style.pointerEvents = "none";
+            }
+          };
+          grid.appendChild(button);
+        });
+        (outdoorWhereIdx % 2 === 0 ? say : sayOther)(
+          outdoorWherePrompt(target.name),
+        );
+      }
+      function outdoorWhereDone() {
+        var grid = document.getElementById("outdoorWhereGrid");
+        var title = document.getElementById("outdoorWhereTitle");
+        var pips = document.getElementById("outdoorWherePips");
+        var startBtn = document.getElementById("outdoor1StartBtn");
+        if (title) title.textContent = "";
+        if (pips) pips.innerHTML = "";
+        if (startBtn) startBtn.style.display = "none";
+        if (grid) {
+          grid.removeAttribute("style");
+          grid.innerHTML =
+            '<div style="grid-column:1/-1;text-align:center;">' +
+            '<p style="font-size:clamp(1.4rem,2.6vw,2.6rem);font-weight:900;margin:0.6em 0;">Well Done!</p>' +
+            "</div>";
+        }
+        if (!outdoorWhereRewarded && qualifies(outdoorWhereResults)) {
+          outdoorWhereRewarded = true;
+          celebrate("ADVENTURE / OUTSIDE! +1 \u2b50");
+        }
+        setTimeout(function () {
+          show(screenIndexById("outdoorSlotScreen"));
+        }, 1500);
+      }
+
+      function screenIndexById(id) {
+        for (var s = 0; s < screens.length; s++) {
+          if (screens[s].id === id) return s;
+        }
+        return -1;
+      }
+
+      /* ── Adventure Slot Machine ── */
+      var outdoorSlotPool = [];
+      var outdoorSlotTimer = null;
+      var outdoorSlotCurrent = null;
+      var outdoorSlotWord = "";
+      var outdoorSlotResults = [];
+      var outdoorSlotIdx = 0;
+      var outdoorSlotTotal = 10;
+      var outdoorSlotRewarded = false;
+      function outdoorSlotBuildPool() {
+        return OUTDOOR.slice();
+      }
+      function outdoorSlotPickOtherWord(name) {
+        var names = [];
+        for (var i = 0; i < OUTDOOR.length; i++) {
+          if (OUTDOOR[i].name !== name) names.push(OUTDOOR[i].name);
+        }
+        return names[Math.floor(Math.random() * names.length)];
+      }
+      function outdoorSlotSpeak(name) {
+        (outdoorSlotIdx % 2 === 0 ? say : sayOther)(name);
+      }
+      function outdoorSlotSpin() {
+        if (outdoorSlotTimer || outdoorSlotIdx >= outdoorSlotTotal) return;
+        outdoorSlotPool = outdoorSlotBuildPool();
+        outdoorSlotCurrent = null;
+        var img = document.getElementById("outdoorSlotImg");
+        if (!img) return;
+        var target =
+          outdoorSlotPool[
+            Math.floor(Math.random() * outdoorSlotPool.length)
+          ];
+        var spinIdx = Math.floor(Math.random() * outdoorSlotPool.length);
+        var start = Date.now();
+        var duration = 2400 + Math.random() * 800;
+        function tick() {
+          var elapsed = Date.now() - start;
+          if (elapsed >= duration) {
+            outdoorSlotTimer = null;
+            img.src = target.img;
+            img.alt = target.name;
+            outdoorSlotCurrent = target;
+            outdoorSlotWord =
+              Math.random() < 0.5
+                ? target.name
+                : outdoorSlotPickOtherWord(target.name);
+            setTimeout(function () {
+              outdoorSlotSpeak(outdoorSlotWord);
+            }, 300);
+            return;
+          }
+          img.src = outdoorSlotPool[spinIdx].img;
+          img.alt = outdoorSlotPool[spinIdx].name;
+          var remain = duration - elapsed;
+          var delay = 40 + (1 - remain / duration) * 260;
+          spinIdx = (spinIdx + 1) % outdoorSlotPool.length;
+          outdoorSlotTimer = window.setTimeout(tick, Math.max(30, delay));
+        }
+        outdoorSlotTimer = window.setTimeout(tick, 60);
+      }
+      function outdoorSlotSpeakAgain() {
+        if (outdoorSlotTimer || !outdoorSlotCurrent) return;
+        outdoorSlotSpeak(outdoorSlotWord);
+      }
+      function outdoorSlotReset() {
+        outdoorSlotResults = [];
+        outdoorSlotIdx = 0;
+        buildPips("outdoorSlotPips", outdoorSlotTotal);
+        setPips("outdoorSlotPips", outdoorSlotResults, outdoorSlotIdx);
+        outdoorSlotSpin();
+      }
+      function outdoorSlotAnswer(answer) {
+        if (
+          outdoorSlotTimer ||
+          !outdoorSlotCurrent ||
+          outdoorSlotIdx >= outdoorSlotTotal
+        )
+          return;
+        var truth =
+          outdoorSlotWord === outdoorSlotCurrent.name ? "yes" : "no";
+        var won = answer === truth;
+        outdoorSlotResults.push(won ? "good" : "bad");
+        setPips("outdoorSlotPips", outdoorSlotResults, outdoorSlotIdx);
+        toast(won ? "WELL DONE!" : "Try again!");
+        outdoorSlotIdx++;
+        if (outdoorSlotIdx >= outdoorSlotTotal) {
+          var greens = outdoorSlotResults.filter(function (result) {
+            return result === "good";
+          }).length;
+          if (greens >= 8 && !outdoorSlotRewarded) {
+            outdoorSlotRewarded = true;
+            celebrate("ADVENTURE / OUTSIDE! +1 \u2b50");
+          }
+          setTimeout(function () {
+            show(screenIndexById("outdoor1Screen"));
+          }, 1500);
+          return;
+        }
+        setTimeout(outdoorSlotSpin, 1200);
+      }
+
+      /* ── Sound toggle ── */
+      var soundTag = document.getElementById("soundBtn").querySelector(".tag");
       document.getElementById("soundBtn").onclick = function () {
         soundOn = !soundOn;
-        soundTag.innerHTML = soundOn ? iconVolumeOn : iconVolumeOff;
+        soundTag.innerHTML = soundOn ? ICON_VOLUME_ON : ICON_VOLUME_OFF;
+        cancelSpeech();
       };
 
-      window.addEventListener("DOMContentLoaded", function () {
-        try {
-          var shadow = hostEl.shadowRoot || hostEl.attachShadow({ mode: "open" });
-          handle = window.Elpz.mount(shadow, {
-            onHeight: function (px) { hostEl.style.minHeight = px + "px"; },
-            onResult: function (payload) {
-              var path = window.location.pathname;
-              try {
-                if (payload.type === "elpz:result") {
-                  logActivity("Student_Default", path, "EduPuzzle", "Result", "Completed " + payload.pieces + " pieces");
-                } else {
-                  logActivity("Student_Default", path, "EduPuzzle", "Progress", "step " + payload.step + "/" + payload.of + " (" + payload.noun + ")");
-                }
-              } catch (e) {}
-            }
-          });
-          var elpzSoundBtn = handle.element.querySelector(".elpz-bar button[aria-pressed]");
-          if (elpzSoundBtn) {
-            soundOn = elpzSoundBtn.getAttribute("aria-pressed") !== "true";
-            soundTag.innerHTML = soundOn ? iconVolumeOn : iconVolumeOff;
-            elpzSoundBtn.addEventListener("click", function () {
-              soundOn = elpzSoundBtn.getAttribute("aria-pressed") !== "true";
-              soundTag.innerHTML = soundOn ? iconVolumeOn : iconVolumeOff;
-            });
-          }
-        } catch (e) {}
+      /* ── Keyboard: Enter clicks active button only (no arrows) ── */
+      document.addEventListener("keydown", function (e) {
+        var k = e.key || "";
+        var kc = e.keyCode || e.which || 0;
+        if (kc === 13 || kc === 29443 || k === "Enter") {
+          var el = document.activeElement;
+          if (el && el.tagName === "BUTTON" && !el.disabled) el.click();
+        }
       });
+
+      /* ── Start: show first screen ── */
+      show(0);
     </script>
-    <script src="../../tracker.js"></script>
+  <script src="../../tracker.js"></script>
   </body>
 </html>

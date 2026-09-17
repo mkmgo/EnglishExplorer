@@ -17,7 +17,7 @@ EnglishExplorer/
 ├── english-explorer-tracker/   <-- Cloudflare Worker backend (airtable + GitHub proxy; see below)
 ├── junior/                     <-- Ages 6-9 ecosystem
 │   ├── thematic/               <-- Thematic lesson decks
-│   │   ├── adventure-outside.html    <-- EduPuzzle: The Treasure Map (10-piece adventure deck, inlined Elpz bundle)
+│   │   ├── adventure-outside.html    <-- Adventure / Outside standard slots deck (slot-machine + Where Is...? puzzle, 10 Cloudinary crops: bridge…treasure)
 │   │   ├── animals.html
 │   │   ├── food-and-drinks.html
 │   │   ├── house-home.html             <-- House & Home lesson deck
