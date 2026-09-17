@@ -4815,7 +4815,7 @@ if (idx < 0) return;
             el.appendChild(tbody);
           }
           else if (blk.t === "hr") { el = document.createElement("hr"); }
-          else { el = document.createElement("p"); mdFillText(el, blk.text, false); }
+          else { el = document.createElement("p"); el.style.whiteSpace = "pre-line"; mdFillText(el, blk.text, false); }
           out.appendChild(el);
         }
         updateMdHint();
@@ -4908,7 +4908,7 @@ if (idx < 0) return;
         function mdSectionItemHtml(indent, item) {
           var pad = new Array(indent + 1).join("  ");
           if (item.t === "p") {
-            return pad + '<p>' + mdStripInline(item.text) + '</p>\n';
+            return pad + '<p>' + mdStripInline(item.text).replace(/\r?\n/g, "<br>") + '</p>\n';
           } else if (item.t === "h3") {
             return pad + '<h3>' + mdEscapeHtml(mdStripInline(item.text)) + '</h3>\n';
           } else if (item.t === "ol" || item.t === "ul") {
@@ -5066,7 +5066,7 @@ if (idx < 0) return;
           '      p{font-size:clamp(1rem,1.8vw,1.15rem);margin:.4em 0}\n' +
           '      hr{border:0;border-top:2px solid rgba(96,112,141,.35);margin:1.4em 0}\n' +
           '      .story-section{background:var(--panel);border-radius:24px;padding:clamp(1rem,2.5vw,1.6em);box-shadow:var(--shadow);margin-bottom:1.4em}\n' +
-          '      .story-section h3{margin-top:0} .story-section p{margin:.3em 0}\n' +
+          '      .story-section h3{margin-top:0} .story-section p{margin:0 0 .55em}\n' +
           '      .example{background:#fdf3e7;border-left:5px solid var(--accent);border-radius:8px;padding:.7em 1em;margin:.8em 0 !important;font-style:italic}\n' +
           '      .vocab-table{width:100%;border-collapse:separate;border-spacing:0;margin:1.6em 0 2em;background:var(--panel);border-radius:16px;box-shadow:var(--shadow);overflow:hidden}\n' +
           '      .vocab-table th{background:var(--ink);color:var(--accent2);font-size:clamp(.85rem,1.5vw,1rem);font-weight:800;letter-spacing:.06em;padding:.8em 1em;text-align:left;white-space:nowrap}\n' +
