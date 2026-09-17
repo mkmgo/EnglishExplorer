@@ -1,0 +1,196 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no" />
+    <title>Protocol 17/09/2026</title>
+    <meta name="description" content="English Explorer — Protocol 17/09/2026" />
+    <meta property="og:image" content="https://res.cloudinary.com/dmkhsyfzf/image/upload/q_auto/f_auto/v1781698464/protocol_r392x1.png" />
+    <link rel="icon" type="image/png" href="https://res.cloudinary.com/dmkhsyfzf/image/upload/q_auto/f_auto/v1781698464/protocol_r392x1.png" />
+    <link rel="apple-touch-icon" href="https://res.cloudinary.com/dmkhsyfzf/image/upload/q_auto/f_auto/v1781698464/protocol_r392x1.png" />
+    <style>
+      :root { --bg: #FAF7F2; --ink: #14213d; --muted: #60708d; --accent: #e43703; --accent2: #ffb866; --panel: #fcfcfc; --shadow: 0 18px 50px rgba(20,33,61,0.14); }
+      html[data-theme="dark"] { --bg: #161a24; --ink: #e8ecf4; --muted: #93a1b8; --panel: #1f2530; --shadow: 0 18px 50px rgba(0,0,0,0.55); }
+      .container[data-weekday="mon"]{--accent:#2563eb} .container[data-weekday="tue"]{--accent:#e43703} .container[data-weekday="wed"]{--accent:#0d9488} .container[data-weekday="thu"]{--accent:#7c3aed} .container[data-weekday="fri"]{--accent:#dc2626} .container[data-weekday="sat"]{--accent:#d97706} .container[data-weekday="sun"]{--accent:#475569}
+      *{box-sizing:border-box} html,body{margin:0;width:100%;min-height:100%;background:var(--bg);font-family:Arial,Helvetica,sans-serif;color:var(--ink);touch-action:manipulation;line-height:1.6}
+      .container{max-width:900px;margin:0 auto;padding:clamp(16px,4vw,40px) clamp(12px,3vw,24px)}
+      h1{font-size:clamp(1.8rem,5vw,3rem);margin:0 0 .2em;font-weight:900;letter-spacing:-.03em;color:var(--accent)}
+      .date-sub{font-size:clamp(.9rem,1.6vw,1.2rem);color:var(--muted);font-weight:700;letter-spacing:.1em;margin:0 0 .4em}
+      .to-line{font-size:clamp(.95rem,1.7vw,1.15rem);color:var(--muted);font-weight:800;letter-spacing:.06em;text-transform:uppercase;margin:0 0 2em}
+      .to-line b{color:var(--accent)}
+      .intro{background:var(--panel);border-radius:24px;padding:clamp(1rem,2.5vw,1.8em);box-shadow:var(--shadow);margin-bottom:2em;font-size:clamp(1rem,1.8vw,1.2rem);line-height:1.7}
+      .zh{display:block;margin-top:.6em;color:var(--muted);font-size:.92em}
+      h2{font-size:clamp(1.3rem,3.2vw,2rem);margin:2em 0 .6em;font-weight:900;color:var(--ink);letter-spacing:-.02em}
+      h3{font-size:clamp(1.1rem,2.2vw,1.5rem);margin:1.6em 0 .4em;font-weight:800;color:var(--accent)}
+      p{font-size:clamp(1rem,1.8vw,1.15rem);margin:.4em 0}
+      hr{border:0;border-top:2px solid rgba(96,112,141,.35);margin:1.4em 0}
+      .story-section{background:var(--panel);border-radius:24px;padding:clamp(1rem,2.5vw,1.6em);box-shadow:var(--shadow);margin-bottom:1.4em}
+      .story-section h3{margin-top:0} .story-section p{margin:.3em 0}
+      .example{background:#fdf3e7;border-left:5px solid var(--accent);border-radius:8px;padding:.7em 1em;margin:.8em 0 !important;font-style:italic}
+      .vocab-table{width:100%;border-collapse:separate;border-spacing:0;margin:1.6em 0 2em;background:var(--panel);border-radius:16px;box-shadow:var(--shadow);overflow:hidden}
+      .vocab-table th{background:var(--ink);color:var(--accent2);font-size:clamp(.85rem,1.5vw,1rem);font-weight:800;letter-spacing:.06em;padding:.8em 1em;text-align:left;white-space:nowrap}
+      .vocab-table td{padding:.7em 1em;font-size:clamp(.9rem,1.6vw,1.05rem);border-top:1px solid #eae5db;vertical-align:top;word-break:break-word}
+      .vocab-table tr:nth-child(even) td{background:#fdf9f3}
+      .vocab-table td:last-child{color:var(--muted);font-weight:600}
+      html[data-theme="dark"] .example{background:#232a36}
+      html[data-theme="dark"] hr{border-top-color:#333c4e}
+      html[data-theme="dark"] .vocab-table th{background:#0e1220}
+      html[data-theme="dark"] .vocab-table tr:nth-child(even) td{background:#232a36}
+      html[data-theme="dark"] .vocab-table td{border-top-color:#333c4e}
+      #themeToggle{position:fixed;top:clamp(10px,2vw,16px);right:clamp(10px,2vw,16px);z-index:50;width:clamp(38px,5vw,46px);height:clamp(38px,5vw,46px);border-radius:50%;background:var(--panel);color:var(--accent);border:2px solid var(--accent);font-size:20px;cursor:pointer;box-shadow:var(--shadow);line-height:1}
+    </style>
+  </head>
+  <body>
+    <button id="themeToggle" type="button" aria-label="Toggle dark mode">&#x263E;</button>
+    <div class="container" data-weekday="thu">
+      <h1>Protocol 17/09/2026</h1>
+      <p class="date-sub">English Explorer | Breakthrough</p>
+      <p class="to-line">For: <b>Nimza</b></p>
+      <div class="intro">
+        Please study the following structures and sentences well. Words and expressions must be fully understood and memorised. The last section shows today's new vocabulary. Please carefully repeat these as well.
+        <span class="zh">请将这些句子抄到练习本的词汇表下方。所有单词和表达方式都必须完全理解和记忆。</span>
+      </div>
+      <h2>Luck</h2>
+      <div class="story-section">
+      <h3>The Tale of the Unluckiest Girl: The Opening 10 Minutes</h3>
+      <p>Sam Greenfield is eighteen years old, but she has a big secret: she is the unluckiest person in the whole world. Every single day, simple things go completely wrong for her.</p>
+      <p>In the morning, her toaster always burns her bread. When she tries to open a door, the handle falls off in her hand. If she holds something soft, like a glass of juice or a bag of flour, she drops it onto the floor. Bad luck follows her wherever she goes!</p>
+      <p>Today is a very big day for Sam. Because she has turned eighteen, she must leave her foster home. A foster home is a place where children live when they do not have a family to care for them.</p>
+      <p>Before Sam packs her bags, she goes to find her young friend, Hazel. Hazel is a sweet little girl who still lives at the foster home. Hazel is looking for a lucky charm—a special item that she believes will help her find a forever family. Sam loves Hazel very much and promises to help her if she can.</p>
+      <p>Sam picks up her boxes and moves into her very first flat. But as soon as she steps inside, her terrible luck starts again!</p>
+      <ul>
+        <li>The front door key gets stuck fast in the lock.</li>
+        <li>Her heavy wooden furniture breaks as she tries to set it up.</li>
+        <li>She trips over her own bags and drops her clothes on the floor.</li>
+      </ul>
+      <p>Sam sits on her bed and sighs. Moving out is hard, especially when everything goes wrong!</p>
+      <p>By evening, Sam feels tired, hungry, and a bit sad. She goes outside and sits down on the cold pavement near the street to eat her simple dinner.</p>
+      <p>Suddenly, a quiet black cat walks up to her. Instead of chasing the cat away, Sam smiles softly. She breaks off a small piece of her food and gently offers it to the animal. The black cat eats the food, looks up at Sam with bright eyes, and then quietly walks away into the dark night.</p>
+      <h3>Basic Vocabulary</h3>
+      <table class="vocab-table">
+        <thead><tr><th>British English Word</th><th>Simple Meaning</th></tr></thead>
+        <tbody>
+          <tr><td>Unlucky</td><td>Experiencing bad luck or unfortunate events.</td></tr>
+          <tr><td>Foster Home</td><td>A temporary home for children without parents.</td></tr>
+          <tr><td>Flat</td><td>A set of rooms for living in; an apartment.</td></tr>
+          <tr><td>Lucky Charm</td><td>An object kept because people believe it brings good luck.</td></tr>
+          <tr><td>Pavement</td><td>A paved path at the side of a road for people to walk on.</td></tr>
+        </tbody>
+      </table>
+      <h3>Grammar Exercises: Pronouns &amp; Past Simple</h3>
+      <p>Circle or write the correct word in brackets to complete each sentence.</p>
+      <ol>
+        <li>Sam is very unlucky, so bad things happen to (she / her) every day.</li>
+        <li>Hazel lives in the foster home because (she / it) is still young.</li>
+        <li>Sam moved into a new flat, but (it / they) had broken doors.</li>
+        <li>The black cat ate the food after Sam gave (him / it) a piece.</li>
+        <li>"Will (you / your) help me find a lucky charm?" asked Hazel.</li>
+      </ol>
+      <p>Use the correct past simple verb from the word bank to complete the story:</p>
+      <p>\[ burnt | moved | dropped | shared | turned \]</p>
+      <ol>
+        <li>Sam turned eighteen years old today.</li>
+        <li>Her toaster burned her bread in the morning.</li>
+        <li>She dropped her keys on the floor of the flat.</li>
+        <li>Sam moved out of her old foster home.</li>
+        <li>She shared her evening meal with a black cat.</li>
+      </ol>
+      <h3>Answer Key (For Tutors)</h3>
+      <ol>
+        <li>her</li>
+        <li>she</li>
+        <li>it</li>
+        <li>it</li>
+        <li>you</li>
+      </ol>
+      <ol>
+        <li>turned</li>
+        <li>burnt</li>
+        <li>dropped</li>
+        <li>moved</li>
+        <li>shared</li>
+      </ol>
+      </div>
+      <h2>Vocabulary — 17/09/2026</h2>
+      <table class="vocab-table">
+        <thead><tr><th>English</th><th>Chinese</th></tr></thead>
+        <tbody>
+          <tr><td>The Tale of the Unluckiest Girl</td><td>最不幸女孩的故事</td></tr>
+          <tr><td>Section</td><td>部分</td></tr>
+          <tr><td>Life with Bad Luck</td><td>生活有霉运</td></tr>
+          <tr><td>Secret:</td><td>秘密：</td></tr>
+          <tr><td>Unluckiest</td><td>最倒霉的</td></tr>
+          <tr><td>Person</td><td>人</td></tr>
+          <tr><td>Whole</td><td>所有的</td></tr>
+          <tr><td>Every single day, simple things go completely wrong for her.</td><td>每一天，简单的事情对她来说都是完全错误的。</td></tr>
+          <tr><td>In the morning, her toaster always burns her bread.</td><td>早上，她的烤面包机总是烤面包。</td></tr>
+          <tr><td>To try</td><td>尝试一下</td></tr>
+          <tr><td>When she tries to open a door, the handle falls off in her hand.</td><td>当她试图打开门时，她手中的把手掉了下来。</td></tr>
+          <tr><td>Flour,</td><td>面粉，</td></tr>
+          <tr><td>She drops it onto the floor.</td><td>她把它扔到地板上。</td></tr>
+          <tr><td>Bad luck follows her wherever she goes!</td><td>无论她走到哪里，厄运都跟随着她！</td></tr>
+          <tr><td>Leaving the Foster Home</td><td>离开寄养家庭</td></tr>
+          <tr><td>Today is a very big day for Sam.</td><td>今天对山姆来说是一个非常重要的日子。</td></tr>
+          <tr><td>She has turned eighteen</td><td>她已经十八岁了</td></tr>
+          <tr><td>A foster home is a place where children live when they do not have a family to care for them.</td><td>寄养家庭是儿童没有家人照顾时居住的地方。</td></tr>
+          <tr><td>Care</td><td>关心</td></tr>
+          <tr><td>Still</td><td>仍然</td></tr>
+          <tr><td>A lucky charm</td><td>幸运符</td></tr>
+          <tr><td>A forever family</td><td>永远的一家人</td></tr>
+          <tr><td>Item</td><td>物品</td></tr>
+          <tr><td>Special</td><td>特别的</td></tr>
+          <tr><td>To promise</td><td>承诺</td></tr>
+          <tr><td>The New Flat</td><td>新公寓</td></tr>
+          <tr><td>To pick up</td><td>来接取</td></tr>
+          <tr><td>Soon</td><td>很快</td></tr>
+          <tr><td>But as soon as she steps inside, her terrible luck starts again!</td><td>可一踏进去，她的霉运又开始了！</td></tr>
+          <tr><td>It gets stuck</td><td>它被卡住了</td></tr>
+          <tr><td>Heavy</td><td>重的</td></tr>
+          <tr><td>Wooden</td><td>木制的</td></tr>
+          <tr><td>Furniture</td><td>家具</td></tr>
+          <tr><td>She trips over her own bags and drops her clothes on the floor.</td><td>她被自己的包绊倒，衣服掉在地板上。</td></tr>
+          <tr><td>To sigh</td><td>叹息</td></tr>
+          <tr><td>Everything goes wrong!</td><td>一切都不对劲！</td></tr>
+          <tr><td>A Late Night Visitor</td><td>深夜访客</td></tr>
+          <tr><td>Outside</td><td>外部</td></tr>
+          <tr><td>Pavement</td><td>路面</td></tr>
+          <tr><td>She goes outside and sits down on the cold pavement near the street to eat her simple dinner.</td><td>她走到外面，坐在街边冰冷的人行道上吃简单的晚餐。</td></tr>
+          <tr><td>Instead of chasing the cat away, Sam smiles softly.</td><td>山姆没有赶走猫，而是轻轻地笑了。</td></tr>
+          <tr><td>She breaks off a small piece of her food and gently offers it to the animal.</td><td>她掰下一小块食物，轻轻地喂给动物。</td></tr>
+          <tr><td>The black cat eats the food, looks up at Sam with bright eyes, and then quietly walks away into the dark night.</td><td>黑猫吃完食物，抬头用明亮的眼睛看着萨姆，然后静静地走入漆黑的夜色中。</td></tr>
+          <tr><td>Sam turned eighteen years old today.</td><td>山姆今天十八岁了。</td></tr>
+          <tr><td>To burn</td><td>燃烧</td></tr>
+          <tr><td>Burned</td><td>烧了。</td></tr>
+          <tr><td>Dropped</td><td>丢失</td></tr>
+          <tr><td>Moved</td><td>移动</td></tr>
+          <tr><td>Shared</td><td>共享</td></tr>
+          <tr><td>Meal</td><td>盛餐</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <script>
+      (function () {
+        var d = document.documentElement;
+        var K = "eebt-theme";
+        function apply() {
+          var dt = d.getAttribute("data-theme") === "dark";
+          var b = document.getElementById("themeToggle");
+          if (b) b.textContent = dt ? "\u2600" : "\u263E";
+        }
+        var t = null;
+        try { t = localStorage.getItem(K); } catch (e) {}
+        if (t === "dark" || t === "light") d.setAttribute("data-theme", t);
+        else if (window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches) d.setAttribute("data-theme", "dark");
+        else d.setAttribute("data-theme", "light");
+        apply();
+        var b = document.getElementById("themeToggle");
+        if (b) b.onclick = function () {
+          var n = d.getAttribute("data-theme") === "dark" ? "light" : "dark";
+          d.setAttribute("data-theme", n);
+          apply();
+          try { localStorage.setItem(K, n); } catch (e) {}
+        };
+      })();
+    </script>
+  </body>
+</html>
