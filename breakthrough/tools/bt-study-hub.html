@@ -294,23 +294,41 @@
         margin-left: clamp(14px, 2.5vw, 28px);
       }
       .themeTag {
-        position: absolute;
-        top: 0;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        background: var(--accent);
-        color: #fff;
+        flex: 0 0 100%;
+        display: flex;
+        align-items: center;
+        gap: 0.55em;
+        color: var(--accent);
         font-size: clamp(0.6rem, 1vw, 0.72rem);
         font-weight: 800;
         letter-spacing: 0.06em;
-        padding: 0.18em 0.55em;
-        border-radius: 999px;
-        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+        line-height: 1.1;
+        text-transform: uppercase;
         white-space: nowrap;
       }
+      .themeTag::before {
+        content: "";
+        width: 0.72em;
+        height: 0.72em;
+        flex: none;
+        border-radius: 50%;
+        background: currentColor;
+        box-shadow: 0 0 0 0.22em var(--accent2);
+      }
+      .themeTag::after {
+        content: "";
+        height: 2px;
+        flex: 1;
+        min-width: 18px;
+        border-radius: 999px;
+        background: currentColor;
+        opacity: 0.32;
+      }
       .card.feature-bg .themeTag {
-        background: var(--onAccent);
-        color: var(--accent);
+        color: var(--onAccentMuted);
+      }
+      .card.feature-bg .themeTag::before {
+        box-shadow: 0 0 0 0.22em rgba(255, 255, 255, 0.22);
       }
       .readBtn {
         display: inline-flex;
@@ -959,7 +977,6 @@
             var tag = document.createElement("span");
             tag.className = "themeTag";
             tag.textContent = themeNo;
-            card.appendChild(tag);
           }
 
           var thumb = document.createElement("div");
@@ -983,6 +1000,7 @@
           var h = document.createElement("h3");
           h.className = "cardTitle";
           h.textContent = title || "Reading";
+          if (tag) head.appendChild(tag);
           head.appendChild(h);
           if (title) {
             var speak = document.createElement("button");
