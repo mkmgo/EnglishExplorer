@@ -294,18 +294,17 @@
         margin-left: clamp(14px, 2.5vw, 28px);
       }
       .themeTag {
-        position: absolute;
-        top: -1px;
-        right: 12px;
+        flex: none;
+        order: -1;
         background: var(--accent);
         color: #fff;
         font-size: clamp(0.6rem, 1vw, 0.72rem);
         font-weight: 800;
         letter-spacing: 0.06em;
         padding: 0.18em 0.55em;
-        border-radius: 0 0 8px 8px;
+        border-radius: 999px;
         box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
-        z-index: 2;
+        white-space: nowrap;
       }
       .card.feature-bg .themeTag {
         background: var(--onAccent);
@@ -350,8 +349,8 @@
         display: flex;
       }
       .readBox {
-        width: min(86vw, 680px);
-        height: min(86vh, 640px);
+        width: min(82vw, 620px);
+        height: min(82vh, 580px);
         background: var(--panel);
         border-radius: 24px;
         border: 2pt solid var(--accent2);
@@ -422,8 +421,8 @@
         display: block;
       }
       .readBody {
-        font-size: clamp(1.05rem, 2vw, 1.35rem);
-        line-height: 1.7;
+        font-size: clamp(0.92rem, 1.65vw, 1.12rem);
+        line-height: 1.55;
         word-break: break-word;
       }
       .readBody > :first-child { margin-top: 0; }
@@ -432,9 +431,9 @@
         line-height: 1.25;
         margin: 1.25em 0 0.45em;
       }
-      .readBody h1 { font-size: 1.45em; }
-      .readBody h2 { font-size: 1.28em; }
-      .readBody h3 { font-size: 1.12em; }
+      .readBody h1 { font-size: 1.28em; }
+      .readBody h2 { font-size: 1.16em; }
+      .readBody h3 { font-size: 1.06em; }
       .readBody p { margin: 0 0 0.9em; }
       .readBody ul, .readBody ol { margin: 0 0 0.9em; padding-left: 1.45em; }
       .readBody blockquote {
@@ -448,8 +447,8 @@
       .readBody pre { margin: 0 0 0.9em; padding: 0.75em; overflow-x: auto; border-radius: 10px; background: var(--accent2); }
       .readBody pre code { padding: 0; background: transparent; }
       .markdownTableWrap { margin: 0 0 0.9em; overflow-x: auto; }
-      .readBody table { width: 100%; border-collapse: collapse; font-size: 0.88em; }
-      .readBody th, .readBody td { padding: 0.48em 0.6em; text-align: left; vertical-align: top; border: 1px solid var(--accent2); }
+      .readBody table { width: 100%; border-collapse: collapse; font-size: 0.78em; line-height: 1.4; }
+      .readBody th, .readBody td { padding: 0.4em 0.48em; text-align: left; vertical-align: top; border: 1px solid var(--accent2); }
       .readBody th { background: var(--accent2); font-weight: 900; }
       .readBtns {
         display: flex;
@@ -489,6 +488,13 @@
       }
 
       @media (max-width: 520px) {
+        .readBox {
+          width: min(92vw, 620px);
+          height: min(84vh, 580px);
+          padding: 0.9rem;
+        }
+        .readBody { font-size: 0.92rem; }
+        .readBody table { font-size: 0.74em; }
         .card {
           flex-wrap: wrap;
         }
@@ -947,11 +953,11 @@
           if (!isNaN(ord) && ord % 1 !== 0) card.classList.add("subchapter");
 
           var themeNo = String(f.ThemeNo || "").trim();
+          var themeTag;
           if (themeNo) {
-            var tag = document.createElement("span");
-            tag.className = "themeTag";
-            tag.textContent = themeNo;
-            card.appendChild(tag);
+            themeTag = document.createElement("span");
+            themeTag.className = "themeTag";
+            themeTag.textContent = themeNo;
           }
 
           var thumb = document.createElement("div");
@@ -975,6 +981,7 @@
           var h = document.createElement("h3");
           h.className = "cardTitle";
           h.textContent = title || "Reading";
+          if (themeTag) head.appendChild(themeTag);
           head.appendChild(h);
           if (title) {
             var speak = document.createElement("button");
