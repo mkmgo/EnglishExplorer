@@ -294,8 +294,10 @@
         margin-left: clamp(14px, 2.5vw, 28px);
       }
       .themeTag {
-        flex: none;
-        order: -1;
+        position: absolute;
+        top: 0;
+        left: 50%;
+        transform: translate(-50%, -50%);
         background: var(--accent);
         color: #fff;
         font-size: clamp(0.6rem, 1vw, 0.72rem);
@@ -953,11 +955,11 @@
           if (!isNaN(ord) && ord % 1 !== 0) card.classList.add("subchapter");
 
           var themeNo = String(f.ThemeNo || "").trim();
-          var themeTag;
           if (themeNo) {
-            themeTag = document.createElement("span");
-            themeTag.className = "themeTag";
-            themeTag.textContent = themeNo;
+            var tag = document.createElement("span");
+            tag.className = "themeTag";
+            tag.textContent = themeNo;
+            card.appendChild(tag);
           }
 
           var thumb = document.createElement("div");
@@ -981,7 +983,6 @@
           var h = document.createElement("h3");
           h.className = "cardTitle";
           h.textContent = title || "Reading";
-          if (themeTag) head.appendChild(themeTag);
           head.appendChild(h);
           if (title) {
             var speak = document.createElement("button");
