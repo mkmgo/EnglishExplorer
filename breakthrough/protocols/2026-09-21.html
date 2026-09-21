@@ -1,0 +1,172 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no" />
+    <title>Protocol 21/09/2026</title>
+    <meta name="description" content="English Explorer — Protocol 21/09/2026" />
+    <meta property="og:image" content="https://res.cloudinary.com/dmkhsyfzf/image/upload/q_auto/f_auto/v1781698464/protocol_r392x1.png" />
+    <link rel="icon" type="image/png" href="https://res.cloudinary.com/dmkhsyfzf/image/upload/q_auto/f_auto/v1781698464/protocol_r392x1.png" />
+    <link rel="apple-touch-icon" href="https://res.cloudinary.com/dmkhsyfzf/image/upload/q_auto/f_auto/v1781698464/protocol_r392x1.png" />
+    <style>
+      :root { --bg: #FAF7F2; --ink: #14213d; --muted: #60708d; --accent: #e43703; --accent2: #ffb866; --panel: #fcfcfc; --shadow: 0 18px 50px rgba(20,33,61,0.14); }
+      html[data-theme="dark"] { --bg: #161a24; --ink: #e8ecf4; --muted: #93a1b8; --panel: #1f2530; --shadow: 0 18px 50px rgba(0,0,0,0.55); }
+      .container[data-weekday="mon"]{--accent:#2563eb} .container[data-weekday="tue"]{--accent:#e43703} .container[data-weekday="wed"]{--accent:#0d9488} .container[data-weekday="thu"]{--accent:#7c3aed} .container[data-weekday="fri"]{--accent:#dc2626} .container[data-weekday="sat"]{--accent:#d97706} .container[data-weekday="sun"]{--accent:#475569}
+      *{box-sizing:border-box} html,body{margin:0;width:100%;min-height:100%;background:var(--bg);font-family:Arial,Helvetica,sans-serif;color:var(--ink);touch-action:manipulation;line-height:1.6}
+      .container{max-width:900px;margin:0 auto;padding:clamp(16px,4vw,40px) clamp(12px,3vw,24px)}
+      h1{font-size:clamp(1.8rem,5vw,3rem);margin:0 0 .2em;font-weight:900;letter-spacing:-.03em;color:var(--accent)}
+      .date-sub{font-size:clamp(.9rem,1.6vw,1.2rem);color:var(--muted);font-weight:700;letter-spacing:.1em;margin:0 0 .4em}
+      .to-line{font-size:clamp(.95rem,1.7vw,1.15rem);color:var(--muted);font-weight:800;letter-spacing:.06em;text-transform:uppercase;margin:0 0 2em}
+      .to-line b{color:var(--accent)}
+      .intro{background:var(--panel);border-radius:24px;padding:clamp(1rem,2.5vw,1.8em);box-shadow:var(--shadow);margin-bottom:2em;font-size:clamp(1rem,1.8vw,1.2rem);line-height:1.7}
+      .zh{display:block;margin-top:.6em;color:var(--muted);font-size:.92em}
+      h2{font-size:clamp(1.3rem,3.2vw,2rem);margin:2em 0 .6em;font-weight:900;color:var(--ink);letter-spacing:-.02em}
+      h3{font-size:clamp(1.1rem,2.2vw,1.5rem);margin:1.6em 0 .4em;font-weight:800;color:var(--accent)}
+      p{font-size:clamp(1rem,1.8vw,1.15rem);margin:.4em 0}
+      hr{border:0;border-top:2px solid rgba(96,112,141,.35);margin:1.4em 0}
+      .story-section{background:var(--panel);border-radius:24px;padding:clamp(1rem,2.5vw,1.6em);box-shadow:var(--shadow);margin-bottom:1.4em}
+      .story-section h3{margin-top:0} .story-section p{margin:0 0 .55em}
+      .example{background:#fdf3e7;border-left:5px solid var(--accent);border-radius:8px;padding:.7em 1em;margin:.8em 0 !important;font-style:italic}
+      .vocab-table{width:100%;border-collapse:separate;border-spacing:0;margin:1.6em 0 2em;background:var(--panel);border-radius:16px;box-shadow:var(--shadow);overflow:hidden}
+      .vocab-table th{background:var(--ink);color:var(--accent2);font-size:clamp(.85rem,1.5vw,1rem);font-weight:800;letter-spacing:.06em;padding:.8em 1em;text-align:left;white-space:nowrap}
+      .vocab-table td{padding:.7em 1em;font-size:clamp(.9rem,1.6vw,1.05rem);border-top:1px solid #eae5db;vertical-align:top;word-break:break-word}
+      .vocab-table tr:nth-child(even) td{background:#fdf9f3}
+      .vocab-table td:last-child{color:var(--muted);font-weight:600}
+      html[data-theme="dark"] .example{background:#232a36}
+      html[data-theme="dark"] hr{border-top-color:#333c4e}
+      html[data-theme="dark"] .vocab-table th{background:#0e1220}
+      html[data-theme="dark"] .vocab-table tr:nth-child(even) td{background:#232a36}
+      html[data-theme="dark"] .vocab-table td{border-top-color:#333c4e}
+      #themeToggle{position:fixed;top:clamp(10px,2vw,16px);right:clamp(10px,2vw,16px);z-index:50;width:clamp(38px,5vw,46px);height:clamp(38px,5vw,46px);border-radius:50%;background:var(--panel);color:var(--accent);border:2px solid var(--accent);font-size:20px;cursor:pointer;box-shadow:var(--shadow);line-height:1}
+    </style>
+  </head>
+  <body>
+    <button id="themeToggle" type="button" aria-label="Toggle dark mode">&#x263E;</button>
+    <div class="container" data-weekday="mon">
+      <h1>Protocol 21/09/2026</h1>
+      <p class="date-sub">English Explorer | Breakthrough</p>
+      <p class="to-line">For: <b>Nimza</b></p>
+      <div class="intro">
+        Please study the following structures and sentences well. Words and expressions must be fully understood and memorised. The last section shows today's new vocabulary. Please carefully repeat these as well.
+        <span class="zh">请将这些句子抄到练习本的词汇表下方。所有单词和表达方式都必须完全理解和记忆。</span>
+      </div>
+      <h2>Luck</h2>
+      <div class="story-section">
+      <h3>The Story of Luck ...</h3>
+      <hr>
+      <p>After sharing her food with the black cat, Sam is amazed when the cat turns around and speaks to her!</p>
+      <p>The cat drops a shiny lucky coin on the ground and runs away into a dark alley. Sam picks up the coin and puts it in her pocket.</p>
+      <p>The next morning, Sam notices something incredible. Her terrible bad luck completely disappears!</p>
+      <ul>
+        <li>Her toaster cooks her bread perfectly without burning it.</li>
+        <li>She opens her door without breaking the handle.</li>
+        <li>She drops her keys, but they bounce right into her hand!</li>
+      </ul>
+      <p>Sam is thrilled. She decides to give this lucky coin to her young friend, Hazel, so Hazel can find a loving family.</p>
+      <p>However, when Sam tries to flush her toilet, she accidentally drops the lucky coin into the water! The coin flushes away forever, and Sam’s awful bad luck returns immediately.</p>
+      <p>Desperate to find another coin, Sam searches the streets and spots the black cat again. She follows the sneaky animal down a secret side street and watches him step through a glowing, green portal!</p>
+      <hr>
+      <table class="vocab-table">
+        <thead><tr><th>Word</th><th>Simple Meaning</th></tr></thead>
+        <tbody>
+          <tr><td>Lucky Coin</td><td>A special metal coin that brings good fortune to anyone holding it.</td></tr>
+          <tr><td>Alley</td><td>A narrow street or path between buildings.</td></tr>
+          <tr><td>Incredible</td><td>Extremely surprising or hard to believe.</td></tr>
+          <tr><td>Flush</td><td>To wash something away down a toilet using water.</td></tr>
+          <tr><td>Portal</td><td>A magical door or gateway to another world.</td></tr>
+        </tbody>
+      </table>
+      <hr>
+      <hr>
+      <p>Circle or write the correct word in brackets to complete each sentence.</p>
+      <ol>
+        <li>The black cat dropped a coin, and Sam picked it up.</li>
+        <li>Hazel was happy because Sam wanted to help her.</li>
+        <li>Sam followed the cat because he ran down a dark alley.</li>
+        <li>The keys bounced into Sam's hand when she dropped them.</li>
+        <li>"Will you help me find another lucky coin?" asked Sam.</li>
+      </ol>
+      <hr>
+      <p>Use the correct past simple verb from the word bank to complete the story:</p>
+      <p>[ dropped | followed | flushed | spoke | noticed ]</p>
+      <ol>
+        <li>The black cat turned around and spoke to Sam!</li>
+        <li>Sam noticed that her bad luck went away in the morning.</li>
+        <li>She accidentally dropped the lucky coin into the toilet.</li>
+        <li>The water flushed the shiny coin away forever.</li>
+        <li>Sam followed the magical cat through a secret portal.</li>
+      </ol>
+      </div>
+      <h2>Vocabulary — 21/09/2026</h2>
+      <table class="vocab-table">
+        <thead><tr><th>English</th><th>Chinese</th></tr></thead>
+        <tbody>
+          <tr><td>Sharing</td><td>分享</td></tr>
+          <tr><td>Amazed</td><td>惊讶</td></tr>
+          <tr><td>To turn around</td><td>转身</td></tr>
+          <tr><td>Shiny</td><td>闪亮的</td></tr>
+          <tr><td>Lucky coin</td><td>幸运币</td></tr>
+          <tr><td>To drop</td><td>下降</td></tr>
+          <tr><td>Dark</td><td>黑暗的</td></tr>
+          <tr><td>Alley.</td><td>胡同。</td></tr>
+          <tr><td>To pick up</td><td>来接取</td></tr>
+          <tr><td>To notice</td><td>要注意</td></tr>
+          <tr><td>Incredible.</td><td>极好的。</td></tr>
+          <tr><td>Her terrible bad luck completely disappears!</td><td>她那可怕的厄运彻底消失了！</td></tr>
+          <tr><td>Her toaster cooks her bread perfectly without burning it.</td><td>她的烤面包机可以完美地烹制面包，而不会烧焦。</td></tr>
+          <tr><td>She opens her door without breaking the handle.</td><td>她打开门，没有折断把手。</td></tr>
+          <tr><td>She drops her keys, but they bounce right into her hand!</td><td>她的钥匙掉在了地上，但钥匙却弹到了她的手里！</td></tr>
+          <tr><td>Thrilled.</td><td>激动不已。</td></tr>
+          <tr><td>To decide</td><td>决定</td></tr>
+          <tr><td>...so Hazel can find a loving family.</td><td>...这样黑兹尔就能找到一个充满爱的家庭。</td></tr>
+          <tr><td>However,</td><td>然而，</td></tr>
+          <tr><td>Accidentally</td><td>偶然</td></tr>
+          <tr><td>She accidentally drops the lucky coin into the water</td><td>她不小心把幸运币掉进了水里</td></tr>
+          <tr><td>The coin flushes away forever, and Sam’s awful bad luck returns immediately.</td><td>硬币永远被冲走了，山姆的坏运气立刻又回来了。</td></tr>
+          <tr><td>Immediately.</td><td>立即地。</td></tr>
+          <tr><td>Desperate</td><td>绝望的</td></tr>
+          <tr><td>Desperate to find another coin, Sam searches the streets and spots the black cat again.</td><td>山姆急于找到另一枚硬币，他在街道上搜寻，再次发现了黑猫。</td></tr>
+          <tr><td>To follow</td><td>关注</td></tr>
+          <tr><td>Sneaky</td><td>运动鞋</td></tr>
+          <tr><td>Animal</td><td>动物</td></tr>
+          <tr><td>Secret</td><td>秘密</td></tr>
+          <tr><td>To step</td><td>迈步</td></tr>
+          <tr><td>A step</td><td>一步</td></tr>
+          <tr><td>Scottish</td><td>苏格兰人</td></tr>
+          <tr><td>A special metal coin that brings good fortune to anyone holding it.</td><td>一种特殊的金属硬币，可为持有它的人带来好运。</td></tr>
+          <tr><td>Narrow</td><td>狭窄的</td></tr>
+          <tr><td>Path</td><td>小路</td></tr>
+          <tr><td>Incredible</td><td>极好的</td></tr>
+          <tr><td>Extremely surprising or hard to believe.</td><td>极其令人惊讶或难以置信。</td></tr>
+          <tr><td>To wash something away down a toilet using water.</td><td>用水冲掉马桶里的东西。</td></tr>
+          <tr><td>Portal</td><td>门户网站</td></tr>
+          <tr><td>A magical door or gateway to another world.</td><td>通往另一个世界的神奇之门或门户。</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <script>
+      (function () {
+        var d = document.documentElement;
+        var K = "eebt-theme";
+        function apply() {
+          var dt = d.getAttribute("data-theme") === "dark";
+          var b = document.getElementById("themeToggle");
+          if (b) b.textContent = dt ? "\u2600" : "\u263E";
+        }
+        var t = null;
+        try { t = localStorage.getItem(K); } catch (e) {}
+        if (t === "dark" || t === "light") d.setAttribute("data-theme", t);
+        else if (window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches) d.setAttribute("data-theme", "dark");
+        else d.setAttribute("data-theme", "light");
+        apply();
+        var b = document.getElementById("themeToggle");
+        if (b) b.onclick = function () {
+          var n = d.getAttribute("data-theme") === "dark" ? "light" : "dark";
+          d.setAttribute("data-theme", n);
+          apply();
+          try { localStorage.setItem(K, n); } catch (e) {}
+        };
+      })();
+    </script>
+  </body>
+</html>
