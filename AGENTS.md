@@ -296,7 +296,7 @@ CSS colour variable arrives in `PrimaryColour` (not `Fill`) — the game accepts
 | `TextColour` | Single line text *(optional)* | Word colour on the brick front; empty = `var(--text)`. |
 | `TextSize` | Single line text *(optional)* | Word size: `Small` / `Medium` (0.85rem, default) / `Large`, or a px/rem value. |
 | `ColourOutsideFrame` | Checkbox *(optional)* | Invert colour placement: the frame stays neutral and the **card face** fills with `PrimaryColour` (colour-only / lucide-icon). Empty = colour stays inside the frame (current behaviour). |
-| `FillTile` | Checkbox *(optional)* | Full-tile mode: the asset fills the whole brick face edge-to-edge and the word label is hidden (icon boosts to 52px). Works with all three render modes; overrides `Frame`/`FrameSize`/`FrameBorder` for that card. Empty = framed asset + label (default). |
+| `FillTile` | Checkbox *(optional)* | Full-tile mode: the asset fills the whole brick face edge-to-edge and the word label is hidden (icon boosts to 52px). Works with all three render modes; overrides `Frame`/`FrameSize`/`FrameBorder` for that card. Empty = framed asset + label (default). The face keeps its 10px radius (`.frontFace.fulltile`) so filled and framed bricks share the same corner rounding. |
 | `Fill` | Single line text *(optional)* | Colour-only frame background — any CSS colour (hex `#ef4444`, name `red`, or palette var `var(--color-red)`). Empty = falls back to `PrimaryColour`. |
 
 - Shared CSS colour palette available to `Fill` / `PrimaryColour` (theme-aware vars):

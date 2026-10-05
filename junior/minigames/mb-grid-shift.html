@@ -254,13 +254,15 @@
         border: 1px solid var(--item-border);
       }
       /* Full-tile bricks (Airtable `FillTile`): the asset covers the whole
-         face edge to edge with no rounded corners left exposed — the face's
-         default 1px border and padding are removed and the radius is zeroed
-         so no edge line or corner sliver of background remains. */
+         face edge to edge — the face's default 1px border and padding are
+         removed so no edge line or sliver of background remains, while the
+         radius is kept (inherited 10px from .face) so every brick, filled or
+         framed, has identical corner rounding. overflow:hidden then clips the
+         edge-to-edge asset to those rounded corners. */
       .frontFace.fulltile {
         padding: 0;
         border: 0;
-        border-radius: 0;
+        border-radius: 10px;
         overflow: hidden;
       }
       .backFace {
