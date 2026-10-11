@@ -105,6 +105,42 @@ describe("English Explorer Tracker worker", () => {
 		}
 	});
 
+	it("reads GridShiftVariants without a sort param", async () => {
+		const ctx = createExecutionContext();
+		let requestedUrl = "";
+		const origFetch = globalThis.fetch;
+		globalThis.fetch = (url) => {
+			requestedUrl = String(url);
+			return new Response(
+				JSON.stringify({
+					records: [
+						{
+							id: "rec10",
+							fields: { Name: "GridShift Pure Match", Active: true },
+						},
+					],
+				}),
+				{ status: 200, headers: { "Content-Type": "application/json" } },
+			);
+		};
+		try {
+			const response = await worker.fetch(
+				new Request(
+					"https://tracker.dev/airtable?table=GridShiftVariants",
+				),
+				{ AIRTABLE_BASE_ID: "base1", AIRTABLE_PAT: "pat-test" },
+				ctx,
+			);
+			await waitOnExecutionContext(ctx);
+			expect(response.status).toBe(200);
+			expect(requestedUrl).not.toContain("sort[0][field]");
+			const body = await response.json();
+			expect(body.records[0].fields.Name).toBe("GridShift Pure Match");
+		} finally {
+			globalThis.fetch = origFetch;
+		}
+	});
+
 	it("proxies a GET to the GitHub API", async () => {
 		const ctx = createExecutionContext();
 		const inner = () =>

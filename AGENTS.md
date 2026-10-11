@@ -33,6 +33,7 @@ EnglishExplorer/
 │   └── minigames/              <-- Highly gamified mini-games (formerly /Features)
 │       ├── abc-world.html
 │       ├── mb-grid-shift.html  <-- Grid Shift: flip bricks (front/back) from two 20-card stacks onto a shared 8x5 grid; Airtable table GridShift
+│       ├── md-grid-shift-pure-match.html  <-- Single-player Grid Shift: place flipped cards onto randomized matching text imprints
 │       ├── mystery-base.html   <-- FLAGSHIP: most-viewed, most-developed version; keep pristine, treat as base for feature integration
 │       ├── mystery-phrases.html
 │       ├── new-words-wizard.html
@@ -75,9 +76,9 @@ put in them (see "Self-contained files" below).
 - Every HTML file is fully self-contained: inline `<style>` and inline `<script>`, no local assets folder.
 - **Approved exception for external JS**: the Lucide icon library (`https://unpkg.com/lucide@latest`,
   loaded right before `tracker.js`) — used by `junior/minigames/mystery-base.html` and
-  `junior/minigames/mb-grid-shift.html`. Icons are declared as `<i data-lucide="name">` placeholders
-  and swapped for real SVGs with `lucide.createIcons()` via a `renderIcons()` helper. Do **not** add
-  any other external JS/CSS library without discussion.
+  both Grid Shift pages. Icons are declared as `<i data-lucide="name">` placeholders and swapped
+  for real SVGs with `lucide.createIcons()` via a `renderIcons()` helper. Do **not** add any other
+  external JS/CSS library without discussion.
 - Images and videos are hosted on Cloudinary and referenced by absolute `https://res.cloudinary.com/...` URLs.
 - No HTML file links to another HTML file (no local `href`/`src`/`window.open` to sibling files). **Do not introduce relative file references** — if two files must share code, treat that as a deliberate refactor and discuss it first.
 - When moving/renaming a file, move it without editing (git detects byte-identical copies as renames), then apply any edits on the new path.
@@ -114,7 +115,8 @@ There is **no `config.js`** — all secrets live server-side in the Cloudflare W
   - `GET /airtable?table=<TableName>` — read-only Airtable reader (PAT stays server-side).
     Only **allowlisted** tables are readable. Each table is sorted by its own field (or its
     natural Airtable order when it has no sort field): `BTStudyHub` (sorted by `DisplayOrder`,
-    used by `bt-study-hub.html`) and `GridShift` (natural order, used by `mb-grid-shift.html`).
+    used by `bt-study-hub.html`), `GridShift` (used by both Grid Shift games), and
+    `GridShiftVariants` (used by `md-grid-shift-pure-match.html`).
     Returns `{ records: [...] }`.
   - `POST /` — Airtable visitor tracking.
   - `OPTIONS` — CORS preflight (`GET, POST, OPTIONS`).
@@ -135,9 +137,9 @@ cursor and fires synthetic `PointerEvent`s (Cross-press/release) into the
 existing document-level drag-and-drop handlers.
 
 - Implemented in **`junior/minigames/mystery-base.html`** (flagship) and
-  **`junior/minigames/mb-grid-shift.html`**. Steering is confirmed working
-  on-device (Tizen + PS4 controller). **Keep both copies in sync** when changing
-  the bridge.
+  both **Grid Shift** pages. Steering is confirmed working on-device (Tizen +
+  PS4 controller) in the flagship and original Grid Shift game. **Keep all three
+  copies in sync** when changing the bridge.
 - Layout pieces required: the `#gamepadCursor` div, its CSS block (`.connected`,
   `.grabbing`, `.hovering`), and the poller starting with
   `if (typeof navigator !== "undefined" && navigator.getGamepads) { padPoll(); }`.
@@ -267,6 +269,17 @@ across the two decks (`Math.ceil(count / 2)`) — e.g. 20 → 10/10, 30 → 15/1
   "Grid complete!" fires only when **both** decks are empty.
 - The game fetches `GET /airtable?table=GridShift` (allowlisted in the worker).
 
+### Grid Shift Pure Match variant
+
+`junior/minigames/md-grid-shift-pure-match.html` is a separate one-player game.
+It uses the active `GridShiftVariants` row named `Grid Shift Pure Match` for its
+settings, then includes every `GridShift` record with `PM-Active` checked.
+`DeckCount` must be `Variable`, `GridDimension` supports a cell count or
+`columns x rows`, `Placing` currently supports `Random`, and `Hint` must be
+`Imprints of Display (Text)`. Each checked card's `Display` text is placed at a
+random unique cell; cards can only be placed on a matching imprint. Both Airtable
+tables must be allowlisted by the worker.
+
 ### Airtable `GridShift` table schema
 
 The minigame reads fields **by name**, not position. Note: for colour-only rows the
@@ -276,6 +289,7 @@ CSS colour variable arrives in `PrimaryColour` (not `Fill`) — the game accepts
 |---|---|---|
 | `GridShiftID` | Autonumber | Stable per-brick id (also logs Turn/Place actions). |
 | `Active` | Checkbox | Whether this brick is included in the game. Only checked cards are fetched, shuffled and dealt; the grid self-sizes to the checked count (see "Grid sizing" above). |
+| `PM-Active` | Checkbox *(optional)* | Whether this brick is included in Grid Shift Pure Match; the variant uses every checked row and matches against `Display`. |
 | `TileName` | Single line text | Internal machine name (e.g. `Living-Room`). |
 | `Display` | Single line text | Word shown on the brick front (e.g. `Lounge`) — falls back to `TileName`. |
 | `Category` | Single line text | Grouping (Numbers, Clothes, Animals, Colours, Rooms, Directions) — currently unused by the UI. |

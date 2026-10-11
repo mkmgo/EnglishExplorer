@@ -119,23 +119,33 @@
       }
 
       .stage {
+        display: grid;
+        grid-template-columns: 148px minmax(0, 1fr);
+        grid-template-areas: "players grid";
+        align-items: start;
+        gap: 18px;
+        width: 100%;
+        max-width: 1500px;
+      }
+
+      /* Wide layout stacks both player decks beside the board. */
+      .deckPair {
+        grid-area: players;
         display: flex;
         flex-direction: column;
         align-items: center;
-        gap: 18px;
-        width: 100%;
-        max-width: 1000px;
-      }
-
-      /* The two decks side by side (red left, orange right). */
-      .deckPair {
-        display: flex;
-        justify-content: center;
-        align-items: flex-start;
         gap: 14px;
-        flex-wrap: wrap;
       }
-
+      .gridWrap {
+        grid-area: grid;
+        min-width: 0;
+        max-width: 100%;
+        overflow-x: auto;
+      }
+      .grid {
+        width: max-content;
+        margin: 0 auto;
+      }
       /* ---------- Deck (stacked mystery bricks) ---------- */
       .deckPanel {
         flex: none;
@@ -382,8 +392,16 @@
           padding: 14px;
         }
         .stage {
+          display: flex;
           flex-direction: column;
           align-items: center;
+        }
+        .deckPair {
+          display: flex;
+          justify-content: center;
+          align-items: flex-start;
+          gap: 14px;
+          flex-wrap: wrap;
         }
         .deckPanel {
           flex-direction: row;

@@ -12,6 +12,7 @@ const CORS_HEADERS = {
 const ALLOWED_AIRTABLE_TABLES = {
 	BTStudyHub: 'DisplayOrder',
 	GridShift: null,
+	GridShiftVariants: null,
 	HandWriting: null,
 };
 

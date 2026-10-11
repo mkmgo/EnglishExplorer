@@ -1,0 +1,1361 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Grid Shift Pure Match</title>
+    <style>
+      :root,
+      html.light {
+        color-scheme: light;
+        --bg-color: #f0f4f8;
+        --card-bg: #ffffff;
+        --primary: #3b82f6;
+        --accent: #f59e0b;
+        --text: #1f2937;
+        --heading: #1e3a8a;
+        --muted: #475569;
+        --border: #cbd5e1;
+        --border-strong: #94a3b8;
+        --dropzone-bg: #f8fafc;
+        --dropzone-hover: #dbeafe;
+        --item-bg: #e5e7eb;
+        --item-border: #6b7280;
+        --img-bg: #ffffff;
+        --good: #10b981;
+        --goal-bg: #d1fae5;
+        --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        --color-blue: #3b82f6;
+        --color-yellow: #eab308;
+        --color-green: #22c55e;
+        --color-red: #ef4444;
+        --color-orange: #f97316;
+        --color-purple: #a855f7;
+      }
+
+      @media (prefers-color-scheme: dark) {
+        :root {
+          color-scheme: dark;
+          --bg-color: #0f172a;
+          --card-bg: #1e293b;
+          --primary: #60a5fa;
+          --accent: #fbbf24;
+          --text: #e2e8f0;
+          --heading: #93c5fd;
+          --muted: #94a3b8;
+          --border: #334155;
+          --border-strong: #475569;
+          --dropzone-bg: #16233a;
+          --dropzone-hover: #1d3a5f;
+          --item-bg: #1e293b;
+          --item-border: #64748b;
+          --img-bg: #f8fafc;
+          --good: #34d399;
+          --goal-bg: #064e3b;
+          --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.45);
+        }
+      }
+
+      html.dark {
+        color-scheme: dark;
+        --bg-color: #0f172a;
+        --card-bg: #1e293b;
+        --primary: #60a5fa;
+        --accent: #fbbf24;
+        --text: #e2e8f0;
+        --heading: #93c5fd;
+        --muted: #94a3b8;
+        --border: #334155;
+        --border-strong: #475569;
+        --dropzone-bg: #16233a;
+        --dropzone-hover: #1d3a5f;
+        --item-bg: #1e293b;
+        --item-border: #64748b;
+        --img-bg: #f8fafc;
+        --good: #34d399;
+        --goal-bg: #064e3b;
+        --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.45);
+      }
+
+      #themeToggle {
+        position: fixed;
+        top: 12px;
+        right: 12px;
+        z-index: 10;
+        width: 46px;
+        height: 46px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.3rem;
+        line-height: 1;
+        background: var(--card-bg);
+        color: var(--text);
+        border: 2px solid var(--border);
+        border-radius: 999px;
+        box-shadow: var(--shadow);
+        cursor: pointer;
+        -webkit-tap-highlight-color: transparent;
+      }
+
+      body {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        background-color: var(--bg-color);
+        color: var(--text);
+        margin: 0;
+        padding: 20px;
+        min-height: 100vh;
+        overflow-x: hidden;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+
+      h1 {
+        margin: 0 0 8px;
+        color: var(--heading);
+        font-size: clamp(1.4rem, 3.4vw, 2rem);
+        text-align: center;
+      }
+
+      .stage {
+        display: grid;
+        grid-template-columns: 148px minmax(0, 1fr);
+        grid-template-areas: "players grid";
+        align-items: start;
+        gap: 18px;
+        width: 100%;
+        max-width: 1500px;
+      }
+
+      /* Wide layout stacks both player decks beside the board. */
+      .deckPair {
+        grid-area: players;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 14px;
+      }
+      .gridWrap {
+        grid-area: grid;
+        min-width: 0;
+        max-width: 100%;
+        overflow-x: auto;
+      }
+      .grid {
+        width: max-content;
+        margin: 0 auto;
+      }
+      /* ---------- Deck (stacked mystery bricks) ---------- */
+      .deckPanel {
+        flex: none;
+        width: 148px;
+        background: var(--card-bg);
+        border: 2px solid var(--border);
+        border-radius: 14px;
+        box-shadow: var(--shadow);
+        padding: 12px;
+        box-sizing: border-box;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 12px;
+      }
+      .deckHead {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-weight: 800;
+        color: var(--muted);
+        font-size: clamp(0.82rem, 1.5vw, 0.95rem);
+        text-transform: uppercase;
+        letter-spacing: 0.03em;
+      }
+      /* Deck colour badge (Red / Orange). */
+      .deckHead .dot {
+        width: 14px;
+        height: 14px;
+        border-radius: 50%;
+        display: inline-block;
+        box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.18);
+      }
+      .count {
+        background: var(--item-bg);
+        border: 1px solid var(--item-border);
+        border-radius: 999px;
+        padding: 1px 8px;
+        font-size: 0.85em;
+        color: var(--text);
+      }
+      .deck {
+        position: relative;
+        width: 112px;
+        height: 100px;
+        border-radius: 10px;
+        overflow: hidden;
+        box-sizing: border-box;
+        outline: 2px dashed var(--border-strong);
+        outline-offset: -2px;
+        background: var(--item-bg);
+      }
+      .statusText {
+        text-align: center;
+        font-weight: 900;
+        color: var(--good);
+        font-size: 0.95rem;
+        margin-top: 16px;
+      }
+      .hint {
+        text-align: center;
+        color: var(--muted);
+        font-size: 0.78rem;
+        font-weight: 600;
+        line-height: 1.35;
+      }
+
+      /* ---------- Flip card (front + back brick) ---------- */
+      .flipCard {
+        width: 96px;
+        height: 84px;
+        box-sizing: border-box;
+        position: absolute;
+        top: 0;
+        left: 0;
+        perspective: 600px;
+        cursor: grab;
+        touch-action: none;
+        -webkit-tap-highlight-color: transparent;
+        -webkit-touch-callout: none;
+        -webkit-user-select: none;
+        user-select: none;
+      }
+      .flipCard:active {
+        cursor: grabbing;
+      }
+      .flipInner {
+        position: relative;
+        width: 100%;
+        height: 100%;
+        transform-style: preserve-3d;
+        transition: transform 0.45s ease;
+      }
+      .flipCard.flipped .flipInner {
+        transform: rotateY(180deg);
+      }
+      .face {
+        position: absolute;
+        inset: 0;
+        border-radius: 10px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 3px;
+        padding: 4px;
+        text-align: center;
+        box-sizing: border-box;
+        backface-visibility: hidden;
+        -webkit-backface-visibility: hidden;
+      }
+      .frontFace {
+        transform: rotateY(180deg);
+        background-color: var(--item-bg);
+        color: var(--text);
+        border: 1px solid var(--item-border);
+      }
+      /* Full-tile bricks (Airtable `FillTile`): the asset covers the whole
+         face edge to edge — the face's default 1px border and padding are
+         removed so no edge line or sliver of background remains, while the
+         radius is kept (inherited 10px from .face) so every brick, filled or
+         framed, has identical corner rounding. overflow:hidden then clips the
+         edge-to-edge asset to those rounded corners. */
+      .frontFace.fulltile {
+        padding: 0;
+        border: 0;
+        border-radius: 10px;
+        overflow: hidden;
+      }
+      .backFace {
+        background: var(--item-bg) center center / cover no-repeat;
+        border: 1px solid var(--item-border);
+        box-shadow: inset 0 0 12px rgba(0, 0, 0, 0.35);
+      }
+      .round {
+        width: 48px;
+        height: 48px;
+        flex: none;
+        border-radius: 50%;
+        overflow: hidden;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: var(--img-bg);
+        border: 1px solid var(--item-border);
+        box-sizing: border-box;
+      }
+      .round img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
+        -webkit-user-drag: none;
+        pointer-events: none;
+      }
+      .round svg {
+        width: var(--icon-size, 28px);
+        height: var(--icon-size, 28px);
+      }
+      /* Optional SecondColour glow: soft drop-shadow around the icon stroke. */
+      .round.glow svg {
+        filter: drop-shadow(0 0 2px var(--second-colour, rgba(0, 0, 0, 0.4)));
+      }
+      .cardName {
+        font-weight: bold;
+        font-size: 0.85rem;
+        line-height: 1;
+        color: var(--text);
+        max-width: 100%;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+
+      /* Only the top card of the stack can be flipped / dragged. */
+      .deck .flipCard:not(:last-child) {
+        pointer-events: none;
+      }
+      .flipCard.dragging-original {
+        opacity: 0.35;
+      }
+      .flipCard.ghost {
+        position: fixed;
+        z-index: 1000;
+        pointer-events: none;
+        margin: 0;
+        transform: scale(1.05);
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.25);
+      }
+      /* A placed brick sits snugly inside its grid cell and stays grab-able
+         so it can be moved to another empty cell. */
+      .cell .flipCard {
+        position: relative;
+        top: auto !important;
+        left: auto !important;
+        z-index: auto !important;
+        cursor: grab;
+      }
+
+      /* ---------- 8 x 5 grid ---------- */
+      .gridWrap {
+        max-width: 100%;
+      }
+      .grid {
+        display: grid;
+        grid-template-columns: repeat(8, 104px);
+        grid-template-rows: repeat(5, 92px);
+        gap: 10px;
+        padding: 12px;
+        background: var(--dropzone-bg);
+        border: 2px dashed var(--border-strong);
+        border-radius: 14px;
+        box-sizing: border-box;
+      }
+      .cell {
+        width: 104px;
+        height: 92px;
+        box-sizing: border-box;
+        outline: 2px dashed var(--border-strong);
+        outline-offset: -2px;
+        border-radius: 10px;
+        background: var(--item-bg);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: background-color 0.2s, outline-color 0.2s;
+      }
+      .cell.drag-over {
+        background: var(--dropzone-hover);
+        outline-color: var(--primary);
+      }
+      .cell.filled {
+        outline-style: solid;
+        outline-color: var(--border);
+        background: transparent;
+      }
+      .cell .imprint {
+        max-width: 100%;
+        padding: 4px;
+        opacity: 0.35;
+        text-align: center;
+        pointer-events: none;
+      }
+      .cell .imprint span {
+        color: var(--text);
+        font-size: 0.85rem;
+        font-weight: 700;
+        line-height: 1.1;
+        overflow-wrap: anywhere;
+      }
+      .cell .imprint.taken {
+        display: none;
+      }
+      .cell.wrong-target {
+        background: #fee2e2;
+        outline-color: #ef4444;
+      }
+      html.dark .cell.wrong-target {
+        background: #7f1d1d;
+      }
+      .cell .flipCard.matched {
+        pointer-events: none;
+        cursor: default;
+      }
+      .grid.done {
+        border-color: var(--good);
+        background: var(--goal-bg);
+      }
+
+      @media (max-width: 900px) {
+        body {
+          padding: 14px;
+        }
+        .stage {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+        }
+        .deckPair {
+          display: flex;
+          justify-content: center;
+          align-items: flex-start;
+          gap: 14px;
+          flex-wrap: wrap;
+        }
+        .deckPanel {
+          flex-direction: row;
+          flex-wrap: wrap;
+          justify-content: center;
+        }
+        .deck {
+          margin: 0 6px;
+        }
+        .hint {
+          flex-basis: 100%;
+        }
+        .gridWrap {
+          overflow-x: auto;
+          max-width: 100%;
+        }
+        .grid {
+          width: max-content;
+          margin: 0 auto;
+        }
+      }
+
+      @media (max-width: 640px) {
+        html,
+        body {
+          -webkit-touch-callout: none;
+          -webkit-user-select: none;
+          user-select: none;
+        }
+      }
+
+      img {
+        -webkit-user-drag: none;
+        pointer-events: none;
+      }
+
+      /* PS4 controller cursor (shown when a gamepad is connected) */
+      #gamepadCursor {
+        position: fixed;
+        z-index: 3000;
+        width: 30px;
+        height: 30px;
+        margin: -15px 0 0 -15px;
+        border-radius: 50%;
+        border: 3px solid #22c55e;
+        background: rgba(34, 197, 94, 0.18);
+        box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.25);
+        pointer-events: none;
+        display: none;
+        transition:
+          border-color 0.15s,
+          background-color 0.15s;
+      }
+      #gamepadCursor.connected {
+        display: block;
+      }
+      #gamepadCursor.grabbing {
+        border-color: #f59e0b;
+        background: rgba(245, 158, 11, 0.28);
+        transform: scale(1.25);
+      }
+      /* Gamepad cursor hover state: blue ring when over a clickable /
+         draggable target so the player knows Cross (or grab) will activate it. */
+      #gamepadCursor.hovering {
+        border-color: #3b82f6;
+        background: rgba(59, 130, 246, 0.28);
+        box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.4);
+      }
+      #gamepadCursor.hovering.grabbing {
+        border-color: #f59e0b;
+        background: rgba(245, 158, 11, 0.28);
+        box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.35);
+      }
+    </style>
+  </head>
+  <body>
+    <button id="themeToggle" aria-label="Toggle dark mode" title="Toggle dark mode">
+      🌙
+    </button>
+    <div id="gamepadCursor"></div>
+    <h1>Grid Shift Pure Match</h1>
+
+    <main class="stage">
+      <div class="deckPair">
+        <section class="deckPanel">
+          <div class="deckHead"><span class="dot" style="background:#ef4444"></span><span>Player</span><span class="count" id="count">0</span></div>
+          <div class="deck" id="deck"></div>
+          <div class="hint">Turn over each card, then place it on the matching imprint.</div>
+        </section>
+      </div>
+
+      <div class="gridWrap">
+        <section class="grid" id="grid"></section>
+      </div>
+    </main>
+
+    <div class="statusText" id="status" hidden>Grid complete!</div>
+    <div class="hint" id="feedback" role="status" aria-live="polite"></div>
+
+    <script>
+      // Theme toggle (dark mode). Defaults to system preference.
+      (function () {
+        var root = document.documentElement;
+        var btn = document.getElementById("themeToggle");
+        var theme = "system";
+        try {
+          var saved = localStorage.getItem("miniGameTheme");
+          if (saved === "dark" || saved === "light") theme = saved;
+        } catch (e) {}
+        var darkMq = window.matchMedia("(prefers-color-scheme: dark)");
+
+        function apply() {
+          var dark = theme === "dark" || (theme === "system" && darkMq.matches);
+          root.classList.toggle("dark", dark);
+          root.classList.toggle("light", !dark);
+          btn.textContent = dark ? "☀️" : "🌙";
+        }
+
+        apply();
+        if (darkMq.addEventListener) darkMq.addEventListener("change", apply);
+        else if (darkMq.addListener) darkMq.addListener(apply);
+        btn.addEventListener("click", function () {
+          theme = theme === "dark" ? "light" : "dark";
+          try {
+            localStorage.setItem("miniGameTheme", theme);
+          } catch (e) {}
+          apply();
+        });
+      })();
+
+      var WORKER =
+        "https://english-explorer-tracker.mkmueller-mission.workers.dev/airtable?table=";
+      var PAGE = "/junior/minigames/md-grid-shift-pure-match.html";
+
+      var deckEl = document.getElementById("deck");
+      var countEl = document.getElementById("count");
+      var gridEl = document.getElementById("grid");
+      var statusEl = document.getElementById("status");
+      var feedbackEl = document.getElementById("feedback");
+
+      var COLS = 8;
+      var ROWS = 5;
+
+      // Lucide loads at runtime from the CDN (same as mystery-base); this
+      // replaces every <i data-lucide> placeholder with its real SVG.
+      function renderIcons() {
+        if (typeof lucide === "undefined") return;
+        lucide.createIcons();
+      }
+
+      function track(action, detail) {
+        if (typeof logActivity === "function") {
+          logActivity("Nimza", PAGE, "GridShift", action, detail || "").catch(function () {});
+        }
+      }
+
+      function gridDimensions(count) {
+        if (count <= 20) return { cols: 5, rows: 4 };
+        if (count <= 30) return { cols: 6, rows: 5 };
+        if (count <= 40) return { cols: 8, rows: 5 };
+        var cols = Math.ceil(Math.sqrt(count));
+        return { cols: cols, rows: Math.ceil(count / cols) };
+      }
+
+      function buildGrid(cols, rows, targets) {
+        gridEl.innerHTML = "";
+        gridEl.style.gridTemplateColumns = "repeat(" + cols + ", 104px)";
+        gridEl.style.gridTemplateRows = "repeat(" + rows + ", 92px)";
+        var targetCells = [];
+        for (var i = 0; i < cols * rows; i++) targetCells.push(i);
+        shuffle(targetCells);
+        for (var c = 0; c < cols * rows; c++) {
+          var cell = document.createElement("div");
+          cell.className = "cell";
+          gridEl.appendChild(cell);
+        }
+        targets.forEach(function (target, i) {
+          var cell = gridEl.children[targetCells[i]];
+          cell.dataset.match = target.key;
+          var imprint = document.createElement("div");
+          imprint.className = "imprint";
+          var text = document.createElement("span");
+          text.textContent = target.text;
+          imprint.appendChild(text);
+          cell.appendChild(imprint);
+        });
+      }
+
+      var remaining = [];
+
+      function normalizedFieldName(name) {
+        return String(name || "").toLowerCase().replace(/[^a-z0-9]/g, "");
+      }
+
+      function getField(fields, name) {
+        var wanted = normalizedFieldName(name);
+        var key = Object.keys(fields || {}).find(function (fieldName) {
+          return normalizedFieldName(fieldName) === wanted;
+        });
+        return key ? fields[key] : undefined;
+      }
+
+      function normalizeMatch(value) {
+        return String(value || "").trim().toLowerCase();
+      }
+
+      function parseHintField(hint) {
+        var match = /^imprints?\s+of\s+(.+?)\s*\(\s*text\s*\)$/i.exec(
+          String(hint || "").trim(),
+        );
+        if (!match) {
+          throw new Error("Hint must use the format 'Imprints of <field> (Text)'.");
+        }
+        return match[1].trim();
+      }
+
+      function parseGridDimension(value, cardCount) {
+        var text = String(value || "").trim().toLowerCase();
+        var dimensions =
+          /(\d+)\s*(?:columns?\s*)?[x×]\s*(\d+)\s*(?:rows?)?/i.exec(text);
+        if (dimensions) {
+          return {
+            cols: parseInt(dimensions[1], 10),
+            rows: parseInt(dimensions[2], 10),
+          };
+        }
+        if (text === "variable" || text === "auto") {
+          return gridDimensions(cardCount);
+        }
+        if (/^\d+$/.test(text)) {
+          var cells = parseInt(text, 10);
+          if (cells === 20) return { cols: 5, rows: 4 };
+          if (cells === 30) return { cols: 6, rows: 5 };
+          if (cells === 40) return { cols: 8, rows: 5 };
+          var cols = Math.ceil(Math.sqrt(cells));
+          return { cols: cols, rows: Math.ceil(cells / cols) };
+        }
+        throw new Error("GridDimension must be a cell count or columns x rows.");
+      }
+
+      function parseDeckCount(value, activeCount) {
+        var text = String(value || "").trim().toLowerCase();
+        if (text === "variable") return activeCount;
+        throw new Error(
+          "Pure Match requires DeckCount = Variable so every PM-Active card is included.",
+        );
+      }
+
+      // ---- Per-card styling from Airtable -------------------------------
+      // Optional fields on the GridShift table let a brick override the
+      // default .round / .cardName look per card (see AGENTS.md). Empty
+      // fields keep today's defaults, so existing cards are unchanged.
+      function shapeRadius(frame) {
+        var s = String(frame || "").trim().toLowerCase();
+        if (!s || s === "round") return "50%";
+        if (s === "square") return "0";
+        var r = /^r(\d+)$/.exec(s);
+        if (r) return r[1] + "px";
+        if (/^\d+(\.\d+)?$/.test(s)) return parseFloat(s) + "px";
+        if (/^\d+(\.\d+)?(px|rem|em|%|vmin|vw)$/.test(s)) return s;
+        return "50%";
+      }
+
+      function isChecked(val) {
+        var v = String(val === undefined || val === null ? "" : val).trim().toLowerCase();
+        return v === "true" || v === "1" || v === "checked" || v === "on" || v === "yes";
+      }
+
+      function iconSizeCss(size) {
+        var s = String(size || "").trim().toLowerCase();
+        if (!s || s === "medium") return "28px";
+        if (s === "small") return "22px";
+        if (s === "large") return "36px";
+        if (/^\d+(\.\d+)?$/.test(s)) return parseFloat(s) + "px";
+        return "28px";
+      }
+
+      function textSizeCss(size) {
+        var s = String(size || "").trim().toLowerCase();
+        if (!s || s === "medium") return "";
+        if (s === "small") return "0.72rem";
+        if (s === "large") return "1.05rem";
+        if (/^\d+(\.\d+)?$/.test(s)) return parseFloat(s) + "px";
+        if (/^\d+(\.\d+)?(px|rem|em)$/.test(s)) return s;
+        return "";
+      }
+
+      function buildCard(rec, matchText) {
+        var f = (rec && rec.fields) || {};
+        var id = f.GridShiftID || f.TileName || "";
+        var mode = f.RenderMode || "cloudinary-img";
+        var label = f.Display || f.TileName || id;
+        var front = f.TileFront || "";
+        var back = f.TileBackA || f.TileBack || "";
+        var fill = f.Fill || f.PrimaryColour || "";
+        var primary = f.PrimaryColour || "#060606";
+        var invert = isChecked(f.ColourOutsideFrame);
+        var fulltile = isChecked(f.FillTile);
+
+        var card = document.createElement("div");
+        card.className = "flipCard draggable-item";
+        card.dataset.flipped = "false";
+        card.dataset.id = String(id);
+        card.dataset.match = normalizeMatch(matchText);
+        card.dataset.imprint = String(matchText).trim();
+
+        var inner = document.createElement("div");
+        inner.className = "flipInner";
+
+        var backFace = document.createElement("div");
+        backFace.className = "face backFace";
+        if (back) backFace.style.backgroundImage = "url('" + back + "')";
+
+        var frontFace = document.createElement("div");
+        frontFace.className = "face frontFace";
+
+        // Invert colour placement: the frame stays neutral and the card face
+        // fills with PrimaryColour instead (colour-only / lucide-icon only).
+        if (invert && primary && (mode === "colour-only" || mode === "lucide-icon")) {
+          frontFace.style.background = primary;
+        }
+
+        var round = document.createElement("div");
+        round.className = "round";
+        var frameSize = parseFloat(f.FrameSize);
+        if (isFinite(frameSize) && frameSize > 0) {
+          round.style.width = frameSize + "px";
+          round.style.height = frameSize + "px";
+        }
+        round.style.borderRadius = shapeRadius(f.Frame);
+        var iconSize = fulltile ? "52px" : iconSizeCss(f.IconSize);
+        round.style.setProperty("--icon-size", iconSize);
+
+        if (mode === "colour-only" && fill) {
+          round.style.background = invert ? "var(--item-bg)" : fill;
+        } else if (mode === "lucide-icon") {
+          var name = String(f.Lucide || "").toLowerCase();
+          round.style.background = "transparent";
+          round.style.border = "0";
+          round.style.color = primary;
+          round.innerHTML = '<i data-lucide="' + name + '"></i>';
+          if (f.SecondColour) {
+            round.classList.add("glow");
+            round.style.setProperty("--second-colour", String(f.SecondColour));
+          }
+        } else if (front) {
+          var img = document.createElement("img");
+          img.src = front;
+          img.alt = label;
+          img.loading = "lazy";
+          img.draggable = false;
+          round.appendChild(img);
+        } else {
+          round.textContent = "?";
+          round.style.background = "var(--item-bg)";
+        }
+        // FrameColour / FrameBorder are explicit overrides for any mode.
+        if (f.FrameColour) round.style.background = String(f.FrameColour);
+        if (f.FrameBorder) round.style.border = String(f.FrameBorder);
+
+        // Full-tile mode (Airtable `FillTile` checkbox): the asset fills the
+        // whole brick face edge-to-edge and the word label is hidden.
+        if (fulltile) {
+          frontFace.classList.add("fulltile");
+          round.style.width = "100%";
+          round.style.height = "100%";
+          round.style.borderRadius = "0";
+          round.style.border = "0";
+        }
+        frontFace.appendChild(round);
+
+        var nameEl = document.createElement("span");
+        nameEl.className = "cardName";
+        nameEl.textContent = label || id;
+        if (f.TextColour) nameEl.style.color = String(f.TextColour);
+        var textSize = textSizeCss(f.TextSize);
+        if (textSize) nameEl.style.fontSize = textSize;
+        if (!fulltile) frontFace.appendChild(nameEl);
+
+        inner.appendChild(backFace);
+        inner.appendChild(frontFace);
+        card.appendChild(inner);
+        return card;
+      }
+
+      function renderDeck(list) {
+        while (deckEl.firstChild) deckEl.removeChild(deckEl.firstChild);
+        countEl.textContent = String(list.length);
+        for (var i = 0; i < list.length; i++) {
+          var card = list[i];
+          var off = 4 + Math.min(i * 3, 12);
+          card.style.top = off + "px";
+          card.style.left = off + "px";
+          card.style.zIndex = String(i + 1);
+          deckEl.appendChild(card);
+        }
+      }
+
+      function refreshDecks() {
+        renderDeck(remaining);
+        var done = remaining.length === 0;
+        if (done) {
+          gridEl.classList.add("done");
+          statusEl.hidden = false;
+        } else {
+          gridEl.classList.remove("done");
+          statusEl.hidden = true;
+        }
+      }
+
+      // ---------- Pointer-based drag & drop ----------
+      var activeItem = null;
+      var activeGhost = null;
+      var grabOffsetX = 0;
+      var grabOffsetY = 0;
+      var overCell = null;
+      var fromCell = null; // cell a placed card was grabbed from
+
+      function clearOverCell() {
+        if (overCell) {
+          overCell.classList.remove("drag-over");
+          overCell = null;
+        }
+      }
+
+      var edgeScrollTimer = null;
+      var edgeClientX = 0;
+      var edgeClientY = 0;
+      function scrollOnEdge(clientX, clientY) {
+        edgeClientX = clientX;
+        edgeClientY = clientY;
+        if (document.documentElement.scrollHeight <= window.innerHeight) return;
+        var edge = Math.min(80, window.innerHeight * 0.15);
+        var scrollDir =
+          clientY < edge ? -1 : clientY > window.innerHeight - edge ? 1 : 0;
+        if (edgeScrollTimer) {
+          clearInterval(edgeScrollTimer);
+          edgeScrollTimer = null;
+        }
+        if (!scrollDir) return;
+        var step =
+          Math.max(12, Math.round(Math.abs(window.innerHeight / 2 - clientY) / 14)) *
+          scrollDir;
+        edgeScrollTimer = setInterval(function () {
+          window.scrollBy(0, step);
+          if (!activeGhost) return;
+          var under = document.elementFromPoint(edgeClientX, edgeClientY);
+          var cell = under ? under.closest(".cell") : null;
+          if (cell !== overCell) {
+            clearOverCell();
+            overCell = cell;
+            if (overCell) overCell.classList.add("drag-over");
+          }
+        }, 16);
+      }
+
+      document.addEventListener("pointerdown", function (e) {
+        if (activeItem) return;
+        if (e.pointerType === "mouse" && e.button !== 0) return;
+        var card = e.target.closest(".flipCard");
+        if (!card) return;
+        e.preventDefault();
+        // Unrevealed card: turn it over instead of dragging.
+        if (card.dataset.flipped !== "true") {
+          card.classList.add("flipped");
+          card.dataset.flipped = "true";
+          track("Turn", card.dataset.id);
+          return;
+        }
+        activeItem = card;
+        fromCell = card.parentNode && card.parentNode.classList.contains("cell")
+          ? card.parentNode
+          : null;
+        var rect = card.getBoundingClientRect();
+        grabOffsetX = e.clientX - rect.left;
+        grabOffsetY = e.clientY - rect.top;
+        activeGhost = card.cloneNode(true);
+        activeGhost.classList.remove("dragging-original");
+        activeGhost.classList.add("ghost");
+        activeGhost.style.width = rect.width + "px";
+        activeGhost.style.height = rect.height + "px";
+        activeGhost.style.left = e.clientX - grabOffsetX + "px";
+        activeGhost.style.top = e.clientY - grabOffsetY + "px";
+        document.body.appendChild(activeGhost);
+        card.classList.add("dragging-original");
+        if (card.setPointerCapture) {
+          try {
+            card.setPointerCapture(e.pointerId);
+          } catch (err) {}
+        }
+      });
+
+      document.addEventListener("pointermove", function (e) {
+        if (!activeItem) return;
+        e.preventDefault();
+        scrollOnEdge(e.clientX, e.clientY);
+        if (activeGhost) {
+          activeGhost.style.left = e.clientX - grabOffsetX + "px";
+          activeGhost.style.top = e.clientY - grabOffsetY + "px";
+        }
+        var under = document.elementFromPoint(e.clientX, e.clientY);
+        var cell = under ? under.closest(".cell") : null;
+        if (cell !== overCell) {
+          clearOverCell();
+          overCell = cell;
+          if (overCell) overCell.classList.add("drag-over");
+        }
+      });
+
+      function endDrag(e) {
+        if (!activeItem) return;
+        e.preventDefault();
+        if (edgeScrollTimer) {
+          clearInterval(edgeScrollTimer);
+          edgeScrollTimer = null;
+        }
+        if (activeGhost) {
+          activeGhost.remove();
+          activeGhost = null;
+        }
+        activeItem.classList.remove("dragging-original");
+        var card = activeItem;
+        if (
+          overCell &&
+          !overCell.querySelector(".flipCard") &&
+          overCell.dataset.match === card.dataset.match
+        ) {
+          var idx = remaining.indexOf(card);
+          if (idx > -1) remaining.splice(idx, 1);
+          card.classList.add("matched");
+          overCell.appendChild(card);
+          overCell.classList.add("filled");
+          var imprint = overCell.querySelector(".imprint");
+          if (imprint) imprint.classList.add("taken");
+          feedbackEl.textContent = "";
+          track("Place", card.dataset.id);
+          refreshDecks();
+        } else if (overCell && !overCell.querySelector(".flipCard")) {
+          var wrongCell = overCell;
+          wrongCell.classList.add("wrong-target");
+          window.setTimeout(function () {
+            wrongCell.classList.remove("wrong-target");
+          }, 600);
+          feedbackEl.textContent = "That card doesn't match this imprint. Try another spot.";
+        }
+        fromCell = null;
+        clearOverCell();
+        activeItem = null;
+      }
+
+      document.addEventListener("pointerup", endDrag);
+
+      function shuffle(arr) {
+        for (var i = arr.length - 1; i > 0; i--) {
+          var j = Math.floor(Math.random() * (i + 1));
+          var tmp = arr[i];
+          arr[i] = arr[j];
+          arr[j] = tmp;
+        }
+        return arr;
+      }
+
+      function fetchTable(table) {
+        return fetch(WORKER + encodeURIComponent(table)).then(function (response) {
+          if (!response.ok) {
+            throw new Error(table + " request failed (HTTP " + response.status + ").");
+          }
+          return response.json();
+        });
+      }
+
+      function showLoadError(error) {
+        console.error("Grid Shift Pure Match could not start:", error);
+        deckEl.textContent = "Couldn't load game.";
+        countEl.textContent = "!";
+        feedbackEl.textContent = error.message;
+      }
+
+      // ---------- Build the configured Pure Match game from Airtable ----------
+      Promise.all([fetchTable("GridShiftVariants"), fetchTable("GridShift")])
+        .then(function (dataSets) {
+          var variantRecords = (dataSets[0] && dataSets[0].records) || [];
+          var cardRecords = (dataSets[1] && dataSets[1].records) || [];
+          var variants = variantRecords.filter(function (record) {
+            var fields = (record && record.fields) || {};
+            return (
+              isChecked(getField(fields, "Active")) &&
+              normalizedFieldName(getField(fields, "Name")) ===
+                normalizedFieldName("Grid Shift Pure Match")
+            );
+          });
+          if (variants.length !== 1) {
+            throw new Error(
+              "Expected one active 'Grid Shift Pure Match' setup in GridShiftVariants; found " +
+                variants.length +
+                ".",
+            );
+          }
+
+          var settings = variants[0].fields || {};
+          var hintField = parseHintField(getField(settings, "Hint"));
+          if (normalizedFieldName(hintField) !== "display") {
+            throw new Error("Pure Match requires Hint = Imprints of Display (Text).");
+          }
+          var placing = normalizedFieldName(getField(settings, "Placing"));
+          if (placing !== "random") {
+            throw new Error("This page currently supports Placing = Random.");
+          }
+
+          var activeRecords = cardRecords.filter(function (record) {
+            return isChecked(getField((record && record.fields) || {}, "PM-Active"));
+          });
+          if (!activeRecords.length) {
+            throw new Error("No GridShift cards have PM-Active checked.");
+          }
+          parseDeckCount(getField(settings, "DeckCount"), activeRecords.length);
+
+          var cards = [];
+          activeRecords.forEach(function (record) {
+            var fields = (record && record.fields) || {};
+            var matchText = getField(fields, "Display");
+            if (typeof matchText !== "string" || !matchText.trim()) {
+              throw new Error(
+                "A PM-Active card is missing text in its Display field.",
+              );
+            }
+            var card = buildCard(record, matchText);
+            if (!card.dataset.match) {
+              throw new Error("Every PM-Active card must have a non-empty Display value.");
+            }
+            cards.push(card);
+          });
+          shuffle(cards);
+
+          var dim = parseGridDimension(
+            getField(settings, "GridDimension"),
+            cards.length,
+          );
+          if (
+            !Number.isInteger(dim.cols) ||
+            !Number.isInteger(dim.rows) ||
+            dim.cols < 1 ||
+            dim.rows < 1
+          ) {
+            throw new Error("GridDimension must contain positive grid dimensions.");
+          }
+          if (dim.cols * dim.rows < cards.length) {
+            throw new Error(
+              "GridDimension has fewer cells than the " + cards.length + " active cards.",
+            );
+          }
+
+          COLS = dim.cols;
+          ROWS = dim.rows;
+          var targets = cards.map(function (card) {
+            return { key: card.dataset.match, text: card.dataset.imprint };
+          });
+          buildGrid(COLS, ROWS, targets);
+          remaining = cards;
+          refreshDecks();
+          renderIcons();
+        })
+        .catch(showLoadError);
+
+      // ---- PS4 controller -> pointer bridge ----
+      // Tizen (USB gamepad) exposes the controller only via the raw Gamepad
+      // API, producing no DOM events. This polls the gamepad each frame, moves
+      // a visible cursor (stick / D-pad), and fires synthetic pointer events on
+      // Cross-press / Cross-release so the existing drag-and-drop handles it.
+      // If no gamepad is present the block is inert and the page is unchanged.
+      //
+      // Steering is confirmed working on-device (Tizen + PS4 controller) —
+      // identical to junior/minigames/mystery-base.html; keep both in sync.
+      //
+      // Button map: Cross = turn/top-card grab & drop on a cell, Circle =
+      // cancel drag & snap the card back onto the deck, D-pad = move cursor /
+      // scroll page, R2 = toggle light/dark theme, Right stick = fine cursor
+      // movement.
+      var padCursor = document.getElementById("gamepadCursor");
+      var padActive = false; // a gamepad is being polled
+      var padX = window.innerWidth / 2;
+      var padY = window.innerHeight / 2;
+      var padGrabbing = false;
+      var padDownX = 0;
+      var padDownY = 0;
+      // Advance one "move" per held key tick (repeat delay/factor).
+      var padTick = 0;
+      var padPadHeld = false;
+      // A Cross release counts as a "tap" (fires synthetic click) when the
+      // cursor moved less than this many px from the grab point.
+      var padTapDist = 14;
+      // R2 (button 7) toggles the theme on its rising edge, not on hold.
+      var padThemePrev = false;
+
+      function padFind() {
+        var pads;
+        try {
+          pads = navigator.getGamepads ? navigator.getGamepads() : [];
+        } catch (e) {
+          pads = [];
+        }
+        for (var i = 0; i < pads.length; i++) {
+          if (pads[i] && pads[i].connected) return pads[i];
+        }
+        return null;
+      }
+
+      function padBtnValue(gp, index) {
+        if (!gp || !gp.buttons || !gp.buttons[index]) return 0;
+        var b = gp.buttons[index];
+        return typeof b === "number" ? b : b.value;
+      }
+
+      function padBtnDown(gp, index) {
+        if (!gp || !gp.buttons || !gp.buttons[index]) return false;
+        var b = gp.buttons[index];
+        return typeof b === "number" ? b > 0 : b.pressed;
+      }
+
+      // Map a pointer-type event onto the element currently under the cursor.
+      function padDispatch(type, clientX, clientY, buttons) {
+        var el = document.elementFromPoint(clientX, clientY);
+        if (!el) return;
+        try {
+          var ev = new PointerEvent(type, {
+            bubbles: true,
+            cancelable: true,
+            clientX: clientX,
+            clientY: clientY,
+            pointerType: "touch",
+            pointerId: 991,
+            isPrimary: true,
+            buttons: buttons,
+          });
+          el.dispatchEvent(ev);
+        } catch (e) {}
+      }
+
+      function padPlaceCursor() {
+        padCursor.style.left = padX + "px";
+        padCursor.style.top = padY + "px";
+      }
+
+      function padMove(dx, dy) {
+        padX += dx;
+        padY += dy;
+        if (padX < 0) padX = 0;
+        if (padY < 0) padY = 0;
+        if (padX > window.innerWidth) padX = window.innerWidth;
+        if (padY > window.innerHeight) padY = window.innerHeight;
+        padPlaceCursor();
+        // Auto-scroll while dragging if the cursor hugs the viewport edge.
+        if (padGrabbing) padAutoScroll();
+      }
+
+      function padAutoScroll() {
+        var edge = Math.min(70, window.innerHeight * 0.15);
+        var step = 22;
+        if (padY < edge) window.scrollBy(0, -step);
+        else if (padY > window.innerHeight - edge) window.scrollBy(0, step);
+      }
+
+      function padPoll() {
+        var gp = padFind();
+        var pads;
+        try {
+          pads = navigator.getGamepads ? navigator.getGamepads() : [];
+        } catch (e) {
+          pads = [];
+        }
+        // Detect a newly connected gamepad even without an event.
+        var anyNow = false;
+        for (var i = 0; i < pads.length; i++) {
+          if (pads[i] && pads[i].connected) anyNow = true;
+        }
+        if (anyNow !== padActive) {
+          padActive = anyNow;
+          padCursor.classList.toggle("connected", padActive);
+          if (padActive) padPlaceCursor();
+        }
+        padTick++;
+
+        if (gp) {
+          var lx = gp.axes && gp.axes.length > 0 ? gp.axes[0] : 0;
+          var ly = gp.axes && gp.axes.length > 1 ? gp.axes[1] : 0;
+          var dead = 0.2;
+          var magL = Math.sqrt(lx * lx + ly * ly);
+          if (magL > dead) {
+            var n = (magL - dead) / (1 - dead);
+            padMove(lx * n * 18, ly * n * 18);
+            padPadHeld = false;
+            padTick = 0;
+          } else {
+            // D-pad: buttons 12=up 13=down 14=left 15=right.
+            var dUp = padBtnDown(gp, 12);
+            var dDown = padBtnDown(gp, 13);
+            var dLeft = padBtnDown(gp, 14);
+            var dRight = padBtnDown(gp, 15);
+            var dpadActive = dUp || dDown || dLeft || dRight;
+            if (dpadActive) {
+              // Repeat every 8 frames (~130 ms) — slower than before so menu
+              // and cursor navigation is steadier and easier to steer.
+              if (!padPadHeld || padTick % 8 === 0) {
+                var ds = 60;
+                var dxp = (dRight ? 1 : 0) - (dLeft ? 1 : 0);
+                var dyp = (dDown ? 1 : 0) - (dUp ? 1 : 0);
+                padMove(dxp * ds, dyp * ds);
+                // When NOT grabbing anything, D-pad Up/Down scrolls the page
+                // instead of moving the cursor, so off-view content downhill is
+                // reachable without first grabbing an item. Left/Right still
+                // move the cursor horizontally.
+                if (!padGrabbing) {
+                  if (dUp && window.scrollY > 0) window.scrollBy(0, -ds);
+                  if (dDown && window.scrollY < document.documentElement.scrollHeight - window.innerHeight)
+                    window.scrollBy(0, ds);
+                }
+              }
+              padPadHeld = true;
+            } else {
+              padPadHeld = false;
+            }
+          }
+
+          // Cross (button 0): hold = grab, release = drop. A short Cross tap
+          // on the top card flips it (the pointerdown handler turns it over).
+          var cross = padBtnDown(gp, 0);
+          if (cross && !padGrabbing) {
+            padGrabbing = true;
+            padCursor.classList.add("grabbing");
+            padDownX = padX;
+            padDownY = padY;
+            padDispatch("pointerdown", padX, padY, 1);
+          } else if (!cross && padGrabbing) {
+            padGrabbing = false;
+            padCursor.classList.remove("grabbing");
+            var moved = Math.sqrt(
+              (padX - padDownX) * (padX - padDownX) +
+                (padY - padDownY) * (padY - padDownY),
+            );
+            // If the cursor hasn't moved from the grab point, still fire a
+            // pointerup so any pending highlight clears. Movement is handled
+            // through the synthetic pointermove below.
+            padDispatch("pointerup", padX, padY, 0);
+            // A short tap (little or no movement) on a click-only target
+            // (theme toggle) needs a real click — browsers do NOT synthesise
+            // "click" from a dispatched PointerEvent. Fire our own.
+            if (moved < padTapDist) {
+              var tapEl = document.elementFromPoint(padX, padY);
+              if (tapEl) {
+                var isClickable = tapEl.closest("#themeToggle");
+                if (isClickable) {
+                  var cev = new PointerEvent("click", {
+                    bubbles: true,
+                    cancelable: true,
+                    clientX: padX,
+                    clientY: padY,
+                    pointerType: "touch",
+                    pointerId: 991,
+                  });
+                  tapEl.dispatchEvent(cev);
+                }
+              }
+            }
+          }
+          // Fire continuous pointermove while grabbing so the ghost follows
+          // the cursor exactly as with a mouse drag.
+          if (padGrabbing) {
+            padDispatch("pointermove", padX, padY, 1);
+          }
+
+          // Circle (button 1): cancel a drag and snap the card back onto its
+          // own deck instead of dropping it onto the grid.
+          if (padBtnDown(gp, 1) && padGrabbing) {
+            padGrabbing = false;
+            padCursor.classList.remove("grabbing");
+            var srcEl = null;
+            if (activeItem && activeItem.parentNode) {
+              if (activeItem.parentNode === deckEl) srcEl = deckEl;
+            }
+            if (!srcEl) srcEl = deckEl;
+            var dr = srcEl.getBoundingClientRect();
+            if (dr.width && dr.height) {
+              padX = dr.left + dr.width / 2;
+              padY = dr.top + dr.height / 2;
+              padPlaceCursor();
+            }
+            padDispatch("pointermove", padX, padY, 1);
+            padDispatch("pointerup", padX, padY, 0);
+          }
+
+          // R2 (button 7): toggle light/dark theme on press — reuses the
+          // #themeToggle click handler so it persists to localStorage too.
+          var r2 = padBtnDown(gp, 7);
+          if (r2 && !padThemePrev) {
+            var themeBtn = document.getElementById("themeToggle");
+            if (themeBtn) themeBtn.click();
+          }
+          padThemePrev = r2;
+
+          // Right stick as a fast-fine alternate (axes 2/3) when present.
+          var rx = gp.axes && gp.axes.length > 2 ? gp.axes[2] : 0;
+          var ry = gp.axes && gp.axes.length > 3 ? gp.axes[3] : 0;
+          var magR = Math.sqrt(rx * rx + ry * ry);
+          if (magR > dead) {
+            var rn = (magR - dead) / (1 - dead);
+            padMove(rx * rn * 5, ry * rn * 5);
+          }
+        }
+        // Hover highlight: blue ring when the cursor sits over an interactive
+        // target so the player sees what Cross / grab will activate.
+        var hovEl = document.elementFromPoint(padX, padY);
+        var hoverable =
+          hovEl &&
+          hovEl.closest(".flipCard, .cell, #themeToggle");
+        padCursor.classList.toggle("hovering", !!hoverable);
+        requestAnimationFrame(padPoll);
+      }
+
+      if (typeof navigator !== "undefined" && navigator.getGamepads) {
+        padPoll();
+      }
+    </script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script>
+      if (typeof renderIcons === "function") renderIcons();
+    </script>
+    <script src="../../tracker.js"></script>
+  </body>
+</html>
