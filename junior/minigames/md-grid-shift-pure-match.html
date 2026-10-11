@@ -632,6 +632,21 @@
         return key ? fields[key] : undefined;
       }
 
+      function getSetting(fields, aliases, prefix) {
+        for (var i = 0; i < aliases.length; i++) {
+          var value = getField(fields, aliases[i]);
+          if (value !== undefined) return value;
+        }
+        if (prefix) {
+          var wantedPrefix = normalizedFieldName(prefix);
+          var key = Object.keys(fields || {}).find(function (fieldName) {
+            return normalizedFieldName(fieldName).indexOf(wantedPrefix) === 0;
+          });
+          if (key) return fields[key];
+        }
+        return undefined;
+      }
+
       function normalizeMatch(value) {
         return String(value || "").trim().toLowerCase();
       }
@@ -723,7 +738,7 @@
         var mode = f.RenderMode || "cloudinary-img";
         var label = f.Display || f.TileName || id;
         var front = f.TileFront || "";
-        var back = f.TileBackA || f.TileBack || "";
+        var back = f.TileBack || "";
         var fill = f.Fill || f.PrimaryColour || "";
         var primary = f.PrimaryColour || "#060606";
         var invert = isChecked(f.ColourOutsideFrame);
@@ -1015,22 +1030,23 @@
           var cardRecords = (dataSets[1] && dataSets[1].records) || [];
           var variants = variantRecords.filter(function (record) {
             var fields = (record && record.fields) || {};
+            var name = getSetting(fields, ["VarName", "Name"]);
+            var active = getField(fields, "Active");
             return (
-              isChecked(getField(fields, "Active")) &&
-              normalizedFieldName(getField(fields, "Name")) ===
-                normalizedFieldName("Grid Shift Pure Match")
+              normalizedFieldName(name) === "purematch" &&
+              (active === undefined || isChecked(active))
             );
           });
           if (variants.length !== 1) {
             throw new Error(
-              "Expected one active 'Grid Shift Pure Match' setup in GridShiftVariants; found " +
+              "Expected one Pure Match setup in GridShiftVariants; found " +
                 variants.length +
                 ".",
             );
           }
 
           var settings = variants[0].fields || {};
-          var hintField = parseHintField(getField(settings, "Hint"));
+          var hintField = parseHintField(getSetting(settings, ["Hints", "Hint"]));
           if (normalizedFieldName(hintField) !== "display") {
             throw new Error("Pure Match requires Hint = Imprints of Display (Text).");
           }
@@ -1038,12 +1054,22 @@
           if (placing !== "random") {
             throw new Error("This page currently supports Placing = Random.");
           }
+          var deckField = getField(settings, "Deck");
+          if (typeof deckField !== "string" || !deckField.trim()) {
+            throw new Error("The Pure Match setup needs a Deck field name.");
+          }
 
           var activeRecords = cardRecords.filter(function (record) {
-            return isChecked(getField((record && record.fields) || {}, "PM-Active"));
+            return isChecked(
+              getField((record && record.fields) || {}, deckField.trim()),
+            );
           });
           if (!activeRecords.length) {
-            throw new Error("No GridShift cards have PM-Active checked.");
+            throw new Error(
+              "No GridShift cards are checked for the configured Deck field '" +
+                deckField.trim() +
+                "'.",
+            );
           }
           parseDeckCount(getField(settings, "DeckCount"), activeRecords.length);
 
@@ -1065,7 +1091,7 @@
           shuffle(cards);
 
           var dim = parseGridDimension(
-            getField(settings, "GridDimension"),
+            getSetting(settings, [], "GridDimension"),
             cards.length,
           );
           if (
@@ -1089,6 +1115,7 @@
           });
           buildGrid(COLS, ROWS, targets);
           remaining = cards;
+          feedbackEl.textContent = "";
           refreshDecks();
           renderIcons();
         })

@@ -272,13 +272,15 @@ across the two decks (`Math.ceil(count / 2)`) — e.g. 20 → 10/10, 30 → 15/1
 ### Grid Shift Pure Match variant
 
 `junior/minigames/md-grid-shift-pure-match.html` is a separate one-player game.
-It uses the active `GridShiftVariants` row named `Grid Shift Pure Match` for its
-settings, then includes every `GridShift` record with `PM-Active` checked.
-`DeckCount` must be `Variable`, `GridDimension` supports a cell count or
-`columns x rows`, `Placing` currently supports `Random`, and `Hint` must be
+It uses the `GridShiftVariants` row with `VarName: Pure Match` for its settings.
+`Deck` names the checkbox field on `GridShift` (currently `PM-Active`); every
+card checked in that field is included. `DeckCount` must be `Variable`,
+`GridDimension (horizontal)` accepts a cell count or `columns x rows`,
+`Placing` currently supports `Random`, and `Hints` must be
 `Imprints of Display (Text)`. Each checked card's `Display` text is placed at a
-random unique cell; cards can only be placed on a matching imprint. Both Airtable
-tables must be allowlisted by the worker.
+random unique cell; cards can only be placed on a matching imprint. Before
+turning, each card uses its `TileBack` asset. Both Airtable tables must be
+allowlisted by the worker.
 
 ### Airtable `GridShift` table schema
 
