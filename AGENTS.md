@@ -275,12 +275,15 @@ across the two decks (`Math.ceil(count / 2)`) — e.g. 20 → 10/10, 30 → 15/1
 It uses the `GridShiftVariants` row with `VarName: Pure Match` for its settings.
 `Deck` names the checkbox field on `GridShift` (currently `PM-Active`); every
 card checked in that field is included. `DeckCount` must be `Variable`,
-`GridDimension (horizontal)` accepts a cell count or `columns x rows`,
+`GridDimension (horizontal)` accepts a cell count or `rows x columns`
+(so the Airtable value `4x5` creates 5 columns × 4 rows),
 `Placing` currently supports `Random`, and `Hints` must be
 `Imprints of Display (Text)`. Each checked card's `Display` text is placed at a
 random unique cell; cards can only be placed on a matching imprint. Before
 turning, each card uses its `TileBack` asset. Both Airtable tables must be
 allowlisted by the worker.
+In wide layouts the single player deck sits left of the board with a 10px gap;
+in narrow layouts it moves above the board.
 
 ### Airtable `GridShift` table schema
 

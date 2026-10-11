@@ -58,26 +58,45 @@ Check `FillTile` on some cards (full-bleed images) and leave others as default (
 
 ---
 
-## Territory zones (pre-defined cell colours)
+## Variant settings and territory zones
 
-Two optional tables alongside `GridShift` — the card table stays unchanged, and each optional table is fetched only if it exists:
+`GridShiftVariants` is now used by Grid Shift Pure Match. The active setup is
+selected by `VarName`; the live `Pure Match` row uses these fields:
+
+| Field | Example | Purpose |
+|---|---|---|
+| `VarID` | `1` | Stable variant identifier. |
+| `VarName` | `Pure Match` | Selects this configuration for the Pure Match page. |
+| `Deck` | `PM-Active` | Name of the checkbox field on `GridShift` that chooses cards. Every checked row is included. |
+| `DeckCount` | `variable` | Must be `Variable` so the full checked set is used. |
+| `GridDimension (horizontal)` | `4x5` | Cell count or `rows x columns`; `4x5` means 4 rows × 5 columns. |
+| `Placing` | `Random` | Imprints are assigned to random unique cells. |
+| `Hints` | `Imprints of Display (Text)` | Use each selected card's `Display` value for its text imprint. |
+| `PartColour` | `Red` | Player/deck colour setting; currently informational in Pure Match. |
+| `NoParticipants` | `1` | Participant count; currently informational in Pure Match. |
+
+`Active` is not present on the live `GridShiftVariants` table; the page selects
+the row by `VarName`. The previous proposed `Name` / `Active` / `GridSize` /
+`CardLimit` / `ColourCells` settings are not the live schema.
+
+Territory cells remain a future variation. A proposed `GridShiftCells` table
+could describe one pre-coloured cell per row:
 
 | Table | Row = | Purpose |
 |---|---|---|
-| `GridShiftVariants` | A game mode | `Name`, `Active`, `GridSize` (overrides the auto grid), `CardLimit`, `ColourCells` |
-| `GridShiftCells` | A pre-coloured cell | `CellID`, `Group`, `Colour`, `Active` |
+| `GridShiftCells` *(proposed)* | A pre-coloured cell | `CellID`, `Group`, `Colour`, `Active` |
 
 `CellID` is a **virtual column address** — letter = column, digit = row (`A1` = col 0 / row 0, `C3` = col 2 / row 2) — so the same row set maps onto any grid size (5×4 / 6×5 / 8×5).
 
-**Two-player territory rules:**
+**Potential two-player territory rules:**
 - Open board: any card may land in any empty cell.
 - A player only **scores** when their card lands in a cell of their own zone (`Group 1` ↔ Red deck, `Group 2` ↔ Orange deck).
 - The cell tints with its zone colour on a scored placement.
 - Grid completes when both decks are empty → higher score wins (tie = draw).
 
-No active variant or no cells configured → current behaviour (auto-sized grid, neutral colouring) is preserved.
+These territory settings are not currently read by either game.
 
-**Why a second table is necessary (cards stay in one):** the cards are one table, but zone data is **per-cell, not per-card** — a `GridShift` row is a card, and there is no clean place on a card row to say "A1 is red". Avoiding a second table means either cramming cell→colour pairs into a long-text field (`"A1:red,A2:red,..."`) — fragile and un-Airtable — or deriving zones from a formula, which loses the arbitrary "this exact cell is red". A dedicated `GridShiftCells` table (one row per cell) is the natural fit. The variant config (`GridShiftVariants`) is the only piece that could realistically be folded away (it could be a handful of fields on a single "settings" row), but a small third table keeps it clean and extensible — so the floor is **1 card table + 1 cells table**.
+**Why a separate cell table is necessary:** zone data is **per-cell, not per-card** — a `GridShift` row is a card, and there is no clean place on a card row to say "A1 is red". Avoiding a separate table means either cramming cell→colour pairs into a long-text field (`"A1:red,A2:red,..."`) — fragile and un-Airtable — or deriving zones from a formula, which loses the arbitrary "this exact cell is red". A dedicated `GridShiftCells` table (one row per cell) is the natural fit. Since `GridShiftVariants` already stores game-mode settings, the full setup would use **1 card table + 1 settings table + 1 cell table**.
 
 ---
 
@@ -96,17 +115,25 @@ Currently anything > 40 falls into 8×5 — would need a cap or larger grid.
 ### 2. Single-deck mode
 Collapse UI to one stack. Simpler for younger players or quick rounds. One deck badge, one count.
 
-### 2b. Single vs two card sets — where the switch lives
-Keep **one** `GridShift` card table; the variant declares the deck count:
+### 2b. Future single vs two-deck configuration
+Keep **one** `GridShift` card table; a generalized variant could declare deck count.
+The current Pure Match settings are shown for comparison:
 
-| Field | 1-player | 2-player (today) |
+| Field | Current Pure Match | Possible 2-player mode |
 |---|---|---|
-| `DeckCount` | `1` | `2` |
-| `DeckName` / `DeckColour` | `Red` / `#ef4444` | `Red` + `Orange` |
-| `GridSize` | `20` | `40` |
-| `ColourCells` | off | on |
+| `DeckCount` | `variable` | `2` |
+| `Deck` | `PM-Active` checkbox field | Could identify two decks |
+| `GridDimension (horizontal)` | `4x5` → 5 columns × 4 rows | To be configured |
+| `Placing` | `Random` | To be configured |
+| `Hints` | `Imprints of Display (Text)` | To be configured |
 
-The page renders 1 or 2 deck panels from the active `GridShiftVariants` row. Deal: `DeckCount = 2` → today's random even split (`Math.ceil(count / 2)`); `DeckCount = 1` → all cards to deck A.
+A future generalized page could render one or two deck panels from its
+`GridShiftVariants` settings. Deal: `DeckCount = 2` → random even split
+(`Math.ceil(count / 2)`); `DeckCount = 1` → all cards to deck A.
+
+The current Pure Match page is the single-player implementation. In wide
+horizontal layouts its player deck is left of the board; the deck-to-board gap
+is 10px. On narrower screens the deck returns above the board.
 
 **Deck arrangement options:**
 - **A. Random shuffle + even split (today)** — both decks mix every category.
@@ -173,21 +200,28 @@ Same `GridShift` table, reskinned UI:
 
 ## Field Usage Quick Reference
 
-Currently read by `buildCard()` in `mb-grid-shift.html`:
+Card fields used by `mb-grid-shift.html` and
+`md-grid-shift-pure-match.html`:
 ```
-GridShiftID, Active, TileName, Display, RenderMode,
-TileFront, TileBackA, TileBackB, Lucide, Stroke,
+GridShiftID, Active, PM-Active, TileName, Display, RenderMode,
+TileFront, TileBack, TileBackA, TileBackB, Lucide, Stroke,
 IconSize, PrimaryColour, SecondColour, Frame, FrameSize,
 FrameBorder, FrameColour, TextColour, TextSize,
 ColourOutsideFrame, FillTile, Fill
 ```
 
-Documented in AGENTS.md but **not read by UI**:
+`CategoryColour` is documented in AGENTS.md but **not read by the UI**:
 ```
-Category, CategoryColour
+CategoryColour
 ```
 
-These two are free for new features — no backwards-compat risk.
+`Category` is present in Airtable for grouping, but is currently unused by both
+game UIs.
+
+Pure Match also reads `GridShiftVariants` fields `VarName`, `Deck`, `DeckCount`,
+`GridDimension (horizontal)`, `Placing`, `Hints`, `PartColour`, and
+`NoParticipants`. `GridShiftVariants` is allowlisted in the tracker worker and is
+fetched in its natural Airtable row order.
 
 ---
 

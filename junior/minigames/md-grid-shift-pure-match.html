@@ -123,7 +123,8 @@
         grid-template-columns: 148px minmax(0, 1fr);
         grid-template-areas: "players grid";
         align-items: start;
-        gap: 18px;
+        column-gap: 10px;
+        row-gap: 18px;
         width: 100%;
         max-width: 1500px;
       }
@@ -663,12 +664,11 @@
 
       function parseGridDimension(value, cardCount) {
         var text = String(value || "").trim().toLowerCase();
-        var dimensions =
-          /(\d+)\s*(?:columns?\s*)?[x×]\s*(\d+)\s*(?:rows?)?/i.exec(text);
+        var dimensions = /^(\d+)\s*[x×]\s*(\d+)$/.exec(text);
         if (dimensions) {
           return {
-            cols: parseInt(dimensions[1], 10),
-            rows: parseInt(dimensions[2], 10),
+            rows: parseInt(dimensions[1], 10),
+            cols: parseInt(dimensions[2], 10),
           };
         }
         if (text === "variable" || text === "auto") {
@@ -682,7 +682,7 @@
           var cols = Math.ceil(Math.sqrt(cells));
           return { cols: cols, rows: Math.ceil(cells / cols) };
         }
-        throw new Error("GridDimension must be a cell count or columns x rows.");
+        throw new Error("GridDimension must be a cell count or rows x columns.");
       }
 
       function parseDeckCount(value, activeCount) {
