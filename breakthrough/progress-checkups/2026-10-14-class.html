@@ -1,0 +1,397 @@
+<!doctype html>
+<html lang="en-GB">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>English Explorer — Luck Movie (Minutes 25–50)</title>
+    <style>
+      :root {
+        --bg: #FAF7F2;
+        --ink: #14213d;
+        --muted: #60708d;
+        --accent: #7c3aed;
+        --panel: #fcfcfc;
+        --shadow: 0 18px 50px rgba(20, 33, 61, 0.14);
+        --input-bg: #f3efe6;
+        --border: #dcd6cd;
+        --correct: #10b981;
+      }
+      html[data-theme="dark"] {
+        --bg: #161a24;
+        --ink: #e8ecf4;
+        --muted: #93a1b8;
+        --panel: #1f2530;
+        --shadow: 0 18px 50px rgba(0,0,0,0.55);
+        --input-bg: #28303f;
+        --border: #3f4a5c;
+      }
+      * { box-sizing: border-box; }
+      html, body {
+        margin: 0;
+        width: 100%;
+        min-height: 100%;
+        background: var(--bg);
+        font-family: Arial, Helvetica, sans-serif;
+        color: var(--ink);
+        line-height: 1.6;
+      }
+      .container {
+        max-width: 900px;
+        margin: 0 auto;
+        padding: clamp(16px, 4vw, 40px) clamp(12px, 3vw, 24px);
+      }
+      h1 {
+        font-size: clamp(1.8rem, 5vw, 2.6rem);
+        margin: 0 0 0.2em;
+        font-weight: 900;
+        color: var(--accent);
+      }
+      .date-sub {
+        font-size: clamp(0.9rem, 1.6vw, 1.1rem);
+        color: var(--muted);
+        font-weight: 700;
+        margin: 0 0 0.4em;
+      }
+      .to-line {
+        font-size: clamp(0.95rem, 1.7vw, 1.15rem);
+        color: var(--muted);
+        font-weight: 800;
+        text-transform: uppercase;
+        margin: 0 0 1.8em;
+      }
+      .to-line b { color: var(--accent); }
+      .intro {
+        background: var(--panel);
+        border-radius: 20px;
+        padding: clamp(1rem, 2.5vw, 1.6em);
+        box-shadow: var(--shadow);
+        margin-bottom: 2em;
+      }
+      .zh {
+        display: block;
+        margin-top: 0.5em;
+        color: var(--muted);
+        font-size: 0.9em;
+      }
+      .test-section {
+        background: var(--panel);
+        border-radius: 20px;
+        padding: clamp(1rem, 2.5vw, 1.6em);
+        box-shadow: var(--shadow);
+        margin-bottom: 1.8em;
+      }
+      h2 {
+        font-size: clamp(1.3rem, 3vw, 1.8rem);
+        margin: 0 0 0.6em;
+        font-weight: 900;
+        color: var(--accent);
+        border-bottom: 2px solid var(--border);
+        padding-bottom: 0.4em;
+      }
+      h3 {
+        font-size: clamp(1.05rem, 2vw, 1.3rem);
+        margin: 1.2em 0 0.4em;
+        font-weight: 800;
+      }
+      p { margin: 0.4em 0 0.8em; }
+      .word-bank {
+        background: var(--input-bg);
+        border: 1px dashed var(--accent);
+        border-radius: 12px;
+        padding: 0.8em 1.2em;
+        margin: 0.8em 0 1.2em;
+        font-weight: bold;
+        text-align: center;
+      }
+      ol, ul { padding-left: 1.4em; margin: 0.5em 0 1em; }
+      li { margin-bottom: 1.2em; position: relative; }
+      input[type="text"], textarea {
+        background: var(--input-bg);
+        color: var(--ink);
+        border: 1px solid var(--border);
+        border-radius: 6px;
+        padding: 0.4em 0.6em;
+        font-size: 1rem;
+        font-family: inherit;
+        width: 100%;
+        max-width: 320px;
+        display: inline-block;
+      }
+      textarea {
+        max-width: 100%;
+        min-height: 80px;
+        resize: vertical;
+        margin-top: 0.4em;
+      }
+      input[type="text"].inline-input {
+        width: 160px;
+        margin: 0 0.3em;
+      }
+      .mc-option {
+        display: block;
+        margin: 0.3em 0;
+        cursor: pointer;
+      }
+      .mc-option input { margin-right: 0.5em; }
+
+      /* TUTOR CORRECTION ENGINE */
+      .answer-key {
+        display: none;
+        background: #e6f4ea;
+        color: #137333;
+        border-left: 4px solid #137333;
+        padding: 0.4em 0.8em;
+        margin-top: 0.4em;
+        font-size: 0.9rem;
+        font-weight: bold;
+        border-radius: 0 6px 6px 0;
+      }
+      html[data-theme="dark"] .answer-key {
+        background: #1c3829;
+        color: #81c995;
+        border-left-color: #81c995;
+      }
+      .tutor-controls {
+        display: none;
+        margin-top: 0.3em;
+      }
+      .tutor-btn {
+        border: none;
+        padding: 0.2em 0.6em;
+        border-radius: 4px;
+        font-size: 0.8rem;
+        font-weight: bold;
+        cursor: pointer;
+        margin-right: 0.4em;
+      }
+      .btn-pass { background: #d1fae5; color: #065f46; }
+      .btn-fail { background: #fee2e2; color: #991b1b; }
+      html.show-tutor .answer-key, html.show-tutor .tutor-controls {
+        display: block !important;
+      }
+      .item-correct { background: rgba(16, 185, 129, 0.15); border-radius: 6px; padding: 0.2em 0.4em; }
+      .item-incorrect { background: rgba(239, 68, 68, 0.15); border-radius: 6px; padding: 0.2em 0.4em; }
+
+      #themeToggle, #tutorToggle {
+        position: fixed;
+        z-index: 100;
+        background: var(--panel);
+        color: var(--accent);
+        border: 2px solid var(--accent);
+        cursor: pointer;
+        box-shadow: var(--shadow);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      #themeToggle {
+        top: 16px;
+        right: 16px;
+        width: 44px;
+        height: 44px;
+        border-radius: 50%;
+        font-size: 20px;
+      }
+      #tutorToggle {
+        bottom: 16px;
+        right: 16px;
+        height: 38px;
+        padding: 0 16px;
+        border-radius: 20px;
+        font-size: 0.85rem;
+        font-weight: bold;
+      }
+    </style>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        var d = document.documentElement;
+        var themeBtn = document.getElementById("themeToggle");
+        var tutorBtn = document.getElementById("tutorToggle");
+
+        function updateThemeIcon() {
+          var isDark = d.getAttribute("data-theme") === "dark";
+          themeBtn.textContent = isDark ? "\u2600" : "\u263E";
+        }
+
+        var savedTheme = localStorage.getItem("eebt-theme");
+        if (savedTheme) {
+          d.setAttribute("data-theme", savedTheme);
+        } else if (window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches) {
+          d.setAttribute("data-theme", "dark");
+        } else {
+          d.setAttribute("data-theme", "light");
+        }
+        updateThemeIcon();
+
+        themeBtn.onclick = function () {
+          var currentTheme = d.getAttribute("data-theme");
+          var nextTheme = currentTheme === "dark" ? "light" : "dark";
+          d.setAttribute("data-theme", nextTheme);
+          localStorage.setItem("eebt-theme", nextTheme);
+          updateThemeIcon();
+        };
+
+        function toggleTutorMode() {
+          d.classList.toggle("show-tutor");
+          var isOn = d.classList.contains("show-tutor");
+          tutorBtn.textContent = "Tutor Mode: " + (isOn ? "ON" : "OFF");
+          tutorBtn.style.borderColor = isOn ? "var(--correct)" : "var(--accent)";
+        }
+
+        tutorBtn.onclick = toggleTutorMode;
+
+        window.addEventListener("keydown", function (e) {
+          if (e.ctrlKey && e.shiftKey && (e.key === "K" || e.key === "k")) {
+            e.preventDefault();
+            toggleTutorMode();
+          }
+        });
+      });
+
+      function mark(btn, isCorrect) {
+        var parent = btn.closest("li") || btn.closest(".test-section");
+        if (isCorrect) {
+          parent.classList.remove("item-incorrect");
+          parent.classList.add("item-correct");
+        } else {
+          parent.classList.remove("item-correct");
+          parent.classList.add("item-incorrect");
+        }
+      }
+    </script>
+  </head>
+  <body>
+    <button id="themeToggle" type="button" aria-label="Toggle dark mode">&#x263E;</button>
+    <button id="tutorToggle" type="button" title="Shortcut: Ctrl+Shift+K">Tutor Mode: OFF</button>
+
+    <div class="container">
+      <h1>English Explorer — Luck Movie (Minutes 25–50)</h1>
+      <p class="date-sub">Progress Test | Focus: Land of Luck Vocabulary, Irregular Past Tense & Prepositions</p>
+      <p class="to-line">Student: <b>Nimza</b></p>
+
+      <div class="intro">
+        Complete the exercises below covering Sam’s adventures inside the Land of Luck (minutes 25 to 50). Type your answers directly into the boxes.
+      </div>
+
+      <!-- PART 1 -->
+      <div class="test-section">
+        <h2>Part 1: Land of Luck Vocabulary (Minutes 25–50)</h2>
+        <p><b>Exercise A: Gap Fill</b> — Complete the sentences using words from the word bank.</p>
+        <div class="word-bank">
+          factory | machine | management | disguise | hazard | balance
+        </div>
+        <ol>
+          <li>
+            Sam had to wear a clever animal
+            <input type="text" class="inline-input" placeholder="answer..." />
+            so that nobody in the magical world would notice she was a human.
+            <div class="answer-key">Key: disguise</div>
+            <div class="tutor-controls"><button class="tutor-btn btn-pass" onclick="mark(this, true)">✓ Correct</button><button class="tutor-btn btn-fail" onclick="mark(this, false)">✗ Incorrect</button></div>
+          </li>
+          <li>
+            Good luck and bad luck are manufactured inside a massive, highly complex
+            <input type="text" class="inline-input" placeholder="answer..." />.
+            <div class="answer-key">Key: factory</div>
+            <div class="tutor-controls"><button class="tutor-btn btn-pass" onclick="mark(this, true)">✓ Correct</button><button class="tutor-btn btn-fail" onclick="mark(this, false)">✗ Incorrect</button></div>
+          </li>
+          <li>
+            The strict leaders in upper
+            <input type="text" class="inline-input" placeholder="answer..." />
+            monitored every single piece of fortune produced each day.
+            <div class="answer-key">Key: management</div>
+            <div class="tutor-controls"><button class="tutor-btn btn-pass" onclick="mark(this, true)">✓ Correct</button><button class="tutor-btn btn-fail" onclick="mark(this, false)">✗ Incorrect</button></div>
+          </li>
+          <li>
+            Bob warned Sam that losing the lucky coin would upset the delicate
+            <input type="text" class="inline-input" placeholder="answer..." />
+            between good and bad luck.
+            <div class="answer-key">Key: balance</div>
+            <div class="tutor-controls"><button class="tutor-btn btn-pass" onclick="mark(this, true)">✓ Correct</button><button class="tutor-btn btn-fail" onclick="mark(this, false)">✗ Incorrect</button></div>
+          </li>
+          <li>
+            An exposed wire or slippery floor in the facility creates a safety
+            <input type="text" class="inline-input" placeholder="answer..." />.
+            <div class="answer-key">Key: hazard</div>
+            <div class="tutor-controls"><button class="tutor-btn btn-pass" onclick="mark(this, true)">✓ Correct</button><button class="tutor-btn btn-fail" onclick="mark(this, false)">✗ Incorrect</button></div>
+          </li>
+        </ol>
+      </div>
+
+      <!-- PART 2 -->
+      <div class="test-section">
+        <h2>Part 2: Grammar — Irregular Past Tense Verbs</h2>
+        <p><b>Exercise: Transform the Verbs</b> — Change the present tense verb in brackets into its correct <em>irregular past simple</em> form.</p>
+        <ol>
+          <li>
+            Sam <input type="text" class="inline-input" placeholder="(meet)" /> a talking black cat named Bob in the alleyway.
+            <div class="answer-key">Key: met</div>
+            <div class="tutor-controls"><button class="tutor-btn btn-pass" onclick="mark(this, true)">✓ Correct</button><button class="tutor-btn btn-fail" onclick="mark(this, false)">✗ Incorrect</button></div>
+          </li>
+          <li>
+            Bob <input type="text" class="inline-input" placeholder="(take)" /> Sam through the glowing green portal.
+            <div class="answer-key">Key: took</div>
+            <div class="tutor-controls"><button class="tutor-btn btn-pass" onclick="mark(this, true)">✓ Correct</button><button class="tutor-btn btn-fail" onclick="mark(this, false)">✗ Incorrect</button></div>
+          </li>
+          <li>
+            They <input type="text" class="inline-input" placeholder="(find)" /> a secret control room inside the grand building.
+            <div class="answer-key">Key: found</div>
+            <div class="tutor-controls"><button class="tutor-btn btn-pass" onclick="mark(this, true)">✓ Correct</button><button class="tutor-btn btn-fail" onclick="mark(this, false)">✗ Incorrect</button></div>
+          </li>
+          <li>
+            Sam <input type="text" class="inline-input" placeholder="(wear)" /> a funny costume to hide her human identity.
+            <div class="answer-key">Key: wore</div>
+            <div class="tutor-controls"><button class="tutor-btn btn-pass" onclick="mark(this, true)">✓ Correct</button><button class="tutor-btn btn-fail" onclick="mark(this, false)">✗ Incorrect</button></div>
+          </li>
+          <li>
+            A giant machine <input type="text" class="inline-input" placeholder="(run)" /> continuously to sort out the lucky crystals.
+            <div class="answer-key">Key: ran</div>
+            <div class="tutor-controls"><button class="tutor-btn btn-pass" onclick="mark(this, true)">✓ Correct</button><button class="tutor-btn btn-fail" onclick="mark(this, false)">✗ Incorrect</button></div>
+          </li>
+          <li>
+            Sam <input type="text" class="inline-input" placeholder="(catch)" /> the falling crystal before it hit the floor.
+            <div class="answer-key">Key: caught</div>
+            <div class="tutor-controls"><button class="tutor-btn btn-pass" onclick="mark(this, true)">✓ Correct</button><button class="tutor-btn btn-fail" onclick="mark(this, false)">✗ Incorrect</button></div>
+          </li>
+        </ol>
+      </div>
+
+      <!-- PART 3 -->
+      <div class="test-section">
+        <h2>Part 3: Grammar — Prepositions of Movement & Place</h2>
+        <p><b>Exercise: Complete the Sentences</b> — Type the correct preposition (<i>through, across, into, inside, above, around</i>) for each sentence.</p>
+        <ol>
+          <li>
+            Sam stepped <input type="text" class="inline-input" placeholder="preposition..." /> the glowing portal into another realm.
+            <div class="answer-key">Key: through (or into)</div>
+            <div class="tutor-controls"><button class="tutor-btn btn-pass" onclick="mark(this, true)">✓ Correct</button><button class="tutor-btn btn-fail" onclick="mark(this, false)">✗ Incorrect</button></div>
+          </li>
+          <li>
+            The magical factory stood proudly <input type="text" class="inline-input" placeholder="preposition..." /> the clouds.
+            <div class="answer-key">Key: above</div>
+            <div class="tutor-controls"><button class="tutor-btn btn-pass" onclick="mark(this, true)">✓ Correct</button><button class="tutor-btn btn-fail" onclick="mark(this, false)">✗ Incorrect</button></div>
+          </li>
+          <li>
+            Bob guided Sam <input type="text" class="inline-input" placeholder="preposition..." /> the bustling manufacturing floors.
+            <div class="answer-key">Key: through (or around)</div>
+            <div class="tutor-controls"><button class="tutor-btn btn-pass" onclick="mark(this, true)">✓ Correct</button><button class="tutor-btn btn-fail" onclick="mark(this, false)">✗ Incorrect</button></div>
+          </li>
+          <li>
+            They hid <input type="text" class="inline-input" placeholder="preposition..." /> a large storage container to avoid the guards.
+            <div class="answer-key">Key: inside</div>
+            <div class="tutor-controls"><button class="tutor-btn btn-pass" onclick="mark(this, true)">✓ Correct</button><button class="tutor-btn btn-fail" onclick="mark(this, false)">✗ Incorrect</button></div>
+          </li>
+        </ol>
+      </div>
+
+      <!-- PART 4 -->
+      <div class="test-section">
+        <h2>Part 4: Short Writing Task</h2>
+        <p>Write 3 to 4 full sentences explaining what Sam and Bob discovered when they entered the luck manufacturing factory between minutes 25 and 50.</p>
+        <textarea style="min-height: 120px;" placeholder="Write your sentences here..."></textarea>
+        <div class="answer-key">Key Checklist: Uses irregular past tense verbs correctly (e.g., found, took, wore), describes the luck factory operations, and maintains proper sentence structure.</div>
+        <div class="tutor-controls"><button class="tutor-btn btn-pass" onclick="mark(this, true)">✓ Correct</button><button class="tutor-btn btn-fail" onclick="mark(this, false)">✗ Incorrect</button></div>
+      </div>
+    </div>
+  </body>
+</html>

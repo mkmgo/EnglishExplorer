@@ -1,0 +1,463 @@
+<!doctype html>
+<html lang="en-GB">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>English Explorer — 45-Minute Progress Repetition</title>
+    <style>
+      :root {
+        --bg: #FAF7F2;
+        --ink: #14213d;
+        --muted: #60708d;
+        --accent: #0d9488;
+        --panel: #fcfcfc;
+        --shadow: 0 18px 50px rgba(20, 33, 61, 0.14);
+        --input-bg: #f3efe6;
+        --border: #dcd6cd;
+        --correct: #10b981;
+      }
+      html[data-theme="dark"] {
+        --bg: #161a24;
+        --ink: #e8ecf4;
+        --muted: #93a1b8;
+        --panel: #1f2530;
+        --shadow: 0 18px 50px rgba(0, 0, 0, 0.55);
+        --input-bg: #28303f;
+        --border: #3f4a5c;
+      }
+      * { box-sizing: border-box; }
+      html, body {
+        margin: 0;
+        width: 100%;
+        min-height: 100%;
+        background: var(--bg);
+        font-family: Arial, Helvetica, sans-serif;
+        color: var(--ink);
+        line-height: 1.6;
+      }
+      .container {
+        max-width: 900px;
+        margin: 0 auto;
+        padding: clamp(16px, 4vw, 40px) clamp(12px, 3vw, 24px);
+      }
+      h1 {
+        font-size: clamp(1.8rem, 5vw, 2.6rem);
+        margin: 0 0 0.2em;
+        font-weight: 900;
+        color: var(--accent);
+      }
+      .date-sub {
+        font-size: clamp(0.9rem, 1.6vw, 1.1rem);
+        color: var(--muted);
+        font-weight: 700;
+        margin: 0 0 0.4em;
+      }
+      .to-line {
+        font-size: clamp(0.95rem, 1.7vw, 1.15rem);
+        color: var(--muted);
+        font-weight: 800;
+        text-transform: uppercase;
+        margin: 0 0 1.8em;
+      }
+      .to-line b { color: var(--accent); }
+      .intro {
+        background: var(--panel);
+        border-radius: 20px;
+        padding: clamp(1rem, 2.5vw, 1.6em);
+        box-shadow: var(--shadow);
+        margin-bottom: 2em;
+      }
+      .repetition-section {
+        background: var(--panel);
+        border-radius: 20px;
+        padding: clamp(1rem, 2.5vw, 1.6em);
+        box-shadow: var(--shadow);
+        margin-bottom: 1.8em;
+      }
+      h2 {
+        font-size: clamp(1.3rem, 3vw, 1.8rem);
+        margin: 0 0 0.6em;
+        font-weight: 900;
+        color: var(--accent);
+        border-bottom: 2px solid var(--border);
+        padding-bottom: 0.4em;
+      }
+      h3 {
+        font-size: clamp(1.05rem, 2vw, 1.3rem);
+        margin: 1.2em 0 0.4em;
+        font-weight: 800;
+      }
+      p { margin: 0.4em 0 0.8em; }
+      .word-bank {
+        background: var(--input-bg);
+        border: 1px dashed var(--accent);
+        border-radius: 12px;
+        padding: 0.8em 1.2em;
+        margin: 0.8em 0 1.2em;
+        font-weight: bold;
+        text-align: center;
+      }
+      ol, ul { padding-left: 1.4em; margin: 0.5em 0 1em; }
+      li { margin-bottom: 1.2em; position: relative; }
+      input[type="text"], textarea {
+        background: var(--input-bg);
+        color: var(--ink);
+        border: 1px solid var(--border);
+        border-radius: 6px;
+        padding: 0.4em 0.6em;
+        font-size: 1rem;
+        font-family: inherit;
+        width: 100%;
+        max-width: 320px;
+        display: inline-block;
+      }
+      textarea {
+        max-width: 100%;
+        min-height: 80px;
+        resize: vertical;
+        margin-top: 0.4em;
+      }
+      input[type="text"].inline-input {
+        width: 180px;
+        margin: 0 0.3em;
+      }
+      .mc-option {
+        display: block;
+        margin: 0.3em 0;
+        cursor: pointer;
+      }
+      .mc-option input { margin-right: 0.5em; }
+
+      /* TUTOR CORRECTION ENGINE */
+      .answer-key {
+        display: none;
+        background: #e6f4ea;
+        color: #137333;
+        border-left: 4px solid #137333;
+        padding: 0.4em 0.8em;
+        margin-top: 0.4em;
+        font-size: 0.9rem;
+        font-weight: bold;
+        border-radius: 0 6px 6px 0;
+      }
+      html[data-theme="dark"] .answer-key {
+        background: #1c3829;
+        color: #81c995;
+        border-left-color: #81c995;
+      }
+      .tutor-controls {
+        display: none;
+        margin-top: 0.3em;
+      }
+      .tutor-btn {
+        border: none;
+        padding: 0.2em 0.6em;
+        border-radius: 4px;
+        font-size: 0.8rem;
+        font-weight: bold;
+        cursor: pointer;
+        margin-right: 0.4em;
+      }
+      .btn-pass { background: #d1fae5; color: #065f46; }
+      .btn-fail { background: #fee2e2; color: #991b1b; }
+      html.show-tutor .answer-key, html.show-tutor .tutor-controls {
+        display: block !important;
+      }
+      .item-correct { background: rgba(16, 185, 129, 0.15); border-radius: 6px; padding: 0.2em 0.4em; }
+      .item-incorrect { background: rgba(239, 68, 68, 0.15); border-radius: 6px; padding: 0.2em 0.4em; }
+
+      #themeToggle, #tutorToggle {
+        position: fixed;
+        z-index: 100;
+        background: var(--panel);
+        color: var(--accent);
+        border: 2px solid var(--accent);
+        cursor: pointer;
+        box-shadow: var(--shadow);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      #themeToggle {
+        top: 16px;
+        right: 16px;
+        width: 44px;
+        height: 44px;
+        border-radius: 50%;
+        font-size: 20px;
+      }
+      #tutorToggle {
+        bottom: 16px;
+        right: 16px;
+        height: 38px;
+        padding: 0 16px;
+        border-radius: 20px;
+        font-size: 0.85rem;
+        font-weight: bold;
+      }
+    </style>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        var d = document.documentElement;
+        var themeBtn = document.getElementById("themeToggle");
+        var tutorBtn = document.getElementById("tutorToggle");
+
+        function updateThemeIcon() {
+          var isDark = d.getAttribute("data-theme") === "dark";
+          themeBtn.textContent = isDark ? "\u2600" : "\u263E";
+        }
+
+        // Initialize Theme
+        var savedTheme = localStorage.getItem("eebt-theme");
+        if (savedTheme) {
+          d.setAttribute("data-theme", savedTheme);
+        } else if (window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches) {
+          d.setAttribute("data-theme", "dark");
+        } else {
+          d.setAttribute("data-theme", "light");
+        }
+        updateThemeIcon();
+
+        // Theme Toggle Click
+        themeBtn.onclick = function () {
+          var currentTheme = d.getAttribute("data-theme");
+          var nextTheme = currentTheme === "dark" ? "light" : "dark";
+          d.setAttribute("data-theme", nextTheme);
+          localStorage.setItem("eebt-theme", nextTheme);
+          updateThemeIcon();
+        };
+
+        // Tutor Mode Toggle
+        function toggleTutorMode() {
+          d.classList.toggle("show-tutor");
+          var isOn = d.classList.contains("show-tutor");
+          tutorBtn.textContent = "Tutor Mode: " + (isOn ? "ON" : "OFF");
+          tutorBtn.style.borderColor = isOn ? "var(--correct)" : "var(--accent)";
+        }
+
+        tutorBtn.onclick = toggleTutorMode;
+
+        // Shortcut: Ctrl + Shift + K
+        window.addEventListener("keydown", function (e) {
+          if (e.ctrlKey && e.shiftKey && (e.key === "K" || e.key === "k")) {
+            e.preventDefault();
+            toggleTutorMode();
+          }
+        });
+      });
+
+      function mark(btn, isCorrect) {
+        var parent = btn.closest("li") || btn.closest(".repetition-section");
+        if (isCorrect) {
+          parent.classList.remove("item-incorrect");
+          parent.classList.add("item-correct");
+        } else {
+          parent.classList.remove("item-correct");
+          parent.classList.add("item-incorrect");
+        }
+      }
+    </script>
+  </head>
+  <body>
+    <button id="themeToggle" type="button" aria-label="Toggle dark mode">&#x263E;</button>
+    <button id="tutorToggle" type="button" title="Shortcut: Ctrl+Shift+K">Tutor Mode: OFF</button>
+
+    <div class="container">
+      <h1>English Explorer — Progress Repetition</h1>
+      <p class="date-sub">Time Allowed: 45 Minutes | Topics: Pocket City & The Story of Luck</p>
+      <p class="to-line">Student: <b>Nimza</b></p>
+
+      <div class="intro">
+        Complete all sections carefully. You can type your answers directly into the text boxes provided.
+      </div>
+
+      <!-- PART 1 -->
+      <div class="repetition-section">
+        <h2>Part 1: Pocket City — Vocabulary & City Planning</h2>
+        <p><b>Exercise A: Gap Fill</b> — Complete the sentences using the correct word from the word bank.</p>
+        <div class="word-bank">
+          zones | citizens | power plant | budget | taxes | mayor | congestion
+        </div>
+        <ol>
+          <li>
+            To make sure the city has electricity, the
+            <input type="text" class="inline-input" placeholder="answer..." />
+            built a new <input type="text" class="inline-input" placeholder="answer..." />.
+            <div class="answer-key">Key: mayor | power plant</div>
+            <div class="tutor-controls"><button class="tutor-btn btn-pass" onclick="mark(this, true)">✓ Correct</button><button class="tutor-btn btn-fail" onclick="mark(this, false)">✗ Incorrect</button></div>
+          </li>
+          <li>
+            The local council collected
+            <input type="text" class="inline-input" placeholder="answer..." />
+            from the residents to pay for roads and public parks.
+            <div class="answer-key">Key: taxes</div>
+            <div class="tutor-controls"><button class="tutor-btn btn-pass" onclick="mark(this, true)">✓ Correct</button><button class="tutor-btn btn-fail" onclick="mark(this, false)">✗ Incorrect</button></div>
+          </li>
+          <li>
+            The city is divided into industrial, commercial, and residential
+            <input type="text" class="inline-input" placeholder="answer..." />.
+            <div class="answer-key">Key: zones</div>
+            <div class="tutor-controls"><button class="tutor-btn btn-pass" onclick="mark(this, true)">✓ Correct</button><button class="tutor-btn btn-fail" onclick="mark(this, false)">✗ Incorrect</button></div>
+          </li>
+          <li>
+            All the happy
+            <input type="text" class="inline-input" placeholder="answer..." />
+            enjoyed spending their weekend at the new recreation centre.
+            <div class="answer-key">Key: citizens</div>
+            <div class="tutor-controls"><button class="tutor-btn btn-pass" onclick="mark(this, true)">✓ Correct</button><button class="tutor-btn btn-fail" onclick="mark(this, false)">✗ Incorrect</button></div>
+          </li>
+          <li>
+            Building too many commercial buildings without enough roads can cause heavy traffic
+            <input type="text" class="inline-input" placeholder="answer..." />.
+            <div class="answer-key">Key: congestion</div>
+            <div class="tutor-controls"><button class="tutor-btn btn-pass" onclick="mark(this, true)">✓ Correct</button><button class="tutor-btn btn-fail" onclick="mark(this, false)">✗ Incorrect</button></div>
+          </li>
+          <li>
+            We must monitor our spending closely so that we stay within our city
+            <input type="text" class="inline-input" placeholder="answer..." />.
+            <div class="answer-key">Key: budget</div>
+            <div class="tutor-controls"><button class="tutor-btn btn-pass" onclick="mark(this, true)">✓ Correct</button><button class="tutor-btn btn-fail" onclick="mark(this, false)">✗ Incorrect</button></div>
+          </li>
+        </ol>
+
+        <h3>Exercise B: Sentence Rewriting</h3>
+        <p>Rewrite each sentence using your own words while keeping the exact same meaning:</p>
+        <ol>
+          <li>
+            The mayor must build enough houses for everyone in the residential zone.<br />
+            <textarea placeholder="Rewrite the sentence here..."></textarea>
+            <div class="answer-key">Key Example: The city leader needs to construct sufficient housing for all residents in the residential area.</div>
+            <div class="tutor-controls"><button class="tutor-btn btn-pass" onclick="mark(this, true)">✓ Correct</button><button class="tutor-btn btn-fail" onclick="mark(this, false)">✗ Incorrect</button></div>
+          </li>
+          <li>
+            Traffic congestion is a big problem in the city centre during rush hour.<br />
+            <textarea placeholder="Rewrite the sentence here..."></textarea>
+            <div class="answer-key">Key Example: Heavy traffic creates major issues in downtown areas during peak travel times.</div>
+            <div class="tutor-controls"><button class="tutor-btn btn-pass" onclick="mark(this, true)">✓ Correct</button><button class="tutor-btn btn-fail" onclick="mark(this, false)">✗ Incorrect</button></div>
+          </li>
+          <li>
+            It is essential to balance revenue from taxes with emergency services costs.<br />
+            <textarea placeholder="Rewrite the sentence here..."></textarea>
+            <div class="answer-key">Key Example: Balancing tax income with the expenses of emergency services is crucial.</div>
+            <div class="tutor-controls"><button class="tutor-btn btn-pass" onclick="mark(this, true)">✓ Correct</button><button class="tutor-btn btn-fail" onclick="mark(this, false)">✗ Incorrect</button></div>
+          </li>
+        </ol>
+      </div>
+
+      <!-- PART 2 -->
+      <div class="repetition-section">
+        <h2>Part 2: The Story of Luck — Grammar & Plot</h2>
+        <p><b>Exercise A: Past Simple Verbs</b> — Fill in the blanks with the correct past simple form of the verb in brackets.</p>
+        <ol>
+          <li>
+            Sam <input type="text" class="inline-input" placeholder="(share)" /> her food with a stray black cat named Bob.
+            <div class="answer-key">Key: shared</div>
+            <div class="tutor-controls"><button class="tutor-btn btn-pass" onclick="mark(this, true)">✓ Correct</button><button class="tutor-btn btn-fail" onclick="mark(this, false)">✗ Incorrect</button></div>
+          </li>
+          <li>
+            The black cat <input type="text" class="inline-input" placeholder="(drop)" /> a shiny lucky penny on the pavement.
+            <div class="answer-key">Key: dropped</div>
+            <div class="tutor-controls"><button class="tutor-btn btn-pass" onclick="mark(this, true)">✓ Correct</button><button class="tutor-btn btn-fail" onclick="mark(this, false)">✗ Incorrect</button></div>
+          </li>
+          <li>
+            Sam <input type="text" class="inline-input" placeholder="(notice)" /> that her terrible streak of bad luck had instantly disappeared.
+            <div class="answer-key">Key: noticed</div>
+            <div class="tutor-controls"><button class="tutor-btn btn-pass" onclick="mark(this, true)">✓ Correct</button><button class="tutor-btn btn-fail" onclick="mark(this, false)">✗ Incorrect</button></div>
+          </li>
+          <li>
+            She accidentally <input type="text" class="inline-input" placeholder="(flush)" /> the lucky penny down the toilet!
+            <div class="answer-key">Key: flushed</div>
+            <div class="tutor-controls"><button class="tutor-btn btn-pass" onclick="mark(this, true)">✓ Correct</button><button class="tutor-btn btn-fail" onclick="mark(this, false)">✗ Incorrect</button></div>
+          </li>
+          <li>
+            Sam secretively <input type="text" class="inline-input" placeholder="(follow)" /> Bob down a dark alleyway and through a portal into the Land of Luck.
+            <div class="answer-key">Key: followed</div>
+            <div class="tutor-controls"><button class="tutor-btn btn-pass" onclick="mark(this, true)">✓ Correct</button><button class="tutor-btn btn-fail" onclick="mark(this, false)">✗ Incorrect</button></div>
+          </li>
+          <li>
+            Bob <input type="text" class="inline-input" placeholder="(explain)" /> that bad luck and good luck must remain balanced.
+            <div class="answer-key">Key: explained</div>
+            <div class="tutor-controls"><button class="tutor-btn btn-pass" onclick="mark(this, true)">✓ Correct</button><button class="tutor-btn btn-fail" onclick="mark(this, false)">✗ Incorrect</button></div>
+          </li>
+        </ol>
+
+        <h3>Exercise B: Multiple Choice Plot Comprehension</h3>
+        <p>Select the correct answer for each question:</p>
+        <ol>
+          <li>
+            Why was Sam so determined to keep hold of the lucky penny?
+            <label class="mc-option"><input type="radio" name="q1" value="a" /> a) She wanted to buy an expensive bicycle.</label>
+            <label class="mc-option"><input type="radio" name="q1" value="b" /> b) She wanted to give it to her young friend Hazel so she could find an adoptive family.</label>
+            <label class="mc-option"><input type="radio" name="q1" value="c" /> c) She wanted to prove to everyone that magic was real.</label>
+            <div class="answer-key">Key: b) She wanted to give it to her young friend Hazel so she could find an adoptive family.</div>
+            <div class="tutor-controls"><button class="tutor-btn btn-pass" onclick="mark(this, true)">✓ Correct</button><button class="tutor-btn btn-fail" onclick="mark(this, false)">✗ Incorrect</button></div>
+          </li>
+          <li>
+            What magical occurrence happened when Sam dropped her keys while holding the lucky penny?
+            <label class="mc-option"><input type="radio" name="q2" value="a" /> a) They shattered into pieces on the floor.</label>
+            <label class="mc-option"><input type="radio" name="q2" value="b" /> b) They fell directly down the drain.</label>
+            <label class="mc-option"><input type="radio" name="q2" value="c" /> c) They bounced cleanly back up into her open hand.</label>
+            <div class="answer-key">Key: c) They bounced cleanly back up into her open hand.</div>
+            <div class="tutor-controls"><button class="tutor-btn btn-pass" onclick="mark(this, true)">✓ Correct</button><button class="tutor-btn btn-fail" onclick="mark(this, false)">✗ Incorrect</button></div>
+          </li>
+          <li>
+            What lesson did Sam learn by the end of her adventure?
+            <label class="mc-option"><input type="radio" name="q3" value="a" /> a) Bad luck is always evil and must be eliminated.</label>
+            <label class="mc-option"><input type="radio" name="q3" value="b" /> b) Bad luck can lead to unexpected good opportunities and helps people grow stronger.</label>
+            <label class="mc-option"><input type="radio" name="q3" value="c" /> c) It is better to rely on luck than on hard work.</label>
+            <div class="answer-key">Key: b) Bad luck can lead to unexpected good opportunities and helps people grow stronger.</div>
+            <div class="tutor-controls"><button class="tutor-btn btn-pass" onclick="mark(this, true)">✓ Correct</button><button class="tutor-btn btn-fail" onclick="mark(this, false)">✗ Incorrect</button></div>
+          </li>
+        </ol>
+      </div>
+
+      <!-- PART 3 -->
+      <div class="repetition-section">
+        <h2>Part 3: Vocabulary & Definitions</h2>
+        <p>Type a clear English definition or simple explanation for each target word:</p>
+        <ol>
+          <li>
+            <b>Portal:</b>
+            <input type="text" style="max-width:450px;" placeholder="Definition..." />
+            <div class="answer-key">Key: A doorway, gate, or magical entrance to another world or place.</div>
+            <div class="tutor-controls"><button class="tutor-btn btn-pass" onclick="mark(this, true)">✓ Correct</button><button class="tutor-btn btn-fail" onclick="mark(this, false)">✗ Incorrect</button></div>
+          </li>
+          <li>
+            <b>Alley:</b>
+            <input type="text" style="max-width:450px;" placeholder="Definition..." />
+            <div class="answer-key">Key: A narrow passage or street between or behind buildings.</div>
+            <div class="tutor-controls"><button class="tutor-btn btn-pass" onclick="mark(this, true)">✓ Correct</button><button class="tutor-btn btn-fail" onclick="mark(this, false)">✗ Incorrect</button></div>
+          </li>
+          <li>
+            <b>Incredible:</b>
+            <input type="text" style="max-width:450px;" placeholder="Definition..." />
+            <div class="answer-key">Key: Surprising, extraordinary, or difficult to believe.</div>
+            <div class="tutor-controls"><button class="tutor-btn btn-pass" onclick="mark(this, true)">✓ Correct</button><button class="tutor-btn btn-fail" onclick="mark(this, false)">✗ Incorrect</button></div>
+          </li>
+          <li>
+            <b>Desperate:</b>
+            <input type="text" style="max-width:450px;" placeholder="Definition..." />
+            <div class="answer-key">Key: Feeling or showing a hopeless sense that a situation is so bad as to be impossible to deal with.</div>
+            <div class="tutor-controls"><button class="tutor-btn btn-pass" onclick="mark(this, true)">✓ Correct</button><button class="tutor-btn btn-fail" onclick="mark(this, false)">✗ Incorrect</button></div>
+          </li>
+          <li>
+            <b>Congestion:</b>
+            <input type="text" style="max-width:450px;" placeholder="Definition..." />
+            <div class="answer-key">Key: A situation in which a place or road is extremely crowded and blocked.</div>
+            <div class="tutor-controls"><button class="tutor-btn btn-pass" onclick="mark(this, true)">✓ Correct</button><button class="tutor-btn btn-fail" onclick="mark(this, false)">✗ Incorrect</button></div>
+          </li>
+        </ol>
+      </div>
+
+      <!-- PART 4 -->
+      <div class="repetition-section">
+        <h2>Part 4: Extended Writing Task</h2>
+        <p>Imagine you are elected Mayor of a new city in <i>Pocket City</i>. Write 4 to 5 full sentences explaining what structures you would construct first, how you would manage your budget, and how you would prevent traffic congestion.</p>
+        <textarea style="min-height: 140px;" placeholder="Write your full paragraph here..."></textarea>
+        <div class="answer-key">Key Checklist: Must contain 4-5 full sentences, correct spelling, appropriate city-planning vocabulary (mayor, budget, zones, congestion, power plant), and clear reasoning.</div>
+        <div class="tutor-controls"><button class="tutor-btn btn-pass" onclick="mark(this, true)">✓ Correct</button><button class="tutor-btn btn-fail" onclick="mark(this, false)">✗ Incorrect</button></div>
+      </div>
+    </div>
+  </body>
+</html>
