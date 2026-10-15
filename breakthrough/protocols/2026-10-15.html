@@ -1,0 +1,158 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no" />
+    <title>Protocol 15/10/2026</title>
+    <meta name="description" content="English Explorer — Protocol 15/10/2026" />
+    <meta property="og:image" content="https://res.cloudinary.com/dmkhsyfzf/image/upload/q_auto/f_auto/v1781698464/protocol_r392x1.png" />
+    <link rel="icon" type="image/png" href="https://res.cloudinary.com/dmkhsyfzf/image/upload/q_auto/f_auto/v1781698464/protocol_r392x1.png" />
+    <link rel="apple-touch-icon" href="https://res.cloudinary.com/dmkhsyfzf/image/upload/q_auto/f_auto/v1781698464/protocol_r392x1.png" />
+    <style>
+      :root { --bg: #FAF7F2; --ink: #14213d; --muted: #60708d; --accent: #e43703; --accent2: #ffb866; --panel: #fcfcfc; --shadow: 0 18px 50px rgba(20,33,61,0.14); }
+      html[data-theme="dark"] { --bg: #161a24; --ink: #e8ecf4; --muted: #93a1b8; --panel: #1f2530; --shadow: 0 18px 50px rgba(0,0,0,0.55); }
+      .container[data-weekday="mon"]{--accent:#2563eb} .container[data-weekday="tue"]{--accent:#e43703} .container[data-weekday="wed"]{--accent:#0d9488} .container[data-weekday="thu"]{--accent:#7c3aed} .container[data-weekday="fri"]{--accent:#dc2626} .container[data-weekday="sat"]{--accent:#d97706} .container[data-weekday="sun"]{--accent:#475569}
+      *{box-sizing:border-box} html,body{margin:0;width:100%;min-height:100%;background:var(--bg);font-family:Arial,Helvetica,sans-serif;color:var(--ink);touch-action:manipulation;line-height:1.6}
+      .container{max-width:900px;margin:0 auto;padding:clamp(16px,4vw,40px) clamp(12px,3vw,24px)}
+      h1{font-size:clamp(1.8rem,5vw,3rem);margin:0 0 .2em;font-weight:900;letter-spacing:-.03em;color:var(--accent)}
+      .date-sub{font-size:clamp(.9rem,1.6vw,1.2rem);color:var(--muted);font-weight:700;letter-spacing:.1em;margin:0 0 .4em}
+      .to-line{font-size:clamp(.95rem,1.7vw,1.15rem);color:var(--muted);font-weight:800;letter-spacing:.06em;text-transform:uppercase;margin:0 0 2em}
+      .to-line b{color:var(--accent)}
+      .intro{background:var(--panel);border-radius:24px;padding:clamp(1rem,2.5vw,1.8em);box-shadow:var(--shadow);margin-bottom:2em;font-size:clamp(1rem,1.8vw,1.2rem);line-height:1.7}
+      .zh{display:block;margin-top:.6em;color:var(--muted);font-size:.92em}
+      h2{font-size:clamp(1.3rem,3.2vw,2rem);margin:2em 0 .6em;font-weight:900;color:var(--ink);letter-spacing:-.02em}
+      h3{font-size:clamp(1.1rem,2.2vw,1.5rem);margin:1.6em 0 .4em;font-weight:800;color:var(--accent)}
+      p{font-size:clamp(1rem,1.8vw,1.15rem);margin:.4em 0}
+      hr{border:0;border-top:2px solid rgba(96,112,141,.35);margin:1.4em 0}
+      .story-section{background:var(--panel);border-radius:24px;padding:clamp(1rem,2.5vw,1.6em);box-shadow:var(--shadow);margin-bottom:1.4em}
+      .story-section h3{margin-top:0} .story-section p{margin:0 0 .55em}
+      .example{background:#fdf3e7;border-left:5px solid var(--accent);border-radius:8px;padding:.7em 1em;margin:.8em 0 !important;font-style:italic}
+      .vocab-table{width:100%;border-collapse:separate;border-spacing:0;margin:1.6em 0 2em;background:var(--panel);border-radius:16px;box-shadow:var(--shadow);overflow:hidden}
+      .vocab-table th{background:var(--ink);color:var(--accent2);font-size:clamp(.85rem,1.5vw,1rem);font-weight:800;letter-spacing:.06em;padding:.8em 1em;text-align:left;white-space:nowrap}
+      .vocab-table td{padding:.7em 1em;font-size:clamp(.9rem,1.6vw,1.05rem);border-top:1px solid #eae5db;vertical-align:top;word-break:break-word}
+      .vocab-table tr:nth-child(even) td{background:#fdf9f3}
+      .vocab-table td:last-child{color:var(--muted);font-weight:600}
+      html[data-theme="dark"] .example{background:#232a36}
+      html[data-theme="dark"] hr{border-top-color:#333c4e}
+      html[data-theme="dark"] .vocab-table th{background:#0e1220}
+      html[data-theme="dark"] .vocab-table tr:nth-child(even) td{background:#232a36}
+      html[data-theme="dark"] .vocab-table td{border-top-color:#333c4e}
+      #themeToggle{position:fixed;top:clamp(10px,2vw,16px);right:clamp(10px,2vw,16px);z-index:50;width:clamp(38px,5vw,46px);height:clamp(38px,5vw,46px);border-radius:50%;background:var(--panel);color:var(--accent);border:2px solid var(--accent);font-size:20px;cursor:pointer;box-shadow:var(--shadow);line-height:1}
+    </style>
+  </head>
+  <body>
+    <button id="themeToggle" type="button" aria-label="Toggle dark mode">&#x263E;</button>
+    <div class="container" data-weekday="thu">
+      <h1>Protocol 15/10/2026</h1>
+      <p class="date-sub">English Explorer | Breakthrough</p>
+      <p class="to-line">For: <b>Nimza</b></p>
+      <div class="intro">
+        Please study the following structures and sentences well. Words and expressions must be fully understood and memorised. The last section shows today's new vocabulary. Please carefully repeat these as well.
+        <span class="zh">请将这些句子抄到练习本的词汇表下方。所有单词和表达方式都必须完全理解和记忆。</span>
+      </div>
+      <h2>Grammar Exercises</h2>
+      <h2>Grammar Exercises</h2>
+      <div class="story-section">
+      <p>Here are some basic and clear grammar exercises covering different fields.</p>
+      <hr>
+      <h3>1. Articles (A, An, The)</h3>
+      <p>Choose the correct article to fill in the blank.</p>
+      <ul>
+        <li>She bought a new laptop yesterday.</li>
+        <li>He wants to be an engineer when he finishes university.</li>
+        <li>The sun rises in the east every morning.</li>
+        <li>We saw an old film at the cinema last night.</li>
+      </ul>
+      <h3>2. Prepositions of Place (In, On, At)</h3>
+      <p>Choose the correct preposition to complete each sentence.</p>
+      <ul>
+        <li>My keys are on the kitchen table.</li>
+        <li>Sarah lives in London with her family.</li>
+        <li>Please meet me at the bus stop at three o'clock.</li>
+        <li>The cat is sleeping i the armchair.</li>
+      </ul>
+      <h3>3. Verb Tenses (Present Simple vs. Past Simple)</h3>
+      <p>Change the verb in brackets into the correct tense (Present Simple or Past Simple).</p>
+      <ul>
+        <li>Every day, Tom walks to school.</li>
+        <li>Yesterday, we played football in the park.</li>
+        <li>My mother baked a delicious cake last weekend.</li>
+        <li>Water boils at 100 degrees Celsius.</li>
+      </ul>
+      <hr>
+      <h3>4. Subject-Verb Agreement</h3>
+      <p>Choose the correct verb form to match the subject.</p>
+      <ul>
+        <li>Every student has finished their homework.</li>
+        <li>Cats like sleeping in warm places.</li>
+        <li>My brother and sister are visiting us this weekend.</li>
+        <li>Neither of the answers are correct.</li>
+      </ul>
+      <hr>
+      <h3>5. Pronouns</h3>
+      <p>Replace the underlined words with the correct pronoun (he, she, it, they, we).</p>
+      <ul>
+        <li>He is going to the shop to buy some milk.</li>
+        <li>They love travelling during the holidays.</li>
+        <li>Look at it! It looks very fast.</li>
+        <li>We went to the museum on Saturday.</li>
+      </ul>
+      <h3>6. Irregular Past Tense Verbs</h3>
+      <p>Exercise: Transform the Verbs — Change the present tense verb in brackets into its correct irregular past simple form.</p>
+      <ol>
+        <li>Sam met a talking black cat named Bob in the alleyway.</li>
+        <li>Bob took Sam through the glowing green portal.</li>
+        <li>They found a secret control room inside the grand building.</li>
+        <li>Sam wore a funny costume to hide her human identity.</li>
+        <li>A giant machine ran continuously to sort out the lucky crystals.</li>
+        <li>Sam caught the falling crystal before it hit the floor.</li>
+      </ol>
+      </div>
+      <h2>Vocabulary — 15/10/2026</h2>
+      <table class="vocab-table">
+        <thead><tr><th>English</th><th>Chinese</th></tr></thead>
+        <tbody>
+          <tr><td>Engineer</td><td>工程师</td></tr>
+          <tr><td>University.</td><td>大学。</td></tr>
+          <tr><td>To finish</td><td>完成</td></tr>
+          <tr><td>To rise</td><td>上升</td></tr>
+          <tr><td>East</td><td>东方</td></tr>
+          <tr><td>Film</td><td>电影</td></tr>
+          <tr><td>Cinema</td><td>电影</td></tr>
+          <tr><td>Armchair.</td><td>扶手椅。</td></tr>
+          <tr><td>Degrees</td><td>度数</td></tr>
+          <tr><td>Celsius.</td><td>摄氏度。</td></tr>
+          <tr><td>To boil</td><td>煮沸</td></tr>
+          <tr><td>Neither</td><td>两者都不</td></tr>
+          <tr><td>Either</td><td>任何一个</td></tr>
+          <tr><td>Identity</td><td>身份</td></tr>
+          <tr><td>Continuously</td><td>不断地</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <script>
+      (function () {
+        var d = document.documentElement;
+        var K = "eebt-theme";
+        function apply() {
+          var dt = d.getAttribute("data-theme") === "dark";
+          var b = document.getElementById("themeToggle");
+          if (b) b.textContent = dt ? "\u2600" : "\u263E";
+        }
+        var t = null;
+        try { t = localStorage.getItem(K); } catch (e) {}
+        if (t === "dark" || t === "light") d.setAttribute("data-theme", t);
+        else if (window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches) d.setAttribute("data-theme", "dark");
+        else d.setAttribute("data-theme", "light");
+        apply();
+        var b = document.getElementById("themeToggle");
+        if (b) b.onclick = function () {
+          var n = d.getAttribute("data-theme") === "dark" ? "light" : "dark";
+          d.setAttribute("data-theme", n);
+          apply();
+          try { localStorage.setItem(K, n); } catch (e) {}
+        };
+      })();
+    </script>
+  </body>
+</html>
