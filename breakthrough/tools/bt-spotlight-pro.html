@@ -881,7 +881,8 @@
         flex: 0 0 auto;
       }
       .clipMove,
-      .clipDel {
+      .clipDel,
+      .clipEdit {
         width: clamp(22.5px, 3.75vw, 33px);
         height: clamp(12px, 1.875vh, 16.5px);
         border-radius: 6px;
@@ -897,7 +898,8 @@
         transition: 0.15s transform;
       }
       .clipMove:active,
-      .clipDel:active {
+      .clipDel:active,
+      .clipEdit:active {
         transform: scale(0.9);
       }
       .clipMove:disabled {
@@ -908,6 +910,66 @@
       .clipDel {
         color: var(--bad);
         border-color: rgba(224, 82, 82, 0.35);
+      }
+      .clipEdit {
+        color: var(--accent);
+        border-color: rgba(228, 55, 3, 0.35);
+      }
+      .clipRow.editing {
+        overflow: visible;
+      }
+      .clipEditForm {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 0.4em;
+        width: 100%;
+        padding: 0.4em;
+        background: #eef1f7;
+        border: 1.5px solid rgba(96, 112, 141, 0.35);
+        border-radius: 12px;
+      }
+      .clipEditInput {
+        flex: 1 1 8em;
+        min-width: 0;
+        border: 1px solid rgba(96, 112, 141, 0.45);
+        border-radius: 8px;
+        background: var(--panel);
+        color: var(--ink);
+        font-size: clamp(0.7rem, 1.2vw, 1rem);
+        font-weight: 700;
+        padding: 0.3em 0.55em;
+        outline: none;
+      }
+      .clipEditSave,
+      .clipEditCancel {
+        flex: 0 0 auto;
+        border-radius: 8px;
+        border: 1.5px solid rgba(96, 112, 141, 0.35);
+        padding: 0.3em 0.8em;
+        font-size: clamp(0.7rem, 1.2vw, 1rem);
+        font-weight: 800;
+        cursor: pointer;
+      }
+      .clipEditSave {
+        background: var(--accent);
+        color: var(--accent2);
+        border-color: var(--accent);
+      }
+      .clipEditCancel {
+        background: #eef1f7;
+        color: var(--ink);
+      }
+      :root[data-theme="dark"] .clipEditForm {
+        background: #232a36;
+        border-color: #333c4e;
+      }
+      :root[data-theme="dark"] .clipEditInput {
+        background: #1f2530;
+        border-color: #333c4e;
+      }
+      :root[data-theme="dark"] .clipEditCancel {
+        background: #232a36;
       }
       .downloadCsvBtn {
         display: flex;
@@ -1731,9 +1793,9 @@
         min-height: 46vh;
         max-height: 62vh;
         overflow-y: auto;
-        padding: 1em 1.2em;
+        padding: 1em 1.4em;
         text-align: left;
-        font-size: clamp(0.8rem, 1.4vw, 1.3rem);
+        font-size: clamp(1.05rem, 1.7vw, 1.5rem);
         line-height: 1.6;
         scrollbar-width: none;
       }
@@ -1798,53 +1860,77 @@
         max-height: 74vh;
       }
       .mdCanvas p {
-        margin: 0.5em 0;
+        margin: 0.6em 0;
       }
       .mdCanvas h1 {
-        font-size: clamp(1.4rem, 2.6vw, 2.1rem);
-        margin: 0.65em 0 0.35em;
+        font-size: clamp(1.8rem, 3vw, 2.6rem);
+        margin: 0.8em 0 0.4em;
+        font-weight: 900;
+        letter-spacing: -0.01em;
+        color: var(--accent);
+      }
+      .mdCanvas h2 {
+        font-size: clamp(1.5rem, 2.4vw, 2.1rem);
+        margin: 0.7em 0 0.35em;
         font-weight: 900;
         letter-spacing: -0.01em;
       }
-      .mdCanvas h2 {
-        font-size: clamp(1.25rem, 2.2vw, 1.8rem);
-        margin: 0.55em 0 0.3em;
-        font-weight: 800;
-      }
       .mdCanvas h3 {
-        font-size: clamp(1.1rem, 1.85vw, 1.5rem);
-        margin: 0.5em 0 0.25em;
+        font-size: clamp(1.3rem, 2.1vw, 1.8rem);
+        margin: 0.6em 0 0.3em;
         font-weight: 800;
+        color: var(--accent);
       }
       .mdCanvas h4 {
-        font-size: clamp(1rem, 1.6vw, 1.3rem);
-        margin: 0.45em 0 0.2em;
+        font-size: clamp(1.2rem, 1.9vw, 1.6rem);
+        margin: 0.55em 0 0.25em;
         font-weight: 800;
       }
       .mdCanvas h5,
       .mdCanvas h6 {
-        font-size: clamp(0.95rem, 1.45vw, 1.15rem);
-        margin: 0.4em 0 0.2em;
+        font-size: clamp(1.1rem, 1.7vw, 1.4rem);
+        margin: 0.5em 0 0.2em;
         font-weight: 800;
       }
       .mdCanvas hr {
         border: 0;
         border-top: 2px solid rgba(96, 112, 141, 0.35);
-        margin: 1.4em auto;
+        margin: 1.6em auto;
         width: min(60%, 320px);
       }
       .mdCanvas ul,
       .mdCanvas ol {
-        margin: 0.4em 0 0.4em 1.4em;
+        margin: 0.5em 0 0.5em 1.8em;
+        padding-inline-start: 1.2em;
+        font-size: inherit;
+        line-height: inherit;
       }
-      .mdCanvas li {
-        margin: 0.2em 0;
+      .mdCanvas ul li,
+      .mdCanvas ol li {
+        margin: 0.25em 0;
+      }
+      .mdCanvas ul li::marker,
+      .mdCanvas ol li::marker {
+        color: var(--accent);
+        font-weight: 700;
+      }
+      .mdCanvas ul ul,
+      .mdCanvas ol ol,
+      .mdCanvas ul ol,
+      .mdCanvas ol ul {
+        margin: 0.25em 0 0.25em 1em;
       }
       .mdCanvas blockquote {
-        margin: 0.5em 0;
-        padding: 0.2em 1em;
+        margin: 0.8em 0;
+        padding: 0.4em 1.2em;
         border-left: 4px solid var(--accent2);
-        color: var(--muted);
+        background: #fdf9f3;
+        border-radius: 0 12px 12px 0;
+        color: var(--ink);
+      }
+      :root[data-theme="dark"] .mdCanvas blockquote {
+        background: #232a36;
+        color: var(--ink);
       }
       .mdCanvas code {
         font-family: Consolas, Menlo, Monaco, monospace;
@@ -1966,6 +2052,52 @@
         background: var(--accent2);
         box-shadow: 0 0 0 2px var(--accent);
         color: var(--ink);
+      }
+      .mdSent {
+        border-radius: 6px;
+        transition: background 0.15s, box-shadow 0.15s;
+      }
+      .mdMarkerMode .mdSent {
+        cursor: pointer;
+      }
+      .mdMarkerMode .mdSent:hover {
+        background: rgba(255, 184, 102, 0.35);
+      }
+      .mdMark {
+        border-radius: 6px;
+        padding: 0 2px;
+      }
+      .mdMark-focus {
+        background: var(--accent2);
+        box-shadow: inset 0 -0.55em 0 rgba(255, 184, 102, 0.55);
+        color: var(--ink);
+      }
+      .mdMark-copy {
+        background: var(--accent);
+        color: var(--accent2);
+        padding: 0 0.25em;
+        box-decoration-break: clone;
+        -webkit-box-decoration-break: clone;
+      }
+      :root[data-theme="dark"] .mdMark-focus {
+        background: rgba(255, 184, 102, 0.3);
+        box-shadow: inset 0 -0.55em 0 rgba(255, 184, 102, 0.25);
+        color: var(--ink);
+      }
+      :root[data-theme="dark"] .mdMark-copy {
+        background: var(--accent);
+        color: #fff;
+      }
+      #mdMarkerBtn.active {
+        background: var(--accent);
+        color: var(--accent2);
+        border-color: var(--accent);
+      }
+      .mdLink {
+        color: var(--accent);
+        font-weight: 800;
+        text-decoration: underline;
+        cursor: pointer;
       }
       .mdMedia {
         display: block;
@@ -2337,7 +2469,7 @@
             onclick="next()"
           ></button>
         </div>
-        <span class="versionText">SpotlightPro V1.6</span>
+        <span class="versionText">SpotlightPro V2.0</span>
       </div>
 
       <!-- 1: Media clipper (paste Cloudinary asset link) -->
@@ -2441,6 +2573,83 @@
               Word list
             </button>
             </div>
+            <div class="csvBtns" style="margin-top: -0.9em; margin-bottom: 0.25em; gap: 0.5em;">
+              <button
+                type="button"
+                class="miniChip voiceChip downloadCsvBtn"
+                onclick="downloadWords()"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="1.2em"
+                  height="1.2em"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  style="vertical-align: -0.2em"
+                >
+                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                  <polyline points="7 10 12 15 17 10" />
+                  <line x1="12" x2="12" y1="15" y2="3" />
+                </svg>
+                <span>Save words</span>
+              </button>
+              <button
+                type="button"
+                class="miniChip voiceChip downloadCsvBtn"
+                onclick="document.getElementById('csvFileInput').click()"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="1.2em"
+                  height="1.2em"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  style="vertical-align: -0.2em"
+                >
+                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                  <polyline points="17 8 12 3 7 8" />
+                  <line x1="12" x2="12" y1="3" y2="15" />
+                </svg>
+                <span>Load words</span>
+              </button>
+              <button
+                type="button"
+                class="miniChip voiceChip downloadCsvBtn"
+                onclick="clearWords()"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="1.2em"
+                  height="1.2em"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  style="vertical-align: -0.2em"
+                >
+                  <path d="M3 6h18" />
+                  <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6" />
+                  <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2" />
+                </svg>
+                <span>Clear</span>
+              </button>
+            </div>
+            <input
+              type="file"
+              id="csvFileInput"
+              accept=".json,.csv,.txt,application/json,text/csv,text/plain,text/markdown"
+              style="display: none"
+            />
             <div class="panel">
               <div class="cast">
               <figure class="castMember">
@@ -2491,83 +2700,6 @@
               </figure>
               </div>
               <div class="clipList" id="clipList"></div>
-              <div class="csvBtns">
-                <button
-                  type="button"
-                  class="miniChip voiceChip downloadCsvBtn"
-                  onclick="downloadWords()"
-                >
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="1.2em"
-                    height="1.2em"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-width="2"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    style="vertical-align: -0.2em"
-                  >
-                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
-                    <polyline points="7 10 12 15 17 10" />
-                    <line x1="12" x2="12" y1="15" y2="3" />
-                  </svg>
-                  <span>Save words</span>
-                </button>
-                <button
-                  type="button"
-                  class="miniChip voiceChip downloadCsvBtn"
-                  onclick="document.getElementById('csvFileInput').click()"
-                >
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="1.2em"
-                    height="1.2em"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-width="2"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    style="vertical-align: -0.2em"
-                  >
-                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
-                    <polyline points="17 8 12 3 7 8" />
-                    <line x1="12" x2="12" y1="3" y2="15" />
-                  </svg>
-                  <span>Load words</span>
-                </button>
-                <button
-                  type="button"
-                  class="miniChip voiceChip downloadCsvBtn"
-                  onclick="clearWords()"
-                >
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="1.2em"
-                    height="1.2em"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-width="2"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    style="vertical-align: -0.2em"
-                  >
-                    <path d="M3 6h18" />
-                    <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6" />
-                    <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2" />
-                  </svg>
-                  <span>Clear</span>
-                </button>
-              </div>
-              <input
-                type="file"
-                id="csvFileInput"
-                accept=".json,.csv,.txt,application/json,text/csv,text/plain,text/markdown"
-                style="display: none"
-              />
             </div>
           </div>
         </div>
@@ -2600,6 +2732,10 @@
               <button class="miniChip mdChip mdAccent" id="mdGenerateBtn" onclick="generateOutput()">
                 <svg xmlns="http://www.w3.org/2000/svg" width="1.1em" height="1.1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-0.2em"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/><path d="M10 9H8"/><path d="M16 13H8"/><path d="M16 17H8"/></svg>
                 Generate
+              </button>
+              <button class="miniChip mdChip" id="mdMarkerBtn" onclick="mdToggleMarker()">
+                <svg xmlns="http://www.w3.org/2000/svg" width="1.1em" height="1.1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-0.2em"><path d="m9 11-6 6v3h9l3-3"/><path d="m22 12-4.6 4.6a2 2 0 0 1-2.8 0l-5.2-5.2a2 2 0 0 1 0-2.8L14 4"/></svg>
+                Marker
               </button>
               <span class="mdHint" id="mdHint">Tap a word to hear &amp; select it · Translate sends it to the translator</span>
             </div>
@@ -2743,6 +2879,8 @@ Tap a word to hear it — SpotlightPro turns your notes into a live lesson.
         '<svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 9 6-9"/></svg>';
       var ICON_DELETE =
         '<svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/></svg>';
+      var ICON_PENCIL =
+        '<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg>';
 
       var ICON_MAXIMIZE =
         '<svg xmlns="http://www.w3.org/2000/svg" width="1.2em" height="1.2em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: -0.2em"><path d="M8 3H5a2 2 0 0 0-2 2v3"/><path d="M21 8V5a2 2 0 0 0-2-2h-3"/><path d="M3 16v3a2 2 0 0 0 2 2h3"/><path d="M16 21h3a2 2 0 0 0 2-2v-3"/></svg>';
@@ -3230,6 +3368,15 @@ Tap a word to hear it — SpotlightPro turns your notes into a live lesson.
           e.stopPropagation();
           moveClipRow(row, 1);
         });
+        var editBtn = document.createElement("button");
+        editBtn.className = "clipEdit";
+        editBtn.type = "button";
+        editBtn.innerHTML = ICON_PENCIL;
+        editBtn.setAttribute("aria-label", "Edit entry");
+        editBtn.addEventListener("click", function (e) {
+          e.stopPropagation();
+          editClipRow(row);
+        });
         var delBtn = document.createElement("button");
         delBtn.className = "clipDel";
         delBtn.type = "button";
@@ -3241,10 +3388,72 @@ Tap a word to hear it — SpotlightPro turns your notes into a live lesson.
         });
         moves.appendChild(upBtn);
         moves.appendChild(downBtn);
+        moves.appendChild(editBtn);
         moves.appendChild(delBtn);
         row.appendChild(moves);
 
         clipList.appendChild(row);
+      }
+
+      function editClipRow(row) {
+        if (!row || row.classList.contains("editing")) return;
+        var idx = parseInt(row.getAttribute("data-idx"), 10);
+        var c = clipHistory[idx];
+        if (isNaN(idx) || !c) return;
+        row.classList.add("editing");
+        var time = c.time;
+        var curEn = c.en;
+        var curZh = c.zh;
+        row.innerHTML = "";
+        var form = document.createElement("div");
+        form.className = "clipEditForm";
+        var enI = document.createElement("input");
+        enI.className = "clipEditInput";
+        enI.type = "text";
+        enI.value = curEn;
+        enI.setAttribute("aria-label", "English text");
+        var zhI = document.createElement("input");
+        zhI.className = "clipEditInput";
+        zhI.type = "text";
+        zhI.value = curZh || "";
+        zhI.setAttribute("aria-label", "Chinese text");
+        var saveB = document.createElement("button");
+        saveB.className = "clipEditSave";
+        saveB.type = "button";
+        saveB.textContent = "Save";
+        var cancelB = document.createElement("button");
+        cancelB.className = "clipEditCancel";
+        cancelB.type = "button";
+        cancelB.textContent = "Cancel";
+        saveB.addEventListener("click", function (e) {
+          e.stopPropagation();
+          var en = enI.value.trim();
+          var zh = zhI.value.trim();
+          if (!en) { enI.focus(); return; }
+          clipHistory[idx] = { time: time, en: en, zh: zh };
+          saveWords();
+          renderClipList();
+          toast("Entry updated");
+        });
+        cancelB.addEventListener("click", function (e) {
+          e.stopPropagation();
+          renderClipList();
+        });
+        enI.addEventListener("keydown", function (e) {
+          if (e.key === "Enter") { e.preventDefault(); saveB.click(); }
+          else if (e.key === "Escape") { e.preventDefault(); cancelB.click(); }
+        });
+        zhI.addEventListener("keydown", function (e) {
+          if (e.key === "Enter") { e.preventDefault(); saveB.click(); }
+          else if (e.key === "Escape") { e.preventDefault(); cancelB.click(); }
+        });
+        form.appendChild(enI);
+        form.appendChild(zhI);
+        form.appendChild(saveB);
+        form.appendChild(cancelB);
+        row.appendChild(form);
+        enI.focus();
+        enI.select();
       }
 
       function renderClipList() {
@@ -3260,6 +3469,7 @@ Tap a word to hear it — SpotlightPro turns your notes into a live lesson.
       function updateClipMoveButtons() {
         var rows = clipList.children;
         for (var i = 0; i < rows.length; i++) {
+          rows[i].setAttribute("data-idx", i);
           var up = rows[i].querySelector(".clipMove.up");
           var down = rows[i].querySelector(".clipMove.down");
           if (up) up.disabled = i === 0;
@@ -4581,6 +4791,13 @@ if (idx < 0) return;
       var mdSel = null;
       var mdSelText = null;
       var mdRenderTimer = null;
+      var mdMarkerMode = false;
+      var mdAllWords = [];
+      var mdSelWords = [];
+      var mdSelAnchor = null;
+      var mdDragging = false;
+      var mdDragAnchor = null;
+      var mdDragMoved = false;
 
       function mdEscape(s) {
         return String(s)
@@ -4627,28 +4844,39 @@ if (idx < 0) return;
         var s = String(raw);
         var out = [];
         var re =
-          /(\[([^\]]*)\]\(([^)]+)\)|`([^`]*)`|\*\*([^*]+)\*\*|_([^_]+)_|\*([^*]+)\*)/g;
+          /(==([^=]+?)==|>>([^>]+?)<<|\[([^\]]*)\]\(([^)]+)\)|`([^`]*)`|\*\*([^*]+)\*\*|_([^_]+)_|\*([^*]+)\*)/g;
         var last = 0;
         var m;
         while ((m = re.exec(s))) {
           if (m.index > last) out.push(s.slice(last, m.index));
-          if (m[1] && m[1].indexOf("[") === 0) {
+          var tok = m[1] || "";
+          if (tok.charAt(0) === "=") {
+            var ms = document.createElement("span");
+            ms.className = "mdMark mdMark-focus";
+            mdFillText(ms, m[2], skipWords);
+            out.push(ms);
+          } else if (tok.charAt(0) === ">") {
+            var mc = document.createElement("span");
+            mc.className = "mdMark mdMark-copy";
+            mdFillText(mc, m[3], skipWords);
+            out.push(mc);
+          } else if (tok.charAt(0) === "[") {
             var a = document.createElement("a");
             a.className = "mdLink";
-            a.textContent = m[2];
-            a.href = m[3];
+            a.textContent = m[4];
+            a.href = m[5];
             a.target = "_blank";
             a.rel = "noopener";
-            a.setAttribute("data-text", m[2]);
+            a.setAttribute("data-text", m[4]);
             out.push(a);
-          } else if (m[4] !== undefined) {
+          } else if (tok.charAt(0) === "`") {
             var code = document.createElement("code");
-            code.textContent = m[4];
+            code.textContent = m[6];
             out.push(code);
           } else {
-            var txt = m[5] !== undefined ? m[5] : m[6] !== undefined ? m[6] : m[7];
-            var em = document.createElement(m[5] !== undefined ? "strong" : "em");
-            appendWordSpan(em, txt);
+            var txt = m[7] !== undefined ? m[7] : m[8] !== undefined ? m[8] : m[9];
+            var em = document.createElement(m[7] !== undefined ? "strong" : "em");
+            mdFillText(em, txt, skipWords);
             out.push(em);
           }
           last = re.lastIndex;
@@ -4705,17 +4933,38 @@ if (idx < 0) return;
       }
 
       function parseMd(src) {
-        var lines = String(src).split(/\r?\n/);
+        var S = String(src);
+        var lines = S.split(/\r?\n/);
+        var lineOffs = [];
+        var cursor = 0;
+        for (var lo = 0; lo < lines.length; lo++) {
+          lineOffs.push(cursor);
+          cursor += lines[lo].length;
+          if (S.charAt(cursor) === "\r") cursor++;
+          if (S.charAt(cursor) === "\n") cursor++;
+        }
         var blocks = [];
         var para = [];
+        var paraStart = -1;
+        var paraEnd = -1;
         var list = null;
         var ordered = false;
         var pre = false;
         var preBuf = [];
         var tableBuf = null;
 
+        function pushParaText(text, start, end) {
+          if (paraStart < 0) { paraStart = start; paraEnd = end; }
+          else { if (start >= 0 && start < paraStart) paraStart = start; if (end > paraEnd) paraEnd = end; }
+          para.push(text);
+        }
         function flushPara() {
-          if (para.length) { blocks.push({ t: "p", text: para.join("\n") }); para = []; }
+          if (para.length) {
+            blocks.push({ t: "p", text: para.join("\n"), start: paraStart, end: paraEnd });
+            para = [];
+            paraStart = -1;
+            paraEnd = -1;
+          }
         }
         function flushList() {
           if (list) { blocks.push({ t: "list", items: list, ordered: ordered }); list = null; }
@@ -4760,7 +5009,7 @@ if (idx < 0) return;
               align: tableAligns(parseTableRow(tableBuf[1]))
             });
           } else {
-            para.push(tableBuf.join(" "));
+            pushParaText(tableBuf.join(" "), -1, -1);
           }
           tableBuf = null;
         }
@@ -4804,17 +5053,29 @@ if (idx < 0) return;
           var h = trimmed.match(/^(#{1,6})\s+(.*)$/);
           if (h) { flushPara(); flushList(); blocks.push({ t: "h", level: h[1].length, text: h[2] }); continue; }
           var bq = trimmed.match(/^>\s?(.*)$/);
-          if (bq) { flushPara(); flushList(); blocks.push({ t: "bq", text: bq[1] }); continue; }
+          if (bq) {
+            flushPara();
+            flushList();
+            var bo = line.indexOf(bq[1]);
+            var boAbs = lineOffs[i] + (bo < 0 ? 0 : bo);
+            blocks.push({ t: "bq", text: bq[1], start: boAbs, end: boAbs + bq[1].length });
+            continue;
+          }
           var ol = trimmed.match(/^\d+\.\s+(.*)$/);
           var ul = trimmed.match(/^[-*+]\s+(.*)$/);
           if (ol || ul) {
             flushPara();
             if (!list) { list = []; ordered = !!ol; }
-            list.push(ol ? ol[1] : ul[1]);
+            var itemText = ol ? ol[1] : ul[1];
+            var io = line.indexOf(itemText);
+            var ioAbs = lineOffs[i] + (io < 0 ? 0 : io);
+            list.push({ text: itemText, start: ioAbs, end: ioAbs + itemText.length });
             continue;
           }
           flushList();
-          para.push(trimmed);
+          var ts = line.indexOf(trimmed);
+          var tAbs = lineOffs[i] + (ts < 0 ? 0 : ts);
+          pushParaText(trimmed, tAbs, tAbs + trimmed.length);
         }
         flushPara();
         flushList();
@@ -4825,11 +5086,114 @@ if (idx < 0) return;
 
       function mdStripInline(raw) {
         var s = String(raw);
+        s = s.replace(/==([^=]+?)==/g, "$1");
+        s = s.replace(/>>([^>]+?)<</g, "$1");
         s = s.replace(/`([^`]*)`/g, "$1");
         s = s.replace(/\[([^\]]*)\]\([^)]*\)/g, "$1");
         s = s.replace(/(\*\*|__)(.*?)\1/g, "$2");
         s = s.replace(/(\*|_)(.*?)\1/g, "$2");
         return s.trim();
+      }
+
+      function mdInlineHtml(raw) {
+        var s = String(raw);
+        var out = "";
+        var re =
+          /(==([^=]+?)==|>>([^>]+?)<<|\[([^\]]*)\]\(([^)]+)\)|`([^`]*)`|\*\*([^*]+)\*\*|_([^_]+)_|\*([^*]+)\*)/g;
+        var last = 0;
+        var m;
+        while ((m = re.exec(s))) {
+          if (m.index > last) out += mdEscapeHtml(s.slice(last, m.index));
+          var tok = m[1] || "";
+          if (tok.charAt(0) === "=") {
+            out += '<span class="mdMark mdMark-focus">' + mdInlineHtml(m[2]) + "</span>";
+          } else if (tok.charAt(0) === ">") {
+            out += '<span class="mdMark mdMark-copy">' + mdInlineHtml(m[3]) + "</span>";
+          } else if (tok.charAt(0) === "[") {
+            out +=
+              '<a href="' + mdEscapeHtml(m[5]) + '" target="_blank" rel="noopener">' +
+              mdEscapeHtml(m[4]) + "</a>";
+          } else if (tok.charAt(0) === "`") {
+            out += "<code>" + mdEscapeHtml(m[6]) + "</code>";
+          } else {
+            var txt = m[7] !== undefined ? m[7] : m[8] !== undefined ? m[8] : m[9];
+            var tag = m[7] !== undefined ? "strong" : "em";
+            out += "<" + tag + ">" + mdEscapeHtml(txt) + "</" + tag + ">";
+          }
+          last = re.lastIndex;
+        }
+        if (last < s.length) out += mdEscapeHtml(s.slice(last));
+        return out;
+      }
+
+      function splitSentences(raw) {
+        var res = [];
+        var s = String(raw);
+        var start = 0;
+        var i = 0;
+        function push(endIdx) {
+          res.push({ text: s.slice(start, endIdx), start: start, end: endIdx });
+        }
+        while (i < s.length) {
+          var ch = s.charAt(i);
+          if (ch === "\n") {
+            push(i);
+            i++;
+            start = i;
+            continue;
+          }
+          if (ch === "." || ch === "!" || ch === "?" || ch === "\u2026") {
+            var j = i + 1;
+            while (j < s.length) {
+              var cj = s.charAt(j);
+              if (cj === "." || cj === "!" || cj === "?" || cj === "\u2026") j++;
+              else break;
+            }
+            while (j < s.length) {
+              var cq = s.charAt(j);
+              if (cq === '"' || cq === "'" || cq === ")" || cq === "]" || cq === "=" || cq === "<") j++;
+              else break;
+            }
+            if (j >= s.length || /\s/.test(s.charAt(j))) {
+              push(j);
+              i = j;
+              start = j;
+              continue;
+            }
+          }
+          i++;
+        }
+        if (start < s.length) push(s.length);
+        return res;
+      }
+
+      function mdAppendSentences(container, raw, absStart, markable) {
+        if (!markable || absStart == null || absStart < 0) {
+          mdFillText(container, raw, false);
+          return;
+        }
+        var sents = splitSentences(raw);
+        for (var s = 0; s < sents.length; s++) {
+          var snt = sents[s];
+          var sp = document.createElement("span");
+          sp.className = "mdSent";
+          sp.setAttribute("data-abs-start", absStart + snt.start);
+          sp.setAttribute("data-abs-end", absStart + snt.end);
+          mdFillText(sp, snt.text, false);
+          container.appendChild(sp);
+        }
+      }
+
+      function mdClearSel() {
+        for (var i = 0; i < mdAllWords.length; i++) mdAllWords[i].classList.remove("sel");
+        mdSelWords = [];
+      }
+
+      function mdSyncMarkerUi() {
+        var out = document.getElementById("mdOutput");
+        var btn = document.getElementById("mdMarkerBtn");
+        if (out) out.classList.toggle("mdMarkerMode", !!mdMarkerMode);
+        if (btn) btn.classList.toggle("active", !!mdMarkerMode);
       }
 
       function mdRender() {
@@ -4838,6 +5202,8 @@ if (idx < 0) return;
         if (!input || !out) return;
         if (mdSel) { mdSel.classList.remove("sel"); mdSel = null; }
         mdSelText = null;
+        mdSelWords = [];
+        mdSelAnchor = null;
         var src = input.value;
         try {
           localStorage.setItem("spotlight-md-src", src);
@@ -4850,13 +5216,22 @@ if (idx < 0) return;
           var el;
           if (blk.t === "media") { out.appendChild(mdBuildMedia(blk.ref)); continue; }
           else if (blk.t === "h") { el = document.createElement("h" + blk.level); mdFillText(el, blk.text, false); }
-          else if (blk.t === "bq") { el = document.createElement("blockquote"); mdFillText(el, blk.text, false); }
+          else if (blk.t === "bq") {
+            el = document.createElement("blockquote");
+            var bqMark = blk.start != null && blk.start >= 0;
+            mdAppendSentences(el, bqMark ? src.slice(blk.start, blk.end) : blk.text, blk.start, bqMark);
+          }
           else if (blk.t === "pre") { el = document.createElement("pre"); var c = document.createElement("code"); c.textContent = blk.text; el.appendChild(c); }
           else if (blk.t === "list") {
             el = document.createElement(blk.ordered ? "ol" : "ul");
             for (var li = 0; li < blk.items.length; li++) {
               var it = document.createElement("li");
-              mdFillText(it, blk.items[li], false);
+              var item = blk.items[li];
+              if (typeof item === "string") { mdFillText(it, item, false); }
+              else {
+                var lm = item.start != null && item.start >= 0;
+                mdAppendSentences(it, lm ? src.slice(item.start, item.end) : item.text, item.start, lm);
+              }
               el.appendChild(it);
             }
           }
@@ -4890,9 +5265,16 @@ if (idx < 0) return;
             el.appendChild(tbody);
           }
           else if (blk.t === "hr") { el = document.createElement("hr"); }
-          else { el = document.createElement("p"); el.style.whiteSpace = "pre-line"; mdFillText(el, blk.text, false); }
+          else {
+            el = document.createElement("p");
+            el.style.whiteSpace = "pre-line";
+            var pMark = blk.start != null && blk.start >= 0;
+            mdAppendSentences(el, pMark ? src.slice(blk.start, blk.end) : blk.text, blk.start, pMark);
+          }
           out.appendChild(el);
         }
+        mdAllWords = Array.prototype.slice.call(out.querySelectorAll(".mdWord"));
+        mdSyncMarkerUi();
         updateMdHint();
       }
 
@@ -5024,19 +5406,21 @@ if (idx < 0) return;
         function mdSectionItemHtml(indent, item) {
           var pad = new Array(indent + 1).join("  ");
           if (item.t === "p") {
-            return pad + '<p>' + mdStripInline(item.text).replace(/\r?\n/g, "<br>") + '</p>\n';
+            return pad + '<p>' + mdInlineHtml(item.text).replace(/\r?\n/g, "<br>") + '</p>\n';
           } else if (item.t === "h3") {
-            return pad + '<h3>' + mdEscapeHtml(mdStripInline(item.text)) + '</h3>\n';
+            return pad + '<h3>' + mdInlineHtml(item.text) + '</h3>\n';
           } else if (item.t === "ol" || item.t === "ul") {
             var tag = item.t;
             var out = pad + '<' + tag + '>\n';
             for (var k = 0; k < item.items.length; k++) {
-              out += pad + '  <li>' + mdStripInline(item.items[k]) + '</li>\n';
+              var liVal = item.items[k];
+              var liText = liVal && typeof liVal === "object" ? liVal.text : liVal;
+              out += pad + '  <li>' + mdInlineHtml(liText) + '</li>\n';
             }
             out += pad + '</' + tag + '>\n';
             return out;
           } else if (item.t === "bq") {
-            return pad + '<p class="example">' + mdStripInline(item.text) + '</p>\n';
+            return pad + '<p class="example">' + mdInlineHtml(item.text) + '</p>\n';
           } else if (item.t === "hr") {
             return pad + '<hr>\n';
           } else if (item.t === "table") {
@@ -5044,7 +5428,7 @@ if (idx < 0) return;
             if (item.header && item.header.length) {
               t += pad + '  <thead><tr>';
               for (var hh = 0; hh < item.header.length; hh++) {
-                t += '<th>' + mdEscapeHtml(mdStripInline(item.header[hh])) + '</th>';
+                t += '<th>' + mdInlineHtml(item.header[hh]) + '</th>';
               }
               t += '</tr></thead>\n';
             }
@@ -5052,7 +5436,7 @@ if (idx < 0) return;
             for (var rr = 0; rr < item.rows.length; rr++) {
               t += pad + '    <tr>';
               for (var cc = 0; cc < item.rows[rr].length; cc++) {
-                t += '<td>' + mdEscapeHtml(mdStripInline(item.rows[rr][cc])) + '</td>';
+                t += '<td>' + mdInlineHtml(item.rows[rr][cc]) + '</td>';
               }
               t += '</tr>\n';
             }
@@ -5064,7 +5448,7 @@ if (idx < 0) return;
         }
 
         function mdSectionHtml(title, items) {
-          var out = '      <h2>' + mdEscapeHtml(mdStripInline(title)) + '</h2>\n';
+          var out = '      <h2>' + mdInlineHtml(title) + '</h2>\n';
           out += '      <div class="story-section">\n';
           for (var j = 0; j < items.length; j++) {
             out += mdSectionItemHtml(3, items[j]);
@@ -5184,6 +5568,10 @@ if (idx < 0) return;
           '      .story-section{background:var(--panel);border-radius:24px;padding:clamp(1rem,2.5vw,1.6em);box-shadow:var(--shadow);margin-bottom:1.4em}\n' +
           '      .story-section h3{margin-top:0} .story-section p{margin:0 0 .55em}\n' +
           '      .example{background:#fdf3e7;border-left:5px solid var(--accent);border-radius:8px;padding:.7em 1em;margin:.8em 0 !important;font-style:italic}\n' +
+          '      .mdMark{border-radius:4px;padding:0 2px}\n' +
+          '      .mdMark-focus{background:#ffe3c2;box-shadow:inset 0 -0.5em 0 rgba(255,184,102,.6)}\n' +
+          '      .mdMark-copy{background:var(--accent);color:#fff;padding:0 .25em}\n' +
+          '      html[data-theme="dark"] .mdMark-focus{background:#4a3a22;box-shadow:inset 0 -0.5em 0 rgba(255,184,102,.35)}\n' +
           '      .vocab-table{width:100%;border-collapse:separate;border-spacing:0;margin:1.6em 0 2em;background:var(--panel);border-radius:16px;box-shadow:var(--shadow);overflow:hidden}\n' +
           '      .vocab-table th{background:var(--ink);color:var(--accent2);font-size:clamp(.85rem,1.5vw,1rem);font-weight:800;letter-spacing:.06em;padding:.8em 1em;text-align:left;white-space:nowrap}\n' +
           '      .vocab-table td{padding:.7em 1em;font-size:clamp(.9rem,1.6vw,1.05rem);border-top:1px solid #eae5db;vertical-align:top;word-break:break-word}\n' +
@@ -5253,6 +5641,10 @@ if (idx < 0) return;
       function updateMdHint() {
         var h = document.getElementById("mdHint");
         if (!h) return;
+        if (mdMarkerMode) {
+          h.textContent = "Marker on · click a sentence to highlight \u2192 invert \u2192 clear";
+          return;
+        }
         h.textContent = mdSelText
           ? 'Selected: "' + mdSelText + '"  ·  Translate sends it to the translator'
           : "Tap a word to hear & select it · Translate sends it to the translator";
@@ -5261,6 +5653,66 @@ if (idx < 0) return;
       function mdSelect(text) {
         mdSelText = String(text || "").trim();
         updateMdHint();
+      }
+
+      function mdApplyRange(a, b) {
+        var ia = mdAllWords.indexOf(a);
+        var ib = mdAllWords.indexOf(b);
+        if (ia < 0 || ib < 0) return;
+        if (ia > ib) { var tmp = ia; ia = ib; ib = tmp; }
+        mdClearSel();
+        var words = [];
+        for (var i = ia; i <= ib; i++) {
+          mdAllWords[i].classList.add("sel");
+          words.push(mdAllWords[i].getAttribute("data-word") || mdAllWords[i].textContent);
+        }
+        mdSelWords = words;
+        mdSelect(words.join(" "));
+      }
+
+      function mdToggleMarker() {
+        mdMarkerMode = !mdMarkerMode;
+        if (mdMarkerMode) {
+          mdClearSel();
+          mdSelAnchor = null;
+          mdSelText = null;
+        }
+        mdSyncMarkerUi();
+        updateMdHint();
+      }
+
+      function mdCycleMark(raw) {
+        var c = String(raw);
+        var lead = c.match(/^\s*/)[0];
+        var trail = c.match(/\s*$/)[0];
+        var core = c.slice(lead.length, c.length - trail.length);
+        if (!core) return { text: raw, state: "none" };
+        var state = "none";
+        if (core.slice(0, 2) === "==" && core.slice(-2) === "==") {
+          state = "focus";
+          core = core.slice(2, -2);
+        } else if (core.slice(0, 2) === ">>" && core.slice(-2) === "<<") {
+          state = "copy";
+          core = core.slice(2, -2);
+        }
+        var next = state === "none" ? "focus" : state === "focus" ? "copy" : "none";
+        var wrapped =
+          next === "focus" ? "==" + core + "==" : next === "copy" ? ">>" + core + "<<" : core;
+        return { text: lead + wrapped + trail, state: next };
+      }
+
+      function mdToggleSentence(sentEl) {
+        var input = document.getElementById("mdSourceInput");
+        if (!input || !sentEl) return;
+        var a = parseInt(sentEl.getAttribute("data-abs-start"), 10);
+        var b = parseInt(sentEl.getAttribute("data-abs-end"), 10);
+        if (isNaN(a) || isNaN(b) || b <= a) return;
+        var src = input.value;
+        if (a < 0 || b > src.length) return;
+        var res = mdCycleMark(src.slice(a, b));
+        input.value = src.slice(0, a) + res.text + src.slice(b);
+        mdRender();
+        toast(res.state === "focus" ? "Highlighted" : res.state === "copy" ? "Inverted" : "Mark cleared");
       }
 
       function mdSay() {
@@ -5409,6 +5861,9 @@ if (idx < 0) return;
           else if (e.key === "Enter" || e.key === "Tab") { e.preventDefault(); mdSuggestPick(); }
           else if (e.key === "Escape") { hideMdSuggest(); }
         });
+        function mdWordFromEvent(e) {
+          return e.target && e.target.closest ? e.target.closest(".mdWord") : null;
+        }
         out.addEventListener("click", function (e) {
           var t = e.target;
           var media = t.closest ? t.closest(".mdMedia") : null;
@@ -5417,14 +5872,9 @@ if (idx < 0) return;
             if (u) openMediaOverlay(u);
             return;
           }
-          var w = t.closest ? t.closest(".mdWord") : null;
-          if (w) {
-            if (mdSel && mdSel !== w) mdSel.classList.remove("sel");
-            w.classList.add("sel");
-            mdSel = w;
-            var word = w.getAttribute("data-word") || w.textContent;
-            mdSelect(word);
-            say(word);
+          if (mdMarkerMode) {
+            var sent = t.closest ? t.closest(".mdSent") : null;
+            if (sent) mdToggleSentence(sent);
             return;
           }
           var l = t.closest ? t.closest(".mdLink") : null;
@@ -5433,7 +5883,42 @@ if (idx < 0) return;
             var lt = l.getAttribute("data-text") || l.textContent;
             mdSelect(lt);
             say(lt);
+            return;
           }
+          var w = mdWordFromEvent(e);
+          if (w) {
+            var word = w.getAttribute("data-word") || w.textContent;
+            say(word);
+            if (mdDragMoved) { mdDragMoved = false; return; }
+            if (mdSelAnchor && mdSelAnchor !== w && mdAllWords.indexOf(mdSelAnchor) >= 0) {
+              mdApplyRange(mdSelAnchor, w);
+              mdSelAnchor = null;
+            } else {
+              mdClearSel();
+              mdApplyRange(w, w);
+              mdSelAnchor = w;
+            }
+          }
+        });
+        out.addEventListener("mousedown", function (e) {
+          if (mdMarkerMode) return;
+          var w = mdWordFromEvent(e);
+          if (!w) return;
+          mdDragging = true;
+          mdDragMoved = false;
+          mdDragAnchor = w;
+        });
+        out.addEventListener("mouseover", function (e) {
+          if (!mdDragging || mdMarkerMode) return;
+          var w = mdWordFromEvent(e);
+          if (!w || w === mdDragAnchor) return;
+          mdDragMoved = true;
+          mdSelAnchor = null;
+          mdApplyRange(mdDragAnchor, w);
+        });
+        document.addEventListener("mouseup", function () {
+          mdDragging = false;
+          mdDragAnchor = null;
         });
       }
 
