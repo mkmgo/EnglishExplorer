@@ -381,7 +381,7 @@ Both fields are independent and composable — any combination is supported (e.g
 
 - Only `Title` is required (`Text`/`Link` optional, at least one recommended). The reader also accepts `Name`/`URL`/`Note`/`Passage` aliases.
 - To add a reading: create a new row in the `BTStudyHub` table (same base as visitor tracking) with the title and the asset URL. No code change needed — the page updates on reload (meta tags force no-cache).
-- The worker fetch is capped at 200 records (`maxRecords=200&pageSize=100`) — plenty for the current ~21, but paginate if it ever grows.
+- The worker follows Airtable's offset pagination and returns up to 200 records (`maxRecords=200&pageSize=100`) — plenty for the current ~21; raise the cap if the table grows beyond that.
 
 ### Blocked Cloudinary assets
 

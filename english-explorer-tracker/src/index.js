@@ -55,23 +55,39 @@ async function handleAirtable(request, env) {
 		return json({ error: 'Invalid or missing table' }, 400);
 	}
 
-	let airtableUrl =
-		`https://api.airtable.com/v0/${env.AIRTABLE_BASE_ID}/${encodeURIComponent(table)}` +
-		'?maxRecords=200&pageSize=100';
+	const airtableUrl = new URL(
+		`https://api.airtable.com/v0/${env.AIRTABLE_BASE_ID}/${encodeURIComponent(table)}`,
+	);
+	airtableUrl.searchParams.set('maxRecords', '200');
+	airtableUrl.searchParams.set('pageSize', '100');
 	if (sortField) {
-		airtableUrl +=
-			`&sort[0][field]=${encodeURIComponent(sortField)}` +
-			'&sort[0][direction]=asc';
+		airtableUrl.searchParams.set('sort[0][field]', sortField);
+		airtableUrl.searchParams.set('sort[0][direction]', 'asc');
 	}
 
-	const response = await fetch(airtableUrl, {
-		headers: {
-			Authorization: `Bearer ${env.AIRTABLE_PAT}`,
-		},
-	});
+	const records = [];
+	let offset;
+	do {
+		if (offset) {
+			airtableUrl.searchParams.set('offset', offset);
+		}
 
-	const data = await response.json();
-	return json(data, response.status);
+		const response = await fetch(airtableUrl, {
+			headers: {
+				Authorization: `Bearer ${env.AIRTABLE_PAT}`,
+			},
+		});
+
+		const data = await response.json();
+		if (!response.ok) {
+			return json(data, response.status);
+		}
+
+		records.push(...data.records);
+		offset = data.offset;
+	} while (offset && records.length < 200);
+
+	return json({ records });
 }
 
 async function handleGitHub(request, env) {

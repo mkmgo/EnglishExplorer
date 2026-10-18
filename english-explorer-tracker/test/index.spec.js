@@ -75,6 +75,46 @@ describe("English Explorer Tracker worker", () => {
 		}
 	});
 
+	it("fetches all Airtable pages up to the 200-record limit", async () => {
+		const ctx = createExecutionContext();
+		const requestedUrls = [];
+		const origFetch = globalThis.fetch;
+		globalThis.fetch = (url) => {
+			const parsedUrl = new URL(String(url));
+			requestedUrls.push(parsedUrl);
+			const page = requestedUrls.length;
+			return new Response(
+				JSON.stringify(
+					{
+						records: Array.from({ length: 100 }, (_, index) => ({
+							id: `rec${(page - 1) * 100 + index}`,
+						})),
+						offset: `next-page-${page}`,
+					},
+				),
+				{ status: 200, headers: { "Content-Type": "application/json" } },
+			);
+		};
+		try {
+			const response = await worker.fetch(
+				new Request("https://tracker.dev/airtable?table=BTStudyHub"),
+				{ AIRTABLE_BASE_ID: "base1", AIRTABLE_PAT: "pat-test" },
+				ctx,
+			);
+			await waitOnExecutionContext(ctx);
+			expect(response.status).toBe(200);
+			expect(requestedUrls).toHaveLength(2);
+			expect(requestedUrls[0].searchParams.get("maxRecords")).toBe("200");
+			expect(requestedUrls[0].searchParams.get("pageSize")).toBe("100");
+			expect(requestedUrls[1].searchParams.get("offset")).toBe("next-page-1");
+			const body = await response.json();
+			expect(body.records).toHaveLength(200);
+			expect(body.records[199].id).toBe("rec199");
+		} finally {
+			globalThis.fetch = origFetch;
+		}
+	});
+
 	it("reads a GridShift table without a sort param", async () => {
 		const ctx = createExecutionContext();
 		let requestedUrl = "";
