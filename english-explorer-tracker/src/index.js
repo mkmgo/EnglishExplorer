@@ -16,6 +16,10 @@ const ALLOWED_AIRTABLE_TABLES = {
 	HandWriting: null,
 };
 
+// Table data changes infrequently, while pages may request it on every visit.
+// Cache successful reads for five minutes at each Cloudflare data center.
+const AIRTABLE_CACHE_TTL_SECONDS = 300;
+
 function json(data, status = 200) {
 	return new Response(JSON.stringify(data), {
 		status,
@@ -42,7 +46,7 @@ async function handleTracking(request, env) {
 		});
 
 		const data = await response.json();
-		return json(data, response.status);
+		return json(withAirtableDiagnostic(data, response.status), response.status);
 	} catch (err) {
 		return json({ error: err.message }, 500);
 	}
@@ -53,6 +57,21 @@ async function handleAirtable(request, env) {
 	const sortField = ALLOWED_AIRTABLE_TABLES[table];
 	if (!table || sortField === undefined) {
 		return json({ error: 'Invalid or missing table' }, 400);
+	}
+
+	// Include the base and table in the cache key, without exposing the PAT.
+	// Cache API entries are local to a Cloudflare data center, so a cold region
+	// still makes one Airtable request before subsequent reads are served here.
+	const cacheKey = new Request(request.url);
+	const cache = typeof caches !== 'undefined' ? caches.default : null;
+	let cached;
+	try {
+		cached = cache ? await cache.match(cacheKey) : undefined;
+	} catch {
+		// Cache API is unavailable on some Worker hostnames (for example previews).
+	}
+	if (cached) {
+		return json(await cached.json());
 	}
 
 	const airtableUrl = new URL(
@@ -80,14 +99,39 @@ async function handleAirtable(request, env) {
 
 		const data = await response.json();
 		if (!response.ok) {
-			return json(data, response.status);
+			return json(withAirtableDiagnostic(data, response.status), response.status);
 		}
 
 		records.push(...data.records);
 		offset = data.offset;
 	} while (offset && records.length < 200);
 
-	return json({ records });
+	const result = { records };
+	const cachedResponse = new Response(JSON.stringify(result), {
+		status: 200,
+		headers: {
+			'Content-Type': 'application/json',
+			'Cache-Control': `public, max-age=${AIRTABLE_CACHE_TTL_SECONDS}`,
+		},
+	});
+	try {
+		if (cache) await cache.put(cacheKey, cachedResponse);
+	} catch {
+		// Serving fresh Airtable data still succeeds if edge caching is unavailable.
+	}
+	return json(result);
+}
+
+function withAirtableDiagnostic(data, status) {
+	if (status !== 429) return data;
+	const airtableError = data?.error?.type || data?.error?.message || '';
+	const monthlyLimit = String(airtableError).includes('BILLING_LIMIT');
+	return {
+		...data,
+		workerMessage: monthlyLimit
+			? 'Airtable monthly API call limit reached. Calls will work again when the workspace quota resets; caching cannot restore exhausted monthly calls.'
+			: 'Airtable rate limit reached. Airtable requires a 30-second pause before another request to this base.',
+	};
 }
 
 async function handleGitHub(request, env) {
