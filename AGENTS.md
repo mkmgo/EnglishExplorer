@@ -210,6 +210,25 @@ translator, `spotlight-presentation` for the presenter — the latter embeds the
 current `words` too). Loading **merges** (appends, skipping exact `en`+`zh`
 duplicates) rather than replacing, so you can accumulate words across sessions.
 
+### Class Prep (next-class stash)
+
+The **Prep** button (clipboard icon in the top bar, `#prepBtn`) stashes the whole
+live lesson as the next class's material in `localStorage["spotlight-prep"]`
+(`{type:"spotlight-prep", savedAt, md, words, media}`):
+
+- **Stash current** snapshots the markdown (`#mdSourceInput`), the translator word
+  list (`clipHistory`) and the media links (`mediaHistory`); overwriting an
+  existing stash is confirmed in-page (existing `#inputModal` choice buttons —
+  never `window.confirm`, Tizen-safe).
+- **Load into stage** replaces the markdown and media and **merges** the words
+  (Clear the word list first for a strict swap), then jumps to the Markdown
+  screen (`show(2)`).
+- **Clear** removes the stash (confirmed the same way).
+- The `#prepModal` status card shows live stage counts plus the stash's title
+  preview (first non-empty markdown line), word/media counts and timestamp.
+- The modal is placed **before** `#inputModal` in the DOM so confirms stack on
+  top (both `z-index: 90`).
+
 ### File placement & overwrite rule
 
 - Save (or overwrite) the downloaded protocol file as
