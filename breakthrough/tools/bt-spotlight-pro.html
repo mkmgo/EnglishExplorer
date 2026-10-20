@@ -1945,6 +1945,17 @@
         border-radius: 12px;
         overflow-x: auto;
       }
+      .mdCanvas strong,
+      .mdCanvas b {
+        font-weight: 800;
+      }
+      .mdCanvas em,
+      .mdCanvas i {
+        font-style: italic;
+      }
+      .mdCanvas del {
+        text-decoration: line-through;
+      }
       .mdCanvasTable {
         width: 100%;
         border-collapse: collapse;
@@ -4845,23 +4856,22 @@ if (idx < 0) return;
         var s = String(raw);
         var out = [];
         var re =
-          /(==([^=]+?)==|>>([^>]+?)<<|\[([^\]]*)\]\(([^)]+)\)|`([^`]*)`|\*\*([^*]+)\*\*|_([^_]+)_|\*([^*]+)\*)/g;
+          /(==([\s\S]+?)==|>>([\s\S]+?)<<|\[([^\]]*)\]\(([^)]+)\)|`([^`]*)`|\*\*\*([\s\S]+?)\*\*\*|\*\*([\s\S]+?)\*\*|__([\s\S]+?)__|\*([\s\S]+?)\*|_([\s\S]+?)_|~~([\s\S]+?)~~)/g;
         var last = 0;
         var m;
         while ((m = re.exec(s))) {
           if (m.index > last) out.push(s.slice(last, m.index));
-          var tok = m[1] || "";
-          if (tok.charAt(0) === "=") {
+          if (m[2] !== undefined) {
             var ms = document.createElement("span");
             ms.className = "mdMark mdMark-focus";
             mdFillText(ms, m[2], skipWords);
             out.push(ms);
-          } else if (tok.charAt(0) === ">") {
+          } else if (m[3] !== undefined) {
             var mc = document.createElement("span");
             mc.className = "mdMark mdMark-copy";
             mdFillText(mc, m[3], skipWords);
             out.push(mc);
-          } else if (tok.charAt(0) === "[") {
+          } else if (m[4] !== undefined) {
             var a = document.createElement("a");
             a.className = "mdLink";
             a.textContent = m[4];
@@ -4870,15 +4880,28 @@ if (idx < 0) return;
             a.rel = "noopener";
             a.setAttribute("data-text", m[4]);
             out.push(a);
-          } else if (tok.charAt(0) === "`") {
+          } else if (m[6] !== undefined) {
             var code = document.createElement("code");
             code.textContent = m[6];
             out.push(code);
-          } else {
-            var txt = m[7] !== undefined ? m[7] : m[8] !== undefined ? m[8] : m[9];
-            var em = document.createElement(m[7] !== undefined ? "strong" : "em");
-            mdFillText(em, txt, skipWords);
+          } else if (m[7] !== undefined) {
+            var bi = document.createElement("strong");
+            var biem = document.createElement("em");
+            mdFillText(biem, m[7], skipWords);
+            bi.appendChild(biem);
+            out.push(bi);
+          } else if (m[8] !== undefined || m[9] !== undefined) {
+            var st = document.createElement("strong");
+            mdFillText(st, m[8] !== undefined ? m[8] : m[9], skipWords);
+            out.push(st);
+          } else if (m[10] !== undefined || m[11] !== undefined) {
+            var em = document.createElement("em");
+            mdFillText(em, m[10] !== undefined ? m[10] : m[11], skipWords);
             out.push(em);
+          } else if (m[12] !== undefined) {
+            var del = document.createElement("del");
+            mdFillText(del, m[12], skipWords);
+            out.push(del);
           }
           last = re.lastIndex;
         }
@@ -5100,26 +5123,29 @@ if (idx < 0) return;
         var s = String(raw);
         var out = "";
         var re =
-          /(==([^=]+?)==|>>([^>]+?)<<|\[([^\]]*)\]\(([^)]+)\)|`([^`]*)`|\*\*([^*]+)\*\*|_([^_]+)_|\*([^*]+)\*)/g;
+          /(==([\s\S]+?)==|>>([\s\S]+?)<<|\[([^\]]*)\]\(([^)]+)\)|`([^`]*)`|\*\*\*([\s\S]+?)\*\*\*|\*\*([\s\S]+?)\*\*|__([\s\S]+?)__|\*([\s\S]+?)\*|_([\s\S]+?)_|~~([\s\S]+?)~~)/g;
         var last = 0;
         var m;
         while ((m = re.exec(s))) {
           if (m.index > last) out += mdEscapeHtml(s.slice(last, m.index));
-          var tok = m[1] || "";
-          if (tok.charAt(0) === "=") {
+          if (m[2] !== undefined) {
             out += '<span class="mdMark mdMark-focus">' + mdInlineHtml(m[2]) + "</span>";
-          } else if (tok.charAt(0) === ">") {
+          } else if (m[3] !== undefined) {
             out += '<span class="mdMark mdMark-copy">' + mdInlineHtml(m[3]) + "</span>";
-          } else if (tok.charAt(0) === "[") {
+          } else if (m[4] !== undefined) {
             out +=
               '<a href="' + mdEscapeHtml(m[5]) + '" target="_blank" rel="noopener">' +
               mdEscapeHtml(m[4]) + "</a>";
-          } else if (tok.charAt(0) === "`") {
+          } else if (m[6] !== undefined) {
             out += "<code>" + mdEscapeHtml(m[6]) + "</code>";
-          } else {
-            var txt = m[7] !== undefined ? m[7] : m[8] !== undefined ? m[8] : m[9];
-            var tag = m[7] !== undefined ? "strong" : "em";
-            out += "<" + tag + ">" + mdEscapeHtml(txt) + "</" + tag + ">";
+          } else if (m[7] !== undefined) {
+            out += "<strong><em>" + mdInlineHtml(m[7]) + "</em></strong>";
+          } else if (m[8] !== undefined || m[9] !== undefined) {
+            out += "<strong>" + mdInlineHtml(m[8] !== undefined ? m[8] : m[9]) + "</strong>";
+          } else if (m[10] !== undefined || m[11] !== undefined) {
+            out += "<em>" + mdInlineHtml(m[10] !== undefined ? m[10] : m[11]) + "</em>";
+          } else if (m[12] !== undefined) {
+            out += "<del>" + mdInlineHtml(m[12]) + "</del>";
           }
           last = re.lastIndex;
         }
@@ -5421,9 +5447,23 @@ if (idx < 0) return;
             out += pad + '</' + tag + '>\n';
             return out;
           } else if (item.t === "bq") {
-            return pad + '<p class="example">' + mdInlineHtml(item.text) + '</p>\n';
+            var bqText = mdInlineHtml(item.text).replace(/\r?\n/g, "<br>");
+            if (!bqText) return "";
+            return pad + '<p class="example">' + bqText + '</p>\n';
           } else if (item.t === "hr") {
             return pad + '<hr>\n';
+          } else if (item.t === "media") {
+            var mItem = mdResolveMedia(item.ref);
+            if (!mItem || !mItem.url) return "";
+            if (mItem.type === "video") {
+              return pad + '<video class="doc-media video" controls preload="metadata" src="' + mdEscapeHtml(mItem.url) + '"></video>\n';
+            }
+            if (mItem.type === "audio") {
+              return pad + '<audio class="doc-media audio" controls preload="metadata" src="' + mdEscapeHtml(mItem.url) + '"></audio>\n';
+            }
+            return pad + '<img class="doc-media" src="' + mdEscapeHtml(mItem.url) + '" alt="">\n';
+          } else if (item.t === "pre") {
+            return pad + '<pre><code>' + mdEscapeHtml(item.text) + '</code></pre>\n';
           } else if (item.t === "table") {
             var t = pad + '<table class="vocab-table">\n';
             if (item.header && item.header.length) {
@@ -5479,9 +5519,15 @@ if (idx < 0) return;
             if (currentSection) currentSection.items.push(itl);
             else introItems.push(itl);
           } else if (b.t === "bq") {
-            var itb = { t: "bq", text: b.text };
-            if (currentSection) currentSection.items.push(itb);
-            else introItems.push(itb);
+            var bqText = String(b.text || "");
+            if (!bqText.trim()) continue;
+            var bqTarget = currentSection ? currentSection.items : introItems;
+            var prevBq = bqTarget.length ? bqTarget[bqTarget.length - 1] : null;
+            if (prevBq && prevBq.t === "bq") {
+              prevBq.text += "\n" + bqText;
+            } else {
+              bqTarget.push({ t: "bq", text: bqText });
+            }
           } else if (b.t === "hr") {
             var ihr = { t: "hr" };
             if (currentSection) currentSection.items.push(ihr);
@@ -5490,6 +5536,14 @@ if (idx < 0) return;
             var ita = { t: "table", header: b.header, rows: b.rows, align: b.align };
             if (currentSection) currentSection.items.push(ita);
             else introItems.push(ita);
+          } else if (b.t === "media") {
+            var itm = { t: "media", ref: b.ref };
+            if (currentSection) currentSection.items.push(itm);
+            else introItems.push(itm);
+          } else if (b.t === "pre") {
+            var itpre = { t: "pre", text: b.text };
+            if (currentSection) currentSection.items.push(itpre);
+            else introItems.push(itpre);
           }
         }
         if (currentSection) sections.push(currentSection);
@@ -5565,6 +5619,13 @@ if (idx < 0) return;
           '      h2{font-size:clamp(1.3rem,3.2vw,2rem);margin:2em 0 .6em;font-weight:900;color:var(--ink);letter-spacing:-.02em}\n' +
           '      h3{font-size:clamp(1.1rem,2.2vw,1.5rem);margin:1.6em 0 .4em;font-weight:800;color:var(--accent)}\n' +
           '      p{font-size:clamp(1rem,1.8vw,1.15rem);margin:.4em 0}\n' +
+          '      strong,b{font-weight:800} em,i{font-style:italic} del{text-decoration:line-through}\n' +
+          '      code{font-family:Consolas,Menlo,monospace;background:var(--accent2);padding:.08em .28em;border-radius:4px;font-size:.88em}\n' +
+          '      pre{font-family:Consolas,Menlo,monospace;background:var(--panel);padding:.8em 1em;border-radius:10px;overflow-x:auto;margin:.8em 0;font-size:.92em;line-height:1.5}\n' +
+          '      pre code{background:transparent;padding:0}\n' +
+          '      .doc-media{display:block;max-width:100%;height:auto;border-radius:12px;margin:.8em 0;box-shadow:var(--shadow)}\n' +
+          '      .doc-media.video{width:100%;max-width:760px;background:#000}\n' +
+          '      .doc-media.audio{width:min(60vw,640px)}\n' +
           '      hr{border:0;border-top:2px solid rgba(96,112,141,.35);margin:1.4em 0}\n' +
           '      .story-section{background:var(--panel);border-radius:24px;padding:clamp(1rem,2.5vw,1.6em);box-shadow:var(--shadow);margin-bottom:1.4em}\n' +
           '      .story-section h3{margin-top:0} .story-section p{margin:0 0 .55em}\n' +
@@ -5596,7 +5657,7 @@ if (idx < 0) return;
           '        ' + introEn + '\n' +
           '        <span class="zh">' + introZh + '</span>\n' +
           '      </div>\n' +
-          '      <h2>' + mdEscapeHtml(title) + '</h2>\n' +
+          '      <h2>' + mdInlineHtml(title) + '</h2>\n' +
           bodySection +
           '    </div>\n' +
           '    <script>\n' +
