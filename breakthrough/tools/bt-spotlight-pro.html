@@ -2888,6 +2888,7 @@ Tap a word to hear it — SpotlightPro turns your notes into a live lesson.
         '<svg xmlns="http://www.w3.org/2000/svg" width="1.2em" height="1.2em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: -0.2em"><path d="M8 3v3a2 2 0 0 1-2 2H3"/><path d="M21 8h-3a2 2 0 0 1-2-2V3"/><path d="M3 16h3a2 2 0 0 1 2 2v3"/><path d="M16 21v-3a2 2 0 0 1 2-2h3"/></svg>';
 
       function show(i) {
+        if (typeof mdSelAnchor !== "undefined") mdSelAnchor = null;
         idx = Math.max(0, Math.min(screens.length - 1, i));
         for (var j = 0; j < screens.length; j++) {
           screens[j].classList.toggle("active", j === idx);
@@ -5052,7 +5053,7 @@ if (idx < 0) return;
           if (hrM) { flushPara(); flushList(); blocks.push({ t: "hr" }); continue; }
           var h = trimmed.match(/^(#{1,6})\s+(.*)$/);
           if (h) { flushPara(); flushList(); blocks.push({ t: "h", level: h[1].length, text: h[2] }); continue; }
-          var bq = trimmed.match(/^>\s?(.*)$/);
+          var bq = trimmed.match(/^>(?!>)\s?(.*)$/);
           if (bq) {
             flushPara();
             flushList();
@@ -5722,6 +5723,7 @@ if (idx < 0) return;
       }
 
       function mdTranslate() {
+        mdSelAnchor = null;
         var text = mdSelText
           ? mdSelText
           : (function () {
@@ -5898,6 +5900,8 @@ if (idx < 0) return;
               mdApplyRange(w, w);
               mdSelAnchor = w;
             }
+          } else {
+            mdSelAnchor = null;
           }
         });
         out.addEventListener("mousedown", function (e) {
