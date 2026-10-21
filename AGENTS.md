@@ -307,6 +307,17 @@ allowlisted by the worker.
 In wide layouts the single player deck sits left of the board with a 10px gap;
 in narrow layouts it moves above the board.
 
+The variant row also drives the page chrome:
+
+| Field | Type | Purpose |
+|---|---|---|
+| `VarName` | Single line text | Page title — the `<h1>` and the document title. Currently `Pure Match`. |
+| `PartLabel` | Single line text | Deck badge label (replaces the hardcoded `Player` / `PLAYER`). Currently `Onza`. |
+| `DeckText` | Single line text | Instruction line under the deck ("Turn over each card, then place it on the matching imprint."). Empty = the built-in default text. |
+| `PartColour` | Single line text | Deck badge dot colour. Accepts a palette name (`Blue`), a hex / `rgb()` / `hsl()` value, a plain CSS colour name, or `var(--color-x)`. Palette names map to the page's theme-aware vars (`--color-blue`, `--color-yellow`, `--color-green`, `--color-red`, `--color-orange`, `--color-purple`). Empty = `var(--color-red)`. |
+| `NoParticipants` | Number | Number of players. Only `1` is supported so far — a higher value stops the game with an in-page error instead of silently running one deck. |
+| `VarID` | Number | Variant id (not used by the game). |
+
 ### Airtable `GridShift` table schema
 
 The minigame reads fields **by name**, not position. Note: for colour-only rows the

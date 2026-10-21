@@ -178,6 +178,7 @@
         height: 14px;
         border-radius: 50%;
         display: inline-block;
+        background: var(--color-red);
         box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.18);
       }
       .count {
@@ -511,14 +512,14 @@
       🌙
     </button>
     <div id="gamepadCursor"></div>
-    <h1>Grid Shift Pure Match</h1>
+    <h1 id="gameTitle">Grid Shift Pure Match</h1>
 
     <main class="stage">
       <div class="deckPair">
         <section class="deckPanel">
-          <div class="deckHead"><span class="dot" style="background:#ef4444"></span><span>Player</span><span class="count" id="count">0</span></div>
+          <div class="deckHead"><span class="dot" id="deckDot"></span><span id="deckLabel">Player</span><span class="count" id="count">0</span></div>
           <div class="deck" id="deck"></div>
-          <div class="hint">Turn over each card, then place it on the matching imprint.</div>
+          <div class="hint" id="deckText">Turn over each card, then place it on the matching imprint.</div>
         </section>
       </div>
 
@@ -570,6 +571,10 @@
       var gridEl = document.getElementById("grid");
       var statusEl = document.getElementById("status");
       var feedbackEl = document.getElementById("feedback");
+      var titleEl = document.getElementById("gameTitle");
+      var deckDotEl = document.getElementById("deckDot");
+      var deckLabelEl = document.getElementById("deckLabel");
+      var deckTextEl = document.getElementById("deckText");
 
       var COLS = 8;
       var ROWS = 5;
@@ -650,6 +655,29 @@
 
       function normalizeMatch(value) {
         return String(value || "").trim().toLowerCase();
+      }
+
+      // Palette colours the page exposes as CSS variables (see :root).
+      var PALETTE_COLOURS = {
+        blue: "--color-blue",
+        yellow: "--color-yellow",
+        green: "--color-green",
+        red: "--color-red",
+        orange: "--color-orange",
+        purple: "--color-purple",
+      };
+
+      // Turn a colour from Airtable into a CSS colour. Accepts a palette name
+      // ("Blue"), a hex / rgb / hsl value, a plain CSS colour name, or an
+      // explicit "var(--color-x)" reference.
+      function resolveColour(value, fallback) {
+        var raw = String(value === undefined || value === null ? "" : value).trim();
+        if (!raw) return fallback;
+        if (/^var\(/i.test(raw)) return raw;
+        var key = raw.toLowerCase();
+        if (PALETTE_COLOURS[key]) return "var(" + PALETTE_COLOURS[key] + ")";
+        if (/^(#|rgb|hsl)/i.test(raw)) return raw;
+        return raw;
       }
 
       function parseHintField(hint) {
@@ -1046,6 +1074,34 @@
           }
 
           var settings = variants[0].fields || {};
+
+          // The variant row supplies the page title (VarName), the player's
+          // deck badge (PartColour) and the deck label (PartLabel).
+          var variantName = getField(settings, "VarName");
+          if (variantName) {
+            var heading = String(variantName).trim();
+            if (heading) {
+              if (titleEl) titleEl.textContent = heading;
+              document.title = heading;
+            }
+          }
+          var partLabel = getField(settings, "PartLabel");
+          if (partLabel && deckLabelEl) {
+            var labelText = String(partLabel).trim();
+            if (labelText) deckLabelEl.textContent = labelText;
+          }
+          var deckText = getField(settings, "DeckText");
+          if (deckText && deckTextEl) {
+            var deckHint = String(deckText).trim();
+            if (deckHint) deckTextEl.textContent = deckHint;
+          }
+          if (deckDotEl) {
+            deckDotEl.style.background = resolveColour(
+              getField(settings, "PartColour"),
+              "var(--color-red)",
+            );
+          }
+
           var hintField = parseHintField(getSetting(settings, ["Hints", "Hint"]));
           if (normalizedFieldName(hintField) !== "display") {
             throw new Error("Pure Match requires Hint = Imprints of Display (Text).");
@@ -1057,6 +1113,14 @@
           var deckField = getField(settings, "Deck");
           if (typeof deckField !== "string" || !deckField.trim()) {
             throw new Error("The Pure Match setup needs a Deck field name.");
+          }
+          var participants = Number(getField(settings, "NoParticipants"));
+          if (isFinite(participants) && participants > 1) {
+            throw new Error(
+              "This page currently supports NoParticipants = 1; found " +
+                participants +
+                ".",
+            );
           }
 
           var activeRecords = cardRecords.filter(function (record) {
