@@ -305,7 +305,9 @@ random unique cell; cards can only be placed on a matching imprint. Before
 turning, each card uses its `TileBack` asset. Both Airtable tables must be
 allowlisted by the worker.
 In wide layouts the single player deck sits left of the board with a 10px gap;
-in narrow layouts it moves above the board.
+the deck + board group is centred on the page (`grid-template-columns: 148px
+auto` + `justify-content: center` on `.stage`). In narrow layouts it moves
+above the board.
 
 The variant row also drives the page chrome:
 
@@ -314,9 +316,65 @@ The variant row also drives the page chrome:
 | `VarName` | Single line text | Page title — the `<h1>` and the document title. Currently `Pure Match`. |
 | `PartLabel` | Single line text | Deck badge label (replaces the hardcoded `Player` / `PLAYER`). Currently `Onza`. |
 | `DeckText` | Single line text | Instruction line under the deck ("Turn over each card, then place it on the matching imprint."). Empty = the built-in default text. |
+| `Task1AccText` | Single line text | Message shown when the matching puzzle is solved (replaces the old hardcoded "Grid complete!"). Shown in green under the board and **kept on screen** for the rest of the game. Empty = no message. |
+| `NextTask1` | Single line text | Follow-up task shown underneath the accomplished messages, in neutral (muted) text. Empty = nothing shown. |
+| `NextTask1AccText` | Single line text | Message shown in green when the follow-up task is solved (added to the list of accomplished tasks). Empty = the neutral feedback line shows "✔ Correct!". |
+| `SolutionNextTask1` | Link to `GridShift` | The card(s) that solve the follow-up task. The tutee clicks the right card on the finished board. Holds the Airtable **record id(s)** of the GridShift row(s) (e.g. the Tractor, `GridShiftID` 75); a plain `GridShiftID` is accepted too. Empty = the follow-up task has no solution (nothing to click). |
+| `WPIMG1` | URL | Subtle backdrop picture behind the board. Set at runtime as the `--wp-img` CSS custom property. Empty = no backdrop. |
 | `PartColour` | Single line text | Deck badge dot colour. Accepts a palette name (`Blue`), a hex / `rgb()` / `hsl()` value, a plain CSS colour name, or `var(--color-x)`. Palette names map to the page's theme-aware vars (`--color-blue`, `--color-yellow`, `--color-green`, `--color-red`, `--color-orange`, `--color-purple`). Empty = `var(--color-red)`. |
 | `NoParticipants` | Number | Number of players. Only `1` is supported so far — a higher value stops the game with an in-page error instead of silently running one deck. |
 | `VarID` | Number | Variant id (not used by the game). |
+
+### Multi-task flow (Pure Match)
+
+The variant row turns the single matching puzzle into a **sequence of tasks**.
+Task 1 is the matching puzzle itself; every further task is described by the
+pair `NextTaskN` + `SolutionNextTaskN` (N = the task it follows):
+
+| Field | Task | Effect |
+|---|---|---|
+| `Task1AccText` | 1 (the matching puzzle) | Green message under the board when every card is placed. |
+| `NextTask1` | 2 | The instruction shown under the task-1 message. |
+| `SolutionNextTask1` | 2 | The GridShift card that solves task 2. |
+| `NextTask1AccText` | 2 | Green message when the solution card is clicked. |
+| `NextTask2` / `SolutionNextTask2` / `NextTask2AccText` | 3 | …and so on, as far as the row goes. |
+
+- `SolutionNextTaskN` is an Airtable **link** to the `GridShift` table, so it
+  holds the record id(s) of the solution card(s). In Airtable the link is made
+  from the card row's `GridShiftVariants` field (the Tractor, `GridShiftID` 75,
+  links back to the "Pure Match" variant) and then shows up in the variant's
+  `SolutionNextTask1` field.
+- The accomplished messages **accumulate**: every solved task adds its message
+  to the green list under the board (one line per task) and the earlier ones
+  stay visible, so the tutee sees what is already done. The neutral line below
+  always shows the task that is still open.
+- The board turns **green only when every task is solved** (`.grid.done`): after
+  the matching puzzle it stays in its normal colours, the green frame and the
+  green completion background arrive with the last task.
+- While a task with a solution is active the board waits for a click: dragging
+  is disabled, a wrong card shakes and shows "Not that one. Try another card."
+  in the neutral feedback line, and the solved card's cell keeps a green frame
+  (`.solved-cell`). **No rings are drawn on the other cells** — the board must
+  stay free of blue overlays, the messages carry the feedback.
+- Two traps make the click land on nothing, both handled in code:
+  a matched card is normally inert (`.cell .flipCard.matched { pointer-events:
+  none }`) and has to be woken up in pick mode, and the card (96×84) is smaller
+  than its cell (104×92), so a click in the cell padding is resolved to the
+  card that sits in that cell. The frame of the solved cell is drawn on the
+  **cell**, not on the card - an outline on the card is swallowed by its 3D flip.
+- Clicking the solution card completes the task, keeps its message in the
+  accomplished list, replaces the instruction and loads the next task (if the
+  row has one). With no `NextTaskNAccText` configured the neutral feedback line
+  shows "✔ Correct!" — the accomplished list stays as it is.
+
+**WPIMG1 backdrop.** The picture is a CSS layer, not an asset on the board:
+`.grid::before` paints it over the board, so the wallpaper shows **only in the
+grid's area**. The cells stay opaque (they carry the imprints and the placed
+bricks), so the picture reads through the cell gutters and the board padding.
+When the board is finished the picture fades to ~55% so the green completion
+colour (`.grid.done` → `--goal-bg` background + `--good` border) reads at full
+strength. The board only reaches that state when **every** task is solved.
+Tune with `--wp-opacity` (picture strength) in the `:root` block.
 
 ### Airtable `GridShift` table schema
 

@@ -52,6 +52,10 @@
           --img-bg: #f8fafc;
           --good: #34d399;
           --goal-bg: #064e3b;
+          /* Width of the task log under the board. The accomplished messages
+             and the open task share it, so every line starts at the same
+             place. */
+          --log-width: 25rem;
           --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.45);
         }
       }
@@ -120,8 +124,9 @@
 
       .stage {
         display: grid;
-        grid-template-columns: 148px minmax(0, 1fr);
+        grid-template-columns: 148px auto;
         grid-template-areas: "players grid";
+        justify-content: center;
         align-items: start;
         column-gap: 10px;
         row-gap: 18px;
@@ -145,7 +150,7 @@
       }
       .grid {
         width: max-content;
-        margin: 0 auto;
+        margin: 0;
       }
       /* ---------- Deck (stacked mystery bricks) ---------- */
       .deckPanel {
@@ -201,11 +206,32 @@
         background: var(--item-bg);
       }
       .statusText {
-        text-align: center;
+        text-align: left;
         font-weight: 900;
         color: var(--good);
         font-size: 0.95rem;
+        line-height: 1.35;
         margin-top: 16px;
+        width: var(--log-width);
+        margin-left: auto;
+        margin-right: auto;
+        text-wrap: pretty;
+      }
+      /* One line per accomplished task. */
+      .statusText > div + div {
+        margin-top: 6px;
+      }
+      /* The follow-up task shown under the completion text. */
+      .statusNext {
+        text-align: left;
+        color: var(--muted);
+        font-size: 0.85rem;
+        font-weight: 600;
+        line-height: 1.35;
+        margin: 8px auto 0;
+        width: var(--log-width);
+        padding: 0;
+        text-wrap: pretty;
       }
       .hint {
         text-align: center;
@@ -233,6 +259,36 @@
       }
       .flipCard:active {
         cursor: grabbing;
+      }
+      /* Follow-up task: the board waits for a click on the solution card.
+         No ring is drawn on the cells - the messages under the board show
+         what is done. Only the solved card keeps a green frame. */
+      .flipCard.pickable {
+        cursor: pointer;
+      }
+      .grid .cell.solved-cell::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        z-index: 3;
+        border: 3px solid var(--good);
+        border-radius: 10px;
+        pointer-events: none;
+      }
+      .flipCard.wrong-pick {
+        animation: wrongShake 0.4s ease;
+      }
+      @keyframes wrongShake {
+        0%,
+        100% {
+          transform: translateX(0);
+        }
+        25% {
+          transform: translateX(-6px);
+        }
+        75% {
+          transform: translateX(6px);
+        }
       }
       .flipInner {
         position: relative;
@@ -361,6 +417,28 @@
         border: 2px dashed var(--border-strong);
         border-radius: 14px;
         box-sizing: border-box;
+        position: relative;
+      }
+      /* The board carries the WPIMG1 picture: the stage backdrop is hidden
+         behind the board's opaque background, so the picture is repeated here
+         as a layer on top of it. The cells sit above the layer. */
+      .grid::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        z-index: 0;
+        pointer-events: none;
+        border-radius: inherit;
+        background-image: var(--wp-img, none);
+        background-size: cover;
+        background-position: center;
+        opacity: var(--wp-opacity, 0.18);
+        transition: opacity 0.4s ease;
+      }
+      /* Once the board is finished the picture fades back so the green
+         completion colour reads at full strength. */
+      .grid.done::before {
+        opacity: calc(var(--wp-opacity, 0.18) * 0.55);
       }
       .cell {
         width: 104px;
@@ -374,6 +452,8 @@
         align-items: center;
         justify-content: center;
         transition: background-color 0.2s, outline-color 0.2s;
+        position: relative;
+        z-index: 1;
       }
       .cell.drag-over {
         background: var(--dropzone-hover);
@@ -411,6 +491,12 @@
       .cell .flipCard.matched {
         pointer-events: none;
         cursor: default;
+      }
+      /* While a follow-up task waits for a click, the placed cards have to
+         receive the pointer again (they are inert once they are matched). */
+      .grid.picking .cell .flipCard.matched {
+        pointer-events: auto;
+        cursor: pointer;
       }
       .grid.done {
         border-color: var(--good);
@@ -528,7 +614,8 @@
       </div>
     </main>
 
-    <div class="statusText" id="status" hidden>Grid complete!</div>
+    <div class="statusText" id="status" hidden></div>
+    <div class="statusNext" id="nextTask" hidden></div>
     <div class="hint" id="feedback" role="status" aria-live="polite"></div>
 
     <script>
@@ -570,11 +657,131 @@
       var countEl = document.getElementById("count");
       var gridEl = document.getElementById("grid");
       var statusEl = document.getElementById("status");
+      var nextTaskEl = document.getElementById("nextTask");
       var feedbackEl = document.getElementById("feedback");
       var titleEl = document.getElementById("gameTitle");
       var deckDotEl = document.getElementById("deckDot");
       var deckLabelEl = document.getElementById("deckLabel");
       var deckTextEl = document.getElementById("deckText");
+
+      // ---------- Multi-task flow ----------
+      // The variant row drives every task of the game:
+      //   Task1AccText      - the message shown when the matching puzzle is done
+      //   NextTaskN         - the instruction for the task that follows task N
+      //   SolutionNextTaskN - the card(s) that solve that follow-up task
+      //   NextTaskNAccText  - the message shown when that follow-up task is done
+      // Task 1 is the matching puzzle; the follow-up tasks are solved by
+      // clicking the solution card on the finished board. Every message that
+      // is earned stays on screen, so the pupil keeps a list of what is done.
+      var variantSettings = {};
+      var solutionIds = [];
+      var awaitingPick = false;
+      var matchingDone = false;
+      var accomplished = []; // the messages of the tasks completed so far
+      var pendingAccText = ""; // message of the task that is still open
+      var pendingNumber = 1; // the NextTaskN pair that describes the open task
+      var nextTask = ""; // instruction of the open task
+
+      function toIdList(value) {
+        if (value === undefined || value === null) return [];
+        var list = Array.isArray(value) ? value : String(value).split(",");
+        var out = [];
+        for (var i = 0; i < list.length; i++) {
+          var id = String(list[i]).trim();
+          if (id) out.push(id);
+        }
+        return out;
+      }
+
+      function isSolutionCard(card) {
+        if (!card) return false;
+        var keys = [card.dataset.recordId, card.dataset.id];
+        for (var i = 0; i < solutionIds.length; i++) {
+          for (var j = 0; j < keys.length; j++) {
+            if (keys[j] && keys[j] === solutionIds[i]) return true;
+          }
+        }
+        return false;
+      }
+
+      function markPickable() {
+        var cards = document.querySelectorAll("#grid .flipCard");
+        for (var i = 0; i < cards.length; i++) {
+          cards[i].classList.toggle("pickable", awaitingPick);
+        }
+      }
+
+      // Loads the task that follows the one just completed. The pair
+      // NextTaskN / SolutionNextTaskN describes it, NextTaskNAccText is the
+      // message shown when it is solved.
+      function loadNextTask(n) {
+        pendingNumber = n;
+        nextTask = String(getField(variantSettings, "NextTask" + n) || "").trim();
+        solutionIds = toIdList(
+          getField(variantSettings, "SolutionNextTask" + n),
+        );
+        pendingAccText = String(
+          getField(variantSettings, "NextTask" + n + "AccText") || "",
+        ).trim();
+        awaitingPick = solutionIds.length > 0;
+      }
+
+      function showMessages() {
+        statusEl.textContent = "";
+        for (var i = 0; i < accomplished.length; i++) {
+          var line = document.createElement("div");
+          line.textContent = accomplished[i];
+          statusEl.appendChild(line);
+        }
+        statusEl.hidden = accomplished.length === 0;
+        nextTaskEl.textContent = nextTask;
+        nextTaskEl.hidden = !nextTask;
+        gridEl.classList.toggle("picking", awaitingPick);
+      }
+
+      // The board only turns green when every task is solved.
+      function applyState() {
+        gridEl.classList.toggle("done", !awaitingPick && !nextTask);
+        showMessages();
+        markPickable();
+      }
+
+      // The matching puzzle is done: keep its message and open the next task.
+      function completeMatchingTask() {
+        var message = String(
+          getField(variantSettings, "Task1AccText") || "",
+        ).trim();
+        if (message) accomplished.push(message);
+        loadNextTask(1);
+        feedbackEl.textContent = "";
+        applyState();
+      }
+
+      // A follow-up task is solved by clicking the right card on the board.
+      function pickSolution(card) {
+        if (!isSolutionCard(card)) {
+          card.classList.add("wrong-pick");
+          window.setTimeout(function () {
+            card.classList.remove("wrong-pick");
+          }, 500);
+          feedbackEl.textContent = "Not that one. Try another card.";
+          return;
+        }
+        awaitingPick = false;
+        card.classList.remove("pickable");
+        card.classList.add("solved");
+        if (card.parentNode && card.parentNode.classList.contains("cell")) {
+          card.parentNode.classList.add("solved-cell");
+        }
+        if (pendingAccText) {
+          accomplished.push(pendingAccText);
+          feedbackEl.textContent = "";
+        } else {
+          feedbackEl.textContent = "✔ Correct!";
+        }
+        loadNextTask(pendingNumber + 1);
+        applyState();
+      }
 
       var COLS = 8;
       var ROWS = 5;
@@ -776,6 +983,7 @@
         card.className = "flipCard draggable-item";
         card.dataset.flipped = "false";
         card.dataset.id = String(id);
+        card.dataset.recordId = String((rec && rec.id) || "");
         card.dataset.match = normalizeMatch(matchText);
         card.dataset.imprint = String(matchText).trim();
 
@@ -875,11 +1083,12 @@
         renderDeck(remaining);
         var done = remaining.length === 0;
         if (done) {
-          gridEl.classList.add("done");
-          statusEl.hidden = false;
-        } else {
-          gridEl.classList.remove("done");
-          statusEl.hidden = true;
+          if (!matchingDone) {
+            matchingDone = true;
+            // Task 1 is the matching puzzle; its message is kept and the
+            // follow-up task (NextTask1 / SolutionNextTask1) is opened.
+            completeMatchingTask();
+          }
         }
       }
 
@@ -933,6 +1142,24 @@
         if (activeItem) return;
         if (e.pointerType === "mouse" && e.button !== 0) return;
         var card = e.target.closest(".flipCard");
+        // Follow-up task: the board is finished and waits for a click on the
+        // solution card. Dragging is not needed (or allowed) any more. The
+        // card does not fill its cell, so a click in the cell padding counts
+        // as a click on the card that sits in it.
+        if (awaitingPick) {
+          var cell = e.target.closest(".cell");
+          if (!card && cell) card = cell.querySelector(".flipCard");
+          if (!card) return;
+          e.preventDefault();
+          if (card.dataset.flipped !== "true") {
+            card.classList.add("flipped");
+            card.dataset.flipped = "true";
+            track("Turn", card.dataset.id);
+            return;
+          }
+          pickSolution(card);
+          return;
+        }
         if (!card) return;
         e.preventDefault();
         // Unrevealed card: turn it over instead of dragging.
@@ -1094,6 +1321,21 @@
           if (deckText && deckTextEl) {
             var deckHint = String(deckText).trim();
             if (deckHint) deckTextEl.textContent = deckHint;
+          }
+          // Task1AccText replaces the old "Grid complete!" message and
+          // NextTask1 is the follow-up task shown underneath it.
+          variantSettings = settings;
+          // WPIMG1 is the subtle backdrop picture behind the board and the
+          // area around it (it turns green once the board is finished).
+          var wpImg = getField(settings, "WPIMG1");
+          if (wpImg) {
+            var wpUrl = String(wpImg).trim().replace(/"/g, "%22");
+            if (wpUrl) {
+              document.documentElement.style.setProperty(
+                "--wp-img",
+                'url("' + wpUrl + '")',
+              );
+            }
           }
           if (deckDotEl) {
             deckDotEl.style.background = resolveColour(
