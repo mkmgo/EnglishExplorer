@@ -5763,10 +5763,6 @@ if (idx < 0) return;
             break;
           }
         }
-        if (type === "protocol" && !clipHistory.length) {
-          toast("Add words in the translator first");
-          return;
-        }
         var label =
           type === "protocol"
             ? "Lesson Protocol"
@@ -5925,16 +5921,24 @@ if (idx < 0) return;
           sectionHtml += mdSectionHtml(sections[s].title, sections[s].items);
         }
         var vocabSection = "";
-        if (clipHistory.length) {
+        var hasVocab = clipHistory.length > 0;
+        if (hasVocab) {
+          var anyZh = false;
+          for (var z = 0; z < clipHistory.length; z++) {
+            if (String((clipHistory[z] && clipHistory[z].zh) || "").trim()) { anyZh = true; break; }
+          }
           var vocabRows = "";
           for (var v = 0; v < clipHistory.length; v++) {
             var w = clipHistory[v];
-            vocabRows += '          <tr><td>' + mdEscapeHtml(w.en) + '</td><td>' + mdEscapeHtml(w.zh) + '</td></tr>\n';
+            var zhCell = anyZh ? '<td>' + mdEscapeHtml(w.zh || "") + '</td>' : "";
+            vocabRows += '          <tr><td>' + mdEscapeHtml(w.en) + '</td>' + zhCell + '</tr>\n';
           }
           vocabSection =
             '      <h2>Vocabulary \u2014 ' + dateStr + '</h2>\n' +
             '      <table class="vocab-table">\n' +
-            '        <thead><tr><th>English</th><th>Chinese</th></tr></thead>\n' +
+            '        <thead><tr><th>English</th>' +
+            (anyZh ? '<th>Chinese</th>' : '') +
+            '</tr></thead>\n' +
             '        <tbody>\n' +
             vocabRows +
             '        </tbody>\n' +
@@ -5942,22 +5946,18 @@ if (idx < 0) return;
         }
         var bodySection = isTest ? sectionHtml : sectionHtml + vocabSection;
         var introEn;
-        var introZh;
         if (isTest) {
           introEn =
             "Please complete this test on your own, without looking at your notes. Answer every question fully before checking your work.";
-          introZh =
-            "\u8BF7\u72EC\u7ACB\u5B8C\u6210\u8FD9\u4EFD\u6D4B\u8BD5\uFF0C\u4E0D\u8981\u770B\u7B14\u8BB0\u3002\u8BA4\u771F\u56DE\u7B54\u6BCF\u4E00\u4E2A\u95EE\u9898\uFF0C\u6700\u540E\u518D\u6838\u5BF9\u4F60\u7684\u7B54\u6848\u3002";
         } else if (isMsg) {
           introEn =
             "Please read this message sheet and rehearse the phrases below. Make sure every word and expression is fully understood and can be reused.";
-          introZh =
-            "\u8BF7\u5927\u58F0\u6717\u8BFB\u8FD9\u5C01\u6D88\u606F\u5E76\u719F\u6089\u4E0B\u9762\u7684\u53E5\u5B50\u3002\u786E\u4FDD\u6240\u6709\u5355\u8BCD\u548C\u8868\u8FBE\u65B9\u5F0F\u90FD\u5DF2\u5B8C\u5168\u7406\u89E3\u5E76\u80FD\u8FD0\u7528\u3002";
         } else {
           introEn =
-            "Please study the following structures and sentences well. Words and expressions must be fully understood and memorised. The last section shows today's new vocabulary. Please carefully repeat these as well.";
-          introZh =
-            "\u8BF7\u5C06\u8FD9\u4E9B\u53E5\u5B50\u6284\u5230\u7EC3\u4E60\u672C\u7684\u8BCD\u6C47\u8868\u4E0B\u65B9\u3002\u6240\u6709\u5355\u8BCD\u548C\u8868\u8FBE\u65B9\u5F0F\u90FD\u5FC5\u987B\u5B8C\u5168\u7406\u89E3\u548C\u8BB0\u5FC6\u3002";
+            "Please study the following structures and sentences well. Words and expressions must be fully understood and memorised." +
+            (hasVocab
+              ? " The last section shows today's new vocabulary. Please carefully repeat these as well."
+              : "");
         }
         var protocolHtml =
           '<!doctype html>\n' +
@@ -5981,7 +5981,6 @@ if (idx < 0) return;
           '      .to-line{font-size:clamp(.95rem,1.7vw,1.15rem);color:var(--muted);font-weight:800;letter-spacing:.06em;text-transform:uppercase;margin:0 0 2em}\n' +
           '      .to-line b{color:var(--accent)}\n' +
           '      .intro{background:var(--panel);border-radius:24px;padding:clamp(1rem,2.5vw,1.8em);box-shadow:var(--shadow);margin-bottom:2em;font-size:clamp(1rem,1.8vw,1.2rem);line-height:1.7}\n' +
-          '      .zh{display:block;margin-top:.6em;color:var(--muted);font-size:.92em}\n' +
           '      h2{font-size:clamp(1.3rem,3.2vw,2rem);margin:2em 0 .6em;font-weight:900;color:var(--ink);letter-spacing:-.02em}\n' +
           '      h3{font-size:clamp(1.1rem,2.2vw,1.5rem);margin:1.6em 0 .4em;font-weight:800;color:var(--accent)}\n' +
           '      p{font-size:clamp(1rem,1.8vw,1.15rem);margin:.4em 0}\n' +
@@ -6004,7 +6003,7 @@ if (idx < 0) return;
           '      .vocab-table th{background:var(--ink);color:var(--accent2);font-size:clamp(.85rem,1.5vw,1rem);font-weight:800;letter-spacing:.06em;padding:.8em 1em;text-align:left;white-space:nowrap}\n' +
           '      .vocab-table td{padding:.7em 1em;font-size:clamp(.9rem,1.6vw,1.05rem);border-top:1px solid #eae5db;vertical-align:top;word-break:break-word}\n' +
           '      .vocab-table tr:nth-child(even) td{background:#fdf9f3}\n' +
-          '      .vocab-table td:last-child{color:var(--muted);font-weight:600}\n' +
+          '      .vocab-table td:nth-child(2){color:var(--muted);font-weight:600}\n' +
           '      html[data-theme="dark"] .example{background:#232a36}\n' +
           '      html[data-theme="dark"] hr{border-top-color:#333c4e}\n' +
           '      html[data-theme="dark"] .vocab-table th{background:#0e1220}\n' +
@@ -6021,7 +6020,6 @@ if (idx < 0) return;
           '      <p class="to-line">For: <b>' + mdEscapeHtml(recipient) + '</b></p>\n' +
           '      <div class="intro">\n' +
           '        ' + introEn + '\n' +
-          '        <span class="zh">' + introZh + '</span>\n' +
           '      </div>\n' +
           '      <h2>' + mdInlineHtml(title) + '</h2>\n' +
           bodySection +

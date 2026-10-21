@@ -194,15 +194,18 @@ HTML document. Steps:
    **Test**) → choose a recipient (**Onza** / **Nimza** / typed **email**) →
    enter/confirm the title. The document downloads as `YYYY-MM-DD.html` for
    protocols, `message_YYYY-MM-DD.html` for message sheets and
-   `test_YYYY-MM-DD.html` for tests. Protocols require words from the
-   Translators (blank without them); message sheets and tests don't.
+   `test_YYYY-MM-DD.html` for tests. No document type requires vocabulary —
+   a protocol can be generated with an empty word list.
 
 Generated documents are fully self-contained with a **dark-mode toggle** (top-right
 button, persists via `localStorage["eebt-theme"]` with a `prefers-color-scheme`
-fallback) and a `For: <recipient>` line. The Vocabulary table renders `English |
-Chinese` from `clipHistory`. A **Test** document is built from the Markdown
-content itself (paste the test/questions in the Markdown pane before generating)
-with a test-specific intro — it skips the Vocabulary table.
+fallback) and a `For: <recipient>` line. Documents are **English only** — the
+intro instructions have no Chinese translation. Chinese appears only in the
+Vocabulary table, and only when vocabulary was added in the Translator: the
+table renders `English | Chinese` (the Chinese column is dropped when no word
+has a translation). A **Test** document is built from the Markdown content
+itself (paste the test/questions in the Markdown pane before generating) with a
+test-specific intro — it skips the Vocabulary table.
 
 Translator and presenter documents (screen 2/3) use **Save words / Load words /
 Save / Load** instead of CSV: bundles are JSON files (`spotlight-words` for the
