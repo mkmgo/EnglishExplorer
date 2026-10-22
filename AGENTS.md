@@ -295,6 +295,9 @@ across the two decks (`Math.ceil(count / 2)`) — e.g. 20 → 10/10, 30 → 15/1
 
 `junior/minigames/md-grid-shift-pure-match.html` is a separate one-player game.
 It uses the `GridShiftVariants` row with `VarName: Pure Match` for its settings.
+`VarName` is only the **internal name of the puzzle kind** — it selects the
+variant row and titles the browser tab; it is never displayed on the page. The
+visible headline comes from `H1Text`, the subheadline under it from `H3Text`.
 `Deck` names the checkbox field on `GridShift` (currently `PM-Active`); every
 card checked in that field is included. `DeckCount` must be `Variable`,
 `GridDimension (horizontal)` accepts a cell count or `rows x columns`
@@ -313,13 +316,22 @@ The variant row also drives the page chrome:
 
 | Field | Type | Purpose |
 |---|---|---|
-| `VarName` | Single line text | Page title — the `<h1>` and the document title. Currently `Pure Match`. |
+| `VarName` | Single line text | Internal name of the puzzle kind — selects the variant row (the page matches `Pure Match`) and titles the browser tab. It is **never shown on the page**. |
+| `H1Text` | Single line text | Page headline — the `<h1>` above the game (currently `Topic: On the Farm`). Empty = the built-in default headline stays. |
+| `H3Text` | Single line text | Subheadline shown underneath the headline, starting at the same horizontal position (currently `Match and solve all puzzles`). Empty = no subheadline is shown. |
 | `PartLabel` | Single line text | Deck badge label (replaces the hardcoded `Player` / `PLAYER`). Currently `Onza`. |
-| `DeckText` | Single line text | Instruction line under the deck ("Turn over each card, then place it on the matching imprint."). Empty = the built-in default text. |
-| `Task1AccText` | Single line text | Message shown when the matching puzzle is solved (replaces the old hardcoded "Grid complete!"). Shown in green under the board and **kept on screen** for the rest of the game. Empty = no message. |
-| `NextTask1` | Single line text | Follow-up task shown underneath the accomplished messages, in neutral (muted) text. Empty = nothing shown. |
-| `NextTask1AccText` | Single line text | Message shown in green when the follow-up task is solved (added to the list of accomplished tasks). Empty = the neutral feedback line shows "✔ Correct!". |
-| `SolutionNextTask1` | Link to `GridShift` | The card(s) that solve the follow-up task. The tutee clicks the right card on the finished board. Holds the Airtable **record id(s)** of the GridShift row(s) (e.g. the Tractor, `GridShiftID` 75); a plain `GridShiftID` is accepted too. Empty = the follow-up task has no solution (nothing to click). |
+| `task1Text` | Single line text | Instruction of task 1 (the matching puzzle) — shown **under the card stack**. Empty = the built-in default instruction stays. |
+| `task1DoneText` | Single line text | Message shown when the matching puzzle is solved (replaces the old hardcoded "Grid complete!"). Shown in green under the board and **kept on screen** for the rest of the game. Empty = no message. |
+| `task2Text` | Single line text | Instruction of task 2 — shown under the card stack, like every other task instruction. Empty = nothing shown. |
+| `task2DoneText` | Single line text | Message shown in green under the board when task 2 is solved (added to the list of accomplished tasks). Empty = the neutral feedback line shows "✔ Correct!". |
+| `task2Result` | Link to `GridShift` | The card(s) that solve task 2 (e.g. the Tractor, `GridShiftID` 75). The tutee **turns** the card(s) to the back on the finished board. Holds the Airtable **record id(s)** of the GridShift row(s); a plain `GridShiftID` is accepted too. Empty = the task has no solution (nothing to turn). The older names `SolutionTaskN`, `SolutionNextTask(N-1)` and `task(N-1)Result` are still accepted. |
+| `task3Spoken` | Long text *(optional)* | The words that are **spoken aloud** in task 3. The words are spoken slowly and without commas (one word per line or separated by commas). The tutee turns the cards of the spoken words to the back. Empty = the task is solved by reading the instruction only. |
+| `task3DoneBridge` | Single line text *(optional)* | The **bridge message** of task 3: it appears in the empty stack field (centred horizontally and vertically) when task 3 is solved. It is a button — a tap on it returns the turned cards to the stack; when the next task is an intro task, its new cards wait for that tap. Empty = no bridge message. |
+| `task4Text` | Single line text | Instruction of task 4 — shown under the card stack, like every other task instruction. Empty = nothing shown. |
+| `task4Result` | Single line text | The **action** that finishes task 4 (currently `Each card needs to be moved on related tile`). It describes the action, it holds no card ids; the cards of the task are the ones of `TileRelated` (see "Intro tasks" below). |
+| `task4DoneText` | Single line text | Message shown in green under the board when task 4 is solved (added to the list of accomplished tasks). Empty = the neutral feedback line shows "✔ Correct!". |
+| `task4Intro` | Single line text *(optional)* | The **intro marker** of task 4: it activates the intro step (the new cards are added to the board and have to be moved onto their tiles). Its text is **never shown** — only the fact that it is filled matters. Empty = task 4 is an ordinary task. |
+| `task4IntroAction` | Single line text *(optional)* | What the intro step does (currently `TilesRelated distributed randomly on remaining free grid slots and shown openly.`). It is a description only — it is not shown on the page. Empty = the step still runs. Either of the two fields activates the intro step, so the marker may also be written here. |
 | `WPIMG1` | URL | Subtle backdrop picture behind the board. Set at runtime as the `--wp-img` CSS custom property. Empty = no backdrop. |
 | `PartColour` | Single line text | Deck badge dot colour. Accepts a palette name (`Blue`), a hex / `rgb()` / `hsl()` value, a plain CSS colour name, or `var(--color-x)`. Palette names map to the page's theme-aware vars (`--color-blue`, `--color-yellow`, `--color-green`, `--color-red`, `--color-orange`, `--color-purple`). Empty = `var(--color-red)`. |
 | `NoParticipants` | Number | Number of players. Only `1` is supported so far — a higher value stops the game with an in-page error instead of silently running one deck. |
@@ -329,43 +341,145 @@ The variant row also drives the page chrome:
 
 The variant row turns the single matching puzzle into a **sequence of tasks**.
 Task 1 is the matching puzzle itself; every further task is described by the
-pair `NextTaskN` + `SolutionNextTaskN` (N = the task it follows):
+triple `taskNText` + `taskNResult` + `taskNDoneText` (N = the task number):
 
 | Field | Task | Effect |
 |---|---|---|
-| `Task1AccText` | 1 (the matching puzzle) | Green message under the board when every card is placed. |
-| `NextTask1` | 2 | The instruction shown under the task-1 message. |
-| `SolutionNextTask1` | 2 | The GridShift card that solves task 2. |
-| `NextTask1AccText` | 2 | Green message when the solution card is clicked. |
-| `NextTask2` / `SolutionNextTask2` / `NextTask2AccText` | 3 | …and so on, as far as the row goes. |
+| `task1Text` | 1 (the matching puzzle) | The instruction shown under the card stack. |
+| `task1DoneText` | 1 (the matching puzzle) | Green message under the board when every card is placed. |
+| `task2Text` | 2 | The instruction shown under the card stack. |
+| `task2Result` | 2 | The GridShift card(s) that solve task 2. |
+| `task2DoneText` | 2 | Green message when the last card of task 2 is turned. |
+| `task3Text` / `task3Result` / `task3DoneText` / `task3Spoken` / `task3DoneBridge` | 3 | …and so on, as far as the row goes. |
+| `task4Text` / `task4Result` / `task4DoneText` / `task4Intro` / `task4IntroAction` | 4 | The intro task — see "Intro tasks (`taskNIntro`)" below. |
 
-- `SolutionNextTaskN` is an Airtable **link** to the `GridShift` table, so it
+- Task 1 (the matching puzzle) needs **no result field**: its result is
+  inherent — the `Deck` checkbox on `GridShift` together with each card's
+  `Display` text defines which imprint belongs to which card.
+- The **instructions** (`taskNText`) are shown under the **card stack** — the
+  line under the deck that carried the old `DeckText` value. The instruction of
+  the open task is always the one on screen.
+- The **done messages** (`taskNDoneText`) are the only text under the **grid**;
+  they accumulate, one green line per solved task.
+- The field names of the previous scheme (`DeckText`, `NextTaskN`,
+  `TaskNAccText`, `NextTaskNAccText`, `SolutionTaskN`, `SolutionNextTaskN`,
+  `task(N-1)Result`) are still accepted as fallbacks, so a row that was only
+  partly renamed keeps working. As soon as the row holds one `taskNResult`
+  field, the current scheme is used and **every task reads only its own
+  result field** — no task inherits the result of the task before it.
+- `taskNResult` is an Airtable **link** to the `GridShift` table, so it
   holds the record id(s) of the solution card(s). In Airtable the link is made
   from the card row's `GridShiftVariants` field (the Tractor, `GridShiftID` 75,
   links back to the "Pure Match" variant) and then shows up in the variant's
-  `SolutionNextTask1` field.
+  `task2Result` field. The same card may serve more than one task (a card can
+  answer several questions) — link it in each task's own result field.
+- A task without an instruction (`taskNText`, `taskNSpoken` and `taskNIntro` all
+  empty) does not exist: the game ends with the task before it.
+- A task whose **result field names no card of the board** does not exist
+  either: the result field of a turn task holds card ids, a text there (the
+  description of an intro task) has no solution. Such a task is skipped — it
+  shows no instruction, the game ends with the task before it and the tracker
+  logs it (`task N: no solution cards`).
 - The accomplished messages **accumulate**: every solved task adds its message
   to the green list under the board (one line per task) and the earlier ones
-  stay visible, so the tutee sees what is already done. The neutral line below
-  always shows the task that is still open.
+  stay visible, so the tutee sees what is already done.
 - The board turns **green only when every task is solved** (`.grid.done`): after
   the matching puzzle it stays in its normal colours, the green frame and the
   green completion background arrive with the last task.
-- While a task with a solution is active the board waits for a click: dragging
-  is disabled, a wrong card shakes and shows "Not that one. Try another card."
-  in the neutral feedback line, and the solved card's cell keeps a green frame
-  (`.solved-cell`). **No rings are drawn on the other cells** — the board must
-  stay free of blue overlays, the messages carry the feedback.
+- **Every task with a result is solved by turning the cards to the back** —
+  there is no "click the right card" mechanic any more. The cards of
+  `taskNResult` are turned one by one; a wrong card shakes, shows "Not that
+  one. Try another card." and turns back to the front, a right card stays
+  turned and keeps its green frame (`.solved-cell`). The task ends when
+  **all** of them are turned. **No rings are drawn on the other cells** — the
+  board must stay free of blue overlays, the messages carry the feedback.
 - Two traps make the click land on nothing, both handled in code:
   a matched card is normally inert (`.cell .flipCard.matched { pointer-events:
-  none }`) and has to be woken up in pick mode, and the card (96×84) is smaller
-  than its cell (104×92), so a click in the cell padding is resolved to the
-  card that sits in that cell. The frame of the solved cell is drawn on the
-  **cell**, not on the card - an outline on the card is swallowed by its 3D flip.
-- Clicking the solution card completes the task, keeps its message in the
-  accomplished list, replaces the instruction and loads the next task (if the
-  row has one). With no `NextTaskNAccText` configured the neutral feedback line
-  shows "✔ Correct!" — the accomplished list stays as it is.
+  none }`) and has to be woken up in turn mode (`.grid.turning …`), and the
+  card (96×84) is smaller than its cell (104×92), so a click in the cell
+  padding is resolved to the card that sits in that cell. The frame of the
+  solved cell is drawn on the **cell**, not on the card - an outline on the
+  card is swallowed by its 3D flip.
+- Turning the last card of a task completes it, keeps its message in the
+  accomplished list, replaces the instruction under the card stack and loads
+  the next task (if the row has one). With no `taskNDoneText` configured the
+  neutral feedback line shows "✔ Correct!" — the accomplished list stays as
+  it is.
+- A card that was turned **stays turned** for the rest of the game (it keeps
+  its green frame). A card that was turned in an earlier task is therefore not
+  part of a later task — remove it from the later `taskNResult`, otherwise the
+  later task is already solved before the tutee does anything.
+
+**Spoken tasks (`taskNSpoken`).** A task that carries spoken words is solved
+by *turning* the spoken cards **to the back**:
+
+- The words are read aloud slowly (web `SpeechSynthesis` rate 0.55, Tizen
+  `tizen.tts` rate 0.55) and **without commas** — the field may hold one word
+  per line or a comma-separated list; the commas are dropped and the words
+  are spoken one after the other.
+- The board stays **face-up**: the tutee has to see the words on the cards to
+  know which card to turn.
+- The tutee turns the cards of the spoken words to the back; the cards that
+  have to be turned are the ones listed in `taskNResult`. A wrong card shakes,
+  shows "Not that one. Try another card." and turns back to the front; a right
+  card stays turned and keeps its green frame. The task ends when **all** of
+  them are turned.
+- Tapping the instruction under the card stack repeats the words.
+
+**Bridge message (`taskNDoneBridge`).** A task that carries a bridge message
+ends with a button in the **empty stack field**:
+
+- When the task is solved, the text appears **centred horizontally and
+  vertically in the stack field** (the dashed box next to the board, `.deck`
+  grows to fit the text, `.bridgeText`).
+- The bridge message is a **button**: a tap on it returns every turned card
+  from the board **back into the stack**. The cards **stay turned** (face
+  down) and are **discarded** from then on (`.flipCard.discarded` — they
+  cannot be touched any more). The stack count shows them.
+- The bridge message disappears once it has been used, the stack field then
+  holds the discarded cards.
+- When the **next** task is an intro task, its new cards **wait for the tap**:
+  the board is tidied up first (the turned cards are discarded), then the new
+  cards join the free cells.
+
+**Intro tasks (`taskNIntro`).** A task that carries an intro marker is not
+solved by turning cards — it **adds new cards to the board** and asks the
+tutee to move them onto the tile they belong to:
+
+- The marker itself is **never shown**: only the fact that it is filled
+  matters. The same is true for `taskNIntroAction`, which describes what the
+  step does (it is not shown either). **Either of the two fields activates the
+  step**, so the marker may also be written in `taskNIntroAction`.
+- The **new cards** are the `GridShift` records that carry a `TileRelated`
+  value: the picture of the `TileRelated` URL (the farm products) is shown
+  openly on a free cell of the board.
+- The **look** of a new card follows the `FillTileRelated` checkbox of its
+  record: **checked** the picture fills the whole card and carries no word,
+  **unchecked** the picture sits in a round with the word of the `Related`
+  field underneath (e.g. `Milk`, `Cheese`) — like a normal card whose
+  `FillTile` is not checked.
+- The new cards join the board **after** the bridge message of the previous
+  task has been used: the tap on the bridge discards the turned cards first,
+  then the new cards are dealt on the free cells.
+- The **tile** a new card belongs to is the card of the record the picture
+  came from (the animal). The tutee **drags** the new card onto that tile; a
+  wrong tile flashes red and shows "That product doesn't belong to this
+  animal. Try another spot.".
+- A placed new card shrinks into the corner of its cell
+  (`.flipCard.relatedPlaced`, 48×44 at the top left; a round picture shrinks
+  to 22px and its word to 0.5rem) so that the animal and its product stay
+  visible together, and the cell keeps its green frame (`.solved-cell`).
+- The task is done when **every** new card sits on its tile: the message of
+  `taskNDoneText` joins the accomplished list under the board and the next
+  task opens (the board turns green when there is none).
+- `taskNResult` of such a task holds no card ids — it describes the action
+  that finishes it ("Each card needs to be moved on related tile"). When it
+  holds record ids anyway, only the named records are used.
+- The **marker is the switch**: without `taskNIntro` the task is an ordinary
+  task, and a result field that only holds a description has no solution — the
+  task is then skipped (see the multi-task flow above).
+- Only the records whose card lies on the board are used: a record without a
+  tile on the board has nothing to be matched to.
 
 **WPIMG1 backdrop.** The picture is a CSS layer, not an asset on the board:
 `.grid::before` paints it over the board, so the wallpaper shows **only in the
@@ -386,6 +500,9 @@ CSS colour variable arrives in `PrimaryColour` (not `Fill`) — the game accepts
 | `GridShiftID` | Autonumber | Stable per-brick id (also logs Turn/Place actions). |
 | `Active` | Checkbox | Whether this brick is included in the game. Only checked cards are fetched, shuffled and dealt; the grid self-sizes to the checked count (see "Grid sizing" above). |
 | `PM-Active` | Checkbox *(optional)* | Whether this brick is included in Grid Shift Pure Match; the variant uses every checked row and matches against `Display`. |
+| `TileRelated` | URL *(optional)* | The picture of the product that belongs to this brick (the farm products). The intro task of the Pure Match variant turns it into a new card that the tutee has to move onto this brick. Empty = the brick takes part in no intro task. |
+| `Related` | Single line text *(optional)* | The word of the product (e.g. `Milk`, `Cheese`). It is written under the picture of the new card of the intro task when `FillTileRelated` is not checked. Empty = the new card carries no word. |
+| `FillTileRelated` | Checkbox *(optional)* | The look of the new card of the intro task: **checked** the product picture fills the whole card (no word), **unchecked** it sits in a round with the `Related` word underneath. Empty = not filled. |
 | `TileName` | Single line text | Internal machine name (e.g. `Living-Room`). |
 | `Display` | Single line text | Word shown on the brick front (e.g. `Lounge`) — falls back to `TileName`. |
 | `Category` | Single line text | Grouping (Numbers, Clothes, Animals, Colours, Rooms, Directions) — currently unused by the UI. |

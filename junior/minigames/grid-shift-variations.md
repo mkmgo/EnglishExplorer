@@ -66,7 +66,9 @@ selected by `VarName`; the live `Pure Match` row uses these fields:
 | Field | Example | Purpose |
 |---|---|---|
 | `VarID` | `1` | Stable variant identifier. |
-| `VarName` | `Pure Match` | Selects this configuration for the Pure Match page. |
+| `VarName` | `Pure Match` | Internal name of the puzzle kind: selects this configuration for the Pure Match page and titles the browser tab. It is never displayed on the page. |
+| `H1Text` | `Topic: On the Farm` | Page headline — the `<h1>` above the game. |
+| `H3Text` | `Match and solve all puzzles` | Subheadline under the headline, starting at the same horizontal position. |
 | `Deck` | `PM-Active` | Name of the checkbox field on `GridShift` that chooses cards. Every checked row is included. |
 | `DeckCount` | `variable` | Must be `Variable` so the full checked set is used. |
 | `GridDimension (horizontal)` | `4x5` | Cell count or `rows x columns`; `4x5` means 4 rows × 5 columns. |
@@ -74,6 +76,73 @@ selected by `VarName`; the live `Pure Match` row uses these fields:
 | `Hints` | `Imprints of Display (Text)` | Use each selected card's `Display` value for its text imprint. |
 | `PartColour` | `Red` | Player/deck colour setting; currently informational in Pure Match. |
 | `NoParticipants` | `1` | Participant count; currently informational in Pure Match. |
+| `task1Text` | `Match the cards correctly.` | Instruction of task 1 (the matching puzzle) — shown under the card stack. |
+| `task1DoneText` | `✔ You matched all cards correctly` | Green message under the grid when the matching puzzle is solved. |
+| `task2Text` | `Turn the cards that are no animals.` | Instruction of task 2 — shown under the card stack. |
+| `task2Result` | Tractor + 4 other non-animal cards | The cards that have to be turned to the back in task 2 (link to `GridShift`). |
+| `task2DoneText` | `✔ Correct. This is an agricultural vehicle (a tractor).` | Green message under the grid when task 2 is solved. |
+| `task3Text` | `Listen and turn the spoken cards` | Instruction of task 3 — shown under the card stack. |
+| `task3Spoken` | `Rooster` / `Chicks` / `Horse` / `Calf` | The words spoken aloud in task 3 (one per line or comma-separated). They are spoken slowly and without commas. |
+| `task3Result` | Rooster, Chicks, Horse, Calf | The cards that have to be turned to the back in task 3 (link to `GridShift`). The Tractor is **not** in it any more — it was turned in task 2 and stays turned. |
+| `task3DoneBridge` | `Click here to clear turned cards.` | The bridge message of task 3 — centred in the empty stack field when task 3 is solved. A tap on it returns the turned cards to the stack. |
+| `task4Text` | `📌 Match the farm products with the suitable animal.` | Instruction of task 4 — shown under the card stack. |
+| `task4Result` | `Each card needs to be moved on related tile` | The **action** that finishes task 4. It holds no card ids — the cards of the task are the ones of `TileRelated`. |
+| `task4DoneText` | `✔ Well done. You found the correct animals.` | Green message under the grid when task 4 is solved. |
+| `task4Intro` | `yes` | The **intro marker** of task 4: it activates the intro step. Its text is never shown — only the fact that it is filled matters. |
+| `task4IntroAction` | `TilesRelated distributed randomly on remaining free grid slots and shown openly.` | What the intro step does — a description only, never shown. Either of the two fields activates the intro step, so the marker may also be written here. |
+
+The task instructions (`taskNText`) always sit under the card stack; only the
+done messages (`taskNDoneText`) are shown under the grid. Task 1 (the matching
+puzzle) needs no result field — its result is inherent (the `Deck` checkbox
+plus each card's `Display` text). As soon as the row holds a `taskNResult`
+field, every task reads only its own result field; the older names (`DeckText`,
+`NextTaskN`, `TaskNAccText`, `NextTaskNAccText`, `SolutionTaskN`,
+`SolutionNextTaskN`, `task(N-1)Result`) are still accepted as fallbacks.
+
+Every task with a result is solved by **turning the cards of `taskNResult` to
+the back** — there is no "click the right card" mechanic any more. A card that
+was turned stays turned (it keeps its green frame), so a card that belongs to an
+earlier task has to be removed from the result of the later tasks.
+
+A task with a `taskNSpoken` value is a **speaking task**: the words are read
+aloud slowly (without commas), the board stays face-up so the tutee can see
+the words, and the tutee turns the cards of `taskNResult` to the back (a wrong
+card turns back to the front). Tapping the instruction under the card stack
+repeats the words.
+
+A task with a `taskNDoneBridge` value ends with a **button in the empty stack
+field**: the message is centred horizontally and vertically, and a tap on it
+returns every turned card from the board back into the stack. The cards stay
+turned (face down) and are discarded from then on. When the next task is an
+intro task, its new cards **wait for that tap**: the board is tidied up first
+(the turned cards are discarded), then the new cards are dealt on the free
+cells.
+
+A task with a `taskNIntro` value is an **intro task**: it does not turn cards,
+it **adds new cards to the board**. The new cards are the `GridShift` records
+that carry a `TileRelated` value — the picture of the product is shown openly
+on a free cell. The **look** of a new card follows the `FillTileRelated`
+checkbox of its record: checked the picture fills the whole card (no word),
+unchecked it sits in a round with the word of the `Related` field underneath
+(`Milk`, `Cheese`, …). The tutee **drags** each new card onto
+the tile it belongs to (the card of the record the picture came from); a wrong
+tile flashes red. A placed new card shrinks into the corner of its cell so
+that the animal and its product stay visible together, and the cell keeps its
+green frame. The task is done when every new card sits on its tile.
+
+The marker is the switch: without `task4Intro` **and** without
+`task4IntroAction` task 4 is an ordinary task, and its result field (a
+description, no card ids) has no solution — the task is then skipped and the
+game ends with task 3. The live row carries the marker in `task4IntroAction`,
+which is enough to activate the intro step.
+
+The card table gains the fields the intro task needs:
+
+| Field | Example | Purpose |
+|---|---|---|
+| `TileRelated` | Cloudinary URL of the farm product | The picture of the product that belongs to this card. The intro task turns it into a new card the tutee has to move onto this card. Empty = the card takes part in no intro task. |
+| `Related` | `Milk` | The word of the product. It is written under the picture of the new card when `FillTileRelated` is not checked. Empty = the new card carries no word. |
+| `FillTileRelated` | unchecked | The look of the new card: checked the product picture fills the whole card (no word), unchecked the picture sits in a round with the `Related` word underneath. Empty = not filled. |
 
 `Active` is not present on the live `GridShiftVariants` table; the page selects
 the row by `VarName`. The previous proposed `Name` / `Active` / `GridSize` /
@@ -207,7 +276,7 @@ GridShiftID, Active, PM-Active, TileName, Display, RenderMode,
 TileFront, TileBack, TileBackA, TileBackB, Lucide, Stroke,
 IconSize, PrimaryColour, SecondColour, Frame, FrameSize,
 FrameBorder, FrameColour, TextColour, TextSize,
-ColourOutsideFrame, FillTile, Fill
+ColourOutsideFrame, FillTile, Fill, TileRelated, Related, FillTileRelated
 ```
 
 `CategoryColour` is documented in AGENTS.md but **not read by the UI**:
@@ -218,10 +287,13 @@ CategoryColour
 `Category` is present in Airtable for grouping, but is currently unused by both
 game UIs.
 
-Pure Match also reads `GridShiftVariants` fields `VarName`, `Deck`, `DeckCount`,
-`GridDimension (horizontal)`, `Placing`, `Hints`, `PartColour`, and
-`NoParticipants`. `GridShiftVariants` is allowlisted in the tracker worker and is
-fetched in its natural Airtable row order.
+Pure Match also reads `GridShiftVariants` fields `VarName`, `H1Text`, `H3Text`,
+`task1Text`, `task1DoneText`, `task2Text`, `task2Result`, `task2DoneText`,
+`task3Text`, `task3Spoken`, `task3Result`, `task3DoneBridge`, `task4Text`,
+`task4Result`, `task4DoneText`, `task4Intro`, `task4IntroAction`, `Deck`,
+`DeckCount`, `GridDimension (horizontal)`, `Placing`, `Hints`, `PartColour`, and
+`NoParticipants`. `GridShiftVariants` is allowlisted in the tracker worker and
+is fetched in its natural Airtable row order.
 
 ---
 

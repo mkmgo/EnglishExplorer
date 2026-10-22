@@ -31,6 +31,8 @@
         --color-red: #ef4444;
         --color-orange: #f97316;
         --color-purple: #a855f7;
+        /* Width of the task log under the board (the accomplished messages). */
+        --log-width: 25rem;
       }
 
       @media (prefers-color-scheme: dark) {
@@ -52,9 +54,8 @@
           --img-bg: #f8fafc;
           --good: #34d399;
           --goal-bg: #064e3b;
-          /* Width of the task log under the board. The accomplished messages
-             and the open task share it, so every line starts at the same
-             place. */
+          /* Width of the task log under the board (the accomplished
+             messages), so every line starts at the same place. */
           --log-width: 25rem;
           --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.45);
         }
@@ -115,11 +116,34 @@
         align-items: center;
       }
 
+      /* Headline block: the group is centred on the page, but the headline
+         and the subheadline inside it are left-aligned so both lines start
+         at the same horizontal position. */
+      .pageHead {
+        width: max-content;
+        max-width: 100%;
+        margin: 0 auto 8px;
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
       h1 {
-        margin: 0 0 8px;
+        margin: 0 0 4px;
+        max-width: 100%;
         color: var(--heading);
         font-size: clamp(1.4rem, 3.4vw, 2rem);
-        text-align: center;
+        text-align: left;
+      }
+
+      h3 {
+        margin: 0;
+        max-width: 100%;
+        color: var(--muted);
+        font-size: clamp(0.95rem, 2.2vw, 1.2rem);
+        font-weight: 600;
+        line-height: 1.25;
+        text-align: left;
       }
 
       .stage {
@@ -205,6 +229,50 @@
         outline-offset: -2px;
         background: var(--item-bg);
       }
+      /* The bridge message of a finished task: it sits in the empty stack
+         field, centred horizontally and vertically. It is a button - a tap on
+         it returns the turned cards to the stack. */
+      .deck.bridged {
+        width: 100%;
+        height: auto;
+        min-height: 100px;
+        padding: 8px;
+      }
+      .bridgeText {
+        position: relative;
+        z-index: 60;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        width: 100%;
+        min-height: 84px;
+        padding: 4px;
+        box-sizing: border-box;
+        color: var(--text);
+        font-size: 0.85rem;
+        font-weight: 800;
+        line-height: 1.3;
+        cursor: pointer;
+        user-select: none;
+        -webkit-user-select: none;
+        -webkit-tap-highlight-color: transparent;
+      }
+      .bridgeText::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        z-index: -1;
+        border-radius: 8px;
+        background: var(--item-bg);
+        border: 2px solid var(--border-strong);
+      }
+      .bridgeText[hidden] {
+        display: none;
+      }
+      .bridgeText:active {
+        transform: scale(0.97);
+      }
       .statusText {
         text-align: left;
         font-weight: 900;
@@ -221,24 +289,32 @@
       .statusText > div + div {
         margin-top: 6px;
       }
-      /* The follow-up task shown under the completion text. */
-      .statusNext {
-        text-align: left;
-        color: var(--muted);
-        font-size: 0.85rem;
-        font-weight: 600;
-        line-height: 1.35;
-        margin: 8px auto 0;
-        width: var(--log-width);
-        padding: 0;
-        text-wrap: pretty;
-      }
       .hint {
         text-align: center;
         color: var(--muted);
         font-size: 0.78rem;
         font-weight: 600;
         line-height: 1.35;
+      }
+      /* The instruction of the open task, under the card stack. It starts at
+         the left edge of the stack (instead of being centred in it) and is a
+         little larger and stronger than a plain hint, so the pupil reads it
+         as the current instruction. */
+      .taskText {
+        text-align: left;
+        color: var(--text);
+        font-size: 0.95rem;
+        font-weight: 700;
+        line-height: 1.35;
+        width: 112px;
+        margin: 0 auto;
+      }
+      /* A task with spoken words: the instruction can be tapped to hear the
+         words again. */
+      .taskText.speakable {
+        cursor: pointer;
+        text-decoration: underline dotted var(--border-strong);
+        text-underline-offset: 3px;
       }
 
       /* ---------- Flip card (front + back brick) ---------- */
@@ -260,11 +336,11 @@
       .flipCard:active {
         cursor: grabbing;
       }
-      /* Follow-up task: the board waits for a click on the solution card.
-         No ring is drawn on the cells - the messages under the board show
-         what is done. Only the solved card keeps a green frame. */
-      .flipCard.pickable {
-        cursor: pointer;
+      /* A card that was turned and put back into the stack: it stays turned
+         and is discarded, so it cannot be touched any more. */
+      .flipCard.discarded {
+        pointer-events: none;
+        cursor: default;
       }
       .grid .cell.solved-cell::after {
         content: "";
@@ -274,6 +350,31 @@
         border: 3px solid var(--good);
         border-radius: 10px;
         pointer-events: none;
+      }
+      /* A card of the intro task (the farm products) that was moved onto the
+         tile it belongs to: it shrinks into the corner of the cell so that the
+         animal and its product stay visible together. */
+      .cell .flipCard.relatedPlaced {
+        position: absolute !important;
+        top: 2px !important;
+        left: 2px !important;
+        width: 48px;
+        height: 44px;
+        z-index: 4 !important;
+        cursor: default;
+      }
+      .cell .flipCard.relatedPlaced .frontFace {
+        box-shadow: 0 0 0 2px var(--item-bg);
+      }
+      /* A product card that is not filled shows its picture in a round with the
+         word underneath: on the tile both shrink so that the animal and the
+         product stay visible together. */
+      .cell .flipCard.relatedPlaced .frontFace:not(.fulltile) .round {
+        width: 22px;
+        height: 22px;
+      }
+      .cell .flipCard.relatedPlaced .cardName {
+        font-size: 0.5rem;
       }
       .flipCard.wrong-pick {
         animation: wrongShake 0.4s ease;
@@ -492,9 +593,10 @@
         pointer-events: none;
         cursor: default;
       }
-      /* While a follow-up task waits for a click, the placed cards have to
-         receive the pointer again (they are inert once they are matched). */
-      .grid.picking .cell .flipCard.matched {
+      /* While a follow-up task waits for the pupil to turn a card, the placed
+         cards have to receive the pointer again (they are inert once they
+         are matched). */
+      .grid.turning .cell .flipCard.matched {
         pointer-events: auto;
         cursor: pointer;
       }
@@ -527,8 +629,15 @@
         .deck {
           margin: 0 6px;
         }
-        .hint {
+        .hint,
+        .taskText {
           flex-basis: 100%;
+        }
+        /* The instruction uses the whole width of the row, not the width of
+           the card stack. */
+        .taskText {
+          width: auto;
+          margin: 0;
         }
         .gridWrap {
           overflow-x: auto;
@@ -598,14 +707,17 @@
       🌙
     </button>
     <div id="gamepadCursor"></div>
-    <h1 id="gameTitle">Grid Shift Pure Match</h1>
+    <header class="pageHead">
+      <h1 id="headlineText">Grid Shift Pure Match</h1>
+      <h3 id="subheadlineText" hidden></h3>
+    </header>
 
     <main class="stage">
       <div class="deckPair">
         <section class="deckPanel">
           <div class="deckHead"><span class="dot" id="deckDot"></span><span id="deckLabel">Player</span><span class="count" id="count">0</span></div>
-          <div class="deck" id="deck"></div>
-          <div class="hint" id="deckText">Turn over each card, then place it on the matching imprint.</div>
+          <div class="deck" id="deck"><div class="bridgeText" id="bridgeText" hidden></div></div>
+          <div class="taskText" id="deckText">Turn over each card, then place it on the matching imprint.</div>
         </section>
       </div>
 
@@ -615,7 +727,6 @@
     </main>
 
     <div class="statusText" id="status" hidden></div>
-    <div class="statusNext" id="nextTask" hidden></div>
     <div class="hint" id="feedback" role="status" aria-live="polite"></div>
 
     <script>
@@ -653,34 +764,256 @@
         "https://english-explorer-tracker.mkmueller-mission.workers.dev/airtable?table=";
       var PAGE = "/junior/minigames/md-grid-shift-pure-match.html";
 
+      // ---------- Speech (TTS) ----------
+      // The same approach as junior/thematic/adventure-outside.html: the web
+      // SpeechSynthesis API in the browser and the Tizen TTS on the TV. The
+      // words of a task are spoken slowly and without commas.
+      var synth =
+        window.speechSynthesis ||
+        window.webkitSpeechSynthesis ||
+        window.mozSpeechSynthesis ||
+        null;
+      var speechVoice = null;
+      var speechQueue = [];
+      var speechRate = 0.55; // slow: the pupil has time to catch the word
+      var SPEECH_GAP = 250; // pause between two words
+      var FEMALE_HINTS = [
+        "aria", "jenny", "sonia", "zira", "hazel", "samantha", "karen",
+        "moira", "tessa", "veena", "emma", "natasha", "susan", "mary",
+        "amy", "libby", "olivia", "mira", "anya", "lena", "katya", "female",
+      ];
+      var MALE_HINTS = [
+        "david", "mark", "daniel", "alex", "fred", "george", "rishi",
+        "arthur", "guy", "james", "thomas", "oliver", "ryan",
+        "christopher", "matthew", "sasha", "male",
+      ];
+      var NATURAL_HINTS = [
+        "natural", "neural", "premium", "enhanced", "google us english",
+      ];
+
+      function voiceScore(v) {
+        if (!v || !v.lang) return -1;
+        var lang = String(v.lang).toLowerCase();
+        if (lang.indexOf("en") !== 0) return -1;
+        var name = String(v.name || "").toLowerCase();
+        var score = 0;
+        if (lang.indexOf("en-gb") === 0) score += 10;
+        else if (lang.indexOf("en-us") === 0) score += 8;
+        else score += 2;
+        for (var i = 0; i < FEMALE_HINTS.length; i++) {
+          if (name.indexOf(FEMALE_HINTS[i]) >= 0) {
+            score += 30;
+            break;
+          }
+        }
+        for (var j = 0; j < MALE_HINTS.length; j++) {
+          if (name.indexOf(MALE_HINTS[j]) >= 0) {
+            score -= 30;
+            break;
+          }
+        }
+        for (var k = 0; k < NATURAL_HINTS.length; k++) {
+          if (name.indexOf(NATURAL_HINTS[k]) >= 0) {
+            score += 15;
+            break;
+          }
+        }
+        return score;
+      }
+
+      function setSpeechVoice() {
+        if (!synth) return;
+        var voices = synth.getVoices();
+        if (!voices || !voices.length) return;
+        var best = null;
+        var bestScore = -999;
+        for (var i = 0; i < voices.length; i++) {
+          var score = voiceScore(voices[i]);
+          if (score > bestScore) {
+            bestScore = score;
+            best = voices[i];
+          }
+        }
+        speechVoice = best;
+      }
+
+      if (synth) {
+        setSpeechVoice();
+        if (typeof synth.addEventListener === "function") {
+          synth.addEventListener("voiceschanged", setSpeechVoice);
+        }
+        var voiceTimer = window.setInterval(function () {
+          setSpeechVoice();
+          if (speechVoice) window.clearInterval(voiceTimer);
+        }, 500);
+        window.setTimeout(function () {
+          window.clearInterval(voiceTimer);
+        }, 4000);
+      }
+
+      function cancelSpeech() {
+        speechQueue = [];
+        if (synth && typeof synth.cancel === "function") {
+          try {
+            synth.cancel();
+          } catch (e) {}
+        }
+      }
+
+      // Speaks one word slowly. onDone is called when the word is finished.
+      function speakOne(text, onDone) {
+        var word = String(text === undefined || text === null ? "" : text).trim();
+        var done = false;
+        function finish() {
+          if (done) return;
+          done = true;
+          if (onDone) onDone();
+        }
+        if (!word) {
+          finish();
+          return;
+        }
+        if (window.tizen && window.tizen.tts) {
+          try {
+            window.tizen.tts.speak(
+              word,
+              {
+                locale: "en-US",
+                rate: speechRate,
+                pitch: 1.0,
+                type: "TTS_TYPE_SCREEN_READER",
+              },
+              finish,
+            );
+            window.setTimeout(finish, 5000);
+            return;
+          } catch (e) {}
+        }
+        if (synth && typeof SpeechSynthesisUtterance !== "undefined") {
+          var u = new SpeechSynthesisUtterance(word);
+          u.lang = "en-US";
+          u.rate = speechRate;
+          u.pitch = 1.05;
+          if (speechVoice) u.voice = speechVoice;
+          u.onend = finish;
+          u.onerror = finish;
+          synth.speak(u);
+          // Safety net: some browsers drop an utterance without an event.
+          window.setTimeout(finish, 5000);
+          return;
+        }
+        finish();
+      }
+
+      // Speaks the words one after the other.
+      function speakWords(words) {
+        var list = [];
+        for (var i = 0; i < words.length; i++) {
+          var word = String(words[i] === undefined ? "" : words[i])
+            .replace(/,/g, " ")
+            .trim();
+          if (word) list.push(word);
+        }
+        if (!list.length) return;
+        cancelSpeech();
+        speechQueue = list;
+        speakQueueNext();
+      }
+
+      function speakQueueNext() {
+        if (!speechQueue.length) return;
+        var word = speechQueue.shift();
+        speakOne(word, function () {
+          if (!speechQueue.length) return;
+          window.setTimeout(speakQueueNext, SPEECH_GAP);
+        });
+      }
+
       var deckEl = document.getElementById("deck");
       var countEl = document.getElementById("count");
       var gridEl = document.getElementById("grid");
       var statusEl = document.getElementById("status");
-      var nextTaskEl = document.getElementById("nextTask");
       var feedbackEl = document.getElementById("feedback");
-      var titleEl = document.getElementById("gameTitle");
+      var headlineEl = document.getElementById("headlineText");
+      var subheadlineEl = document.getElementById("subheadlineText");
       var deckDotEl = document.getElementById("deckDot");
       var deckLabelEl = document.getElementById("deckLabel");
       var deckTextEl = document.getElementById("deckText");
+      var bridgeEl = document.getElementById("bridgeText");
+
+      // A task with spoken words: the instruction can be tapped to hear the
+      // words again.
+      if (deckTextEl) {
+        deckTextEl.addEventListener("click", function () {
+          if (spokenText) speakTaskWords();
+        });
+      }
+
+      // The bridge message: a tap on it returns the turned cards to the stack.
+      if (bridgeEl) {
+        bridgeEl.addEventListener("pointerdown", function (e) {
+          e.preventDefault();
+          e.stopPropagation();
+          clearTurnedCards();
+        });
+      }
 
       // ---------- Multi-task flow ----------
       // The variant row drives every task of the game:
-      //   Task1AccText      - the message shown when the matching puzzle is done
-      //   NextTaskN         - the instruction for the task that follows task N
-      //   SolutionNextTaskN - the card(s) that solve that follow-up task
-      //   NextTaskNAccText  - the message shown when that follow-up task is done
-      // Task 1 is the matching puzzle; the follow-up tasks are solved by
-      // clicking the solution card on the finished board. Every message that
-      // is earned stays on screen, so the pupil keeps a list of what is done.
+      //   task1Text      - the instruction of the matching puzzle (task 1)
+      //   taskNText      - the instruction of the follow-up task N
+      //   taskNDoneText  - the message shown under the grid when task N is done
+      //   taskNSpoken    - the words spoken aloud in task N
+      //   taskNResult    - the card(s) that solve task N
+      //   taskNDoneBridge- the message shown in the stack field when task N is
+      //                    done (a tap on it returns the turned cards)
+      //   taskNIntro     - the marker that activates the intro step of task N
+      //   taskNIntroAction- what the intro step does (a description); either
+      //                    of the two fields activates the step and neither
+      //                    text is shown on the page
+      // Task 1 is the matching puzzle; its result is inherent (every card
+      // finds its own imprint), so it needs no result field. A follow-up task
+      // is solved by turning the cards of taskNResult to the back: the pupil
+      // sees the words on the cards and turns the ones that belong to the
+      // task. A task with spoken words tells the pupil which cards to turn.
+      // Every message that is earned stays on screen, so the pupil keeps a
+      // list of what is done. The instruction of the open task is shown under
+      // the card stack; under the grid only the accomplished messages appear.
+      //
+      // The intro step (taskNIntro) is different: it adds new cards to the
+      // board and asks the pupil to move them onto the tile they belong to.
+      // The new cards are the GridShift records that carry a TileRelated
+      // value: their picture is shown openly on a free cell. The taskNResult
+      // of such a task describes the action that finishes it (it holds no
+      // card ids); the cards of the task are the ones of taskNResult only
+      // when that field names them.
       var variantSettings = {};
       var solutionIds = [];
-      var awaitingPick = false;
+      var awaitingTurn = false; // the board waits for the pupil to turn a card
+      var spokenText = ""; // the words of the open task (taskNSpoken)
+      var speakTimer = null; // the timer that starts the spoken words
       var matchingDone = false;
       var accomplished = []; // the messages of the tasks completed so far
       var pendingAccText = ""; // message of the task that is still open
-      var pendingNumber = 1; // the NextTaskN pair that describes the open task
-      var nextTask = ""; // instruction of the open task
+      var pendingBridgeText = ""; // bridge message of the task that is open
+      var discarded = []; // the cards that were turned and put back
+      var currentTask = 1; // the task that is open
+      var taskText = ""; // instruction of the open task
+      var introText = ""; // the intro marker of the open task (taskNIntro)
+      var introActionText = ""; // what the intro step does (taskNIntroAction)
+      var pendingActionText = ""; // the action of the open task (taskNResult)
+      var introMode = false; // the open task is an intro task
+      var introResultIds = []; // the cards the intro task names itself
+      var relatedCards = []; // the cards the intro step added to the board
+      var relatedPlaced = 0; // how many of them sit on their tile
+      var bridgePending = false; // a bridge message waits for its tap
+      var introWaiting = false; // the intro cards wait for the bridge tap
+      var allCardRecords = []; // every GridShift record
+
+      // Fallback for the line under the card stack, used until the variant
+      // row is read.
+      var DEFAULT_DECK_TEXT =
+        "Turn over each card, then place it on the matching imprint.";
 
       function toIdList(value) {
         if (value === undefined || value === null) return [];
@@ -691,6 +1024,79 @@
           if (id) out.push(id);
         }
         return out;
+      }
+
+      // The Airtable fields of task N. The live row uses taskNText,
+      // taskNDoneText and taskNResult; the earlier names (DeckText,
+      // TaskNAccText, NextTask(N-1)…, SolutionNextTask(N-1)) are still
+      // accepted so a row that was only partly renamed keeps working.
+      // Task 1 is the matching puzzle: its result is inherent (every card
+      // finds its imprint), so it needs no result field.
+      function taskFields(n) {
+        if (n <= 1) {
+          return {
+            text: ["task1Text", "DeckText"],
+            acc: ["task1DoneText", "Task1AccText"],
+            spoken: [],
+            bridge: [],
+            intro: [],
+            introAction: [],
+          };
+        }
+        var legacy = n - 1;
+        return {
+          text: ["task" + n + "Text", "NextTask" + legacy],
+          acc: [
+            "task" + n + "DoneText",
+            "Task" + n + "AccText",
+            "NextTask" + legacy + "AccText",
+          ],
+          spoken: ["task" + n + "Spoken"],
+          bridge: ["task" + n + "DoneBridge"],
+          intro: ["task" + n + "Intro"],
+          introAction: ["task" + n + "IntroAction"],
+        };
+      }
+
+      // The row uses the current scheme (taskNResult = the result of task N)
+      // as soon as it holds one of those fields: every task then reads only
+      // its own result field. A row that was never renamed keeps the older
+      // names (SolutionTaskN, SolutionNextTask(N-1), task(N-1)Result).
+      function currentResultScheme() {
+        var keys = Object.keys(variantSettings || {});
+        for (var i = 0; i < keys.length; i++) {
+          if (/^task\d+result$/.test(normalizedFieldName(keys[i]))) return true;
+        }
+        return false;
+      }
+
+      function resultFields(n) {
+        var own = ["task" + n + "Result"];
+        if (currentResultScheme()) return own;
+        return own.concat([
+          "SolutionTask" + n,
+          "SolutionNextTask" + (n - 1),
+          "task" + (n - 1) + "Result",
+        ]);
+      }
+
+      // First field of the list that carries a value.
+      function getFirstField(fields, names) {
+        for (var i = 0; i < names.length; i++) {
+          var value = getField(fields, names[i]);
+          if (value === undefined || value === null) continue;
+          if (Array.isArray(value) ? value.length : String(value).trim()) {
+            return value;
+          }
+        }
+        return "";
+      }
+
+      // The solution field of a task. The same field may serve more than one
+      // task (a card can answer several questions), so nothing is consumed
+      // here: the first field that carries a value wins.
+      function pickSolutionField(fields, names) {
+        return getFirstField(fields, names);
       }
 
       function isSolutionCard(card) {
@@ -704,26 +1110,360 @@
         return false;
       }
 
-      function markPickable() {
-        var cards = document.querySelectorAll("#grid .flipCard");
-        for (var i = 0; i < cards.length; i++) {
-          cards[i].classList.toggle("pickable", awaitingPick);
+      // Opens task n: its instruction goes under the card stack, its solution
+      // card(s) make the board wait for a turn and its message is added to the
+      // list under the grid once it is solved.
+      function loadTask(n) {
+        currentTask = n;
+        var fields = taskFields(n);
+        taskText = String(getFirstField(variantSettings, fields.text) || "").trim();
+        spokenText = String(
+          getFirstField(variantSettings, fields.spoken) || "",
+        ).trim();
+        introText = String(
+          getFirstField(variantSettings, fields.intro) || "",
+        ).trim();
+        introActionText = String(
+          getFirstField(variantSettings, fields.introAction) || "",
+        ).trim();
+        // The marker may sit in either field - both carry a description of
+        // what the step does and neither of them is ever shown.
+        if (!introText) introText = introActionText;
+        if (!introActionText) introActionText = introText;
+        // A task without an instruction does not exist: the game ends with it.
+        // The intro marker alone is enough: it activates the next step.
+        var hasTask = n <= 1 || !!(taskText || spokenText || introText);
+        // An intro task is solved by moving the new cards onto their tiles,
+        // so it has no result cards of its own.
+        introMode = hasTask && n > 1 && !!introText;
+        // The result field of an intro task either names the cards that have
+        // to be moved (record ids) or describes the action that finishes the
+        // task ("Each card needs to be moved on related tile").
+        var introResult = hasTask
+          ? pickSolutionField(variantSettings, resultFields(n))
+          : "";
+        introResultIds = [];
+        pendingActionText = "";
+        if (introMode) {
+          var named = toIdList(introResult).filter(function (id) {
+            return !!findRecord(id);
+          });
+          if (named.length) introResultIds = named;
+          else pendingActionText = String(introResult || "").trim();
+        }
+        solutionIds =
+          hasTask && !introMode
+            ? toIdList(pickSolutionField(variantSettings, resultFields(n)))
+            : [];
+        // The result field of an ordinary task names the cards that have to
+        // be turned. A field that holds a text instead of card ids has no
+        // solution: such a task does not exist and the game ends with the
+        // task before it.
+        if (solutionIds.length && !cardsOnBoard(solutionIds).length) {
+          hasTask = false;
+          solutionIds = [];
+          track("Task", "task " + n + ": no solution cards");
+        }
+        if (!hasTask) {
+          // A task that does not exist shows nothing: no instruction, no
+          // spoken words, no done message.
+          taskText = "";
+          spokenText = "";
+          introText = "";
+        }
+        pendingAccText = String(
+          getFirstField(variantSettings, fields.acc) || "",
+        ).trim();
+        pendingBridgeText = String(
+          getFirstField(variantSettings, fields.bridge) || "",
+        ).trim();
+        // Every task with a result is solved by turning the cards of
+        // taskNResult to the back.
+        awaitingTurn = solutionIds.length > 0;
+        if (deckTextEl) {
+          deckTextEl.textContent = taskText || (n === 1 ? DEFAULT_DECK_TEXT : "");
+          deckTextEl.classList.toggle("speakable", !!spokenText);
+          if (spokenText) deckTextEl.title = "Tap to hear the words again";
+          else deckTextEl.removeAttribute("title");
+        }
+        if (spokenText) {
+          // The tutee sees the words on the cards and turns the spoken ones
+          // to the back. The words are read out to tell the tutee which
+          // cards belong to the task.
+          if (speakTimer) window.clearTimeout(speakTimer);
+          speakTimer = window.setTimeout(speakTaskWords, 500);
+        }
+        if (introMode) {
+          // The intro step puts the new cards on the board. When the previous
+          // task left a bridge message, the new cards wait for the tap that
+          // clears the turned cards: the board is tidied up first.
+          if (bridgePending) introWaiting = true;
+          else startIntroTask();
+        }
+        if (pendingActionText) {
+          track("Task", "task " + n + ": " + pendingActionText);
         }
       }
 
-      // Loads the task that follows the one just completed. The pair
-      // NextTaskN / SolutionNextTaskN describes it, NextTaskNAccText is the
-      // message shown when it is solved.
-      function loadNextTask(n) {
-        pendingNumber = n;
-        nextTask = String(getField(variantSettings, "NextTask" + n) || "").trim();
-        solutionIds = toIdList(
-          getField(variantSettings, "SolutionNextTask" + n),
+      // The words of taskNSpoken: one per line or separated by commas. The
+      // commas are dropped so the voice does not pause at them.
+      function spokenWordList() {
+        var parts = String(spokenText || "").split(/[\n\r,;]+/);
+        var words = [];
+        for (var i = 0; i < parts.length; i++) {
+          var word = parts[i].replace(/,/g, " ").trim();
+          if (word) words.push(word);
+        }
+        return words;
+      }
+
+      // Speaks the words of the open task (slowly, without commas).
+      function speakTaskWords() {
+        if (speakTimer) {
+          window.clearTimeout(speakTimer);
+          speakTimer = null;
+        }
+        if (!spokenText) return;
+        var words = spokenWordList();
+        if (!words.length) return;
+        speakWords(words);
+      }
+
+      // Every card of taskNResult has been turned to the back.
+      function allSolutionCardsTurned() {
+        var cards = gridEl.querySelectorAll(".flipCard");
+        var total = 0;
+        var turned = 0;
+        for (var i = 0; i < cards.length; i++) {
+          if (!isSolutionCard(cards[i])) continue;
+          total++;
+          if (cards[i].dataset.turned === "true") turned++;
+        }
+        return total > 0 && turned >= total;
+      }
+
+      // The cards of the task have all been turned: the task is done. Its
+      // message joins the list under the grid and its bridge message (if it
+      // has one) appears in the stack field.
+      function completeTurnTask() {
+        awaitingTurn = false;
+        if (pendingAccText) {
+          accomplished.push(pendingAccText);
+          feedbackEl.textContent = "";
+        } else {
+          feedbackEl.textContent = "✔ Correct!";
+        }
+        var bridge = pendingBridgeText;
+        bridgePending = !!bridge;
+        loadTask(currentTask + 1);
+        if (bridge) showBridge(bridge);
+        applyState();
+      }
+
+      // The bridge message sits in the empty stack field, centred
+      // horizontally and vertically.
+      function showBridge(text) {
+        if (!bridgeEl) return;
+        bridgeEl.textContent = text;
+        bridgeEl.hidden = false;
+        deckEl.classList.add("bridged");
+      }
+
+      function hideBridge() {
+        if (!bridgeEl) return;
+        bridgeEl.hidden = true;
+        bridgeEl.textContent = "";
+        deckEl.classList.remove("bridged");
+      }
+
+      // A tap on the bridge message: the cards that were turned leave the
+      // board and go back into the stack. They stay turned (face down) and
+      // are discarded from now on.
+      function clearTurnedCards() {
+        var cards = gridEl.querySelectorAll(".flipCard");
+        var back = [];
+        for (var i = 0; i < cards.length; i++) {
+          if (cards[i].dataset.turned === "true") back.push(cards[i]);
+        }
+        for (var j = 0; j < back.length; j++) {
+          var card = back[j];
+          card.classList.add("discarded");
+          card.classList.remove("solved");
+          card.classList.remove("flipped");
+          card.dataset.flipped = "false";
+          var cell = card.parentNode;
+          if (cell && cell.classList.contains("cell")) {
+            cell.classList.remove("solved-cell");
+          }
+          discarded.push(card);
+        }
+        hideBridge();
+        bridgePending = false;
+        renderDeck(remaining.concat(discarded));
+        track("Clear", back.length + " turned cards");
+        // The cards of the intro step join the board now: the tap on the
+        // bridge has cleared the turned cards away.
+        if (introWaiting) {
+          introWaiting = false;
+          startIntroTask();
+        }
+      }
+
+      // The cards of the board that carry one of the ids.
+      function cardsOnBoard(ids) {
+        var out = [];
+        var cards = gridEl.querySelectorAll(".flipCard");
+        for (var i = 0; i < cards.length; i++) {
+          for (var j = 0; j < ids.length; j++) {
+            if (
+              cards[i].dataset.recordId === ids[j] ||
+              cards[i].dataset.id === ids[j]
+            ) {
+              out.push(cards[i]);
+              break;
+            }
+          }
+        }
+        return out;
+      }
+
+      // A GridShift record by its record id or by its GridShiftID.
+      function findRecord(id) {
+        var wanted = String(id || "");
+        if (!wanted) return null;
+        for (var i = 0; i < allCardRecords.length; i++) {
+          var record = allCardRecords[i];
+          if (!record) continue;
+          if (String(record.id) === wanted) return record;
+          var gridId = getField(record.fields, "GridShiftID");
+          if (gridId !== undefined && String(gridId) === wanted) return record;
+        }
+        return null;
+      }
+
+      // The intro step of the variant row: the GridShift records that carry a
+      // TileRelated value (the pictures of the farm products) are added to the
+      // board. Their picture is shown openly on a free cell and the pupil has
+      // to move every one of them onto the tile it belongs to.
+      function startIntroTask() {
+        relatedCards = [];
+        relatedPlaced = 0;
+        // The records whose card lies on the board: only they have a tile the
+        // new card can be moved onto.
+        var onBoard = {};
+        var boardCards = gridEl.querySelectorAll(".flipCard");
+        for (var b = 0; b < boardCards.length; b++) {
+          onBoard[String(boardCards[b].dataset.recordId)] = true;
+        }
+        var sources = allCardRecords.filter(function (record) {
+          var url = String(
+            getField((record && record.fields) || {}, "TileRelated") || "",
+          ).trim();
+          return !!url && onBoard[String(record.id)];
+        });
+        if (introResultIds.length) {
+          sources = sources.filter(function (record) {
+            return (
+              introResultIds.indexOf(String(record.id)) > -1 ||
+              introResultIds.indexOf(
+                String(getField((record && record.fields) || {}, "GridShiftID")),
+              ) > -1
+            );
+          });
+        }
+        shuffle(sources);
+        var cells = [];
+        var cellEls = gridEl.querySelectorAll(".cell");
+        for (var i = 0; i < cellEls.length; i++) {
+          if (!cellEls[i].querySelector(".flipCard")) cells.push(cellEls[i]);
+        }
+        // The new cards are spread over the free cells of the board.
+        shuffle(cells);
+        for (var j = 0; j < sources.length && j < cells.length; j++) {
+          var record = sources[j];
+          var fields = (record && record.fields) || {};
+          var url = String(getField(fields, "TileRelated")).trim();
+          // The word of the product (the `Related` field of the record the
+          // picture belongs to): it is written under the picture.
+          var relatedWord = String(getField(fields, "Related") || "").trim();
+          // `FillTileRelated` decides how the product card looks: checked it
+          // fills the whole card and carries no word, unchecked it shows the
+          // picture in a round with the word underneath.
+          var fillRelated = isChecked(getField(fields, "FillTileRelated"));
+          var card = buildCard(
+            {
+              id: String(record.id) + "-related",
+              fields: {
+                GridShiftID:
+                  String(getField(fields, "GridShiftID") || record.id) + "-related",
+                TileName: relatedWord,
+                Display: relatedWord,
+                RenderMode: "cloudinary-img",
+                TileFront: url,
+                TileBack: String(
+                  getField(fields, "TileBack") ||
+                    getField(fields, "TileBackA") ||
+                    "",
+                ),
+                FillTile: fillRelated ? "true" : "",
+              },
+            },
+            "related-" + record.id,
+          );
+          // The tile the card belongs to: the record the picture came from.
+          card.dataset.relatedTo = String(record.id);
+          if (!relatedWord) {
+            // Without a word the card carries no label at all.
+            var nameEl = card.querySelector(".cardName");
+            if (nameEl && nameEl.parentNode) nameEl.parentNode.removeChild(nameEl);
+          }
+          card.classList.add("flipped");
+          card.dataset.flipped = "true";
+          cells[j].appendChild(card);
+          relatedCards.push(card);
+        }
+        track(
+          "Intro",
+          introActionText || relatedCards.length + " new cards",
         );
-        pendingAccText = String(
-          getField(variantSettings, "NextTask" + n + "AccText") || "",
-        ).trim();
-        awaitingPick = solutionIds.length > 0;
+      }
+
+      // Is the cell the tile that this card belongs to?
+      function isRelatedTarget(cell, card) {
+        var want = card && card.dataset.relatedTo;
+        if (!want || !cell) return false;
+        var cards = cell.querySelectorAll(".flipCard");
+        for (var i = 0; i < cards.length; i++) {
+          if (cards[i] === card) continue;
+          if (String(cards[i].dataset.recordId) === want) return true;
+        }
+        return false;
+      }
+
+      // The card is moved onto the tile it belongs to: the cell keeps its
+      // green frame and the task is done when every card is on its tile.
+      function placeRelatedCard(card, cell) {
+        cell.appendChild(card);
+        card.classList.add("matched", "relatedPlaced");
+        cell.classList.add("solved-cell");
+        feedbackEl.textContent = "";
+        track("Match", card.dataset.id);
+        relatedPlaced++;
+        if (relatedPlaced >= relatedCards.length) completeIntroTask();
+      }
+
+      // Every new card sits on its tile: the task is done, its message joins
+      // the list under the grid and the next task (if there is one) opens.
+      function completeIntroTask() {
+        introMode = false;
+        if (pendingAccText) {
+          accomplished.push(pendingAccText);
+          feedbackEl.textContent = "";
+        } else {
+          feedbackEl.textContent = "✔ Correct!";
+        }
+        loadTask(currentTask + 1);
+        applyState();
       }
 
       function showMessages() {
@@ -734,52 +1474,23 @@
           statusEl.appendChild(line);
         }
         statusEl.hidden = accomplished.length === 0;
-        nextTaskEl.textContent = nextTask;
-        nextTaskEl.hidden = !nextTask;
-        gridEl.classList.toggle("picking", awaitingPick);
+        gridEl.classList.toggle("turning", awaitingTurn);
       }
 
       // The board only turns green when every task is solved.
       function applyState() {
-        gridEl.classList.toggle("done", !awaitingPick && !nextTask);
+        gridEl.classList.toggle("done", !awaitingTurn && !taskText);
         showMessages();
-        markPickable();
       }
 
       // The matching puzzle is done: keep its message and open the next task.
       function completeMatchingTask() {
         var message = String(
-          getField(variantSettings, "Task1AccText") || "",
+          getFirstField(variantSettings, taskFields(1).acc) || "",
         ).trim();
         if (message) accomplished.push(message);
-        loadNextTask(1);
+        loadTask(2);
         feedbackEl.textContent = "";
-        applyState();
-      }
-
-      // A follow-up task is solved by clicking the right card on the board.
-      function pickSolution(card) {
-        if (!isSolutionCard(card)) {
-          card.classList.add("wrong-pick");
-          window.setTimeout(function () {
-            card.classList.remove("wrong-pick");
-          }, 500);
-          feedbackEl.textContent = "Not that one. Try another card.";
-          return;
-        }
-        awaitingPick = false;
-        card.classList.remove("pickable");
-        card.classList.add("solved");
-        if (card.parentNode && card.parentNode.classList.contains("cell")) {
-          card.parentNode.classList.add("solved-cell");
-        }
-        if (pendingAccText) {
-          accomplished.push(pendingAccText);
-          feedbackEl.textContent = "";
-        } else {
-          feedbackEl.textContent = "✔ Correct!";
-        }
-        loadNextTask(pendingNumber + 1);
         applyState();
       }
 
@@ -1067,7 +1778,10 @@
       }
 
       function renderDeck(list) {
-        while (deckEl.firstChild) deckEl.removeChild(deckEl.firstChild);
+        // Only the cards are replaced - the bridge message lives in the same
+        // box and must stay.
+        var old = deckEl.querySelectorAll(".flipCard");
+        for (var k = 0; k < old.length; k++) deckEl.removeChild(old[k]);
         countEl.textContent = String(list.length);
         for (var i = 0; i < list.length; i++) {
           var card = list[i];
@@ -1080,13 +1794,13 @@
       }
 
       function refreshDecks() {
-        renderDeck(remaining);
+        renderDeck(remaining.concat(discarded));
         var done = remaining.length === 0;
         if (done) {
           if (!matchingDone) {
             matchingDone = true;
             // Task 1 is the matching puzzle; its message is kept and the
-            // follow-up task (NextTask1 / SolutionNextTask1) is opened.
+            // follow-up task (task2Text / task2Result) is opened.
             completeMatchingTask();
           }
         }
@@ -1142,26 +1856,43 @@
         if (activeItem) return;
         if (e.pointerType === "mouse" && e.button !== 0) return;
         var card = e.target.closest(".flipCard");
-        // Follow-up task: the board is finished and waits for a click on the
-        // solution card. Dragging is not needed (or allowed) any more. The
-        // card does not fill its cell, so a click in the cell padding counts
-        // as a click on the card that sits in it.
-        if (awaitingPick) {
-          var cell = e.target.closest(".cell");
-          if (!card && cell) card = cell.querySelector(".flipCard");
-          if (!card) return;
+        // A follow-up task: the pupil turns the cards of taskNResult to the
+        // back. The words are visible on the cards, so the card is turned
+        // first and checked afterwards.
+        if (awaitingTurn) {
+          var turnCell = e.target.closest(".cell");
+          var turnCard = card;
+          if (!turnCard && turnCell) turnCard = turnCell.querySelector(".flipCard");
+          if (!turnCard) return;
           e.preventDefault();
-          if (card.dataset.flipped !== "true") {
-            card.classList.add("flipped");
-            card.dataset.flipped = "true";
-            track("Turn", card.dataset.id);
-            return;
+          if (turnCard.dataset.turned === "true") return; // already turned
+          // The card is turned to the back.
+          turnCard.classList.remove("flipped");
+          turnCard.dataset.flipped = "false";
+          turnCard.dataset.turned = "true";
+          track("Turn", turnCard.dataset.id);
+          if (isSolutionCard(turnCard)) {
+            turnCard.classList.add("solved");
+            if (turnCell) turnCell.classList.add("solved-cell");
+            feedbackEl.textContent = "";
+            if (allSolutionCardsTurned()) completeTurnTask();
+          } else {
+            turnCard.classList.add("wrong-pick");
+            feedbackEl.textContent = "Not that one. Try another card.";
+            window.setTimeout(function () {
+              turnCard.classList.remove("wrong-pick");
+              turnCard.classList.add("flipped");
+              turnCard.dataset.flipped = "true";
+              turnCard.dataset.turned = "false";
+            }, 700);
           }
-          pickSolution(card);
           return;
         }
         if (!card) return;
         e.preventDefault();
+        // A card that was turned stays face down until the bridge message
+        // clears it away.
+        if (card.dataset.turned === "true") return;
         // Unrevealed card: turn it over instead of dragging.
         if (card.dataset.flipped !== "true") {
           card.classList.add("flipped");
@@ -1222,7 +1953,21 @@
         }
         activeItem.classList.remove("dragging-original");
         var card = activeItem;
-        if (
+        if (introMode) {
+          // The intro task: the new cards are moved onto the tile they
+          // belong to.
+          if (overCell && isRelatedTarget(overCell, card)) {
+            placeRelatedCard(card, overCell);
+          } else if (overCell) {
+            var badCell = overCell;
+            badCell.classList.add("wrong-target");
+            window.setTimeout(function () {
+              badCell.classList.remove("wrong-target");
+            }, 600);
+            feedbackEl.textContent =
+              "That product doesn't belong to this animal. Try another spot.";
+          }
+        } else if (
           overCell &&
           !overCell.querySelector(".flipCard") &&
           overCell.dataset.match === card.dataset.match
@@ -1283,6 +2028,9 @@
         .then(function (dataSets) {
           var variantRecords = (dataSets[0] && dataSets[0].records) || [];
           var cardRecords = (dataSets[1] && dataSets[1].records) || [];
+          // Every GridShift record is kept: the intro step picks the records
+          // that carry a TileRelated value.
+          allCardRecords = cardRecords;
           var variants = variantRecords.filter(function (record) {
             var fields = (record && record.fields) || {};
             var name = getSetting(fields, ["VarName", "Name"]);
@@ -1302,29 +2050,35 @@
 
           var settings = variants[0].fields || {};
 
-          // The variant row supplies the page title (VarName), the player's
-          // deck badge (PartColour) and the deck label (PartLabel).
+          // VarName is only the internal name of the puzzle kind: it selects
+          // the variant row and titles the browser tab, it is never shown on
+          // the page. The visible headline is H1Text, the subheadline under
+          // it is H3Text.
           var variantName = getField(settings, "VarName");
           if (variantName) {
             var heading = String(variantName).trim();
-            if (heading) {
-              if (titleEl) titleEl.textContent = heading;
-              document.title = heading;
-            }
+            if (heading) document.title = heading;
           }
+          var headline = String(getField(settings, "H1Text") || "").trim();
+          if (headline && headlineEl) headlineEl.textContent = headline;
+          var subheadline = String(getField(settings, "H3Text") || "").trim();
+          if (subheadline && subheadlineEl) {
+            subheadlineEl.textContent = subheadline;
+            subheadlineEl.hidden = false;
+          }
+          // The variant row also supplies the player's deck badge
+          // (PartColour) and the deck label (PartLabel).
           var partLabel = getField(settings, "PartLabel");
           if (partLabel && deckLabelEl) {
             var labelText = String(partLabel).trim();
             if (labelText) deckLabelEl.textContent = labelText;
           }
-          var deckText = getField(settings, "DeckText");
-          if (deckText && deckTextEl) {
-            var deckHint = String(deckText).trim();
-            if (deckHint) deckTextEl.textContent = deckHint;
-          }
-          // Task1AccText replaces the old "Grid complete!" message and
-          // NextTask1 is the follow-up task shown underneath it.
+          // task1DoneText replaces the old "Grid complete!" message and
+          // task1Text is the instruction shown under the card stack.
           variantSettings = settings;
+          // Opens task 1 (the matching puzzle): its instruction goes under
+          // the card stack, its message under the grid.
+          loadTask(1);
           // WPIMG1 is the subtle backdrop picture behind the board and the
           // area around it (it turns green once the board is finished).
           var wpImg = getField(settings, "WPIMG1");
