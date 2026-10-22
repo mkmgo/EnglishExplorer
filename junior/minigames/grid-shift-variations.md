@@ -90,6 +90,11 @@ selected by `VarName`; the live `Pure Match` row uses these fields:
 | `task4DoneText` | `✔ Well done. You found the correct animals.` | Green message under the grid when task 4 is solved. |
 | `task4Intro` | `yes` | The **intro marker** of task 4: it activates the intro step. Its text is never shown — only the fact that it is filled matters. |
 | `task4IntroAction` | `TilesRelated distributed randomly on remaining free grid slots and shown openly.` | What the intro step does — a description only, never shown. Either of the two fields activates the intro step, so the marker may also be written here. |
+| `WPIMG2` | `https://res.cloudinary.com/dmkhsyfzf/image/upload/.../farm_shop_u2oe2e.jpg` | The picture of the **finale**: it appears in the open slot when every task is solved and **covers it like a normal tile** (104×92), the tiles that are left collapse into it and the board turns green. Empty = no picture (the collapse and the green still happen). |
+| `WrongCardText` | `Not that one. Try another card.` | The message when the tutee turns a card that does not answer the task. Empty = the built-in text. |
+| `WrongSpotText` | `That card doesn't match this imprint. Try another spot.` | The message when a card is dropped on a cell that does not match it. Empty = the built-in text. |
+| `WrongProductText` | `That product doesn't belong to this animal. Try another spot.` | The message when a product of the intro task is dropped on the wrong animal. Empty = the built-in text. |
+| `CorrectText` | `✔ Correct!` | The message when a task is solved and the variant row has no own text for it. Empty = the built-in text. |
 
 The task instructions (`taskNText`) always sit under the card stack; only the
 done messages (`taskNDoneText`) are shown under the grid. Task 1 (the matching
@@ -140,6 +145,14 @@ and the rows are fitted to the cells that are left (`reflowGrid`). When every
 task is solved the board turns green (`.grid.done`) and only the open slots
 are still visible — in the farm setup exactly one slot is left open.
 
+**The finale.** The last step of the game: the `WPIMG2` picture appears in the
+open slot and **covers it like a normal tile** (104×92, `object-fit: cover`),
+the tiles that are left **collapse slowly** into it (1.2 s, staggered by 90 ms
+per tile) and vanish, and only then the board turns green — one cell left, the
+slot that holds the picture. The finale runs once; a bridge message that still
+waits for its tap postpones it. Without `WPIMG2` the collapse and the green
+still happen, only without a picture.
+
 The marker is the switch: without `task4Intro` **and** without
 `task4IntroAction` task 4 is an ordinary task, and its result field (a
 description, no card ids) has no solution — the task is then skipped and the
@@ -153,6 +166,10 @@ The card table gains the fields the intro task needs:
 | `TileRelated` | Cloudinary URL of the farm product | The picture of the product that belongs to this card. The intro task turns it into a new card the tutee has to move onto this card. Empty = the card takes part in no intro task. |
 | `Related` | `Milk` | The word of the product. It is written under the picture of the new card when `FillTileRelated` is not checked. Empty = the new card carries no word. |
 | `FillTileRelated` | unchecked | The look of the new card: checked the product picture fills the whole card (no word), unchecked the picture sits in a round with the `Related` word underneath. Empty = not filled. |
+
+When **no** new card can be dealt (no row carries a `TileRelated` value, or no
+free cell is left), the intro step is skipped and the game goes on with the next
+task — it never waits for a card that never comes.
 
 `Active` is not present on the live `GridShiftVariants` table; the page selects
 the row by `VarName`. The previous proposed `Name` / `Active` / `GridSize` /

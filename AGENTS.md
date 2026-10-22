@@ -323,6 +323,15 @@ products came from (moved onto their tile). The rows are fitted to the cells
 that are left (`reflowGrid`). When every task is solved the board turns green
 (`.grid.done`) and only the open slots are still visible.
 
+**The finale.** When every task is solved the game plays its last step: the
+`WPIMG2` picture appears in the open slot and **covers it like a normal tile**
+(104×92, `object-fit: cover`), the tiles that are left **collapse slowly** into
+it (1.2 s, staggered by 90 ms per tile) and vanish, and only then the board
+turns green (`.grid.done`) with a single cell left — the slot that holds the
+picture. The finale runs once (`finaleStarted`); a bridge message that still
+waits for its tap postpones it. Without `WPIMG2` the collapse and the green
+still happen, only without a picture.
+
 The variant row also drives the page chrome:
 
 | Field | Type | Purpose |
@@ -334,16 +343,21 @@ The variant row also drives the page chrome:
 | `task1Text` | Single line text | Instruction of task 1 (the matching puzzle) — shown **under the card stack**. Empty = the built-in default instruction stays. |
 | `task1DoneText` | Single line text | Message shown when the matching puzzle is solved (replaces the old hardcoded "Grid complete!"). Shown in green under the board and **kept on screen** for the rest of the game. Empty = no message. |
 | `task2Text` | Single line text | Instruction of task 2 — shown under the card stack, like every other task instruction. Empty = nothing shown. |
-| `task2DoneText` | Single line text | Message shown in green under the board when task 2 is solved (added to the list of accomplished tasks). Empty = the neutral feedback line shows "✔ Correct!". |
+| `task2DoneText` | Single line text | Message shown in green under the board when task 2 is solved (added to the list of accomplished tasks). Empty = the neutral feedback line shows the `CorrectText` message (default "✔ Correct!"). |
 | `task2Result` | Link to `GridShift` | The card(s) that solve task 2 (e.g. the Tractor, `GridShiftID` 75). The tutee **turns** the card(s) to the back on the finished board. Holds the Airtable **record id(s)** of the GridShift row(s); a plain `GridShiftID` is accepted too. Empty = the task has no solution (nothing to turn). The older names `SolutionTaskN`, `SolutionNextTask(N-1)` and `task(N-1)Result` are still accepted. |
 | `task3Spoken` | Long text *(optional)* | The words that are **spoken aloud** in task 3. The words are spoken slowly and without commas (one word per line or separated by commas). The tutee turns the cards of the spoken words to the back. Empty = the task is solved by reading the instruction only. |
 | `task3DoneBridge` | Single line text *(optional)* | The **bridge message** of task 3: it appears in the empty stack field (centred horizontally and vertically) when task 3 is solved. It is a button — a tap on it returns the turned cards to the stack; when the next task is an intro task, its new cards wait for that tap. Empty = no bridge message. |
 | `task4Text` | Single line text | Instruction of task 4 — shown under the card stack, like every other task instruction. Empty = nothing shown. |
 | `task4Result` | Single line text | The **action** that finishes task 4 (currently `Each card needs to be moved on related tile`). It describes the action, it holds no card ids; the cards of the task are the ones of `TileRelated` (see "Intro tasks" below). |
-| `task4DoneText` | Single line text | Message shown in green under the board when task 4 is solved (added to the list of accomplished tasks). Empty = the neutral feedback line shows "✔ Correct!". |
+| `task4DoneText` | Single line text | Message shown in green under the board when task 4 is solved (added to the list of accomplished tasks). Empty = the neutral feedback line shows the `CorrectText` message (default "✔ Correct!"). |
 | `task4Intro` | Single line text *(optional)* | The **intro marker** of task 4: it activates the intro step (the new cards are added to the board and have to be moved onto their tiles). Its text is **never shown** — only the fact that it is filled matters. Empty = task 4 is an ordinary task. |
 | `task4IntroAction` | Single line text *(optional)* | What the intro step does (currently `TilesRelated distributed randomly on remaining free grid slots and shown openly.`). It is a description only — it is not shown on the page. Empty = the step still runs. Either of the two fields activates the intro step, so the marker may also be written here. |
 | `WPIMG1` | URL | Subtle backdrop picture behind the board. Set at runtime as the `--wp-img` CSS custom property. Empty = no backdrop. |
+| `WPIMG2` | URL | Picture of the finale: it appears in the open slot when every task is solved and **covers it like a normal tile** (104×92), the tiles that are left collapse into it and the board turns green. Empty = no picture (the collapse and the green still happen). |
+| `WrongCardText` | Single line text *(optional)* | The message when the tutee turns a card that does not answer the task (default: `Not that one. Try another card.`). |
+| `WrongSpotText` | Single line text *(optional)* | The message when a card is dropped on a cell that does not match it (default: `That card doesn't match this imprint. Try another spot.`). |
+| `WrongProductText` | Single line text *(optional)* | The message when a product of the intro task is dropped on the wrong animal (default: `That product doesn't belong to this animal. Try another spot.`). |
+| `CorrectText` | Single line text *(optional)* | The message when a task is solved and the variant row has no own text for it (default: `✔ Correct!`). |
 | `PartColour` | Single line text | Deck badge dot colour. Accepts a palette name (`Blue`), a hex / `rgb()` / `hsl()` value, a plain CSS colour name, or `var(--color-x)`. Palette names map to the page's theme-aware vars (`--color-blue`, `--color-yellow`, `--color-green`, `--color-red`, `--color-orange`, `--color-purple`). Empty = `var(--color-red)`. |
 | `NoParticipants` | Number | Number of players. Only `1` is supported so far — a higher value stops the game with an in-page error instead of silently running one deck. |
 | `VarID` | Number | Variant id (not used by the game). |
@@ -414,8 +428,8 @@ triple `taskNText` + `taskNResult` + `taskNDoneText` (N = the task number):
 - Turning the last card of a task completes it, keeps its message in the
   accomplished list, replaces the instruction under the card stack and loads
   the next task (if the row has one). With no `taskNDoneText` configured the
-  neutral feedback line shows "✔ Correct!" — the accomplished list stays as
-  it is.
+  neutral feedback line shows the `CorrectText` message (default "✔ Correct!") —
+  the accomplished list stays as it is.
 - A card that was turned **stays turned** for the rest of the game (it keeps
   its green frame). A card that was turned in an earlier task is therefore not
   part of a later task — remove it from the later `taskNResult`, otherwise the
@@ -432,7 +446,8 @@ by *turning* the spoken cards **to the back**:
   know which card to turn.
 - The tutee turns the cards of the spoken words to the back; the cards that
   have to be turned are the ones listed in `taskNResult`. A wrong card shakes,
-  shows "Not that one. Try another card." and turns back to the front; a right
+  shows the `WrongCardText` message (default "Not that one. Try another card.")
+  and turns back to the front; a right
   card stays turned and keeps its green frame. The task ends when **all** of
   them are turned.
 - Tapping the instruction under the card stack repeats the words.
@@ -475,8 +490,8 @@ tutee to move them onto the tile they belong to:
   then the new cards are dealt on the free cells.
 - The **tile** a new card belongs to is the card of the record the picture
   came from (the animal). The tutee **drags** the new card onto that tile; a
-  wrong tile flashes red and shows "That product doesn't belong to this
-  animal. Try another spot.".
+  wrong tile flashes red and shows the `WrongProductText` message (default
+  "That product doesn't belong to this animal. Try another spot.").
 - A placed new card shrinks into the corner of its cell
   (`.flipCard.relatedPlaced`, 48×44 at the top left; a round picture shrinks
   to 22px and its word to 0.5rem) so that the animal and its product stay
@@ -493,6 +508,9 @@ tutee to move them onto the tile they belong to:
   task is then skipped (see the multi-task flow above).
 - Only the records whose card lies on the board are used: a record without a
   tile on the board has nothing to be matched to.
+- When **no** new card can be dealt (no record carries a `TileRelated` value,
+  or no free cell is left), the intro step is skipped: the game goes on with
+  the next task instead of waiting for a card that never comes.
 
 **WPIMG1 backdrop.** The picture is a CSS layer, not an asset on the board:
 `.grid::before` paints it over the board, so the wallpaper shows **only in the
@@ -522,10 +540,10 @@ CSS colour variable arrives in `PrimaryColour` (not `Fill`) — the game accepts
 | `CategoryColour` | Single line text | Category accent (Beige/Blue/…) — currently unused. |
 | `RenderMode` | Single line text | `cloudinary-img` (image front), `colour-only` (coloured circle), or `lucide-icon` (inline icon). |
 | `TileFront` | URL *(optional)* | Front asset for `cloudinary-img` (absolute Cloudinary URL). |
-| `TileBackA` | URL *(optional)* | Back art for the **Red** deck (left). Falls back to legacy `TileBack`. |
+| `TileBackA` | URL *(optional)* | Back art for the **Red** deck (left). Falls back to legacy `TileBack`. The Pure Match page uses `TileBack` and falls back to `TileBackA`. |
 | `TileBackB` | URL *(optional)* | Back art for the **Orange** deck (right). |
 | `Lucide` | Single line text *(optional)* | Any Lucide icon name for `lucide-icon` mode (e.g. `corner-right-down`, `rotate-cw`). Loaded at runtime from the CDN — no per-icon code needed. |
-| `Stroke` | Number *(optional)* | Icon stroke width (2). |
+| `Stroke` | Number *(optional)* | Icon stroke width (2). It is applied to the icon via the CSS var `--icon-stroke`. |
 | `IconSize` | Single line text *(optional)* | Icon size preset: `Small` (22px) / `Medium` (28px, default) / `Large` (36px) or a px value. Wired via a `--icon-size` CSS var on `.round`. |
 | `PrimaryColour` | Single line text *(optional)* | Icon stroke colour (`#060606`) **or** the CSS colour var for `colour-only` (`var(--color-red)`). |
 | `SecondColour` | Single line text *(optional)* | Lucide-only: second stroke colour rendered as a soft drop-shadow glow behind the icon stroke (any CSS colour, e.g. `#f97316` or `var(--color-orange)`). Empty = no glow. |
