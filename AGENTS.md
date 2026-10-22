@@ -312,6 +312,17 @@ the deck + board group is centred on the page (`grid-template-columns: 148px
 auto` + `justify-content: center` on `.stage`). In narrow layouts it moves
 above the board.
 
+**The stack shows its front.** Only the **first** card of the stack has to be
+turned by the pupil — the cards below it show their front from the beginning
+(`renderDeck` flips them; the first one carries `needsTurn` until it is
+turned). A card that was turned and discarded keeps its back.
+
+**The board shrinks.** A slot that becomes empty disappears from the board:
+the slots of the cards that are discarded (bridge message) and the slots the
+products came from (moved onto their tile). The rows are fitted to the cells
+that are left (`reflowGrid`). When every task is solved the board turns green
+(`.grid.done`) and only the open slots are still visible.
+
 The variant row also drives the page chrome:
 
 | Field | Type | Purpose |
@@ -435,7 +446,8 @@ ends with a button in the **empty stack field**:
 - The bridge message is a **button**: a tap on it returns every turned card
   from the board **back into the stack**. The cards **stay turned** (face
   down) and are **discarded** from then on (`.flipCard.discarded` — they
-  cannot be touched any more). The stack count shows them.
+  cannot be touched any more). The stack count shows them. The **slots** the
+  discarded cards leave behind disappear from the board.
 - The bridge message disappears once it has been used, the stack field then
   holds the discarded cards.
 - When the **next** task is an intro task, its new cards **wait for the tap**:
@@ -468,7 +480,8 @@ tutee to move them onto the tile they belong to:
 - A placed new card shrinks into the corner of its cell
   (`.flipCard.relatedPlaced`, 48×44 at the top left; a round picture shrinks
   to 22px and its word to 0.5rem) so that the animal and its product stay
-  visible together, and the cell keeps its green frame (`.solved-cell`).
+  visible together, and the cell keeps its green frame (`.solved-cell`). The
+  **slot the product came from** disappears from the board.
 - The task is done when **every** new card sits on its tile: the message of
   `taskNDoneText` joins the accomplished list under the board and the next
   task opens (the board turns green when there is none).

@@ -1294,12 +1294,15 @@
           var cell = card.parentNode;
           if (cell && cell.classList.contains("cell")) {
             cell.classList.remove("solved-cell");
+            // The slot of a discarded card disappears from the board.
+            if (cell.parentNode) cell.parentNode.removeChild(cell);
           }
           discarded.push(card);
         }
         hideBridge();
         bridgePending = false;
         renderDeck(remaining.concat(discarded));
+        reflowGrid();
         track("Clear", back.length + " turned cards");
         // The cards of the intro step join the board now: the tap on the
         // bridge has cleared the turned cards away.
@@ -1443,12 +1446,25 @@
       // The card is moved onto the tile it belongs to: the cell keeps its
       // green frame and the task is done when every card is on its tile.
       function placeRelatedCard(card, cell) {
+        var from = card.parentNode;
         cell.appendChild(card);
+        // The slot the product came from disappears from the board: at the
+        // end only the open slots are left.
+        if (
+          from &&
+          from !== cell &&
+          from.classList &&
+          from.classList.contains("cell") &&
+          from.parentNode
+        ) {
+          from.parentNode.removeChild(from);
+        }
         card.classList.add("matched", "relatedPlaced");
         cell.classList.add("solved-cell");
         feedbackEl.textContent = "";
         track("Match", card.dataset.id);
         relatedPlaced++;
+        reflowGrid();
         if (relatedPlaced >= relatedCards.length) completeIntroTask();
       }
 
@@ -1543,6 +1559,18 @@
       }
 
       var remaining = [];
+
+      // The board shrinks when a slot disappears (a discarded card or a
+      // product that was moved onto its tile): the rows are fitted to the
+      // cells that are left.
+      function reflowGrid() {
+        var count = gridEl.querySelectorAll(".cell").length;
+        if (!count) return;
+        var cols = Math.min(COLS, count);
+        var rows = Math.ceil(count / cols);
+        gridEl.style.gridTemplateColumns = "repeat(" + cols + ", 104px)";
+        gridEl.style.gridTemplateRows = "repeat(" + rows + ", 92px)";
+      }
 
       function normalizedFieldName(name) {
         return String(name || "").toLowerCase().replace(/[^a-z0-9]/g, "");
@@ -1785,6 +1813,17 @@
         countEl.textContent = String(list.length);
         for (var i = 0; i < list.length; i++) {
           var card = list[i];
+          // The cards of the stack show their front from the beginning: only
+          // the first card of the stack has to be turned by the pupil. The
+          // cards that were turned and discarded keep their back.
+          if (
+            card.dataset.needsTurn !== "true" &&
+            card.dataset.turned !== "true" &&
+            card.dataset.flipped !== "true"
+          ) {
+            card.classList.add("flipped");
+            card.dataset.flipped = "true";
+          }
           var off = 4 + Math.min(i * 3, 12);
           card.style.top = off + "px";
           card.style.left = off + "px";
@@ -1897,6 +1936,9 @@
         if (card.dataset.flipped !== "true") {
           card.classList.add("flipped");
           card.dataset.flipped = "true";
+          // The first card of the stack has been turned: the cards below it
+          // show their front anyway.
+          card.dataset.needsTurn = "false";
           track("Turn", card.dataset.id);
           return;
         }
@@ -2175,6 +2217,11 @@
           });
           buildGrid(COLS, ROWS, targets);
           remaining = cards;
+          // Only the first card of the stack has to be turned by the pupil:
+          // the cards below it show their front from the beginning.
+          if (remaining.length) {
+            remaining[remaining.length - 1].dataset.needsTurn = "true";
+          }
           feedbackEl.textContent = "";
           refreshDecks();
           renderIcons();

@@ -113,10 +113,10 @@ repeats the words.
 A task with a `taskNDoneBridge` value ends with a **button in the empty stack
 field**: the message is centred horizontally and vertically, and a tap on it
 returns every turned card from the board back into the stack. The cards stay
-turned (face down) and are discarded from then on. When the next task is an
-intro task, its new cards **wait for that tap**: the board is tidied up first
-(the turned cards are discarded), then the new cards are dealt on the free
-cells.
+turned (face down) and are discarded from then on. The **slots** they leave
+behind disappear from the board. When the next task is an intro task, its new
+cards **wait for that tap**: the board is tidied up first (the turned cards
+are discarded), then the new cards are dealt on the free cells.
 
 A task with a `taskNIntro` value is an **intro task**: it does not turn cards,
 it **adds new cards to the board**. The new cards are the `GridShift` records
@@ -128,7 +128,17 @@ unchecked it sits in a round with the word of the `Related` field underneath
 the tile it belongs to (the card of the record the picture came from); a wrong
 tile flashes red. A placed new card shrinks into the corner of its cell so
 that the animal and its product stay visible together, and the cell keeps its
-green frame. The task is done when every new card sits on its tile.
+green frame. The **slot the product came from** disappears from the board.
+The task is done when every new card sits on its tile.
+
+**The stack shows its front.** Only the **first** card of the stack has to be
+turned by the pupil — the cards below it show their front from the beginning.
+A card that was turned and discarded keeps its back.
+
+The board shrinks as the game goes on: a slot that becomes empty disappears
+and the rows are fitted to the cells that are left (`reflowGrid`). When every
+task is solved the board turns green (`.grid.done`) and only the open slots
+are still visible — in the farm setup exactly one slot is left open.
 
 The marker is the switch: without `task4Intro` **and** without
 `task4IntroAction` task 4 is an ordinary task, and its result field (a
