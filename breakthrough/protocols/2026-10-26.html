@@ -1,0 +1,195 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no" />
+    <title>Protocol 26/10/2026</title>
+    <meta name="description" content="English Explorer — Protocol 26/10/2026" />
+    <meta property="og:image" content="https://res.cloudinary.com/dmkhsyfzf/image/upload/q_auto/f_auto/v1781698464/protocol_r392x1.png" />
+    <link rel="icon" type="image/png" href="https://res.cloudinary.com/dmkhsyfzf/image/upload/q_auto/f_auto/v1781698464/protocol_r392x1.png" />
+    <link rel="apple-touch-icon" href="https://res.cloudinary.com/dmkhsyfzf/image/upload/q_auto/f_auto/v1781698464/protocol_r392x1.png" />
+    <style>
+      :root { --bg: #FAF7F2; --ink: #14213d; --muted: #60708d; --accent: #e43703; --accent2: #ffb866; --panel: #fcfcfc; --shadow: 0 18px 50px rgba(20,33,61,0.14); }
+      html[data-theme="dark"] { --bg: #161a24; --ink: #e8ecf4; --muted: #93a1b8; --panel: #1f2530; --shadow: 0 18px 50px rgba(0,0,0,0.55); }
+      .container[data-weekday="mon"]{--accent:#2563eb} .container[data-weekday="tue"]{--accent:#e43703} .container[data-weekday="wed"]{--accent:#0d9488} .container[data-weekday="thu"]{--accent:#7c3aed} .container[data-weekday="fri"]{--accent:#dc2626} .container[data-weekday="sat"]{--accent:#d97706} .container[data-weekday="sun"]{--accent:#475569}
+      *{box-sizing:border-box} html,body{margin:0;width:100%;min-height:100%;background:var(--bg);font-family:Arial,Helvetica,sans-serif;color:var(--ink);touch-action:manipulation;line-height:1.6}
+      .container{max-width:900px;margin:0 auto;padding:clamp(16px,4vw,40px) clamp(12px,3vw,24px)}
+      h1{font-size:clamp(1.8rem,5vw,3rem);margin:0 0 .2em;font-weight:900;letter-spacing:-.03em;color:var(--accent)}
+      .date-sub{font-size:clamp(.9rem,1.6vw,1.2rem);color:var(--muted);font-weight:700;letter-spacing:.1em;margin:0 0 .4em}
+      .to-line{font-size:clamp(.95rem,1.7vw,1.15rem);color:var(--muted);font-weight:800;letter-spacing:.06em;text-transform:uppercase;margin:0 0 2em}
+      .to-line b{color:var(--accent)}
+      .intro{background:var(--panel);border-radius:24px;padding:clamp(1rem,2.5vw,1.8em);box-shadow:var(--shadow);margin-bottom:2em;font-size:clamp(1rem,1.8vw,1.2rem);line-height:1.7}
+      h2{font-size:clamp(1.3rem,3.2vw,2rem);margin:2em 0 .6em;font-weight:900;color:var(--ink);letter-spacing:-.02em}
+      h3{font-size:clamp(1.1rem,2.2vw,1.5rem);margin:1.6em 0 .4em;font-weight:800;color:var(--accent)}
+      p{font-size:clamp(1rem,1.8vw,1.15rem);margin:.4em 0}
+      strong,b{font-weight:800} em,i{font-style:italic} del{text-decoration:line-through}
+      code{font-family:Consolas,Menlo,monospace;background:var(--accent2);padding:.08em .28em;border-radius:4px;font-size:.88em}
+      pre{font-family:Consolas,Menlo,monospace;background:var(--panel);padding:.8em 1em;border-radius:10px;overflow-x:auto;margin:.8em 0;font-size:.92em;line-height:1.5}
+      pre code{background:transparent;padding:0}
+      .doc-media{display:block;max-width:100%;height:auto;border-radius:12px;margin:.8em 0;box-shadow:var(--shadow)}
+      .doc-media.video{width:100%;max-width:760px;background:#000}
+      .doc-media.audio{width:min(60vw,640px)}
+      hr{border:0;border-top:2px solid rgba(96,112,141,.35);margin:1.4em 0}
+      .story-section{background:var(--panel);border-radius:24px;padding:clamp(1rem,2.5vw,1.6em);box-shadow:var(--shadow);margin-bottom:1.4em}
+      .story-section h3{margin-top:0} .story-section p{margin:0 0 .55em}
+      .example{background:#fdf3e7;border-left:5px solid var(--accent);border-radius:8px;padding:.7em 1em;margin:.8em 0 !important;font-style:italic}
+      .mdMark{border-radius:4px;padding:0 2px}
+      .mdMark-focus{background:#ffe3c2;box-shadow:inset 0 -0.5em 0 rgba(255,184,102,.6)}
+      .mdMark-copy{background:var(--accent);color:#fff;padding:0 .25em}
+      html[data-theme="dark"] .mdMark-focus{background:#4a3a22;box-shadow:inset 0 -0.5em 0 rgba(255,184,102,.35)}
+      .vocab-table{width:100%;border-collapse:separate;border-spacing:0;margin:1.6em 0 2em;background:var(--panel);border-radius:16px;box-shadow:var(--shadow);overflow:hidden}
+      .vocab-table th{background:var(--ink);color:var(--accent2);font-size:clamp(.85rem,1.5vw,1rem);font-weight:800;letter-spacing:.06em;padding:.8em 1em;text-align:left;white-space:nowrap}
+      .vocab-table td{padding:.7em 1em;font-size:clamp(.9rem,1.6vw,1.05rem);border-top:1px solid #eae5db;vertical-align:top;word-break:break-word}
+      .vocab-table tr:nth-child(even) td{background:#fdf9f3}
+      .vocab-table td:nth-child(2){color:var(--muted);font-weight:600}
+      html[data-theme="dark"] .example{background:#232a36}
+      html[data-theme="dark"] hr{border-top-color:#333c4e}
+      html[data-theme="dark"] .vocab-table th{background:#0e1220}
+      html[data-theme="dark"] .vocab-table tr:nth-child(even) td{background:#232a36}
+      html[data-theme="dark"] .vocab-table td{border-top-color:#333c4e}
+      #themeToggle{position:fixed;top:clamp(10px,2vw,16px);right:clamp(10px,2vw,16px);z-index:50;width:clamp(38px,5vw,46px);height:clamp(38px,5vw,46px);border-radius:50%;background:var(--panel);color:var(--accent);border:2px solid var(--accent);font-size:20px;cursor:pointer;box-shadow:var(--shadow);line-height:1}
+    </style>
+  </head>
+  <body>
+    <button id="themeToggle" type="button" aria-label="Toggle dark mode">&#x263E;</button>
+    <div class="container" data-weekday="mon">
+      <h1>Protocol 26/10/2026</h1>
+      <p class="date-sub">English Explorer | Breakthrough</p>
+      <p class="to-line">For: <b>Nimza</b></p>
+      <div class="intro">
+        Please study the following structures and sentences well. Words and expressions must be fully understood and memorised. The last section shows today's new vocabulary. Please carefully repeat these as well.
+      </div>
+      <h2>Plot Comprehension</h2>
+      <h2>English Explorer: Breakthrough — Lesson Sheet</h2>
+      <div class="story-section">
+      <p><strong>Topic:</strong> <em>WondLa</em> (Season 1, Episode 1: &quot;Doors&quot;) | <strong>Focus:</strong> Eva Growing Up &amp; Escaping Sanctuary 573</p>
+      <hr>
+      </div>
+      <h2>Part 1: Reading Text — <em>Growing Up Underground</em></h2>
+      <div class="story-section">
+      <p><span class="mdMark mdMark-copy">Read the story below about Eva Nine's life, how she grew up, and her escape to the surface.</span> Pay attention to the highlighted words!</p>
+      <h3>Life with Muthr</h3>
+      <p>Eva Nine grew up inside <strong>Sanctuary 573</strong>, a high-tech underground bunker designed to protect her. Because she had no human parents, she was raised entirely by <strong>Muthr</strong>, a robotic caretaker.</p>
+      <p>Muthr taught Eva everything she needed to know. Every single day followed a strict routine. Eva studied science, history, and survival techniques from computer screens and digital books. Even though Muthr was kind and deeply <strong>protective</strong>, Eva grew up feeling very lonely. She spent her childhood wondering if there were any other living humans anywhere in the universe.</p>
+      <img class="doc-media" src="https://res.cloudinary.com/dmkhsyfzf/image/upload/q_auto/f_auto/v1792647416/wondla_image_nj9cg6.jpg" alt="">
+      <h3>Growing Up and Asking Questions</h3>
+      <p>As Eva grew older, she noticed that her lessons started to change. She began asking difficult questions about why she was the only child in the facility.</p>
+      <p>On the eve of her sixteenth birthday, Eva felt ready to explore beyond her scheduled lessons. She noticed a restricted area behind a maintenance wall. When she opened the hidden door, she discovered a secret archive. Inside, she found a cryptic note with the word <strong>WondLa</strong> written on it, along with an image of a human child and strange creatures. This discovery proved to her that she was meant to live a bigger life outside the underground walls.</p>
+      <h3>Stepping Onto the Surface</h3>
+      <p>Suddenly, the peaceful shelter was shattered when a dangerous <strong>intruder</strong> broke into the sanctuary. An alien bounty hunter named Besteel tracked Eva down to capture her.</p>
+      <p>Muthr fought bravely against the attacker to keep Eva safe. To save her life, Muthr pushed Eva toward an emergency exit tunnel. Eva climbed <strong>up</strong> through the dark shaft and stepped <strong>through</strong> the heavy hatch.</p>
+      <p>For the very first time in her life, Eva stood <strong>under</strong> the open sky on the surface of a new planet called <strong>Orbona</strong>. Surrounded by unfamiliar plants and alien creatures, Eva began her brave journey into the unknown.</p>
+      <hr>
+      </div>
+      <h2>Part 2: Vocabulary Key</h2>
+      <div class="story-section">
+      <p>Here are the key words from the episode used in the text:</p>
+      <table class="vocab-table">
+        <thead><tr><th>English Word</th><th>Simple Meaning</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Sanctuary</strong></td><td>A safe place or shelter that protects you from harm.</td></tr>
+          <tr><td><strong>Caretaker</strong></td><td>Someone or something that looks after a person or place.</td></tr>
+          <tr><td><strong>Protective</strong></td><td>Wanting to keep someone safe from danger or hurt.</td></tr>
+          <tr><td><strong>Routine</strong></td><td>A fixed and regular way of doing things every day.</td></tr>
+          <tr><td><strong>Restricted</strong></td><td>Not open to everyone; private or forbidden to enter.</td></tr>
+          <tr><td><strong>Intruder</strong></td><td>Someone who enters a place illegally or without permission.</td></tr>
+          <tr><td><strong>Surface</strong></td><td>The outside or top layer of the ground or a planet.</td></tr>
+          <tr><td><strong>Planet</strong></td><td>A large natural world in space that orbits a star.</td></tr>
+        </tbody>
+      </table>
+      </div>
+      <h2>Vocabulary — 26/10/2026</h2>
+      <table class="vocab-table">
+        <thead><tr><th>English</th><th>Chinese</th></tr></thead>
+        <tbody>
+          <tr><td>Escape</td><td>逃脱</td></tr>
+          <tr><td>Surface.</td><td>表面。</td></tr>
+          <tr><td>Highlighted</td><td>突出显示</td></tr>
+          <tr><td>Sanctuary</td><td>避难所</td></tr>
+          <tr><td>Bunker</td><td>掩体</td></tr>
+          <tr><td>To protect</td><td>保护</td></tr>
+          <tr><td>Parents</td><td>父母</td></tr>
+          <tr><td>Because she had no human parents, she was raised entirely by Muthr, a robotic caretaker.</td><td>由于她没有人类父母，她完全由机器人看护人穆瑟抚养长大。</td></tr>
+          <tr><td>Strict</td><td>严格的</td></tr>
+          <tr><td>Routine.</td><td>常规。</td></tr>
+          <tr><td>Survival techniques</td><td>生存技巧</td></tr>
+          <tr><td>Kind</td><td>种类</td></tr>
+          <tr><td>Protective</td><td>保护的</td></tr>
+          <tr><td>Lonely.</td><td>孤独。</td></tr>
+          <tr><td>Universe.</td><td>宇宙。</td></tr>
+          <tr><td>High-tech</td><td>高科技</td></tr>
+          <tr><td>Entirely</td><td>完全</td></tr>
+          <tr><td>Caretaker.</td><td>看门人。</td></tr>
+          <tr><td>Everything she needed to know.</td><td>她需要知道的一切。</td></tr>
+          <tr><td>Childhood</td><td>童年</td></tr>
+          <tr><td>To wonder</td><td>想知道</td></tr>
+          <tr><td>Lessons</td><td>教训</td></tr>
+          <tr><td>Facility.</td><td>设施。</td></tr>
+          <tr><td>Eve</td><td>前夕</td></tr>
+          <tr><td>To explore</td><td>探索</td></tr>
+          <tr><td>Scheduled</td><td>预定</td></tr>
+          <tr><td>Restricted</td><td>受限制的</td></tr>
+          <tr><td>Maintenance</td><td>维护</td></tr>
+          <tr><td>Strange</td><td>奇怪的</td></tr>
+          <tr><td>Creatures.</td><td>生物。</td></tr>
+          <tr><td>Discovery</td><td>发现</td></tr>
+          <tr><td>Beyond</td><td>超过</td></tr>
+          <tr><td>Archive.</td><td>档案。</td></tr>
+          <tr><td>Cryptic</td><td>隐秘的</td></tr>
+          <tr><td>Stepping</td><td>踏步</td></tr>
+          <tr><td>Peaceful</td><td>和平</td></tr>
+          <tr><td>Shelter</td><td>房屋</td></tr>
+          <tr><td>Shattered</td><td>破灭</td></tr>
+          <tr><td>Intruder</td><td>入侵者</td></tr>
+          <tr><td>To track someone down</td><td>追踪某人</td></tr>
+          <tr><td>Capture</td><td>俘虏</td></tr>
+          <tr><td>Fought</td><td>戰鬥</td></tr>
+          <tr><td>Bravely</td><td>勇敢</td></tr>
+          <tr><td>Emergency</td><td>急诊</td></tr>
+          <tr><td>Shaft</td><td>转轴</td></tr>
+          <tr><td>The heavy hatch</td><td>沉重的舱口</td></tr>
+          <tr><td>Unfamiliar</td><td>陌生</td></tr>
+          <tr><td>Surrounded</td><td>包围——</td></tr>
+          <tr><td>Plants</td><td>植物</td></tr>
+          <tr><td>Alien</td><td>异星</td></tr>
+          <tr><td>Brave journey</td><td>勇敢的旅程</td></tr>
+          <tr><td>Unknown.</td><td>未知</td></tr>
+          <tr><td>Bounty hunter</td><td>赏金猎人</td></tr>
+          <tr><td>Attacker</td><td>攻击者</td></tr>
+          <tr><td>A safe place or shelter that protects you from harm.</td><td>一个安全的地方或庇护所，保护您免受伤害。</td></tr>
+          <tr><td>Someone or something that looks after a person or place.</td><td>照顾一个人或一个地方的人或事。</td></tr>
+          <tr><td>Wanting to keep someone safe from danger or hurt.</td><td>希望保护他人免受危险或伤害。</td></tr>
+          <tr><td>A fixed and regular way of doing things every day.</td><td>每天以固定且规律的方式做事。</td></tr>
+          <tr><td>Not open to everyone; private or forbidden to enter.</td><td>并非对所有人开放；私密或禁止进入。</td></tr>
+          <tr><td>Someone who enters a place illegally or without permission.</td><td>非法或未经许可进入某个地方的人。</td></tr>
+          <tr><td>The outside or top layer of the ground or a planet.</td><td>地面或行星的外层或顶层。</td></tr>
+          <tr><td>A large natural world in space that orbits a star.</td><td>太空中一个围绕恒星运行的大型自然世界。</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <script>
+      (function () {
+        var d = document.documentElement;
+        var K = "eebt-theme";
+        function apply() {
+          var dt = d.getAttribute("data-theme") === "dark";
+          var b = document.getElementById("themeToggle");
+          if (b) b.textContent = dt ? "\u2600" : "\u263E";
+        }
+        var t = null;
+        try { t = localStorage.getItem(K); } catch (e) {}
+        if (t === "dark" || t === "light") d.setAttribute("data-theme", t);
+        else if (window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches) d.setAttribute("data-theme", "dark");
+        else d.setAttribute("data-theme", "light");
+        apply();
+        var b = document.getElementById("themeToggle");
+        if (b) b.onclick = function () {
+          var n = d.getAttribute("data-theme") === "dark" ? "light" : "dark";
+          d.setAttribute("data-theme", n);
+          apply();
+          try { localStorage.setItem(K, n); } catch (e) {}
+        };
+      })();
+    </script>
+  </body>
+</html>
