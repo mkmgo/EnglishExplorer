@@ -99,11 +99,17 @@
         border-bottom: 2px solid var(--accent);
         color: var(--accent);
       }
-      #themeBtn {
+      .topbarActions {
         position: absolute;
         right: 2.5vw;
         top: 50%;
         transform: translateY(-50%);
+        display: flex;
+        align-items: center;
+        gap: 0.4rem;
+      }
+      .layoutBtn,
+      #themeBtn {
         width: 1.68rem;
         height: 1.68rem;
         border-radius: 999px;
@@ -117,13 +123,32 @@
         cursor: pointer;
         box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
         transition: transform 0.2s ease, background 0.3s ease, color 0.3s ease;
+        padding: 0;
       }
+      .layoutBtn:active,
       #themeBtn:active {
-        transform: translateY(-50%) scale(0.9);
+        transform: scale(0.9);
       }
       #themeBtn.dark {
         background: var(--accent);
         color: #fff;
+      }
+      .layoutBtn svg,
+      #themeBtn svg {
+        width: 1.05em;
+        height: 1.05em;
+      }
+      :root[data-layout="portrait"] .main {
+        max-width: 980px;
+      }
+      :root[data-layout="landscape"] .main {
+        max-width: 1480px;
+      }
+      :root[data-layout="portrait"] .list {
+        grid-template-columns: 1fr;
+      }
+      :root[data-layout="landscape"] .list {
+        grid-template-columns: repeat(auto-fit, minmax(640px, 1fr));
       }
 
       .main {
@@ -543,27 +568,42 @@
   <body>
     <div class="topbar">
       <span class="topbarTitle" id="topbarTitle">Study Hub</span>
-      <button id="themeBtn" aria-label="Toggle dark mode">
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          width="1.1em"
-          height="1.1em"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          stroke-width="2"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-        >
-          <circle cx="12" cy="12" r="4" />
-          <path d="M12 2v2" />
-          <path d="m4.93 4.93 1.41 1.41" />
-          <path d="M20 12h2" />
-          <path d="m19.07 4.93-1.41 1.41" />
-          <path d="M15.947 12.65a4 4 0 0 0-5.925-4.128" />
-          <path d="M13 22H7a5 5 0 1 1 4.9-6H13a3 3 0 0 1 0 6Z" />
-        </svg>
-      </button>
+      <div class="topbarActions">
+        <button class="layoutBtn" id="layoutToggleBtn" aria-label="Toggle layout" title="Toggle layout">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <rect width="7" height="12" x="8.5" y="6" rx="1" />
+            <rect width="5" height="10" x="9.5" y="7" rx=".5" opacity=".4" />
+            <line x1="12" x2="12" y1="19" y2="19.01" />
+          </svg>
+        </button>
+        <button id="themeBtn" aria-label="Toggle dark mode">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <circle cx="12" cy="12" r="4" />
+            <path d="M12 2v2" />
+            <path d="m4.93 4.93 1.41 1.41" />
+            <path d="M20 12h2" />
+            <path d="m19.07 4.93-1.41 1.41" />
+            <path d="M15.947 12.65a4 4 0 0 0-5.925-4.128" />
+            <path d="M13 22H7a5 5 0 1 1 4.9-6H13a3 3 0 0 1 0 6Z" />
+          </svg>
+        </button>
+      </div>
     </div>
 
     <div class="main">
@@ -623,6 +663,7 @@
       })();
 
       var themeBtn = document.getElementById("themeBtn");
+      var layoutToggleBtn = document.getElementById("layoutToggleBtn");
       var themeDark = false;
       function applyTheme(dark) {
         themeDark = dark;
@@ -649,6 +690,44 @@
           try {
             localStorage.setItem("eebt-theme", themeDark ? "dark" : "light");
           } catch (e) {}
+        };
+      }
+
+      var currentLayout = "portrait";
+      var layoutIcons = {
+        portrait:
+          '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="7" height="12" x="8.5" y="6" rx="1" /><rect width="5" height="10" x="9.5" y="7" rx=".5" opacity=".4" /><line x1="12" x2="12" y1="19" y2="19.01" /></svg>',
+        landscape:
+          '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="12" height="7" x="6" y="8.5" rx="1" /><rect width="10" height="5" x="7" y="9.5" rx=".5" opacity=".4" /><line x1="5" x2="5" y1="12" y2="12.01" /></svg>',
+      };
+      function applyLayout(mode) {
+        currentLayout = mode === "landscape" ? "landscape" : "portrait";
+        document.documentElement.setAttribute("data-layout", currentLayout);
+        if (layoutToggleBtn) {
+          layoutToggleBtn.innerHTML = layoutIcons[currentLayout];
+          layoutToggleBtn.setAttribute(
+            "aria-label",
+            currentLayout === "landscape" ? "Switch to portrait layout" : "Switch to landscape layout",
+          );
+          layoutToggleBtn.setAttribute(
+            "title",
+            currentLayout === "landscape" ? "Portrait layout" : "Landscape layout",
+          );
+        }
+        try {
+          localStorage.setItem("bt-study-hub-layout", currentLayout);
+        } catch (e) {}
+      }
+      try {
+        var storedLayout = localStorage.getItem("bt-study-hub-layout");
+        if (storedLayout === "landscape") applyLayout("landscape");
+        else applyLayout("portrait");
+      } catch (e) {
+        applyLayout("portrait");
+      }
+      if (layoutToggleBtn) {
+        layoutToggleBtn.onclick = function () {
+          applyLayout(currentLayout === "landscape" ? "portrait" : "landscape");
         };
       }
 

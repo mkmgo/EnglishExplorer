@@ -1382,35 +1382,65 @@
         align-items: center;
         gap: 0.6em;
       }
-      .versionText {
-        position: absolute;
-        left: 50%;
-        top: 50%;
-        transform: translate(-50%, -50%);
-        font-family: Verdana, "Trebuchet MS", sans-serif;
-        font-size: clamp(0.95rem, 1.6vw, 1.25rem);
-        font-weight: 600;
-        letter-spacing: 0.08em;
-        color: var(--accent2);
-        white-space: nowrap;
+        .versionText {
+          position: absolute;
+          left: 50%;
+          top: 50%;
+          transform: translate(-50%, -50%);
+          font-family: Verdana, "Trebuchet MS", sans-serif;
+          font-size: clamp(0.95rem, 1.6vw, 1.25rem);
+          font-weight: 600;
+          letter-spacing: 0.08em;
+          color: var(--accent2);
+          white-space: nowrap;
+        }
+        .ctrl {
+          height: 1.425rem;
+          padding: 0 0.45em;
+          border-radius: 999px;
+          background: var(--panel);
+          box-shadow: 0 5px 18px rgba(0, 0, 0, 0.12);
+          font-size: 0.71rem;
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          line-height: 1;
+          border: 1px solid rgba(96, 112, 141, 0.5);
+          transition:
+            transform 0.45s cubic-bezier(0.22, 0.61, 0.36, 1),
+            box-shadow 0.45s cubic-bezier(0.22, 0.61, 0.36, 1),
+            background-color 0.45s ease,
+            color 0.45s ease;
+        }
+        .layoutCtrl {
+          width: 1.425rem;
+          padding: 0;
+          background: var(--accent2);
+          color: var(--accent);
+          border: 2px solid transparent;
+        }
+        .layoutCtrl svg {
+          width: 1.05em;
+          height: 1.05em;
+        }
+      :root[data-layout="portrait"] .content {
+        width: min(940px, 100%);
       }
-      .ctrl {
-        height: 1.425rem;
-        padding: 0 0.45em;
-        border-radius: 999px;
-        background: var(--panel);
-        box-shadow: 0 5px 18px rgba(0, 0, 0, 0.12);
-        font-size: 0.71rem;
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        line-height: 1;
-        border: 1px solid rgba(96, 112, 141, 0.5);
-        transition:
-          transform 0.45s cubic-bezier(0.22, 0.61, 0.36, 1),
-          box-shadow 0.45s cubic-bezier(0.22, 0.61, 0.36, 1),
-          background-color 0.45s ease,
-          color 0.45s ease;
+      :root[data-layout="landscape"] .content {
+        width: min(1600px, 100%);
+      }
+      :root[data-layout="portrait"] .mdStage {
+        display: flex;
+        flex-direction: column;
+      }
+      :root[data-layout="landscape"] .mdStage {
+        display: grid;
+        grid-template-columns: 2fr 3fr;
+        align-items: stretch;
+        gap: 1.2em;
+      }
+      :root[data-layout="landscape"] .mdBar {
+        grid-column: 1 / -1;
       }
       @media (hover: hover) {
         .ctrl:hover {
@@ -2573,28 +2603,19 @@
           </button>
         </div>
         <div class="barRight">
-          <button
-            class="ctrl navCtrl primary"
-            id="prepBtn"
-            aria-label="Class Prep"
-            title="Class Prep"
-            onclick="openPrep()"
-          >
+          <button class="ctrl navCtrl layoutCtrl" id="spotLayoutToggleBtn" aria-label="Toggle layout" title="Toggle layout">
             <svg
               xmlns="http://www.w3.org/2000/svg"
-              width="1.2em"
-              height="1.2em"
               viewBox="0 0 24 24"
               fill="none"
               stroke="currentColor"
               stroke-width="2"
               stroke-linecap="round"
               stroke-linejoin="round"
-              style="vertical-align: -0.2em"
             >
-              <rect width="8" height="4" x="8" y="2" rx="1" ry="1" />
-              <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2" />
-              <path d="m9 14 2 2 4-4" />
+              <rect width="7" height="12" x="8.5" y="6" rx="1" />
+              <rect width="5" height="10" x="9.5" y="7" rx=".5" opacity=".4" />
+              <line x1="12" x2="12" y1="19" y2="19.01" />
             </svg>
           </button>
           <button class="ctrl navCtrl primary" id="themeBtn" aria-label="Theme">
@@ -2621,9 +2642,29 @@
           </button>
           <button
             class="ctrl navCtrl primary"
-            id="nextBtn"
-            onclick="next()"
-          ></button>
+            id="prepBtn"
+            aria-label="Class Prep"
+            title="Class Prep"
+            onclick="openPrep()"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="1.2em"
+              height="1.2em"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              style="vertical-align: -0.2em"
+            >
+              <rect width="8" height="4" x="8" y="2" rx="1" ry="1" />
+              <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2" />
+              <path d="m9 14 2 2 4-4" />
+            </svg>
+          </button>
+          <button class="ctrl navCtrl primary" id="nextBtn" onclick="next()"></button>
         </div>
         <span class="versionText">SpotlightPro V2.0</span>
       </div>
@@ -3049,9 +3090,13 @@ Tap a word to hear it — SpotlightPro turns your notes into a live lesson.
         for (var j = 0; j < screens.length; j++) {
           screens[j].classList.toggle("active", j === idx);
         }
-        document.getElementById("prevBtn").innerHTML = ICON_ARROW_LEFT;
-        document.getElementById("nextBtn").innerHTML = ICON_ARROW_RIGHT;
-        document.getElementById("nextBtn").style.visibility = "visible";
+        var prevBtnEl = document.getElementById("prevBtn");
+        if (prevBtnEl) prevBtnEl.innerHTML = ICON_ARROW_LEFT;
+        var nextBtnEl = document.getElementById("nextBtn");
+        if (nextBtnEl) {
+          nextBtnEl.innerHTML = ICON_ARROW_RIGHT;
+          nextBtnEl.style.visibility = "visible";
+        }
         cancelSpeech();
         var activeVideo = screens[idx].querySelector("video") || null;
         if (activeVideo) preloadVideo(activeVideo);
@@ -5065,6 +5110,51 @@ if (idx < 0) return;
           try {
             localStorage.setItem("eebt-theme", themeDark ? "dark" : "light");
           } catch (e) {}
+        };
+      }
+
+      var spotLayoutBtn = document.getElementById("spotLayoutToggleBtn");
+      var spotLayoutMode = "portrait";
+      var SPOT_LAYOUT_ICONS = {
+        portrait:
+          '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="7" height="12" x="8.5" y="6" rx="1" /><rect width="5" height="10" x="9.5" y="7" rx=".5" opacity=".4" /><line x1="12" x2="12" y1="19" y2="19.01" /></svg>',
+        landscape:
+          '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="12" height="7" x="6" y="8.5" rx="1" /><rect width="10" height="5" x="7" y="9.5" rx=".5" opacity=".4" /><line x1="5" x2="5" y1="12" y2="12.01" /></svg>',
+      };
+      function applySpotLayout(mode) {
+        spotLayoutMode = mode === "landscape" ? "landscape" : "portrait";
+        document.documentElement.setAttribute("data-layout", spotLayoutMode);
+        if (spotLayoutBtn) {
+          spotLayoutBtn.innerHTML = SPOT_LAYOUT_ICONS[spotLayoutMode];
+          spotLayoutBtn.setAttribute(
+            "aria-label",
+            spotLayoutMode === "landscape"
+              ? "Switch to portrait layout"
+              : "Switch to landscape layout",
+          );
+          spotLayoutBtn.setAttribute(
+            "title",
+            spotLayoutMode === "landscape" ? "Portrait layout" : "Landscape layout",
+          );
+        }
+        try {
+          localStorage.setItem("bt-spotlight-layout", spotLayoutMode);
+        } catch (e) {}
+      }
+      try {
+        applySpotLayout(
+          localStorage.getItem("bt-spotlight-layout") === "landscape"
+            ? "landscape"
+            : "portrait",
+        );
+      } catch (e) {
+        applySpotLayout("portrait");
+      }
+      if (spotLayoutBtn) {
+        spotLayoutBtn.onclick = function () {
+          applySpotLayout(
+            spotLayoutMode === "landscape" ? "portrait" : "landscape",
+          );
         };
       }
       document.addEventListener("keydown", function (e) {
