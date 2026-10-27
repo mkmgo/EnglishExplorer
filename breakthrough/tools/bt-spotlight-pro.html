@@ -2187,6 +2187,10 @@
         box-decoration-break: clone;
         -webkit-box-decoration-break: clone;
       }
+      .mdMath {
+        font-family: "Times New Roman", serif;
+        white-space: nowrap;
+      }
       :root[data-theme="dark"] .mdMark-focus {
         background: rgba(255, 184, 102, 0.3);
         box-shadow: inset 0 -0.55em 0 rgba(255, 184, 102, 0.25);
@@ -5222,11 +5226,22 @@ if (idx < 0) return;
         var s = String(raw);
         var out = [];
         var re =
-          /(==([\s\S]+?)==|>>([\s\S]+?)<<|\[([^\]]*)\]\(([^)]+)\)|`([^`]*)`|\*\*\*([\s\S]+?)\*\*\*|\*\*([\s\S]+?)\*\*|__([\s\S]+?)__|\*([\s\S]+?)\*|_([\s\S]+?)_|~~([\s\S]+?)~~)/g;
+          /(\$\$[\s\S]+?\$\$|\$[^\$\n]+?\$|==([\s\S]+?)==|>>([\s\S]+?)<<|\[([^\]]*)\]\(([^)]+)\)|`([^`]*)`|\*\*\*([\s\S]+?)\*\*\*|\*\*([\s\S]+?)\*\*|__([\s\S]+?)__|\*([\s\S]+?)\*|_([\s\S]+?)_|~~([\s\S]+?)~~)/g;
         var last = 0;
         var m;
         while ((m = re.exec(s))) {
           if (m.index > last) out.push(s.slice(last, m.index));
+          if (m[0] && m[0].charAt(0) === "$") {
+            var math = m[0];
+            var inner = math.indexOf("$$") === 0 ? math.slice(2, -2) : math.slice(1, -1);
+            var mt = document.createElement("span");
+            mt.className = "mdMath";
+            mt.textContent = texToUnicode(inner);
+            mt.setAttribute("data-math", inner);
+            out.push(mt);
+            last = re.lastIndex;
+            continue;
+          }
           if (m[2] !== undefined) {
             var ms = document.createElement("span");
             ms.className = "mdMark mdMark-focus";
@@ -5474,8 +5489,41 @@ if (idx < 0) return;
         return blocks;
       }
 
+      function texToUnicode(s) {
+        var t = String(s || "");
+        t = t.replace(/\\rightarrow/g, "\u2192");
+        t = t.replace(/\\to\b/g, "\u2192");
+        t = t.replace(/\\leftarrow/g, "\u2190");
+        t = t.replace(/\\Leftarrow/g, "\u21D0");
+        t = t.replace(/\\Rightarrow/g, "\u21D2");
+        t = t.replace(/\\leftrightarrow/g, "\u2194");
+        t = t.replace(/\\Leftrightarrow/g, "\u21D4");
+        t = t.replace(/\\uparrow/g, "\u2191");
+        t = t.replace(/\\downarrow/g, "\u2193");
+        t = t.replace(/\\mapsto/g, "\u21A6");
+        t = t.replace(/\\times/g, "\u00D7");
+        t = t.replace(/\\cdot/g, "\u00B7");
+        t = t.replace(/\\neq/g, "\u2260");
+        t = t.replace(/\\leq/g, "\u2264");
+        t = t.replace(/\\geq/g, "\u2265");
+        t = t.replace(/\\pm/g, "\u00B1");
+        t = t.replace(/\\infty/g, "\u221E");
+        t = t.replace(/\\approx/g, "\u2248");
+        t = t.replace(/\\equiv/g, "\u2261");
+        t = t.replace(/\\ldots/g, "\u2026");
+        t = t.replace(/\\cdots/g, "\u22EF");
+        t = t.replace(/\^{([^{}]+)}/g, function(_, a){ return a; });
+        t = t.replace(/_{([^{}]+)}/g, function(_, a){ return a; });
+        t = t.replace(/\^(\w)/g, "$1");
+        t = t.replace(/_(\w)/g, "$1");
+        t = t.replace(/\\/g, "");
+        return t;
+      }
+
       function mdStripInline(raw) {
         var s = String(raw);
+        s = s.replace(/\$\$([\s\S]+?)\$\$/g, function(_, m){ return texToUnicode(m); });
+        s = s.replace(/\$([^\$\n]+?)\$/g, function(_, m){ return texToUnicode(m); });
         s = s.replace(/==([^=]+?)==/g, "$1");
         s = s.replace(/>>([^>]+?)<</g, "$1");
         s = s.replace(/`([^`]*)`/g, "$1");
@@ -5489,11 +5537,18 @@ if (idx < 0) return;
         var s = String(raw);
         var out = "";
         var re =
-          /(==([\s\S]+?)==|>>([\s\S]+?)<<|\[([^\]]*)\]\(([^)]+)\)|`([^`]*)`|\*\*\*([\s\S]+?)\*\*\*|\*\*([\s\S]+?)\*\*|__([\s\S]+?)__|\*([\s\S]+?)\*|_([\s\S]+?)_|~~([\s\S]+?)~~)/g;
+          /(\$\$[\s\S]+?\$\$|\$[^\$\n]+?\$|==([\s\S]+?)==|>>([\s\S]+?)<<|\[([^\]]*)\]\(([^)]+)\)|`([^`]*)`|\*\*\*([\s\S]+?)\*\*\*|\*\*([\s\S]+?)\*\*|__([\s\S]+?)__|\*([\s\S]+?)\*|_([\s\S]+?)_|~~([\s\S]+?)~~)/g;
         var last = 0;
         var m;
         while ((m = re.exec(s))) {
           if (m.index > last) out += mdEscapeHtml(s.slice(last, m.index));
+          if (m[0] && m[0].charAt(0) === "$") {
+            var math = m[0];
+            var inner = math.indexOf("$$") === 0 ? math.slice(2, -2) : math.slice(1, -1);
+            out += '<span class="mdMath">' + mdEscapeHtml(texToUnicode(inner)) + "</span>";
+            last = re.lastIndex;
+            continue;
+          }
           if (m[2] !== undefined) {
             out += '<span class="mdMark mdMark-focus">' + mdInlineHtml(m[2]) + "</span>";
           } else if (m[3] !== undefined) {
@@ -5998,6 +6053,7 @@ if (idx < 0) return;
           '      .mdMark{border-radius:4px;padding:0 2px}\n' +
           '      .mdMark-focus{background:#ffe3c2;box-shadow:inset 0 -0.5em 0 rgba(255,184,102,.6)}\n' +
           '      .mdMark-copy{background:var(--accent);color:#fff;padding:0 .25em}\n' +
+          '      .mdMath{font-family:"Times New Roman",serif;white-space:nowrap}\n' +
           '      html[data-theme="dark"] .mdMark-focus{background:#4a3a22;box-shadow:inset 0 -0.5em 0 rgba(255,184,102,.35)}\n' +
           '      .vocab-table{width:100%;border-collapse:separate;border-spacing:0;margin:1.6em 0 2em;background:var(--panel);border-radius:16px;box-shadow:var(--shadow);overflow:hidden}\n' +
           '      .vocab-table th{background:var(--ink);color:var(--accent2);font-size:clamp(.85rem,1.5vw,1rem);font-weight:800;letter-spacing:.06em;padding:.8em 1em;text-align:left;white-space:nowrap}\n' +
