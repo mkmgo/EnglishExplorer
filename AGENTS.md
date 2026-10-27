@@ -33,7 +33,7 @@ EnglishExplorer/
 │   └── minigames/              <-- Highly gamified mini-games (formerly /Features)
 │       ├── abc-world.html
 │       ├── mb-grid-shift.html  <-- Grid Shift: flip bricks (front/back) from two 20-card stacks onto a shared 8x5 grid; Airtable table GridShift
-│       ├── md-grid-shift-pure-match.html  <-- Single-player Grid Shift: place flipped cards onto randomized matching text imprints
+│       ├── mb-gs-pure-match.html  <-- Single-player Grid Shift: place flipped cards onto randomized matching text imprints
 │       ├── mystery-base.html   <-- FLAGSHIP: most-viewed, most-developed version; keep pristine, treat as base for feature integration
 │       ├── mystery-phrases.html
 │       ├── new-words-wizard.html
@@ -116,7 +116,7 @@ There is **no `config.js`** — all secrets live server-side in the Cloudflare W
     Only **allowlisted** tables are readable. Each table is sorted by its own field (or its
     natural Airtable order when it has no sort field): `BTStudyHub` (sorted by `DisplayOrder`,
     used by `bt-study-hub.html`), `GridShift` (used by both Grid Shift games), and
-    `GridShiftVariants` (used by `md-grid-shift-pure-match.html`).
+    `GridShiftVariants` (used by `mb-gs-pure-match.html`).
     Returns `{ records: [...] }`.
   - `POST /` — Airtable visitor tracking.
   - `OPTIONS` — CORS preflight (`GET, POST, OPTIONS`).
@@ -293,7 +293,7 @@ across the two decks (`Math.ceil(count / 2)`) — e.g. 20 → 10/10, 30 → 15/1
 
 ### Grid Shift Pure Match variant
 
-`junior/minigames/md-grid-shift-pure-match.html` is a separate one-player game.
+`junior/minigames/mb-gs-pure-match.html` is a separate one-player game.
 It uses the `GridShiftVariants` row with `VarName: Pure Match` for its settings.
 `VarName` is only the **internal name of the puzzle kind** — it selects the
 variant row and titles the browser tab; it is never displayed on the page. The

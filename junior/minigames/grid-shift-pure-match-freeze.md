@@ -2,7 +2,7 @@
 
 ## Why freeze?
 
-`md-grid-shift-pure-match.html` reads **everything from Airtable on every page
+`mb-gs-pure-match.html` reads **everything from Airtable on every page
 load**. The game works, but its content and even its validity depend on the
 live state of two tables:
 
@@ -25,7 +25,7 @@ re-freeze.
 
 ## Current mechanics (what gets frozen)
 
-Load-time pipeline in `md-grid-shift-pure-match.html`:
+Load-time pipeline in `mb-gs-pure-match.html`:
 
 ```
 GET /airtable?table=GridShiftVariants   ──┐
@@ -121,7 +121,7 @@ path.
 | Mode | Trigger | Behaviour |
 |---|---|---|
 | **Frozen (default)** | normal URL | Build the game from `PURE_MATCH_SNAPSHOT`. No network fetch at all — works offline / on Tizen even if the worker is down. |
-| **Live (authoring)** | `md-grid-shift-pure-match.html?live=1` | Today's exact Airtable path — fetch, validate, render. Airtable input mechanics remain fully valid and testable. |
+| **Live (authoring)** | `mb-gs-pure-match.html?live=1` | Today's exact Airtable path — fetch, validate, render. Airtable input mechanics remain fully valid and testable. |
 
 Both modes converge on the **same** internal pipeline:
 `startGame(resolvedSettings, cardRecords)` → validate → `buildCard()` →
@@ -255,7 +255,7 @@ proposal. Each step is independently verifiable.
 
 ### Step 1 — Add the snapshot marker block
 
-> In `junior/minigames/md-grid-shift-pure-match.html`, add a new inline
+> In `junior/minigames/mb-gs-pure-match.html`, add a new inline
 > `<script>` block immediately before the main game script containing a
 > marker-delimited snapshot constant:
 >
@@ -271,7 +271,7 @@ proposal. Each step is independently verifiable.
 
 ### Step 2 — Split the loader into frozen / live modes on one pipeline
 
-> In `junior/minigames/md-grid-shift-pure-match.html`, refactor the startup
+> In `junior/minigames/mb-gs-pure-match.html`, refactor the startup
 > logic so both data sources feed one shared pipeline:
 >
 > 1. Extract the current post-fetch work — variant validation, deck
@@ -302,7 +302,7 @@ proposal. Each step is independently verifiable.
 
 ### Step 3 — Validate the refactor against both modes
 
-> Verify `junior/minigames/md-grid-shift-pure-match.html` end-to-end:
+> Verify `junior/minigames/mb-gs-pure-match.html` end-to-end:
 >
 > 1. **Frozen mode (default URL):** game renders from a populated snapshot
 >    with the worker unreachable (block the worker URL or go offline) — deck,
@@ -334,7 +334,7 @@ proposal. Each step is independently verifiable.
 ### Step 5 — First freeze (release run)
 
 > Perform the first actual freeze: open
-> `md-grid-shift-pure-match.html?live=1`, run the capture snippet from
+> `mb-gs-pure-match.html?live=1`, run the capture snippet from
 > `grid-shift-pure-match-freeze.md` in the devtools console, paste the
 > printed JSON between the `PURE_MATCH_SNAPSHOT:BEGIN/END` markers (replacing
 > `null`), reload the default URL and confirm the game plays identically to

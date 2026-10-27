@@ -297,7 +297,7 @@ Same `GridShift` table, reskinned UI:
 ## Field Usage Quick Reference
 
 Card fields used by `mb-grid-shift.html` and
-`md-grid-shift-pure-match.html`:
+`mb-gs-pure-match.html`:
 ```
 GridShiftID, Active, PM-Active, TileName, Display, RenderMode,
 TileFront, TileBack, TileBackA, TileBackB, Lucide, Stroke,
