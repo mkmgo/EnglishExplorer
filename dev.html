@@ -282,7 +282,7 @@
 
       <div class="main">
         <div class="container">
-          <h1 class="sectionHead">Quick Links</h1>
+          <h1 class="sectionHead">Quick Links // Dev // EnglishExplorer</h1>
           <div id="links"><p class="loading">Loading file tree&hellip;</p></div>
 
           <h2 class="sectionHead" style="font-size:clamp(1rem,2vw,1.3rem);margin-top:0.5em">Folder Structure</h2>
@@ -378,8 +378,7 @@
           "junior/others",
           "junior/minigames",
           "breakthrough/tools",
-          "breakthrough/protocols",
-          "archive"
+          "breakthrough/protocols"
         ];
 
         var FOLDER_LABELS = {
@@ -388,8 +387,7 @@
           "junior/others":       ["junior / others", "/ Classroom activity games"],
           "junior/minigames":    ["junior / minigames", "/ Gamified mini-games"],
           "breakthrough/tools":  ["breakthrough / tools", "/ Standalone utilities"],
-          "breakthrough/protocols": ["breakthrough / protocols", "/ Daily lesson protocols"],
-          "archive":             ["archive", "/ Older versions & backups"]
+          "breakthrough/protocols": ["breakthrough / protocols", "/ Daily lesson protocols"]
         };
 
         function filenameToName(f) {
@@ -401,39 +399,119 @@
           return idx >= 0 ? idx : FOLDER_ORDER.length;
         }
 
-        function buildLinks(files) {
+        function buildLinks(files, todayFilesMap) {
           var grouped = {};
           files.forEach(function (f) {
+            if (f.indexOf("archive/") === 0) return;
             var parts = f.split("/");
             var folder = parts.length > 1 ? parts.slice(0, -1).join("/") : "";
             if (!grouped[folder]) grouped[folder] = [];
             grouped[folder].push(f);
           });
 
-          var sorted = Object.keys(grouped).sort(function (a, b) {
-            return folderSortKey(a) - folderSortKey(b);
-          });
-
           var container = document.getElementById("links");
           container.innerHTML = "";
+
+          var todayMap = todayFilesMap || {};
+          var todayFiles = [];
+          for (var tf in todayMap) {
+            if (todayMap.hasOwnProperty(tf) && tf.indexOf("archive/") !== 0) {
+              todayFiles.push(tf);
+            }
+          }
+          todayFiles.sort();
+
+          if (todayFiles.length > 0) {
+            var todaySection = document.createElement("div");
+            todaySection.className = "folderSection";
+            var th2 = document.createElement("h2");
+            th2.className = "folderLabel";
+            th2.innerHTML = "Latest Modifications <span>/ same day changes</span>";
+            todaySection.appendChild(th2);
+            var tgrid = document.createElement("div");
+            tgrid.className = "linkGrid";
+            todayFiles.forEach(function (filePath) {
+              var fname = filePath.split("/").pop();
+              var folder = filePath.indexOf("/") >= 0 ? filePath.split("/").slice(0, -1).join("/") : "";
+              var a = document.createElement("a");
+              a.className = "linkCard today";
+              a.href = BASE + filePath;
+              a.target = "_blank";
+              a.rel = "noopener";
+              var name = document.createElement("span");
+              name.className = "lcName";
+              name.textContent = fname;
+              a.appendChild(name);
+              var file = document.createElement("span");
+              file.className = "lcFile";
+              file.textContent = filePath;
+              a.appendChild(file);
+              var desc = DESC[fname];
+              if (!desc && folder === "breakthrough/protocols") {
+                var m = fname.match(/^(\d{4})-(\d{2})-(\d{2})\.html$/);
+                if (m) {
+                  var d = new Date(+m[1], +m[2] - 1, +m[3]);
+                  desc = d.toLocaleDateString("en-GB", { day: "numeric", month: "long", year: "numeric" });
+                }
+              }
+              if (!desc) desc = filenameToName(fname);
+              var descEl = document.createElement("span");
+              descEl.className = "lcDesc";
+              descEl.textContent = desc;
+              a.appendChild(descEl);
+              tgrid.appendChild(a);
+            });
+            todaySection.appendChild(tgrid);
+            container.appendChild(todaySection);
+          }
+
+          var allFolders = Object.keys(grouped);
+          var changedFolders = {};
+          for (var f2 in todayMap) {
+            if (todayMap.hasOwnProperty(f2) && f2.indexOf("archive/") !== 0) {
+              var p2 = f2.split("/");
+              var fol2 = p2.length > 1 ? p2.slice(0, -1).join("/") : "";
+              changedFolders[fol2] = true;
+            }
+          }
+
+          var sorted = allFolders.filter(function (f) { return f !== "archive"; }).sort(function (a, b) {
+            if (changedFolders[a] && !changedFolders[b]) return -1;
+            if (!changedFolders[a] && changedFolders[b]) return 1;
+            return folderSortKey(a) - folderSortKey(b);
+          });
 
           sorted.forEach(function (folder) {
             var section = document.createElement("div");
             section.className = "folderSection";
 
-            var lbl = FOLDER_LABELS[folder] || [folder, ""];
+            var lbl = FOLDER_LABELS[folder] || [folder === "" ? "Root" : folder, folder === "" ? "/" : "/"];
             var h2 = document.createElement("h2");
             h2.className = "folderLabel";
             h2.innerHTML = lbl[0] + " <span>" + lbl[1] + "</span>";
             section.appendChild(h2);
 
+            if (!changedFolders[folder]) {
+              var collapsed = document.createElement("div");
+              collapsed.style.padding = "0.4em 0.6em";
+              collapsed.style.color = "var(--muted)";
+              collapsed.style.fontStyle = "italic";
+              collapsed.style.fontSize = "0.9em";
+              collapsed.innerHTML = '(collapsed) <a href="#" style="color:var(--accent);text-decoration:none" onclick="this.parentElement.style.display=\'none\';this.parentElement.nextElementSibling.style.display=\'grid\';return false;">unclassified / show files</a>';
+              section.appendChild(collapsed);
+            }
+
             var grid = document.createElement("div");
             grid.className = "linkGrid";
+            if (!changedFolders[folder]) {
+              grid.style.display = "none";
+            }
 
             grouped[folder].sort().forEach(function (filePath) {
               var fname = filePath.split("/").pop();
               var a = document.createElement("a");
               a.className = "linkCard";
+              if (todayMap[filePath]) a.classList.add("today");
               a.href = BASE + filePath;
               a.target = "_blank";
               a.rel = "noopener";
@@ -470,7 +548,7 @@
             container.appendChild(section);
           });
 
-          var totalFiles = files.length;
+          var totalFiles = files.filter(function (f) { return f.indexOf("archive/") !== 0; }).length;
           var totalFolders = sorted.length;
           var legend = document.getElementById("legend");
           legend.textContent = totalFiles + " HTML files \u00B7 " + totalFolders + " folders \u00B7 Orange = changed today \u00B7 All pages open in new tab";
@@ -518,6 +596,7 @@
           tree.innerHTML = lines.join("\n");
         }
 
+        var globalTodayFiles = {};
         function markTodayFiles() {
           var today = new Date();
           var todayStr = today.getFullYear() + "-" +
@@ -535,7 +614,7 @@
                   todaySHAs.push(c.sha);
                 }
               });
-              if (!todaySHAs.length) return;
+              if (!todaySHAs.length) return [];
               return Promise.all(todaySHAs.map(function (sha) {
                 return gh("https://api.github.com/repos/" + REPO + "/commits/" + sha)
                   .then(function (r) { return r.json(); })
@@ -553,8 +632,13 @@
               if (!fileArrays) return;
               var todayFiles = {};
               fileArrays.forEach(function (arr) {
-                arr.forEach(function (name) { todayFiles[name] = true; });
+                arr.forEach(function (name) { if (name) todayFiles[name] = true; });
               });
+              globalTodayFiles = todayFiles;
+              var container = document.getElementById("links");
+              if (container && container.querySelector(".folderSection")) {
+                return;
+              }
               document.querySelectorAll(".linkCard").forEach(function (card) {
                 var fp = card.querySelector(".lcFile");
                 if (fp && todayFiles[fp.textContent]) {
@@ -601,10 +685,12 @@
               .map(function (item) { return item.path; });
 
             htmlFiles.sort();
-            buildLinks(htmlFiles);
-            buildTree(htmlFiles);
             markTodayFiles();
-            fetchLastCommitDates();
+            setTimeout(function () {
+              buildLinks(htmlFiles, globalTodayFiles || {});
+              buildTree(htmlFiles);
+              fetchLastCommitDates();
+            }, 800);
           })
           .catch(function () {
             document.getElementById("links").innerHTML =
