@@ -532,6 +532,143 @@
         height: 1em;
       }
 
+      .protocolStrip {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.6em;
+        margin: 0.9em 0 0.2em;
+        padding-top: 0.8em;
+        border-top: 2px solid var(--accent2);
+      }
+      .protocolStrip:empty {
+        display: none;
+        margin: 0;
+        padding: 0;
+        border: 0;
+      }
+      .protocolThumb {
+        flex: none;
+        width: clamp(76px, 15vw, 112px);
+        border: 2px solid var(--accent2);
+        border-radius: 10px;
+        background: var(--panel);
+        padding: 4px;
+        cursor: pointer;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 0.3em;
+        transition: transform 0.15s ease, border-color 0.3s ease;
+      }
+      .protocolThumb:active {
+        transform: scale(0.95);
+      }
+      .protocolThumb img {
+        width: 100%;
+        height: clamp(50px, 9.5vw, 76px);
+        object-fit: cover;
+        border-radius: 6px;
+        display: block;
+        background: var(--accent2);
+      }
+      .protocolThumbIcon {
+        width: 100%;
+        height: clamp(50px, 9.5vw, 76px);
+        border-radius: 6px;
+        background: var(--accent2);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: clamp(1.4rem, 3vw, 2rem);
+      }
+      .protocolThumbLabel {
+        font-size: 0.62rem;
+        font-weight: 800;
+        color: var(--muted);
+        text-align: center;
+        line-height: 1.15;
+        max-width: 100%;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+      .protocolViewer {
+        flex: none;
+        display: flex;
+        flex-direction: column;
+        gap: 0.45em;
+        border: 2pt solid var(--accent);
+        border-radius: 14px;
+        padding: 0.55em;
+        background: var(--panel);
+        box-shadow: var(--shadow);
+      }
+      .protocolViewer[hidden] {
+        display: none;
+      }
+      .protocolViewerBar {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 0.6em;
+      }
+      .protocolViewerTitle {
+        font-weight: 900;
+        font-size: clamp(0.8rem, 1.5vw, 0.95rem);
+        color: var(--accent);
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+      .protocolMinimizeBtn {
+        flex: none;
+        border: 2px solid var(--accent);
+        background: transparent;
+        color: var(--accent);
+        border-radius: 10px;
+        padding: 0.3em 0.7em;
+        font-size: clamp(0.7rem, 1.2vw, 0.82rem);
+        font-weight: 900;
+        cursor: pointer;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.35em;
+        transition: transform 0.15s ease;
+      }
+      .protocolMinimizeBtn:active {
+        transform: scale(0.95);
+      }
+      .protocolMinimizeBtn svg {
+        width: 1em;
+        height: 1em;
+      }
+      .protocolViewerFrame {
+        width: 100%;
+      }
+      .protocolViewerFrame img {
+        width: 100%;
+        height: auto;
+        max-height: min(52vh, 520px);
+        object-fit: contain;
+        object-position: left top;
+        border-radius: 10px;
+        display: block;
+      }
+      .protocolViewerFrame iframe {
+        width: 100%;
+        height: clamp(220px, 40vh, 420px);
+        border: 0;
+        border-radius: 10px;
+        background: #fff;
+        display: block;
+      }
+      @media (hover: hover) {
+        .protocolThumb:hover {
+          border-color: var(--accent);
+          transform: translateY(-2px);
+        }
+      }
+
       @media (max-width: 520px) {
         .readBox {
           width: min(96vw, 1120px);
@@ -618,9 +755,20 @@
       <div class="readBox">
         <h2 id="readTitle"></h2>
         <div class="readSub" id="readSub"></div>
+        <div id="protocolViewer" class="protocolViewer" hidden>
+          <div class="protocolViewerBar">
+            <span class="protocolViewerTitle" id="protocolViewerTitle"></span>
+            <button type="button" class="protocolMinimizeBtn" id="protocolMinimizeBtn" onclick="minimizeProtocol()">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+              MINIMIZE
+            </button>
+          </div>
+          <div id="protocolViewerFrame" class="protocolViewerFrame"></div>
+        </div>
         <div class="readScroll">
           <div id="readAsset" class="readAsset"></div>
           <div class="readBody" id="readBody"></div>
+          <div id="protocolStrip" class="protocolStrip"></div>
         </div>
         <div class="readBtns">
           <button class="modalBtn ghost" onclick="closeRead()">CLOSE</button>
@@ -948,10 +1096,61 @@
       function isVideo(url) {
         return /\.(mp4|webm|ogv|m4v)(\?.*)?$/i.test(String(url));
       }
-      function openRead(title, sub, text, link) {
+      function parseLinkedProtocols(raw) {
+        if (!raw) return [];
+        var text = Array.isArray(raw) ? raw.join("\n") : String(raw);
+        var lines = text.split(/\r?\n/);
+        var urls = [];
+        for (var i = 0; i < lines.length; i++) {
+          var line = lines[i].trim();
+          if (!line) continue;
+          if (/^https?:\/\//i.test(line)) urls.push(line);
+        }
+        return urls;
+      }
+      function protocolLabelFromUrl(url) {
+        try {
+          var u = new URL(url);
+          var parts = u.pathname.split("/");
+          var last = parts[parts.length - 1] || u.hostname;
+          return decodeURIComponent(last) || u.hostname || "Protocol";
+        } catch (e) {
+          var m = String(url).split("/").pop();
+          return m || "Protocol";
+        }
+      }
+      function openProtocol(url) {
+        protocolViewerFrame.innerHTML = "";
+        protocolViewerTitle.textContent = protocolLabelFromUrl(url);
+        if (isImage(url)) {
+          var img = document.createElement("img");
+          img.alt = protocolLabelFromUrl(url);
+          img.loading = "lazy";
+          img.src = url;
+          protocolViewerFrame.appendChild(img);
+        } else {
+          var frm = document.createElement("iframe");
+          frm.src = url;
+          frm.loading = "lazy";
+          protocolViewerFrame.appendChild(frm);
+        }
+        protocolViewer.hidden = false;
+        if (typeof protocolViewer.scrollIntoView === "function") {
+          protocolViewer.scrollIntoView({ behavior: "smooth", block: "nearest" });
+        }
+        logActivity("Nimza", "/breakthrough/tools/bt-study-hub.html", "BTStudyHub", "OpenProtocol", url);
+      }
+      function minimizeProtocol() {
+        if (!protocolViewer) return;
+        protocolViewer.hidden = true;
+        protocolViewerFrame.innerHTML = "";
+        protocolViewerTitle.textContent = "";
+      }
+      function openRead(title, sub, text, link, protocols) {
         readTitle.textContent = title || "Reading";
         readSub.textContent = sub || "";
         readAsset.innerHTML = "";
+        minimizeProtocol();
         if (link) {
           if (isImage(link)) {
             var img = document.createElement("img");
@@ -978,10 +1177,37 @@
         }
         renderMarkdown(text || "", readBody);
         activeReading = readBody.textContent || "";
+        protocolStrip.innerHTML = "";
+        (protocols || []).forEach(function (url) {
+          var btn = document.createElement("button");
+          btn.type = "button";
+          btn.className = "protocolThumb";
+          if (isImage(url)) {
+            var pimg = document.createElement("img");
+            pimg.src = url;
+            pimg.alt = protocolLabelFromUrl(url);
+            pimg.loading = "lazy";
+            btn.appendChild(pimg);
+          } else {
+            var icon = document.createElement("div");
+            icon.className = "protocolThumbIcon";
+            icon.textContent = "📄";
+            btn.appendChild(icon);
+          }
+          var label = document.createElement("span");
+          label.className = "protocolThumbLabel";
+          label.textContent = protocolLabelFromUrl(url);
+          btn.appendChild(label);
+          btn.onclick = function () {
+            openProtocol(url);
+          };
+          protocolStrip.appendChild(btn);
+        });
         readModal.classList.add("show");
       }
       function closeRead() {
         readModal.classList.remove("show");
+        minimizeProtocol();
         cancelSpeech();
         logActivity("Nimza", "/breakthrough/tools/bt-study-hub.html", "BTStudyHub", "CloseRead", "");
       }
@@ -996,6 +1222,10 @@
       readSub = document.getElementById("readSub");
       readBody = document.getElementById("readBody");
       readAsset = document.getElementById("readAsset");
+      var protocolStrip = document.getElementById("protocolStrip");
+      var protocolViewer = document.getElementById("protocolViewer");
+      var protocolViewerTitle = document.getElementById("protocolViewerTitle");
+      var protocolViewerFrame = document.getElementById("protocolViewerFrame");
 
       function isImage(url) {
         return /\.(png|jpe?g|gif|webp|avif)(\?.*)?$/i.test(String(url));
@@ -1022,10 +1252,11 @@
         items.forEach(function (rec) {
           var f = (rec && rec.fields) || {};
           var title = f.Title || f.Name || "";
-          var link = f.Link || f.URL || "";
+          var link = f.AssetLink || f.Link || f.URL || "";
           var sub = f.Subtitle || f.Note || "";
           var text = f.Text || f.Passage || "";
-          if (!title && !link && !text) return;
+          var protocols = parseLinkedProtocols(f.LinkedProtocols);
+          if (!title && !link && !text && !protocols.length) return;
 
           var card = document.createElement("div");
           card.className = "card";
@@ -1106,14 +1337,14 @@
 
           var actions = document.createElement("div");
           actions.className = "cardActions";
-          if (text || link) {
+          if (text || link || protocols.length) {
             var read = document.createElement("button");
             read.type = "button";
             read.className = "readBtn";
             read.innerHTML =
               '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>Content';
             read.onclick = function () {
-              openRead(title, sub, text, link);
+              openRead(title, sub, text, link, protocols);
               logActivity("Nimza", "/breakthrough/tools/bt-study-hub.html", "BTStudyHub", "Read", title);
               if (link) {
                 logActivity("Nimza", "/breakthrough/tools/bt-study-hub.html", "BTStudyHub", "OpenAsset", title);
