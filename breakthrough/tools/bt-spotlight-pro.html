@@ -2217,6 +2217,10 @@
         box-decoration-break: clone;
         -webkit-box-decoration-break: clone;
       }
+      .mdAlignRight {
+        float: right;
+        margin-left: 0.6em;
+      }
       .mdMath {
         font-family: "Times New Roman", serif;
         white-space: nowrap;
@@ -2944,7 +2948,7 @@
                 placeholder="# My presentation
 
 Tap a word to hear it. Use Markdown:
-- **bold**, *italic*, `code`
+- **bold**, *italic*, `code`, >>text>> right-aligned
 1. numbered list
 
 Type {{ to pick a loaded image, video or audio · tap to enlarge."
@@ -5316,7 +5320,7 @@ if (idx < 0) return;
         var s = String(raw);
         var out = [];
         var re =
-          /(\$\$[\s\S]+?\$\$|\$[^\$\n]+?\$|==([\s\S]+?)==|>>([\s\S]+?)<<|\[([^\]]*)\]\(([^)]+)\)|`([^`]*)`|\*\*\*([\s\S]+?)\*\*\*|\*\*([\s\S]+?)\*\*|__([\s\S]+?)__|\*([\s\S]+?)\*|_([\s\S]+?)_|~~([\s\S]+?)~~)/g;
+          /(\$\$[\s\S]+?\$\$|\$[^\$\n]+?\$|==([\s\S]+?)==|>>([^<>]+?)>>|>>([\s\S]+?)<<|\[([^\]]*)\]\(([^)]+)\)|`([^`]*)`|\*\*\*([\s\S]+?)\*\*\*|\*\*([\s\S]+?)\*\*|__([\s\S]+?)__|\*([\s\S]+?)\*|_([\s\S]+?)_|~~([\s\S]+?)~~)/g;
         var last = 0;
         var m;
         while ((m = re.exec(s))) {
@@ -5338,40 +5342,45 @@ if (idx < 0) return;
             mdFillText(ms, m[2], skipWords);
             out.push(ms);
           } else if (m[3] !== undefined) {
+            var mr = document.createElement("span");
+            mr.className = "mdMark mdAlignRight";
+            mdFillText(mr, m[3], skipWords);
+            out.push(mr);
+          } else if (m[4] !== undefined) {
             var mc = document.createElement("span");
             mc.className = "mdMark mdMark-copy";
-            mdFillText(mc, m[3], skipWords);
+            mdFillText(mc, m[4], skipWords);
             out.push(mc);
-          } else if (m[4] !== undefined) {
+          } else if (m[5] !== undefined) {
             var a = document.createElement("a");
             a.className = "mdLink";
-            a.textContent = m[4];
-            a.href = m[5];
+            a.textContent = m[5];
+            a.href = m[6];
             a.target = "_blank";
             a.rel = "noopener";
-            a.setAttribute("data-text", m[4]);
+            a.setAttribute("data-text", m[5]);
             out.push(a);
-          } else if (m[6] !== undefined) {
-            var code = document.createElement("code");
-            code.textContent = m[6];
-            out.push(code);
           } else if (m[7] !== undefined) {
+            var code = document.createElement("code");
+            code.textContent = m[7];
+            out.push(code);
+          } else if (m[8] !== undefined) {
             var bi = document.createElement("strong");
             var biem = document.createElement("em");
-            mdFillText(biem, m[7], skipWords);
+            mdFillText(biem, m[8], skipWords);
             bi.appendChild(biem);
             out.push(bi);
-          } else if (m[8] !== undefined || m[9] !== undefined) {
+          } else if (m[9] !== undefined || m[10] !== undefined) {
             var st = document.createElement("strong");
-            mdFillText(st, m[8] !== undefined ? m[8] : m[9], skipWords);
+            mdFillText(st, m[9] !== undefined ? m[9] : m[10], skipWords);
             out.push(st);
-          } else if (m[10] !== undefined || m[11] !== undefined) {
+          } else if (m[11] !== undefined || m[12] !== undefined) {
             var em = document.createElement("em");
-            mdFillText(em, m[10] !== undefined ? m[10] : m[11], skipWords);
+            mdFillText(em, m[11] !== undefined ? m[11] : m[12], skipWords);
             out.push(em);
-          } else if (m[12] !== undefined) {
+          } else if (m[13] !== undefined) {
             var del = document.createElement("del");
-            mdFillText(del, m[12], skipWords);
+            mdFillText(del, m[13], skipWords);
             out.push(del);
           }
           last = re.lastIndex;
@@ -5615,6 +5624,7 @@ if (idx < 0) return;
         s = s.replace(/\$\$([\s\S]+?)\$\$/g, function(_, m){ return texToUnicode(m); });
         s = s.replace(/\$([^\$\n]+?)\$/g, function(_, m){ return texToUnicode(m); });
         s = s.replace(/==([^=]+?)==/g, "$1");
+        s = s.replace(/>>([^<>]+?)>>/g, "$1");
         s = s.replace(/>>([^>]+?)<</g, "$1");
         s = s.replace(/`([^`]*)`/g, "$1");
         s = s.replace(/\[([^\]]*)\]\([^)]*\)/g, "$1");
@@ -5627,7 +5637,7 @@ if (idx < 0) return;
         var s = String(raw);
         var out = "";
         var re =
-          /(\$\$[\s\S]+?\$\$|\$[^\$\n]+?\$|==([\s\S]+?)==|>>([\s\S]+?)<<|\[([^\]]*)\]\(([^)]+)\)|`([^`]*)`|\*\*\*([\s\S]+?)\*\*\*|\*\*([\s\S]+?)\*\*|__([\s\S]+?)__|\*([\s\S]+?)\*|_([\s\S]+?)_|~~([\s\S]+?)~~)/g;
+          /(\$\$[\s\S]+?\$\$|\$[^\$\n]+?\$|==([\s\S]+?)==|>>([^<>]+?)>>|>>([\s\S]+?)<<|\[([^\]]*)\]\(([^)]+)\)|`([^`]*)`|\*\*\*([\s\S]+?)\*\*\*|\*\*([\s\S]+?)\*\*|__([\s\S]+?)__|\*([\s\S]+?)\*|_([\s\S]+?)_|~~([\s\S]+?)~~)/g;
         var last = 0;
         var m;
         while ((m = re.exec(s))) {
@@ -5642,21 +5652,23 @@ if (idx < 0) return;
           if (m[2] !== undefined) {
             out += '<span class="mdMark mdMark-focus">' + mdInlineHtml(m[2]) + "</span>";
           } else if (m[3] !== undefined) {
-            out += '<span class="mdMark mdMark-copy">' + mdInlineHtml(m[3]) + "</span>";
+            out += '<span class="mdMark mdAlignRight">' + mdInlineHtml(m[3]) + "</span>";
           } else if (m[4] !== undefined) {
+            out += '<span class="mdMark mdMark-copy">' + mdInlineHtml(m[4]) + "</span>";
+          } else if (m[5] !== undefined) {
             out +=
-              '<a href="' + mdEscapeHtml(m[5]) + '" target="_blank" rel="noopener">' +
-              mdEscapeHtml(m[4]) + "</a>";
-          } else if (m[6] !== undefined) {
-            out += "<code>" + mdEscapeHtml(m[6]) + "</code>";
+              '<a href="' + mdEscapeHtml(m[6]) + '" target="_blank" rel="noopener">' +
+              mdEscapeHtml(m[5]) + "</a>";
           } else if (m[7] !== undefined) {
-            out += "<strong><em>" + mdInlineHtml(m[7]) + "</em></strong>";
-          } else if (m[8] !== undefined || m[9] !== undefined) {
-            out += "<strong>" + mdInlineHtml(m[8] !== undefined ? m[8] : m[9]) + "</strong>";
-          } else if (m[10] !== undefined || m[11] !== undefined) {
-            out += "<em>" + mdInlineHtml(m[10] !== undefined ? m[10] : m[11]) + "</em>";
-          } else if (m[12] !== undefined) {
-            out += "<del>" + mdInlineHtml(m[12]) + "</del>";
+            out += "<code>" + mdEscapeHtml(m[7]) + "</code>";
+          } else if (m[8] !== undefined) {
+            out += "<strong><em>" + mdInlineHtml(m[8]) + "</em></strong>";
+          } else if (m[9] !== undefined || m[10] !== undefined) {
+            out += "<strong>" + mdInlineHtml(m[9] !== undefined ? m[9] : m[10]) + "</strong>";
+          } else if (m[11] !== undefined || m[12] !== undefined) {
+            out += "<em>" + mdInlineHtml(m[11] !== undefined ? m[11] : m[12]) + "</em>";
+          } else if (m[13] !== undefined) {
+            out += "<del>" + mdInlineHtml(m[13]) + "</del>";
           }
           last = re.lastIndex;
         }
@@ -6143,6 +6155,7 @@ if (idx < 0) return;
           '      .mdMark{border-radius:4px;padding:0 2px}\n' +
           '      .mdMark-focus{background:#ffe3c2;box-shadow:inset 0 -0.5em 0 rgba(255,184,102,.6)}\n' +
           '      .mdMark-copy{background:var(--accent);color:#fff;padding:0 .25em}\n' +
+          '      .mdAlignRight{float:right;margin-left:.6em}\n' +
           '      .mdMath{font-family:"Times New Roman",serif;white-space:nowrap}\n' +
           '      html[data-theme="dark"] .mdMark-focus{background:#4a3a22;box-shadow:inset 0 -0.5em 0 rgba(255,184,102,.35)}\n' +
           '      .vocab-table{width:100%;border-collapse:separate;border-spacing:0;margin:1.6em 0 2em;background:var(--panel);border-radius:16px;box-shadow:var(--shadow);overflow:hidden}\n' +
