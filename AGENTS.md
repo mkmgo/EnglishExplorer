@@ -312,6 +312,12 @@ the deck + board group is centred on the page (`grid-template-columns: 148px
 auto` + `justify-content: center` on `.stage`). In narrow layouts it moves
 above the board.
 
+The top bar has a horizontal / vertical layout toggle and the light/dark theme
+toggle. Horizontal is the default; vertical stacks the deck above the board,
+uses at most four grid columns, and scales cells/cards and the stack spot to fit
+portrait mobile screens. Task text is slightly smaller in vertical mode.
+Changing layout preserves the current board and progress.
+
 **The stack shows its front.** Only the **first** card of the stack has to be
 turned by the pupil — the cards below it show their front from the beginning
 (`renderDeck` flips them; the first one carries `needsTurn` until it is
@@ -352,7 +358,7 @@ The variant row also drives the page chrome:
 | `task4DoneText` | Single line text | Message shown in green under the board when task 4 is solved (added to the list of accomplished tasks). Empty = the neutral feedback line shows the `CorrectText` message (default "✔ Correct!"). |
 | `task4Intro` | Single line text *(optional)* | The **intro marker** of task 4: it activates the intro step (the new cards are added to the board and have to be moved onto their tiles). Its text is **never shown** — only the fact that it is filled matters. Empty = task 4 is an ordinary task. |
 | `task4IntroAction` | Single line text *(optional)* | What the intro step does (currently `TilesRelated distributed randomly on remaining free grid slots and shown openly.`). It is a description only — it is not shown on the page. Empty = the step still runs. Either of the two fields activates the intro step, so the marker may also be written here. |
-| `WPIMG1` | URL | Subtle backdrop picture behind the board. Set at runtime as the `--wp-img` CSS custom property. Empty = no backdrop. |
+| `WPIMG1` | URL | Subtle backdrop picture across the page and through the board gutters. Set at runtime as the `--wp-img` CSS custom property. Empty = no backdrop. |
 | `WPIMG2` | URL | Picture of the finale: it appears in the open slot when every task is solved and **covers it like a normal tile** (104×92), the tiles that are left collapse into it and the board turns green. Empty = no picture (the collapse and the green still happen). |
 | `WrongCardText` | Single line text *(optional)* | The message when the tutee turns a card that does not answer the task (default: `Not that one. Try another card.`). |
 | `WrongSpotText` | Single line text *(optional)* | The message when a card is dropped on a cell that does not match it (default: `That card doesn't match this imprint. Try another spot.`). |
@@ -512,14 +518,14 @@ tutee to move them onto the tile they belong to:
   or no free cell is left), the intro step is skipped: the game goes on with
   the next task instead of waiting for a card that never comes.
 
-**WPIMG1 backdrop.** The picture is a CSS layer, not an asset on the board:
-`.grid::before` paints it over the board, so the wallpaper shows **only in the
-grid's area**. The cells stay opaque (they carry the imprints and the placed
-bricks), so the picture reads through the cell gutters and the board padding.
-When the board is finished the picture fades to ~55% so the green completion
-colour (`.grid.done` → `--goal-bg` background + `--good` border) reads at full
-strength. The board only reaches that state when **every** task is solved.
-Tune with `--wp-opacity` (picture strength) in the `:root` block.
+**WPIMG1 backdrop.** The picture is a subtle, fixed CSS underlay across the
+whole page, with a second layer over the board so it also shows through the
+cell gutters and board padding. The cells stay opaque (they carry the imprints
+and the placed bricks). When the board is finished its copy of the picture
+fades to ~55% so the green completion colour (`.grid.done` → `--goal-bg`
+background + `--good` border) reads at full strength. The board only reaches
+that state when **every** task is solved. Tune with `--wp-opacity` (picture
+strength) in the `:root` block.
 
 ### Airtable `GridShift` table schema
 

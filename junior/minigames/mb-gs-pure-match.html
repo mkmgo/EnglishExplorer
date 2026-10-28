@@ -85,28 +85,9 @@
         --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.45);
       }
 
-      #themeToggle {
-        position: fixed;
-        top: 12px;
-        right: 12px;
-        z-index: 10;
-        width: 46px;
-        height: 46px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 1.3rem;
-        line-height: 1;
-        background: var(--card-bg);
-        color: var(--text);
-        border: 2px solid var(--border);
-        border-radius: 999px;
-        box-shadow: var(--shadow);
-        cursor: pointer;
-        -webkit-tap-highlight-color: transparent;
-      }
-
       body {
+        position: relative;
+        isolation: isolate;
         font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
         background-color: var(--bg-color);
         color: var(--text);
@@ -117,6 +98,87 @@
         display: flex;
         flex-direction: column;
         align-items: center;
+      }
+
+      .topbar {
+        position: sticky;
+        top: 0;
+        z-index: 30;
+        align-self: stretch;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: clamp(48px, 7vh, 64px);
+        margin: -20px -20px 16px;
+        padding: 0 4vw;
+        background: var(--primary);
+        color: #fff;
+      }
+      .topbarTitle {
+        font-family: Verdana, "Trebuchet MS", sans-serif;
+        font-size: clamp(1.1rem, 2.2vw, 1.6rem);
+        font-weight: 700;
+        letter-spacing: 0.1em;
+        text-align: center;
+        text-transform: uppercase;
+      }
+      html.dark .topbar {
+        background: #232a36;
+        border-bottom: 2px solid var(--accent);
+        color: var(--accent);
+      }
+      .topbarActions {
+        position: absolute;
+        top: 50%;
+        right: 2.5vw;
+        display: flex;
+        align-items: center;
+        gap: 0.4rem;
+        transform: translateY(-50%);
+      }
+      .topbarBtn {
+        display: inline-flex;
+        width: 1.68rem;
+        height: 1.68rem;
+        align-items: center;
+        justify-content: center;
+        padding: 0;
+        border: 2px solid rgba(255, 255, 255, 0.7);
+        border-radius: 999px;
+        background: transparent;
+        color: #fff;
+        font-size: 0.92rem;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        cursor: pointer;
+        -webkit-tap-highlight-color: transparent;
+        transition: transform 0.2s ease, background 0.3s ease, color 0.3s ease;
+      }
+      .topbarBtn:active {
+        transform: scale(0.9);
+      }
+      .topbarBtn:focus-visible {
+        outline: 3px solid var(--text);
+        outline-offset: 3px;
+      }
+      .topbarBtn svg {
+        width: 1.05em;
+        height: 1.05em;
+      }
+      #themeToggle.dark {
+        background: var(--accent);
+        color: #fff;
+      }
+
+      body::before {
+        content: "";
+        position: fixed;
+        inset: 0;
+        z-index: -1;
+        pointer-events: none;
+        background-image: var(--wp-img, none);
+        background-size: cover;
+        background-position: center;
+        opacity: var(--wp-opacity, 0.18);
       }
 
       /* Headline block: the group is centred on the page, but the headline
@@ -159,6 +221,51 @@
         row-gap: 18px;
         width: 100%;
         max-width: 1500px;
+      }
+      html[data-layout="vertical"] .stage {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+      html[data-layout="vertical"] {
+        --grid-cell-width: clamp(52px, 18vw, 72px);
+        --grid-cell-height: clamp(48px, 16vw, 64px);
+        --grid-gap: 6px;
+        --grid-padding: 8px;
+        --card-width: calc(var(--grid-cell-width) - 6px);
+        --card-height: calc(var(--grid-cell-height) - 6px);
+        --deck-width: calc(var(--card-width) + 20px);
+        --deck-height: calc(var(--card-height) + 20px);
+      }
+      html[data-layout="vertical"] .deckPanel {
+        gap: 8px;
+        padding: 8px;
+      }
+      html[data-layout="vertical"] .deck {
+        width: var(--deck-width);
+        height: var(--deck-height);
+      }
+      html[data-layout="vertical"] .deck.bridged {
+        min-height: var(--deck-height);
+      }
+      html[data-layout="vertical"] .bridgeText {
+        min-height: calc(var(--deck-height) - 12px);
+        font-size: 0.75rem;
+      }
+      html[data-layout="vertical"] .taskText {
+        width: 100%;
+        font-size: 0.82rem;
+        line-height: 1.25;
+      }
+      html[data-layout="vertical"] .cell .imprint span {
+        font-size: clamp(0.5rem, 2.4vw, 0.72rem);
+      }
+      html[data-layout="vertical"] .round {
+        width: clamp(28px, 9vw, 40px);
+        height: clamp(28px, 9vw, 40px);
+      }
+      html[data-layout="vertical"] .cardName {
+        font-size: clamp(0.5rem, 2.2vw, 0.7rem);
       }
 
       /* Wide layout stacks both player decks beside the board. */
@@ -322,8 +429,8 @@
 
       /* ---------- Flip card (front + back brick) ---------- */
       .flipCard {
-        width: 96px;
-        height: 84px;
+        width: var(--card-width, 96px);
+        height: var(--card-height, 84px);
         box-sizing: border-box;
         position: absolute;
         top: 0;
@@ -510,25 +617,23 @@
         cursor: grab;
       }
 
-      /* ---------- 8 x 5 grid ---------- */
+      /* ---------- Matching grid ---------- */
       .gridWrap {
         max-width: 100%;
       }
       .grid {
         display: grid;
-        grid-template-columns: repeat(8, 104px);
-        grid-template-rows: repeat(5, 92px);
-        gap: 10px;
-        padding: 12px;
+        grid-template-columns: repeat(var(--grid-cols, 8), var(--grid-cell-width, 104px));
+        grid-auto-rows: var(--grid-cell-height, 92px);
+        gap: var(--grid-gap, 10px);
+        padding: var(--grid-padding, 12px);
         background: var(--dropzone-bg);
         border: 2px dashed var(--border-strong);
         border-radius: 14px;
         box-sizing: border-box;
         position: relative;
       }
-      /* The board carries the WPIMG1 picture: the stage backdrop is hidden
-         behind the board's opaque background, so the picture is repeated here
-         as a layer on top of it. The cells sit above the layer. */
+      /* Keep the WPIMG1 picture visible through the board's gutters and padding. */
       .grid::before {
         content: "";
         position: absolute;
@@ -565,8 +670,8 @@
         will-change: transform, opacity;
       }
       .cell {
-        width: 104px;
-        height: 92px;
+        width: var(--grid-cell-width, 104px);
+        height: var(--grid-cell-height, 92px);
         box-sizing: border-box;
         outline: 2px dashed var(--border-strong);
         outline-offset: -2px;
@@ -631,6 +736,9 @@
       @media (max-width: 900px) {
         body {
           padding: 14px;
+        }
+        .topbar {
+          margin: -14px -14px 16px;
         }
         .stage {
           display: flex;
@@ -726,9 +834,13 @@
     </style>
   </head>
   <body>
-    <button id="themeToggle" aria-label="Toggle dark mode" title="Toggle dark mode">
-      🌙
-    </button>
+    <header class="topbar">
+      <span class="topbarTitle">MY BASE</span>
+      <div class="topbarActions">
+        <button class="topbarBtn" id="layoutToggleBtn" aria-label="Switch to vertical layout" title="Vertical layout" aria-pressed="false"></button>
+        <button class="topbarBtn" id="themeToggle" aria-label="Toggle dark mode" title="Toggle dark mode"></button>
+      </div>
+    </header>
     <div id="gamepadCursor"></div>
     <header class="pageHead">
       <h1 id="headlineText">Grid Shift Pure Match</h1>
@@ -757,10 +869,22 @@
       (function () {
         var root = document.documentElement;
         var btn = document.getElementById("themeToggle");
+        var layoutBtn = document.getElementById("layoutToggleBtn");
         var theme = "system";
+        var layout = "horizontal";
+        var layoutIcons = {
+          horizontal:
+            '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="12" height="7" x="6" y="8.5" rx="1"/><rect width="10" height="5" x="7" y="9.5" rx=".5" opacity=".4"/><line x1="5" x2="5" y1="12" y2="12.01"/></svg>',
+          vertical:
+            '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="7" height="12" x="8.5" y="6" rx="1"/><rect width="5" height="10" x="9.5" y="7" rx=".5" opacity=".4"/><line x1="12" x2="12" y1="19" y2="19.01"/></svg>',
+        };
         try {
           var saved = localStorage.getItem("miniGameTheme");
           if (saved === "dark" || saved === "light") theme = saved;
+        } catch (e) {}
+        try {
+          var savedLayout = localStorage.getItem("pureMatchLayout");
+          if (savedLayout === "vertical") layout = savedLayout;
         } catch (e) {}
         var darkMq = window.matchMedia("(prefers-color-scheme: dark)");
 
@@ -768,18 +892,43 @@
           var dark = theme === "dark" || (theme === "system" && darkMq.matches);
           root.classList.toggle("dark", dark);
           root.classList.toggle("light", !dark);
-          btn.textContent = dark ? "☀️" : "🌙";
+          btn.classList.toggle("dark", dark);
+          btn.innerHTML = dark
+            ? '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="M20 12h2"/><path d="m19.07 4.93-1.41 1.41"/><path d="M12 20v2"/><path d="m4.93 19.07 1.41-1.41"/></svg>'
+            : '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.985 12.486a9 9 0 1 1-9.473-9.472c.405-.022.617.463.402.807a6.5 6.5 0 0 0 8.268 8.268c.344-.215.829-.003.803.397Z"/></svg>';
+          btn.setAttribute("aria-label", dark ? "Switch to light mode" : "Switch to dark mode");
+          btn.title = dark ? "Light mode" : "Dark mode";
         }
 
+        function applyLayout() {
+          root.setAttribute("data-layout", layout);
+          layoutBtn.innerHTML = layoutIcons[layout];
+          layoutBtn.setAttribute(
+            "aria-label",
+            layout === "horizontal" ? "Switch to vertical layout" : "Switch to horizontal layout",
+          );
+          layoutBtn.title = layout === "horizontal" ? "Vertical layout" : "Horizontal layout";
+          layoutBtn.setAttribute("aria-pressed", layout === "vertical" ? "true" : "false");
+          if (gridEl && gridEl.querySelector(".cell")) reflowGrid();
+        }
+
+        applyLayout();
         apply();
         if (darkMq.addEventListener) darkMq.addEventListener("change", apply);
         else if (darkMq.addListener) darkMq.addListener(apply);
         btn.addEventListener("click", function () {
-          theme = theme === "dark" ? "light" : "dark";
+          theme = root.classList.contains("dark") ? "light" : "dark";
           try {
             localStorage.setItem("miniGameTheme", theme);
           } catch (e) {}
           apply();
+        });
+        layoutBtn.addEventListener("click", function () {
+          layout = layout === "horizontal" ? "vertical" : "horizontal";
+          try {
+            localStorage.setItem("pureMatchLayout", layout);
+          } catch (e) {}
+          applyLayout();
         });
       })();
 
@@ -1666,8 +1815,7 @@
 
       function buildGrid(cols, rows, targets) {
         gridEl.innerHTML = "";
-        gridEl.style.gridTemplateColumns = "repeat(" + cols + ", 104px)";
-        gridEl.style.gridTemplateRows = "repeat(" + rows + ", 92px)";
+        updateGridColumns(cols * rows);
         var targetCells = [];
         for (var i = 0; i < cols * rows; i++) targetCells.push(i);
         shuffle(targetCells);
@@ -1690,16 +1838,22 @@
 
       var remaining = [];
 
+      function updateGridColumns(count) {
+        var maxCols = rootLayout() === "vertical" ? Math.min(COLS, 4) : COLS;
+        gridEl.style.setProperty("--grid-cols", String(Math.max(1, Math.min(maxCols, count))));
+      }
+
+      function rootLayout() {
+        return document.documentElement.getAttribute("data-layout");
+      }
+
       // The board shrinks when a slot disappears (a discarded card or a
       // product that was moved onto its tile): the rows are fitted to the
       // cells that are left.
       function reflowGrid() {
         var count = gridEl.querySelectorAll(".cell").length;
         if (!count) return;
-        var cols = Math.min(COLS, count);
-        var rows = Math.ceil(count / cols);
-        gridEl.style.gridTemplateColumns = "repeat(" + cols + ", 104px)";
-        gridEl.style.gridTemplateRows = "repeat(" + rows + ", 92px)";
+        updateGridColumns(count);
       }
 
       function normalizedFieldName(name) {
@@ -2260,8 +2414,7 @@
           // Opens task 1 (the matching puzzle): its instruction goes under
           // the card stack, its message under the grid.
           loadTask(1);
-          // WPIMG1 is the subtle backdrop picture behind the board and the
-          // area around it (it turns green once the board is finished).
+          // WPIMG1 is the subtle page backdrop and the board-gutter picture.
           var wpImg = getField(settings, "WPIMG1");
           if (wpImg) {
             var wpUrl = String(wpImg).trim().replace(/"/g, "%22");
@@ -2552,13 +2705,12 @@
             // pointerup so any pending highlight clears. Movement is handled
             // through the synthetic pointermove below.
             padDispatch("pointerup", padX, padY, 0);
-            // A short tap (little or no movement) on a click-only target
-            // (theme toggle) needs a real click — browsers do NOT synthesise
-            // "click" from a dispatched PointerEvent. Fire our own.
+            // A short tap (little or no movement) on a toolbar button needs a
+            // real click — browsers do NOT synthesise it from PointerEvents.
             if (moved < padTapDist) {
               var tapEl = document.elementFromPoint(padX, padY);
               if (tapEl) {
-                var isClickable = tapEl.closest("#themeToggle");
+                var isClickable = tapEl.closest("#themeToggle, #layoutToggleBtn");
                 if (isClickable) {
                   var cev = new PointerEvent("click", {
                     bubbles: true,
@@ -2622,7 +2774,7 @@
         var hovEl = document.elementFromPoint(padX, padY);
         var hoverable =
           hovEl &&
-          hovEl.closest(".flipCard, .cell, #themeToggle");
+          hovEl.closest(".flipCard, .cell, #themeToggle, #layoutToggleBtn");
         padCursor.classList.toggle("hovering", !!hoverable);
         requestAnimationFrame(padPoll);
       }
