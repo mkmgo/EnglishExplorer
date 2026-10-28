@@ -1135,6 +1135,7 @@
           protocolViewerFrame.appendChild(frm);
         }
         protocolViewer.hidden = false;
+        if (readAsset) readAsset.style.display = "none";
         if (typeof protocolViewer.scrollIntoView === "function") {
           protocolViewer.scrollIntoView({ behavior: "smooth", block: "nearest" });
         }
@@ -1145,6 +1146,7 @@
         protocolViewer.hidden = true;
         protocolViewerFrame.innerHTML = "";
         protocolViewerTitle.textContent = "";
+        if (readAsset) readAsset.style.removeProperty("display");
       }
       function openRead(title, sub, text, link, protocols) {
         readTitle.textContent = title || "Reading";
