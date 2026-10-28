@@ -147,7 +147,8 @@
         flex: 1;
         min-width: 0;
         background: var(--panel);
-        border-radius: 24px;
+        border: 1px solid rgba(96, 112, 141, 0.22);
+        border-radius: 12px;
         box-shadow: var(--shadow);
         padding: clamp(1rem, 2vw, 1.8rem);
         display: flex;
@@ -155,11 +156,32 @@
         gap: 1em;
       }
       .columnHead {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.45em;
         font-size: clamp(1.4rem, 3vw, 2.4rem);
         font-weight: 900;
         text-align: center;
         margin: 0;
         letter-spacing: -0.01em;
+      }
+      .columnHead::before {
+        content: "";
+        width: 1.15em;
+        height: 1.15em;
+        flex: 0 0 1.15em;
+        border: 1px solid currentColor;
+        border-radius: 50%;
+        background-position: center;
+        background-repeat: no-repeat;
+        background-size: contain;
+      }
+      .columnHead.onza::before {
+        background-image: url("https://res.cloudinary.com/dmkhsyfzf/image/upload/q_auto/f_auto/v1793191441/onza_transp_zkzbhr.png");
+      }
+      .columnHead.nima::before {
+        background-image: url("https://res.cloudinary.com/dmkhsyfzf/image/upload/q_auto/f_auto/v1793191442/nimza_transp_gv2y1d.png");
       }
       .columnHead.nima {
         color: #7c3aed;
@@ -183,6 +205,7 @@
       .updateTable {
         width: 100%;
         border-collapse: collapse;
+        table-layout: fixed;
         font-size: clamp(0.85rem, 1.3vw, 1.1rem);
       }
       .updateTable th {
@@ -203,16 +226,28 @@
       .updateTable tr:last-child td {
         border-bottom: none;
       }
+      .updateTable tbody tr:nth-child(n + 11) {
+        display: none;
+      }
+      .updateTable th:first-child,
       .updateTable .colDate {
         white-space: nowrap;
         color: var(--muted);
         font-variant-numeric: tabular-nums;
-        width: 1%;
+        width: 7.5em;
       }
       .updateTable .colFile {
         font-weight: 700;
       }
+      .updateTable .colFile a {
+        display: block;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+      .updateTable th:last-child,
       .updateTable .colNote {
+        width: 25%;
         color: var(--muted);
         font-size: 0.92em;
       }
@@ -259,6 +294,9 @@
         background: #232a36;
         border-bottom: 2px solid var(--accent);
       }
+      :root[data-theme="dark"] .column {
+        border-color: rgba(147, 161, 184, 0.24);
+      }
       :root[data-theme="dark"] .updateTable td {
         border-bottom-color: rgba(147, 161, 184, 0.12);
       }
@@ -296,7 +334,7 @@
 
       <div class="main">
         <div class="columns">
-          <div class="column">
+          <div class="column onza">
             <h2 class="columnHead onza">Onza</h2>
             <p class="columnSub">
               Class: Thu, 29/10/2026, 10am<br /><b
@@ -336,7 +374,7 @@
                       >Farm Products</a
                     >
                   </td>
-                  <td class="colNote">Prep pls</td>
+                  <td class="colNote">Well done</td>
                 </tr>
                 <tr>
                   <td class="colDate">13/10/2026</td>
@@ -398,8 +436,7 @@
                       href="https://res.cloudinary.com/dmkhsyfzf/image/upload/q_auto/f_auto/v1791392392/material_today_pztqss.jpg"
                       target="_blank"
                       rel="noopener"
-                      >Where Is Bumble?<br />My Adventure Kit<br />Where Are
-                      We?</a
+                      >Where Is Bumble? · My Adventure Kit · Where Are We?</a
                     >
                   </td>
                   <td class="colNote">Well done</td>
@@ -604,7 +641,7 @@
             </table>
           </div>
 
-          <div class="column">
+          <div class="column nima">
             <h2 class="columnHead nima">Nimza</h2>
             <p class="columnSub">
               Class: Thu, 29/10/2026, 11am<br /><b>Next: Plot Comprehension</b>
@@ -626,7 +663,7 @@
                       href="https://mkmgo.github.io/EnglishExplorer/breakthrough/protocols/2026-10-26.html"
                       target="_blank"
                       rel="noopener"
-                      >Lesson Protocol 26/10/2026</a
+                      >Protocol 26/10/2026</a
                     >
                   </td>
                   <td class="colNote">Please learn this well</td>
@@ -639,7 +676,7 @@
                       href="https://mkmgo.github.io/EnglishExplorer/breakthrough/protocols/2026-10-20.html"
                       target="_blank"
                       rel="noopener"
-                      >Lesson Protocol 20/10/2026</a
+                      >Protocol 20/10/2026</a
                     >
                   </td>
                   <td class="colNote">Well done</td>
@@ -652,7 +689,7 @@
                       href="https://mkmgo.github.io/EnglishExplorer/breakthrough/protocols/2026-10-16.html"
                       target="_blank"
                       rel="noopener"
-                      >Lesson Protocol 16/10/2026</a
+                      >Protocol 16/10/2026</a
                     >
                   </td>
                   <td class="colNote">Well done</td>
@@ -665,7 +702,7 @@
                       href="https://mkmgo.github.io/EnglishExplorer/breakthrough/protocols/2026-10-15.html"
                       target="_blank"
                       rel="noopener"
-                      >Lesson Protocol 15/10/2026</a
+                      >Protocol 15/10/2026</a
                     >
                   </td>
                   <td class="colNote">Well done</td>
@@ -678,7 +715,7 @@
                       href="https://mkmgo.github.io/EnglishExplorer/breakthrough/protocols/2026-10-14.html"
                       target="_blank"
                       rel="noopener"
-                      >Lesson Protocol 14/10/2026</a
+                      >Protocol 14/10/2026</a
                     >
                   </td>
                   <td class="colNote">Well done</td>
@@ -691,7 +728,7 @@
                       href="https://mkmgo.github.io/EnglishExplorer/breakthrough/protocols/2026-10-13.html"
                       target="_blank"
                       rel="noopener"
-                      >Lesson Protocol 13/10/2026</a
+                      >Protocol 13/10/2026</a
                     >
                   </td>
                   <td class="colNote">Well done</td>
@@ -704,7 +741,7 @@
                       href="https://mkmgo.github.io/EnglishExplorer/breakthrough/protocols/2026-10-09.html"
                       target="_blank"
                       rel="noopener"
-                      >Lesson Protocol 09/10/2026</a
+                      >Protocol 09/10/2026</a
                     >
                   </td>
                   <td class="colNote">Well done</td>
@@ -717,7 +754,7 @@
                       href="https://mkmgo.github.io/EnglishExplorer/breakthrough/protocols/2026-10-08.html"
                       target="_blank"
                       rel="noopener"
-                      >Lesson Protocol 08/10/2026</a
+                      >Protocol 08/10/2026</a
                     >
                   </td>
                   <td class="colNote">Well done</td>
@@ -730,7 +767,7 @@
                       href="https://mkmgo.github.io/EnglishExplorer/breakthrough/protocols/2026-10-07.html"
                       target="_blank"
                       rel="noopener"
-                      >Lesson Protocol 07/10/2026</a
+                      >Protocol 07/10/2026</a
                     >
                   </td>
                   <td class="colNote">Well done</td>
@@ -743,7 +780,7 @@
                       href="https://mkmgo.github.io/EnglishExplorer/breakthrough/protocols/2026-09-21.html"
                       target="_blank"
                       rel="noopener"
-                      >Lesson Protocol 21/09/2026</a
+                      >Protocol 21/09/2026</a
                     >
                   </td>
                   <td class="colNote">Well done</td>
@@ -756,7 +793,7 @@
                       href="https://mkmgo.github.io/EnglishExplorer/breakthrough/protocols/2026-09-17.html"
                       target="_blank"
                       rel="noopener"
-                      >Lesson Protocol 17/09/2026</a
+                      >Protocol 17/09/2026</a
                     >
                   </td>
                   <td class="colNote">Well done</td>
@@ -769,7 +806,7 @@
                       href="https://mkmgo.github.io/EnglishExplorer/breakthrough/protocols/2026-09-16.html"
                       target="_blank"
                       rel="noopener"
-                      >Lesson Protocol 16/09/2026</a
+                      >Protocol 16/09/2026</a
                     >
                   </td>
                   <td class="colNote">Well done</td>
@@ -782,7 +819,7 @@
                       href="https://mkmgo.github.io/EnglishExplorer/breakthrough/protocols/2026-09-15.html"
                       target="_blank"
                       rel="noopener"
-                      >Lesson Protocol 15/09/2026</a
+                      >Protocol 15/09/2026</a
                     >
                   </td>
                   <td class="colNote">Well done</td>
@@ -808,7 +845,7 @@
                       href="https://mkmgo.github.io/EnglishExplorer/breakthrough/protocols/2026-09-11.html"
                       target="_blank"
                       rel="noopener"
-                      >Lesson Protocol 11/09/2026</a
+                      >Protocol 11/09/2026</a
                     >
                   </td>
                   <td class="colNote">Well done</td>
@@ -821,7 +858,7 @@
                       href="https://mkmgo.github.io/EnglishExplorer/breakthrough/protocols/2026-09-10.html"
                       target="_blank"
                       rel="noopener"
-                      >Lesson Protocol 10/09/2026</a
+                      >Protocol 10/09/2026</a
                     >
                   </td>
                   <td class="colNote">Well done</td>
@@ -834,7 +871,7 @@
                       href="https://mkmgo.github.io/EnglishExplorer/breakthrough/protocols/2026-09-09.html"
                       target="_blank"
                       rel="noopener"
-                      >Lesson Protocol 09/09/2026</a
+                      >Protocol 09/09/2026</a
                     >
                   </td>
                   <td class="colNote">Well done</td>
@@ -847,7 +884,7 @@
                       href="https://mkmgo.github.io/EnglishExplorer/breakthrough/protocols/2026-09-08.html"
                       target="_blank"
                       rel="noopener"
-                      >Lesson Protocol 08/09/2026</a
+                      >Protocol 08/09/2026</a
                     >
                   </td>
                   <td class="colNote">Well done</td>
@@ -860,7 +897,7 @@
                       href="https://mkmgo.github.io/EnglishExplorer/breakthrough/protocols/2026-09-07.html"
                       target="_blank"
                       rel="noopener"
-                      >Lesson Protocol 07/09/2026</a
+                      >Protocol 07/09/2026</a
                     >
                   </td>
                   <td class="colNote">Well done</td>
@@ -873,7 +910,7 @@
                       href="https://mkmgo.github.io/EnglishExplorer/breakthrough/protocols/2026-09-04.html"
                       target="_blank"
                       rel="noopener"
-                      >Lesson Protocol 04/09/2026</a
+                      >Protocol 04/09/2026</a
                     >
                   </td>
                   <td class="colNote">Well done</td>
@@ -886,7 +923,7 @@
                       href="https://mkmgo.github.io/EnglishExplorer/breakthrough/protocols/2026-09-02.html"
                       target="_blank"
                       rel="noopener"
-                      >Lesson Protocol 02/09/2026</a
+                      >Protocol 02/09/2026</a
                     >
                   </td>
                   <td class="colNote">Well done</td>
@@ -899,7 +936,7 @@
                       href="https://mkmgo.github.io/EnglishExplorer/breakthrough/protocols/2026-08-31.html"
                       target="_blank"
                       rel="noopener"
-                      >Lesson Protocol 31/08/2026</a
+                      >Protocol 31/08/2026</a
                     >
                   </td>
                   <td class="colNote">Well done</td>
@@ -912,7 +949,7 @@
                       href="https://mkmgo.github.io/EnglishExplorer/breakthrough/protocols/2026-08-28.html"
                       target="_blank"
                       rel="noopener"
-                      >Lesson Protocol 28/08/2026</a
+                      >Protocol 28/08/2026</a
                     >
                   </td>
                   <td class="colNote">Well done</td>
@@ -924,7 +961,7 @@
                       href="https://mkmgo.github.io/EnglishExplorer/breakthrough/protocols/2026-08-27.html"
                       target="_blank"
                       rel="noopener"
-                      >Lesson Protocol 27/08/2026</a
+                      >Protocol 27/08/2026</a
                     >
                   </td>
                   <td class="colNote">Well done</td>
@@ -936,7 +973,7 @@
                       href="https://mkmgo.github.io/EnglishExplorer/breakthrough/protocols/2026-08-25.html"
                       target="_blank"
                       rel="noopener"
-                      >Lesson Protocol 25/08/2026</a
+                      >Protocol 25/08/2026</a
                     >
                   </td>
                   <td class="colNote">Well done</td>
@@ -948,7 +985,7 @@
                       href="https://mkmgo.github.io/EnglishExplorer/breakthrough/protocols/2026-08-24.html"
                       target="_blank"
                       rel="noopener"
-                      >Lesson Protocol 24/08/2026</a
+                      >Protocol 24/08/2026</a
                     >
                   </td>
                   <td class="colNote">Well done</td>
@@ -961,7 +998,7 @@
                       href="https://mkmgo.github.io/EnglishExplorer/breakthrough/protocols/2026-08-21.html"
                       target="_blank"
                       rel="noopener"
-                      >Lesson Protocol 21/08/2026</a
+                      >Protocol 21/08/2026</a
                     >
                   </td>
                   <td class="colNote">Well done</td>
@@ -974,7 +1011,7 @@
                       href="https://mkmgo.github.io/EnglishExplorer/breakthrough/protocols/2026-08-20.html"
                       target="_blank"
                       rel="noopener"
-                      >Lesson Protocol 20/08/2026</a
+                      >Protocol 20/08/2026</a
                     >
                   </td>
                   <td class="colNote">Well done</td>
@@ -987,7 +1024,7 @@
                       href="https://mkmgo.github.io/EnglishExplorer/breakthrough/protocols/2026-08-19.html"
                       target="_blank"
                       rel="noopener"
-                      >Lesson Protocol 19/08/2026</a
+                      >Protocol 19/08/2026</a
                     >
                   </td>
                   <td class="colNote">Well done</td>
@@ -1000,7 +1037,7 @@
                       href="https://mkmgo.github.io/EnglishExplorer/breakthrough/protocols/2026-08-18.html"
                       target="_blank"
                       rel="noopener"
-                      >Lesson Protocol 18/08/2026</a
+                      >Protocol 18/08/2026</a
                     >
                   </td>
                   <td class="colNote">Well done</td>
@@ -1013,7 +1050,7 @@
                       href="https://mkmgo.github.io/EnglishExplorer/breakthrough/protocols/2026-08-17.html"
                       target="_blank"
                       rel="noopener"
-                      >Lesson Protocol 17/08/2026</a
+                      >Protocol 17/08/2026</a
                     >
                   </td>
                   <td class="colNote">Well done</td>
