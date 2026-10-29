@@ -32,8 +32,6 @@
         --color-red: #ef4444;
         --color-orange: #f97316;
         --color-purple: #a855f7;
-        /* Width of the task log under the board (the accomplished messages). */
-        --log-width: 25rem;
       }
 
       @media (prefers-color-scheme: dark) {
@@ -56,9 +54,6 @@
           --img-bg: #f8fafc;
           --good: #34d399;
           --goal-bg: #064e3b;
-          /* Width of the task log under the board (the accomplished
-             messages), so every line starts at the same place. */
-          --log-width: 25rem;
           --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.45);
         }
       }
@@ -88,6 +83,7 @@
       body {
         position: relative;
         isolation: isolate;
+        box-sizing: border-box;
         font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
         background-color: var(--bg-color);
         color: var(--text);
@@ -111,8 +107,8 @@
         height: clamp(48px, 7vh, 64px);
         margin: -20px -20px 16px;
         padding: 0 4vw;
-        background: var(--primary);
-        color: #fff;
+        background: var(--card-bg);
+        color: var(--theme-color, var(--primary));
       }
       .topbarTitle {
         font-family: Verdana, "Trebuchet MS", sans-serif;
@@ -121,11 +117,6 @@
         letter-spacing: 0.1em;
         text-align: center;
         text-transform: uppercase;
-      }
-      html.dark .topbar {
-        background: #232a36;
-        border-bottom: 2px solid var(--accent);
-        color: var(--accent);
       }
       .topbarActions {
         position: absolute;
@@ -136,6 +127,11 @@
         gap: 0.4rem;
         transform: translateY(-50%);
       }
+      html.dark .topbar {
+        background: #232a36;
+        border-bottom: 2px solid var(--accent);
+        color: var(--theme-color-dark, var(--accent));
+      }
       .topbarBtn {
         display: inline-flex;
         width: 1.68rem;
@@ -143,10 +139,10 @@
         align-items: center;
         justify-content: center;
         padding: 0;
-        border: 2px solid rgba(255, 255, 255, 0.7);
+        border: 2px solid currentColor;
         border-radius: 999px;
         background: transparent;
-        color: #fff;
+        color: var(--theme-color, var(--primary));
         font-size: 0.92rem;
         box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
         cursor: pointer;
@@ -157,7 +153,7 @@
         transform: scale(0.9);
       }
       .topbarBtn:focus-visible {
-        outline: 3px solid var(--text);
+        outline: 3px solid currentColor;
         outline-offset: 3px;
       }
       .topbarBtn svg {
@@ -165,8 +161,11 @@
         height: 1.05em;
       }
       #themeToggle.dark {
-        background: var(--accent);
+        background: var(--theme-color, var(--accent));
         color: #fff;
+      }
+      html.dark .topbarBtn {
+        color: var(--theme-color-dark, var(--accent));
       }
 
       body::before {
@@ -237,9 +236,19 @@
         --deck-width: calc(var(--card-width) + 20px);
         --deck-height: calc(var(--card-height) + 20px);
       }
-      html[data-layout="vertical"] .deckPanel {
+      html[data-layout="vertical"] .deckPanel,
+      html[data-layout="vertical"] .statusPanel {
         gap: 8px;
         padding: 8px;
+        width: min(148px, calc((100vw - 56px) / 2));
+        max-width: calc((100vw - 56px) / 2);
+      }
+      html[data-layout="vertical"] .deckPair {
+        width: 100%;
+        flex-direction: row;
+        align-items: flex-start;
+        justify-content: center;
+        gap: 8px;
       }
       html[data-layout="vertical"] .deck {
         width: var(--deck-width);
@@ -256,6 +265,10 @@
         width: 100%;
         font-size: 0.82rem;
         line-height: 1.25;
+        margin: 0;
+      }
+      html[data-layout="vertical"] .gridWrap {
+        overflow-x: visible;
       }
       html[data-layout="vertical"] .cell .imprint span {
         font-size: clamp(0.5rem, 2.4vw, 0.72rem);
@@ -273,8 +286,8 @@
         grid-area: players;
         display: flex;
         flex-direction: column;
-        align-items: center;
-        gap: 14px;
+        align-items: stretch;
+        gap: 10px;
       }
       .gridWrap {
         grid-area: grid;
@@ -300,6 +313,9 @@
         flex-direction: column;
         align-items: center;
         gap: 12px;
+      }
+      .statusPanel {
+        min-width: 0;
       }
       .deckHead {
         display: flex;
@@ -338,6 +354,29 @@
         outline: 2px dashed var(--border-strong);
         outline-offset: -2px;
         background: var(--item-bg);
+      }
+      .statusText {
+        width: 100%;
+        min-height: 0;
+        flex: 1 1 auto;
+        box-sizing: border-box;
+        overflow: hidden;
+        padding: 7px;
+        border: 2px dashed var(--border-strong);
+        border-radius: 10px;
+        background: var(--item-bg);
+        color: var(--good);
+        font-size: 0.72rem;
+        font-weight: 800;
+        line-height: 1.2;
+        text-align: left;
+        overflow-wrap: break-word;
+      }
+      .statusText > div + div {
+        margin-top: 5px;
+      }
+      .statusPanel .deckHead .dot {
+        background: var(--good);
       }
       /* The bridge message of a finished task: it sits in the empty stack
          field, centred horizontally and vertically. It is a button - a tap on
@@ -382,22 +421,6 @@
       }
       .bridgeText:active {
         transform: scale(0.97);
-      }
-      .statusText {
-        text-align: left;
-        font-weight: 900;
-        color: var(--good);
-        font-size: 0.95rem;
-        line-height: 1.35;
-        margin-top: 16px;
-        width: var(--log-width);
-        margin-left: auto;
-        margin-right: auto;
-        text-wrap: pretty;
-      }
-      /* One line per accomplished task. */
-      .statusText > div + div {
-        margin-top: 6px;
       }
       .hint {
         text-align: center;
@@ -487,7 +510,8 @@
         font-size: 0.5rem;
       }
       .flipCard.wrong-pick {
-        animation: wrongShake 0.4s ease;
+        animation: wrongShake 0.65s ease;
+        filter: drop-shadow(0 0 5px #ef4444);
       }
       @keyframes wrongShake {
         0%,
@@ -652,22 +676,22 @@
       .grid.done::before {
         opacity: calc(var(--wp-opacity, 0.18) * 0.55);
       }
-      /* The finale: the WPIMG2 picture covers the slot it sits in, so it has
-         the size of a normal tile. */
+      /* The trophy covers the whole board after the last task is complete. */
       .finaleImg {
+        position: absolute;
+        inset: 0;
+        z-index: 5;
         width: 100%;
         height: 100%;
         object-fit: cover;
-        border-radius: 10px;
+        border-radius: inherit;
         display: block;
       }
-      .cell.finaleTarget {
-        outline-style: solid;
-        outline-color: var(--good);
+      .grid.trophy-finale {
+        overflow: hidden;
       }
-      .cell.collapsing {
-        z-index: 2;
-        will-change: transform, opacity;
+      .grid.trophy-finale .cell {
+        visibility: hidden;
       }
       .cell {
         width: var(--grid-cell-width, 104px);
@@ -713,6 +737,8 @@
       .cell.wrong-target {
         background: #fee2e2;
         outline-color: #ef4444;
+        outline-style: solid;
+        box-shadow: inset 0 0 0 3px rgba(239, 68, 68, 0.42);
       }
       html.dark .cell.wrong-target {
         background: #7f1d1d;
@@ -747,27 +773,24 @@
         }
         .deckPair {
           display: flex;
+          flex-direction: column;
           justify-content: center;
-          align-items: flex-start;
-          gap: 14px;
-          flex-wrap: wrap;
+          align-items: stretch;
+          gap: 10px;
+          flex-wrap: nowrap;
         }
-        .deckPanel {
-          flex-direction: row;
-          flex-wrap: wrap;
-          justify-content: center;
+        .deckPanel,
+        .statusPanel {
+          flex-direction: column;
+          flex-wrap: nowrap;
+          width: 148px;
+          max-width: calc(100vw - 28px);
         }
         .deck {
-          margin: 0 6px;
+          margin: 0;
         }
-        .hint,
         .taskText {
-          flex-basis: 100%;
-        }
-        /* The instruction uses the whole width of the row, not the width of
-           the card stack. */
-        .taskText {
-          width: auto;
+          width: 100%;
           margin: 0;
         }
         .gridWrap {
@@ -777,6 +800,15 @@
         .grid {
           width: max-content;
           margin: 0 auto;
+        }
+        html[data-layout="vertical"] .deckPair {
+          flex-direction: row;
+          align-items: flex-start;
+        }
+        html[data-layout="vertical"] .deckPanel,
+        html[data-layout="vertical"] .statusPanel {
+          width: min(148px, calc((100vw - 56px) / 2));
+          max-width: calc((100vw - 56px) / 2);
         }
       }
 
@@ -835,7 +867,7 @@
   </head>
   <body>
     <header class="topbar">
-      <span class="topbarTitle">MY BASE</span>
+      <span class="topbarTitle" id="topbarTitle">MY BASE</span>
       <div class="topbarActions">
         <button class="topbarBtn" id="layoutToggleBtn" aria-label="Switch to vertical layout" title="Vertical layout" aria-pressed="false"></button>
         <button class="topbarBtn" id="themeToggle" aria-label="Toggle dark mode" title="Toggle dark mode"></button>
@@ -843,16 +875,19 @@
     </header>
     <div id="gamepadCursor"></div>
     <header class="pageHead">
-      <h1 id="headlineText">Grid Shift Pure Match</h1>
       <h3 id="subheadlineText" hidden></h3>
     </header>
 
     <main class="stage">
       <div class="deckPair">
-        <section class="deckPanel">
+        <section class="deckPanel" id="stackPanel">
           <div class="deckHead"><span class="dot" id="deckDot"></span><span id="deckLabel">Player</span><span class="count" id="count">0</span></div>
           <div class="deck" id="deck"><div class="bridgeText" id="bridgeText" hidden></div></div>
           <div class="taskText" id="deckText">Turn over each card, then place it on the matching imprint.</div>
+        </section>
+        <section class="deckPanel statusPanel" id="statusPanel">
+          <div class="deckHead"><span class="dot"></span><span>SUCCESS</span></div>
+          <div class="statusText" id="status" aria-label="Completed messages" aria-live="polite"></div>
         </section>
       </div>
 
@@ -861,7 +896,6 @@
       </div>
     </main>
 
-    <div class="statusText" id="status" hidden></div>
     <div class="hint" id="feedback" role="status" aria-live="polite"></div>
 
     <script>
@@ -910,6 +944,9 @@
           layoutBtn.title = layout === "horizontal" ? "Vertical layout" : "Horizontal layout";
           layoutBtn.setAttribute("aria-pressed", layout === "vertical" ? "true" : "false");
           if (gridEl && gridEl.querySelector(".cell")) reflowGrid();
+          if (typeof syncSuccessPanelSize === "function") {
+            window.requestAnimationFrame(syncSuccessPanelSize);
+          }
         }
 
         applyLayout();
@@ -1102,11 +1139,13 @@
       }
 
       var deckEl = document.getElementById("deck");
+      var stackPanelEl = document.getElementById("stackPanel");
+      var statusPanelEl = document.getElementById("statusPanel");
       var countEl = document.getElementById("count");
       var gridEl = document.getElementById("grid");
       var statusEl = document.getElementById("status");
       var feedbackEl = document.getElementById("feedback");
-      var headlineEl = document.getElementById("headlineText");
+      var topbarTitleEl = document.getElementById("topbarTitle");
       var subheadlineEl = document.getElementById("subheadlineText");
       var deckDotEl = document.getElementById("deckDot");
       var deckLabelEl = document.getElementById("deckLabel");
@@ -1134,7 +1173,7 @@
       // The variant row drives every task of the game:
       //   task1Text      - the instruction of the matching puzzle (task 1)
       //   taskNText      - the instruction of the follow-up task N
-      //   taskNDoneText  - the message shown under the grid when task N is done
+      //   taskNDoneText  - the message shown in the success spot when task N is done
       //   taskNSpoken    - the words spoken aloud in task N
       //   taskNResult    - the card(s) that solve task N
       //   taskNDoneBridge- the message shown in the stack field when task N is
@@ -1148,9 +1187,9 @@
       // is solved by turning the cards of taskNResult to the back: the pupil
       // sees the words on the cards and turns the ones that belong to the
       // task. A task with spoken words tells the pupil which cards to turn.
-      // Every message that is earned stays on screen, so the pupil keeps a
-      // list of what is done. The instruction of the open task is shown under
-      // the card stack; under the grid only the accomplished messages appear.
+      // Earned messages fill the success spot; oldest messages are removed
+      // when needed to keep the panel from scrolling. The open task
+      // instruction is shown under the card stack.
       //
       // The intro step (taskNIntro) is different: it adds new cards to the
       // board and asks the pupil to move them onto the tile they belong to.
@@ -1193,16 +1232,9 @@
       // can be set in the variant row (GridShiftVariants); the built-in text
       // is used while the field is empty.
       var FEEDBACK_FIELDS = {
-        wrongCard: "WrongCardText",
-        wrongSpot: "WrongSpotText",
-        wrongProduct: "WrongProductText",
         correct: "CorrectText",
       };
       var DEFAULT_TEXTS = {
-        wrongCard: "Not that one. Try another card.",
-        wrongSpot: "That card doesn't match this imprint. Try another spot.",
-        wrongProduct:
-          "That product doesn't belong to this animal. Try another spot.",
         correct: "✔ Correct!",
       };
 
@@ -1214,6 +1246,49 @@
           ? String(getField(variantSettings, field) || "").trim()
           : "";
         return value || DEFAULT_TEXTS[key] || "";
+      }
+
+      function addSuccessMessage(value) {
+        var message = String(value || "").trim();
+        if (message) accomplished.push(message);
+      }
+
+      function colourChannels(value) {
+        var probe = document.createElement("span");
+        probe.style.color = resolveColour(value, "");
+        if (!probe.style.color) return null;
+        document.body.appendChild(probe);
+        var computed = window.getComputedStyle(probe).color;
+        probe.parentNode.removeChild(probe);
+        var match = /^rgba?\(([^)]+)\)$/i.exec(computed);
+        if (!match) return null;
+        var channels = match[1].match(/[\d.]+/g);
+        if (!channels || channels.length < 3) return null;
+        return [
+          Math.max(0, Math.min(255, Number(channels[0]))),
+          Math.max(0, Math.min(255, Number(channels[1]))),
+          Math.max(0, Math.min(255, Number(channels[2]))),
+        ];
+      }
+
+      function applyPartColour(value) {
+        var channels = colourChannels(value);
+        if (!channels) return;
+        var darker = channels.map(function (channel) {
+          return Math.round(channel * 0.82);
+        });
+        var lighter = channels.map(function (channel) {
+          return Math.round(channel + (255 - channel) * 0.28);
+        });
+        function cssRgb(rgb) {
+          return "rgb(" + rgb.join(", ") + ")";
+        }
+        var rootStyle = document.documentElement.style;
+        rootStyle.setProperty("--theme-color", cssRgb(darker));
+        rootStyle.setProperty("--theme-color-dark", cssRgb(lighter));
+        rootStyle.setProperty("--primary", cssRgb(darker));
+        rootStyle.setProperty("--accent", cssRgb(darker));
+        rootStyle.setProperty("--heading", cssRgb(darker));
       }
 
       function toIdList(value) {
@@ -1313,7 +1388,7 @@
 
       // Opens task n: its instruction goes under the card stack, its solution
       // card(s) make the board wait for a turn and its message is added to the
-      // list under the grid once it is solved.
+      // success spot once it is solved.
       function loadTask(n) {
         currentTask = n;
         var fields = taskFields(n);
@@ -1444,19 +1519,14 @@
         return total > 0 && turned >= total;
       }
 
-      // The cards of the task have all been turned: the task is done. Its
-      // message joins the list under the grid and its bridge message (if it
-      // has one) appears in the stack field.
+      // The cards of the task have all been turned: its message joins the
+      // success spot and its bridge message (if present) waits for a tap.
       function completeTurnTask() {
         awaitingTurn = false;
-        if (pendingAccText) {
-          accomplished.push(pendingAccText);
-          feedbackEl.textContent = "";
-        } else {
-          feedbackEl.textContent = feedbackText("correct");
-        }
+        addSuccessMessage(pendingAccText || feedbackText("correct"));
         var bridge = pendingBridgeText;
         bridgePending = !!bridge;
+        if (!bridge) clearTurnedCards();
         loadTask(currentTask + 1);
         if (bridge) showBridge(bridge);
         applyState();
@@ -1478,9 +1548,8 @@
         deckEl.classList.remove("bridged");
       }
 
-      // A tap on the bridge message: the cards that were turned leave the
-      // board and go back into the stack. They stay turned (face down) and
-      // are discarded from now on.
+      // Completed cards return to the covered stack, but their grid cells and
+      // imprints stay in place for the rest of the game.
       function clearTurnedCards() {
         var cards = gridEl.querySelectorAll(".flipCard");
         var back = [];
@@ -1496,8 +1565,10 @@
           var cell = card.parentNode;
           if (cell && cell.classList.contains("cell")) {
             cell.classList.remove("solved-cell");
-            // The slot of a discarded card disappears from the board.
-            if (cell.parentNode) cell.parentNode.removeChild(cell);
+            cell.classList.remove("filled");
+            var imprint = cell.querySelector(".imprint");
+            if (imprint) imprint.classList.remove("taken");
+            cell.removeChild(card);
           }
           discarded.push(card);
         }
@@ -1548,10 +1619,16 @@
         return null;
       }
 
+      function isUnoccupiedCell(cell) {
+        return !!cell &&
+          !cell.querySelector(".flipCard") &&
+          !cell.querySelector(".finaleImg");
+      }
+
       // The intro step of the variant row: the GridShift records that carry a
       // TileRelated value (the pictures of the farm products) are added to the
-      // board. Their picture is shown openly on a free cell and the pupil has
-      // to move every one of them onto the tile it belongs to.
+      // board. Their picture is shown openly on an unoccupied cell and the
+      // pupil has to move every one of them onto the tile it belongs to.
       function startIntroTask() {
         relatedCards = [];
         relatedPlaced = 0;
@@ -1582,11 +1659,17 @@
         var cells = [];
         var cellEls = gridEl.querySelectorAll(".cell");
         for (var i = 0; i < cellEls.length; i++) {
-          if (!cellEls[i].querySelector(".flipCard")) cells.push(cellEls[i]);
+          if (isUnoccupiedCell(cellEls[i])) cells.push(cellEls[i]);
         }
-        // The new cards are spread over the free cells of the board.
+        // The new cards are spread over empty cells only; occupied tiles are
+        // never overlaid by an intro card.
         shuffle(cells);
-        for (var j = 0; j < sources.length && j < cells.length; j++) {
+        for (var j = 0; j < sources.length; j++) {
+          var targetCell = cells.shift();
+          while (targetCell && !isUnoccupiedCell(targetCell)) {
+            targetCell = cells.shift();
+          }
+          if (!targetCell) break;
           var record = sources[j];
           var fields = (record && record.fields) || {};
           var url = String(getField(fields, "TileRelated")).trim();
@@ -1626,7 +1709,7 @@
           }
           card.classList.add("flipped");
           card.dataset.flipped = "true";
-          cells[j].appendChild(card);
+          targetCell.appendChild(card);
           relatedCards.push(card);
         }
         if (!relatedCards.length) {
@@ -1657,40 +1740,46 @@
       // The card is moved onto the tile it belongs to: the cell keeps its
       // green frame and the task is done when every card is on its tile.
       function placeRelatedCard(card, cell) {
-        var from = card.parentNode;
         cell.appendChild(card);
-        // The slot the product came from disappears from the board: at the
-        // end only the open slots are left.
-        if (
-          from &&
-          from !== cell &&
-          from.classList &&
-          from.classList.contains("cell") &&
-          from.parentNode
-        ) {
-          from.parentNode.removeChild(from);
-        }
         card.classList.add("matched", "relatedPlaced");
         cell.classList.add("solved-cell");
         feedbackEl.textContent = "";
         track("Match", card.dataset.id);
         relatedPlaced++;
-        reflowGrid();
         if (relatedPlaced >= relatedCards.length) completeIntroTask();
       }
 
       // Every new card sits on its tile: the task is done, its message joins
-      // the list under the grid and the next task (if there is one) opens.
+      // the success spot and the next task (if there is one) opens.
       function completeIntroTask() {
         introMode = false;
-        if (pendingAccText) {
-          accomplished.push(pendingAccText);
-          feedbackEl.textContent = "";
-        } else {
-          feedbackEl.textContent = feedbackText("correct");
-        }
+        addSuccessMessage(pendingAccText || feedbackText("correct"));
+        feedbackEl.textContent = "";
         loadTask(currentTask + 1);
         applyState();
+      }
+
+      function syncSuccessPanelSize() {
+        if (!stackPanelEl || !statusPanelEl || !statusEl) return;
+        statusPanelEl.style.height = "auto";
+        var height = stackPanelEl.getBoundingClientRect().height;
+        if (height > 0) statusPanelEl.style.height = height + "px";
+        while (
+          statusEl.children.length > 1 &&
+          statusEl.scrollHeight > statusEl.clientHeight
+        ) {
+          statusEl.removeChild(statusEl.firstElementChild);
+        }
+        var visibleMessages = [];
+        for (var i = 0; i < statusEl.children.length; i++) {
+          visibleMessages.push(statusEl.children[i].textContent);
+        }
+        statusEl.setAttribute(
+          "aria-label",
+          visibleMessages.length
+            ? "Completed messages: " + visibleMessages.join(". ")
+            : "No completed messages yet",
+        );
       }
 
       function showMessages() {
@@ -1700,74 +1789,33 @@
           line.textContent = accomplished[i];
           statusEl.appendChild(line);
         }
-        statusEl.hidden = accomplished.length === 0;
+        syncSuccessPanelSize();
         gridEl.classList.toggle("turning", awaitingTurn);
       }
+      window.addEventListener("resize", syncSuccessPanelSize);
 
-      // The finale: the WPIMG2 picture appears in the open slot, the tiles
-      // that are left collapse into it and the board turns green.
+      // The finale layers the WPIMG2 trophy over the full board.
       function runFinale() {
-        var cells = Array.prototype.slice.call(
-          gridEl.querySelectorAll(".cell"),
-        );
-        var target = null;
-        for (var i = 0; i < cells.length; i++) {
-          if (!cells[i].querySelector(".flipCard")) {
-            target = cells[i];
-            break;
-          }
-        }
-        if (!target) {
-          // Nothing is left to collapse: the board just turns green.
-          gridEl.classList.add("done");
-          return;
-        }
-        if (finaleImageUrl) {
-          var img = document.createElement("img");
-          img.className = "finaleImg";
-          img.alt = "";
-          img.src = finaleImageUrl;
-          img.onerror = function () {
-            if (this.parentNode) this.parentNode.removeChild(this);
-          };
-          target.appendChild(img);
-          target.classList.add("finaleTarget");
-        }
-        var others = cells.filter(function (cell) {
-          return cell !== target;
-        });
-        if (!others.length) {
-          gridEl.classList.add("done");
-          return;
-        }
-        var box = target.getBoundingClientRect();
-        var toX = box.left + box.width / 2;
-        var toY = box.top + box.height / 2;
-        others.forEach(function (cell, index) {
-          var from = cell.getBoundingClientRect();
-          var dx = toX - (from.left + from.width / 2);
-          var dy = toY - (from.top + from.height / 2);
-          cell.classList.add("collapsing");
-          cell.style.transition = "transform 1.2s ease-in, opacity 1.2s ease-in";
-          cell.style.transitionDelay = index * 90 + "ms";
-          cell.style.transform =
-            "translate(" + dx + "px, " + dy + "px) scale(0.12)";
-          cell.style.opacity = "0";
-        });
-        window.setTimeout(function () {
-          others.forEach(function (cell) {
-            if (cell.parentNode) cell.parentNode.removeChild(cell);
-          });
-          reflowGrid();
-          gridEl.classList.add("done");
-        }, 1400 + others.length * 90);
+        gridEl.classList.add("done");
+        if (!finaleImageUrl) return;
+        var img = document.createElement("img");
+        img.className = "finaleImg";
+        img.alt = "Trophy";
+        img.onload = function () {
+          gridEl.classList.add("trophy-finale");
+        };
+        img.onerror = function () {
+          gridEl.classList.remove("trophy-finale");
+          if (this.parentNode) this.parentNode.removeChild(this);
+        };
+        gridEl.appendChild(img);
+        img.src = finaleImageUrl;
       }
 
       // The board only turns green when every task is solved.
       function applyState() {
         if (!awaitingTurn && !taskText && !bridgePending) {
-          // The game is over: the finale plays once, the board turns green
-          // when the tiles have collapsed into the open slot.
+          // The game is over: place the trophy once and keep the full board.
           if (!finaleStarted) {
             finaleStarted = true;
             runFinale();
@@ -1783,7 +1831,7 @@
         var message = String(
           getFirstField(variantSettings, taskFields(1).acc) || "",
         ).trim();
-        if (message) accomplished.push(message);
+        addSuccessMessage(message || feedbackText("correct"));
         loadTask(2);
         feedbackEl.textContent = "";
         applyState();
@@ -1847,9 +1895,8 @@
         return document.documentElement.getAttribute("data-layout");
       }
 
-      // The board shrinks when a slot disappears (a discarded card or a
-      // product that was moved onto its tile): the rows are fitted to the
-      // cells that are left.
+      // Keep the board's cell count fixed while adapting columns to the
+      // active orientation.
       function reflowGrid() {
         var count = gridEl.querySelectorAll(".cell").length;
         if (!count) return;
@@ -2151,6 +2198,18 @@
         }
       }
 
+      function markWrongCell(cell) {
+        if (!cell) return;
+        if (cell.wrongFeedbackTimer) {
+          window.clearTimeout(cell.wrongFeedbackTimer);
+        }
+        cell.classList.add("wrong-target");
+        cell.wrongFeedbackTimer = window.setTimeout(function () {
+          cell.classList.remove("wrong-target");
+          cell.wrongFeedbackTimer = null;
+        }, 1300);
+      }
+
       var edgeScrollTimer = null;
       var edgeClientX = 0;
       var edgeClientY = 0;
@@ -2208,13 +2267,13 @@
             if (allSolutionCardsTurned()) completeTurnTask();
           } else {
             turnCard.classList.add("wrong-pick");
-            feedbackEl.textContent = feedbackText("wrongCard");
+            feedbackEl.textContent = "";
             window.setTimeout(function () {
               turnCard.classList.remove("wrong-pick");
               turnCard.classList.add("flipped");
               turnCard.dataset.flipped = "true";
               turnCard.dataset.turned = "false";
-            }, 700);
+            }, 1100);
           }
           return;
         }
@@ -2292,12 +2351,8 @@
           if (overCell && isRelatedTarget(overCell, card)) {
             placeRelatedCard(card, overCell);
           } else if (overCell) {
-            var badCell = overCell;
-            badCell.classList.add("wrong-target");
-            window.setTimeout(function () {
-              badCell.classList.remove("wrong-target");
-            }, 600);
-            feedbackEl.textContent = feedbackText("wrongProduct");
+            markWrongCell(overCell);
+            feedbackEl.textContent = "";
           }
         } else if (
           overCell &&
@@ -2317,13 +2372,9 @@
         } else if (overCell && overCell === fromCell) {
           // The card was dropped back onto the cell it came from: nothing
           // changes and no error is shown.
-        } else if (overCell && !overCell.querySelector(".flipCard")) {
-          var wrongCell = overCell;
-          wrongCell.classList.add("wrong-target");
-          window.setTimeout(function () {
-            wrongCell.classList.remove("wrong-target");
-          }, 600);
-          feedbackEl.textContent = feedbackText("wrongSpot");
+        } else if (overCell) {
+          markWrongCell(overCell);
+          feedbackEl.textContent = "";
         }
         fromCell = null;
         clearOverCell();
@@ -2395,7 +2446,7 @@
             if (heading) document.title = heading;
           }
           var headline = String(getField(settings, "H1Text") || "").trim();
-          if (headline && headlineEl) headlineEl.textContent = headline;
+          if (headline && topbarTitleEl) topbarTitleEl.textContent = headline;
           var subheadline = String(getField(settings, "H3Text") || "").trim();
           if (subheadline && subheadlineEl) {
             subheadlineEl.textContent = subheadline;
@@ -2412,7 +2463,7 @@
           // task1Text is the instruction shown under the card stack.
           variantSettings = settings;
           // Opens task 1 (the matching puzzle): its instruction goes under
-          // the card stack, its message under the grid.
+          // the card stack; its done message goes in the success spot.
           loadTask(1);
           // WPIMG1 is the subtle page backdrop and the board-gutter picture.
           var wpImg = getField(settings, "WPIMG1");
@@ -2437,6 +2488,7 @@
               "var(--color-red)",
             );
           }
+          applyPartColour(getField(settings, "PartColour"));
 
           var hintField = parseHintField(getSetting(settings, ["Hints", "Hint"]));
           if (normalizedFieldName(hintField) !== "display") {
