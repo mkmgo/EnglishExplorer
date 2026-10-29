@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no" />
+    <title>Protocol 29/10/2026</title>
+    <meta name="description" content="English Explorer — Protocol 29/10/2026" />
+    <meta property="og:image" content="https://res.cloudinary.com/dmkhsyfzf/image/upload/q_auto/f_auto/v1781698464/protocol_r392x1.png" />
+    <link rel="icon" type="image/png" href="https://res.cloudinary.com/dmkhsyfzf/image/upload/q_auto/f_auto/v1781698464/protocol_r392x1.png" />
+    <link rel="apple-touch-icon" href="https://res.cloudinary.com/dmkhsyfzf/image/upload/q_auto/f_auto/v1781698464/protocol_r392x1.png" />
+    <style>
+      :root { --bg: #FAF7F2; --ink: #14213d; --muted: #60708d; --accent: #e43703; --accent2: #ffb866; --panel: #fcfcfc; --shadow: 0 18px 50px rgba(20,33,61,0.14); }
+      html[data-theme="dark"] { --bg: #161a24; --ink: #e8ecf4; --muted: #93a1b8; --panel: #1f2530; --shadow: 0 18px 50px rgba(0,0,0,0.55); }
+      .container[data-weekday="mon"]{--accent:#2563eb} .container[data-weekday="tue"]{--accent:#e43703} .container[data-weekday="wed"]{--accent:#0d9488} .container[data-weekday="thu"]{--accent:#7c3aed} .container[data-weekday="fri"]{--accent:#dc2626} .container[data-weekday="sat"]{--accent:#d97706} .container[data-weekday="sun"]{--accent:#475569}
+      *{box-sizing:border-box} html,body{margin:0;width:100%;min-height:100%;background:var(--bg);font-family:Arial,Helvetica,sans-serif;color:var(--ink);touch-action:manipulation;line-height:1.6}
+      .container{max-width:900px;margin:0 auto;padding:clamp(16px,4vw,40px) clamp(12px,3vw,24px)}
+      h1{font-size:clamp(1.8rem,5vw,3rem);margin:0 0 .2em;font-weight:900;letter-spacing:-.03em;color:var(--accent)}
+      .date-sub{font-size:clamp(.9rem,1.6vw,1.2rem);color:var(--muted);font-weight:700;letter-spacing:.1em;margin:0 0 .4em}
+      .to-line{font-size:clamp(.95rem,1.7vw,1.15rem);color:var(--muted);font-weight:800;letter-spacing:.06em;text-transform:uppercase;margin:0 0 2em}
+      .to-line b{color:var(--accent)}
+      .intro{background:var(--panel);border-radius:24px;padding:clamp(1rem,2.5vw,1.8em);box-shadow:var(--shadow);margin-bottom:2em;font-size:clamp(1rem,1.8vw,1.2rem);line-height:1.7}
+      h2{font-size:clamp(1.3rem,3.2vw,2rem);margin:2em 0 .6em;font-weight:900;color:var(--ink);letter-spacing:-.02em}
+      h3{font-size:clamp(1.1rem,2.2vw,1.5rem);margin:1.6em 0 .4em;font-weight:800;color:var(--accent)}
+      p{font-size:clamp(1rem,1.8vw,1.15rem);margin:.4em 0}
+      strong,b{font-weight:800} em,i{font-style:italic} del{text-decoration:line-through}
+      code{font-family:Consolas,Menlo,monospace;background:var(--accent2);padding:.08em .28em;border-radius:4px;font-size:.88em}
+      pre{font-family:Consolas,Menlo,monospace;background:var(--panel);padding:.8em 1em;border-radius:10px;overflow-x:auto;margin:.8em 0;font-size:.92em;line-height:1.5}
+      pre code{background:transparent;padding:0}
+      .doc-media{display:block;max-width:100%;height:auto;border-radius:12px;margin:.8em 0;box-shadow:var(--shadow)}
+      .doc-media.video{width:100%;max-width:760px;background:#000}
+      .doc-media.audio{width:min(60vw,640px)}
+      hr{border:0;border-top:2px solid rgba(96,112,141,.35);margin:1.4em 0}
+      .story-section{background:var(--panel);border-radius:24px;padding:clamp(1rem,2.5vw,1.6em);box-shadow:var(--shadow);margin-bottom:1.4em}
+      .story-section h3{margin-top:0} .story-section p{margin:0 0 .55em}
+      .example{background:#fdf3e7;border-left:5px solid var(--accent);border-radius:8px;padding:.7em 1em;margin:.8em 0 !important;font-style:italic}
+      .mdMark{border-radius:4px;padding:0 2px}
+      .mdMark-focus{background:#ffe3c2;box-shadow:inset 0 -0.5em 0 rgba(255,184,102,.6)}
+      .mdMark-copy{background:var(--accent);color:#fff;padding:0 .25em}
+      .mdAlignRight{float:right;margin-left:.6em}
+      .mdMath{font-family:"Times New Roman",serif;white-space:nowrap}
+      html[data-theme="dark"] .mdMark-focus{background:#4a3a22;box-shadow:inset 0 -0.5em 0 rgba(255,184,102,.35)}
+      .vocab-table{width:100%;border-collapse:separate;border-spacing:0;margin:1.6em 0 2em;background:var(--panel);border-radius:16px;box-shadow:var(--shadow);overflow:hidden}
+      .vocab-table th{background:var(--ink);color:var(--accent2);font-size:clamp(.85rem,1.5vw,1rem);font-weight:800;letter-spacing:.06em;padding:.8em 1em;text-align:left;white-space:nowrap}
+      .vocab-table td{padding:.7em 1em;font-size:clamp(.9rem,1.6vw,1.05rem);border-top:1px solid #eae5db;vertical-align:top;word-break:break-word}
+      .vocab-table tr:nth-child(even) td{background:#fdf9f3}
+      .vocab-table td:nth-child(2){color:var(--muted);font-weight:600}
+      html[data-theme="dark"] .example{background:#232a36}
+      html[data-theme="dark"] hr{border-top-color:#333c4e}
+      html[data-theme="dark"] .vocab-table th{background:#0e1220}
+      html[data-theme="dark"] .vocab-table tr:nth-child(even) td{background:#232a36}
+      html[data-theme="dark"] .vocab-table td{border-top-color:#333c4e}
+      #themeToggle{position:fixed;top:clamp(10px,2vw,16px);right:clamp(10px,2vw,16px);z-index:50;width:clamp(38px,5vw,46px);height:clamp(38px,5vw,46px);border-radius:50%;background:var(--panel);color:var(--accent);border:2px solid var(--accent);font-size:20px;cursor:pointer;box-shadow:var(--shadow);line-height:1}
+    </style>
+  </head>
+  <body>
+    <button id="themeToggle" type="button" aria-label="Toggle dark mode">&#x263E;</button>
+    <div class="container" data-weekday="thu">
+      <h1>Protocol 29/10/2026</h1>
+      <p class="date-sub">English Explorer | Breakthrough</p>
+      <p class="to-line">For: <b>Nimza</b></p>
+      <div class="intro">
+        Please study the following structures and sentences well. Words and expressions must be fully understood and memorised. The last section shows today's new vocabulary. Please carefully repeat these as well.
+      </div>
+      <h2>Auxiliary, Modal and Main Verbs</h2>
+      <h2>Grammar Hotspot</h2>
+      <div class="story-section">
+      <hr>
+      <h3>Auxiliary Verbs, Modal Verbs, and Their Properties</h3>
+      <p>In British English, auxiliary verbs (helping verbs) and modal verbs work alongside main verbs to express tense, aspect, voice, mood, and negation. Below is a breakdown of these verbs, their core properties, and special negation rules.</p>
+      <hr>
+      <p>Auxiliary verbs help main verbs form different tenses, questions, and negative sentences. They can change form according to person, number, and tense.</p>
+      </div>
+      <h2>Vocabulary — 29/10/2026</h2>
+      <table class="vocab-table">
+        <thead><tr><th>English</th><th>Chinese</th></tr></thead>
+        <tbody>
+          <tr><td>Auxiliary verbs</td><td>助动词</td></tr>
+          <tr><td>Modal verbs</td><td>情态动词</td></tr>
+          <tr><td>To express</td><td>表达</td></tr>
+          <tr><td>Tense,</td><td>紧张，</td></tr>
+          <tr><td>Aspect,</td><td>方面，</td></tr>
+          <tr><td>Voice,</td><td>嗓音，</td></tr>
+          <tr><td>Mood,</td><td>情绪，</td></tr>
+          <tr><td>Negation.</td><td>否定。</td></tr>
+          <tr><td>Core properties,</td><td>核心属性，</td></tr>
+          <tr><td>Rules.</td><td>规则。</td></tr>
+          <tr><td>Negation</td><td>否定</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <script>
+      (function () {
+        var d = document.documentElement;
+        var K = "eebt-theme";
+        function apply() {
+          var dt = d.getAttribute("data-theme") === "dark";
+          var b = document.getElementById("themeToggle");
+          if (b) b.textContent = dt ? "\u2600" : "\u263E";
+        }
+        var t = null;
+        try { t = localStorage.getItem(K); } catch (e) {}
+        if (t === "dark" || t === "light") d.setAttribute("data-theme", t);
+        else if (window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches) d.setAttribute("data-theme", "dark");
+        else d.setAttribute("data-theme", "light");
+        apply();
+        var b = document.getElementById("themeToggle");
+        if (b) b.onclick = function () {
+          var n = d.getAttribute("data-theme") === "dark" ? "light" : "dark";
+          d.setAttribute("data-theme", n);
+          apply();
+          try { localStorage.setItem(K, n); } catch (e) {}
+        };
+      })();
+    </script>
+  </body>
+</html>
