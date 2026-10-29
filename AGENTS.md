@@ -599,6 +599,45 @@ is imperfect).
 - Loading and error states are in-page (`#loadingMsg` / `#errorMsg`) — Tizen-safe,
   no dialogs.
 
+### Landscape "studio" layout (iPad-first)
+
+The page is **landscape-only by design** (no portrait mode, the layout icon in the
+top bar is shown in the horizontal state but inert). `#app` is a row:
+
+- **Words rail (left)** — every word of the series as a compact, always-visible,
+  scrollable list (thumb + word + ✓ for passed). Words are switchable **freely
+  from the rail** — no Check needed first. Leaving a word that still has
+  un-checked writing opens the in-page `#switchModal` guard (Keep writing /
+  Switch word), never `window.confirm`.
+- **Stage column (centre)** — the **sentence bar** (Airtable `PageTitle` on line
+  1, word counter beside it, verdicts/per-letter hints on line 2; same width as
+  the square) above the **big square** (`aspect-ratio: 1/1`, sized by JS to the
+  free height): the asset fills the top ~35%, the writing grid the rest. Pads
+  are sized from the free square space by `layoutPads()` — short words make a
+  few very large pads; long/double words wrap into up to 4 rows. Recomputed on
+  resize / orientation change (debounced `onViewportChange`).
+- **Right float column** — the **Task card** (current instruction) and the
+  **Event log** (newest first, oldest lines dropped, no scrollbar). Both are
+  translucent, blurred, fixed panels, same as the **floating action pill**
+  (Check / Clear / Next) at the bottom edge of the square.
+
+**Per-letter check = long-press** (no button per pad): holding a pad still for
+~650 ms (`LONGPRESS_MS`) with less than 10 px pen travel runs `checkPad()` on
+that one letter — a blue frame pulses while the hold completes, then the pad
+gets a green frame + ✓ or a red frame + `!`, and the hint shows in the sentence
+bar. New ink on the pad clears its mark. Pure writing (press-move) never
+triggers the check; a hold leaves no dot stroke behind.
+
+**Next** jumps to the next *unpassed* word (sequential, wrapping); the word
+counter, rail and task card follow. Passing every word shows the completion
+overlay. The rail counter shows `<passed>/<total>`.
+
+**Top bar** — copied from `junior/minigames/mb-gs-pure-match.html`: theme
+headline + `PartColour` (light: darkened fill / dark: `#232a36` with the
+lightened colour) come from the **`GridShiftVariants` "Pure Match" row**
+(`H1Text` / `PartColour`); the SVG sun/moon toggle persists to
+`localStorage["miniGameTheme"]` (shared with the minigames, system default).
+
 ### Airtable `HandWriting` table schema
 
 | Field | Type | Purpose |
@@ -606,6 +645,7 @@ is imperfect).
 | `WritingID` | Autonumber | Stable per-row id — not used by the app. |
 | `Text` | Single line text | The word to write (e.g. `tree`). Required — rows without it are skipped. |
 | `Asset` | URL *(optional)* | Picture hint (any absolute image URL, e.g. Cloudinary). Empty = blank placeholder. |
+| `PageTitle` | Single line text *(optional)* | Title line of the word screen (a sentence about the word). Shown in the sentence bar above the square; empty = `Show Your Best Writing!`. |
 
 - Every row is included (no `Active` checkbox). Natural Airtable row order —
   the page shuffles anyway.

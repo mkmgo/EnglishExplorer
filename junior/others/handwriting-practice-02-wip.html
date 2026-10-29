@@ -1,0 +1,1583 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+    />
+    <title>Show Your Best Writing! — Writing Practice</title>
+    <meta name="theme-color" content="#2B0603" />
+    <meta name="description" content="EnglishExplorer — Handwriting word practice on help lines" />
+    <meta property="og:title" content="Show Your Best Writing! — Writing Practice" />
+    <meta property="og:description" content="Fill in the missing word on the help lines." />
+    <meta property="og:image" content="https://res.cloudinary.com/dmkhsyfzf/image/upload/v1787858367/house-heart_dutvpy.png" />
+    <meta name="twitter:title" content="Show Your Best Writing! — Writing Practice" />
+    <meta name="twitter:description" content="Fill in the missing word on the help lines." />
+    <meta name="twitter:image" content="https://res.cloudinary.com/dmkhsyfzf/image/upload/v1787858367/house-heart_dutvpy.png" />
+    <style>
+      :root,
+      html.light {
+        --bg: #faf7f2;
+        --ink: #14213d;
+        --muted: #60708d;
+        --danger: #a63e32;
+        --good: #2e9e4f;
+        --line: #9aa7bd;
+        --panel: #ffffff;
+        /* Top-bar palette — copied from junior/minigames/mb-gs-pure-match.html */
+        color-scheme: light;
+        --primary: #3b82f6;
+        --accent: #f59e0b;
+        --color-blue: #3b82f6;
+        --color-yellow: #eab308;
+        --color-green: #22c55e;
+        --color-red: #ef4444;
+        --color-orange: #f97316;
+        --color-purple: #a855f7;
+        --shadow: 0 18px 50px rgba(20, 33, 61, 0.14);
+      }
+      html.dark {
+        --bg: #0f172a;
+        --ink: #e2e8f0;
+        --muted: #94a3b8;
+        --panel: #1e293b;
+        --line: #475569;
+        /* Top-bar palette in dark — identical to mb-gs-pure-match.html */
+        color-scheme: dark;
+        --primary: #60a5fa;
+        --accent: #fbbf24;
+      }
+      * {
+        box-sizing: border-box;
+        -webkit-tap-highlight-color: transparent;
+      }
+      html,
+      body {
+        margin: 0;
+        width: 100%;
+        height: 100%;
+        background: var(--bg);
+        font-family: "Segoe UI", Arial, Helvetica, sans-serif;
+        color: var(--ink);
+        touch-action: none;
+        overflow: hidden;
+        -webkit-user-select: none;
+        user-select: none;
+      }
+      body {
+        display: flex;
+        flex-direction: column;
+      }
+
+      /* ---- Top bar: copied unchanged from junior/minigames/mb-gs-pure-match.html.
+         Light = PartColour-darkened fill with white title + controls;
+         dark = #232a36 with the lighter PartColour as border + title.
+         The theme toggle uses the inverse (part) treatment for contrast.
+         This page is landscape/tablet-only, so the layout button is shown in
+         the horizontal state but is not switchable. ---- */
+      .topbar {
+        position: sticky;
+        top: 0;
+        z-index: 30;
+        flex: none;
+        align-self: stretch;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: clamp(48px, 7vh, 64px);
+        padding: 0 4vw;
+        background: var(--theme-color, var(--primary));
+        color: #fff;
+      }
+      .topbarTitle {
+        font-family: Verdana, "Trebuchet MS", sans-serif;
+        font-size: clamp(1.1rem, 2.2vw, 1.6rem);
+        font-weight: 700;
+        letter-spacing: 0.1em;
+        text-align: center;
+        text-transform: uppercase;
+      }
+      .topbarActions {
+        position: absolute;
+        top: 50%;
+        right: 2.5vw;
+        display: flex;
+        align-items: center;
+        gap: 0.4rem;
+        transform: translateY(-50%);
+      }
+      html.dark .topbar {
+        background: #232a36;
+        border-bottom: 2px solid var(--accent);
+        color: var(--theme-color-dark, var(--accent));
+      }
+      .topbarBtn {
+        display: inline-flex;
+        width: 1.68rem;
+        height: 1.68rem;
+        align-items: center;
+        justify-content: center;
+        padding: 0;
+        border: 2px solid currentColor;
+        border-radius: 999px;
+        background: transparent;
+        color: #fff;
+        font-size: 0.92rem;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        cursor: pointer;
+        -webkit-tap-highlight-color: transparent;
+        transition: transform 0.2s ease, background 0.3s ease, color 0.3s ease;
+      }
+      .topbarBtn:active {
+        transform: scale(0.9);
+      }
+      .topbarBtn:focus-visible {
+        outline: 3px solid currentColor;
+        outline-offset: 3px;
+      }
+      .topbarBtn svg {
+        width: 1.05em;
+        height: 1.05em;
+      }
+      .topbarBtn.inert {
+        pointer-events: none;
+      }
+      #themeToggle.dark {
+        background: var(--theme-color, var(--accent));
+        color: #fff;
+      }
+      #themeToggle:not(.dark) {
+        background: #fff;
+        color: var(--theme-color, var(--primary));
+      }
+      html.dark .topbarBtn {
+        color: var(--theme-color-dark, var(--accent));
+      }
+      html.dark #themeToggle.dark {
+        background: var(--theme-color-dark, var(--accent));
+        color: #232a36;
+      }
+
+      #app {
+        flex: 1 1 auto;
+        min-height: 0;
+        width: 100vw;
+        box-sizing: border-box;
+        display: flex;
+        gap: clamp(6px, 1vw, 14px);
+        padding: clamp(8px, 1.6vh, 16px);
+      }
+
+      /* ---- Translucent, fixed working panels (rail / task / log / pill) ---- */
+      .rail,
+      .floatCard,
+      .pill {
+        background: rgba(255, 255, 255, 0.74);
+        -webkit-backdrop-filter: blur(8px) saturate(140%);
+        backdrop-filter: blur(8px) saturate(140%);
+        border: 1px solid var(--line);
+        border-radius: 14px;
+        box-shadow: var(--shadow);
+      }
+      html.dark .rail,
+      html.dark .floatCard,
+      html.dark .pill {
+        background: rgba(23, 32, 48, 0.74);
+      }
+
+      /* ---- Words rail (left): the whole asset series, freely scrollable ---- */
+      .rail {
+        flex: none;
+        width: clamp(104px, 12vw, 168px);
+        display: flex;
+        flex-direction: column;
+        min-height: 0;
+        overflow: hidden;
+        align-self: stretch;
+      }
+      .railHead {
+        flex: none;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 8px 10px 6px;
+        font-weight: 800;
+        color: var(--muted);
+        font-size: 0.7rem;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+      }
+      .railList {
+        flex: 1 1 auto;
+        min-height: 0;
+        overflow-y: auto;
+        padding: 0 6px 10px;
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+        touch-action: pan-y;
+      }
+      .railItem {
+        display: flex;
+        align-items: center;
+        gap: 7px;
+        padding: 4px 6px;
+        border-radius: 10px;
+        border: 2px solid transparent;
+        color: var(--ink);
+        cursor: pointer;
+        text-align: left;
+        width: 100%;
+        font: inherit;
+        background: transparent;
+        transition: background 0.15s ease, border-color 0.15s ease;
+      }
+      .railItem:hover {
+        background: rgba(59, 130, 246, 0.12);
+      }
+      .railItem.current {
+        border-color: #3b82f6;
+        background: rgba(59, 130, 246, 0.14);
+      }
+      html.dark .railItem.current {
+        border-color: #60a5fa;
+        background: rgba(96, 165, 250, 0.16);
+      }
+      .railThumb {
+        width: 30px;
+        height: 30px;
+        flex: none;
+        border-radius: 8px;
+        object-fit: cover;
+        background: var(--panel);
+        border: 1px solid var(--line);
+      }
+      .railThumb.blank {
+        display: inline-block;
+      }
+      .railWord {
+        flex: 1;
+        min-width: 0;
+        font-weight: 700;
+        font-size: 0.8rem;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+      .railItem.passed .railWord::after {
+        content: " ✓";
+        color: var(--good);
+        font-weight: 800;
+      }
+
+      /* ---- Stage column: sentence bar above the big square ---- */
+      .stageCol {
+        flex: 1 1 auto;
+        min-width: 0;
+        min-height: 0;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: clamp(6px, 1vh, 10px);
+        position: relative;
+        padding-bottom: clamp(20px, 3.5vh, 30px); /* room for the pill */
+      }
+
+      /* Sentence bar: same length as the square, clearly lower. The Airtable
+         PageTitle lives on line 1, verdict / per-letter hint + Word on line 2. */
+      .sentence {
+        flex: none;
+        width: var(--sq-size, 480px);
+        max-width: 100%;
+        height: clamp(46px, 7.5vh, 66px);
+        box-sizing: border-box;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        gap: 1px;
+        padding: 4px 14px;
+        background: var(--panel);
+        border-radius: 12px;
+        box-shadow: var(--shadow);
+      }
+      .sentTop {
+        display: flex;
+        align-items: baseline;
+        justify-content: space-between;
+        gap: 10px;
+        min-width: 0;
+      }
+      #pageTitle {
+        font-size: clamp(0.92rem, 2.4vw, 1.3rem);
+        color: #c2410c;
+        margin: 0;
+        min-width: 0;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+      #pageTitle.long-title {
+        font-size: clamp(0.78rem, 2vw, 1.05rem);
+      }
+      html.dark #pageTitle {
+        color: #fdba74;
+      }
+      #countLabel {
+        flex: none;
+        font-weight: 700;
+        color: var(--muted);
+        font-size: clamp(0.7rem, 1.8vw, 0.9rem);
+      }
+      #subLine {
+        min-height: 1em;
+        margin: 0;
+        font-size: clamp(0.68rem, 1.8vw, 0.88rem);
+        font-weight: 700;
+        color: var(--muted);
+        text-align: left;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+      #subLine.ok {
+        color: var(--good);
+      }
+      #subLine.almost {
+        color: #f59e0b;
+      }
+      #subLine.fail {
+        color: var(--danger);
+      }
+
+      /* ---- The Square: asset zone (~35%) + writing grid (~65%) ---- */
+      .squareWrap {
+        flex: none;
+        position: relative;
+        width: var(--sq-size, 480px);
+        max-width: 100%;
+      }
+      .square {
+        width: var(--sq-size, 480px);
+        height: var(--sq-size, 480px);
+        max-width: 100%;
+        box-sizing: border-box;
+        background: var(--panel);
+        border-radius: 18px;
+        box-shadow: var(--shadow);
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+      }
+      .assetZone {
+        flex: 0 0 35%;
+        min-height: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 10px 12px 6px;
+        box-sizing: border-box;
+      }
+      .picture {
+        max-width: 100%;
+        max-height: 100%;
+        min-height: 0;
+        width: auto;
+        height: auto;
+        object-fit: contain;
+        border-radius: 10px;
+      }
+      /* In dark mode the white picture shines too much — soften it */
+      html.dark .picture {
+        opacity: 0.72;
+      }
+      .writingZone {
+        flex: 1 1 auto;
+        min-height: 0;
+        display: flex;
+        align-items: stretch;
+        justify-content: center;
+        padding: 4px 14px 14px;
+        box-sizing: border-box;
+      }
+      .word-row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: clamp(4px, 0.7vw, 8px);
+        align-content: center;
+        justify-content: center;
+        width: 100%;
+        height: 100%;
+        min-height: 0;
+      }
+
+      /* Writing pads: sized by JS from the free square space ("writing maxed"). */
+      .chpad {
+        position: relative;
+        border-radius: 10px;
+        background: #fff;
+        overflow: visible;
+      }
+      html.dark .chpad {
+        background: #0b1120;
+      }
+      /* Dotted baseline / midline guides inside each pad */
+      .chpad .guide {
+        position: absolute;
+        left: 0;
+        right: 0;
+        height: 0;
+        border-top: 1.5px dashed var(--line);
+        z-index: 1;
+        pointer-events: none;
+      }
+      .chpad .guide.base {
+        bottom: 22%;
+      }
+      .chpad .guide.mid {
+        bottom: 58%;
+      }
+      .chpad .guide.top {
+        top: 9%;
+      }
+      canvas {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        touch-action: none;
+        z-index: 2;
+        background: transparent;
+      }
+      /* Long-press cue: a blue frame that completes over the hold duration */
+      @keyframes pressPulse {
+        from {
+          box-shadow: inset 0 0 0 1px rgba(59, 130, 246, 0.35);
+        }
+        to {
+          box-shadow: inset 0 0 0 4px rgba(59, 130, 246, 0.9);
+        }
+      }
+      .chpad.pressing {
+        animation: pressPulse 0.65s linear forwards;
+      }
+      /* Per-letter check result frames + stamps (above the canvas) */
+      .chpad.pass::before,
+      .chpad.fail::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        z-index: 3;
+        border-radius: 9px;
+        pointer-events: none;
+      }
+      .chpad.pass::before {
+        border: 3px solid var(--good);
+      }
+      .chpad.fail::before {
+        border: 3px solid #ef4444;
+      }
+      .chpad.pass::after,
+      .chpad.fail::after {
+        position: absolute;
+        right: 3px;
+        bottom: 3px;
+        z-index: 4;
+        width: 17px;
+        height: 17px;
+        border-radius: 50%;
+        font: 800 12px/17px "Segoe UI", Arial, sans-serif;
+        text-align: center;
+        pointer-events: none;
+      }
+      .chpad.pass::after {
+        content: "✓";
+        color: #fff;
+        background: var(--good);
+      }
+      .chpad.fail::after {
+        content: "!";
+        color: #fff;
+        background: #ef4444;
+      }
+
+      /* ---- Right float column: task + event log ---- */
+      .floatCol {
+        flex: none;
+        width: clamp(140px, 15vw, 216px);
+        min-height: 0;
+        display: flex;
+        flex-direction: column;
+        gap: clamp(6px, 1vh, 10px);
+        align-self: stretch;
+      }
+      .floatCard {
+        padding: 8px 10px;
+        box-sizing: border-box;
+        color: var(--ink);
+        min-height: 0;
+        overflow: hidden;
+      }
+      .floatHead {
+        font-weight: 800;
+        font-size: 0.66rem;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: var(--muted);
+        margin-bottom: 3px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
+      #taskText {
+        margin: 0;
+        font-size: 0.78rem;
+        font-weight: 600;
+        line-height: 1.35;
+      }
+      .logCard {
+        flex: 1 1 auto;
+        display: flex;
+        flex-direction: column;
+      }
+      #eventLog {
+        flex: 1 1 auto;
+        min-height: 0;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+        gap: 3px;
+        font-size: 0.72rem;
+        font-weight: 800;
+        color: var(--good);
+        text-align: left;
+      }
+      #eventLog .mismatch {
+        color: #ef4444;
+      }
+
+      /* ---- Floating action pill (bottom edge of the square) ---- */
+      .pill {
+        position: absolute;
+        left: 50%;
+        bottom: clamp(-20px, -2.4vh, -12px);
+        transform: translateX(-50%);
+        display: flex;
+        gap: 10px;
+        align-items: center;
+        padding: 7px 12px;
+        border-radius: 999px;
+        z-index: 6;
+      }
+
+      button.act {
+        font-size: clamp(0.8rem, 2vw, 0.98rem);
+        font-weight: 800;
+        color: #fff;
+        border: 0;
+        border-radius: 10px;
+        padding: clamp(7px, 1.5vh, 12px) clamp(12px, 2vw, 20px);
+        cursor: pointer;
+        transition: transform 0.15s ease, filter 0.2s ease;
+      }
+      button.act:hover {
+        filter: brightness(1.05);
+      }
+      button.act:active {
+        transform: scale(0.96);
+      }
+      .btn-check {
+        background: var(--good);
+      }
+      .btn-clear {
+        background: var(--danger);
+      }
+      .btn-next {
+        background: #3b82f6;
+      }
+      #nextBtn:disabled {
+        background: #94a3b8;
+        cursor: not-allowed;
+        transform: none;
+        filter: none;
+        opacity: 0.6;
+      }
+
+      .hint {
+        color: var(--muted);
+        font-size: clamp(0.75rem, 2vw, 0.92rem);
+        text-align: center;
+        margin: 0;
+      }
+
+      .hidden {
+        display: none !important;
+      }
+
+      /* Completion over a center screen (vertical space is tight) */
+      #done {
+        position: fixed;
+        inset: 0;
+        display: none;
+        align-items: center;
+        justify-content: center;
+        background: rgba(0, 0, 0, 0.55);
+        z-index: 50;
+      }
+      #done.show {
+        display: flex;
+      }
+      /* Word-switch guard: shown from the rail when the open word still has
+         unchecked writing (no window.confirm — Tizen-safe in-page modal). */
+      #switchModal {
+        position: fixed;
+        inset: 0;
+        display: none;
+        align-items: center;
+        justify-content: center;
+        background: rgba(0, 0, 0, 0.55);
+        z-index: 55;
+      }
+      #switchModal.show {
+        display: flex;
+      }
+      .modalBtns {
+        display: flex;
+        gap: 10px;
+        justify-content: center;
+        flex-wrap: wrap;
+      }
+      .done-card {
+        background: var(--panel);
+        color: var(--ink);
+        border-radius: 16px;
+        padding: 26px 34px;
+        text-align: center;
+        box-shadow: var(--shadow);
+        border-top: 6px solid var(--good);
+        max-width: 90vw;
+      }
+      .done-card h2 {
+        margin: 0 0 8px;
+      }
+      .done-card .confetti {
+        font-size: 28px;
+        letter-spacing: 6px;
+        margin: 0 0 10px;
+      }
+      .done-card button {
+        margin-top: 14px;
+      }
+    </style>
+  </head>
+  <body>
+    <header class="topbar">
+      <span class="topbarTitle" id="topbarTitle">WRITING PRACTICE</span>
+      <div class="topbarActions">
+        <!-- Landscape-only page: the layout button is shown in the horizontal
+             state exactly like mb-gs-pure-match.html but is not switchable. -->
+        <button class="topbarBtn inert" id="layoutToggleBtn" tabindex="-1" aria-hidden="true" title="Landscape only">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="12" height="7" x="6" y="8.5" rx="1"/><rect width="10" height="5" x="7" y="9.5" rx=".5" opacity=".4"/><line x1="5" x2="5" y1="12" y2="12.01"/></svg>
+        </button>
+        <button class="topbarBtn" id="themeToggle" aria-label="Toggle dark mode" title="Toggle dark mode"></button>
+      </div>
+    </header>
+
+    <div id="app">
+      <!-- Words rail: every asset of the series, freely browseable. Tap a
+           word to jump to it (a guard appears if the open word has writing). -->
+      <nav class="rail">
+        <div class="railHead"><span>Words</span><span id="railCount">0/0</span></div>
+        <div class="railList" id="railList"></div>
+      </nav>
+
+      <div class="stageCol" id="stageCol">
+        <!-- Sentence bar: Airtable PageTitle + counter, hints land on line 2 -->
+        <div class="sentence" id="sentenceBar">
+          <div class="sentTop">
+            <p id="pageTitle">Show Your Best Writing!</p>
+            <span id="countLabel"></span>
+          </div>
+          <p id="subLine"></p>
+        </div>
+
+        <!-- The big square: asset on top (~35%), writing grid below -->
+        <div class="squareWrap">
+          <section class="square">
+            <div class="assetZone">
+              <img id="picture" class="picture hidden" alt="Word picture" />
+            </div>
+            <div class="writingZone">
+              <div class="word-row" id="wordRow"></div>
+            </div>
+          </section>
+          <div class="pill">
+            <button id="checkBtn" class="act btn-check" type="button">✓ Check</button>
+            <button id="clearBtn" class="act btn-clear" type="button">✕ Clear</button>
+            <button id="nextBtn" class="act btn-next" type="button">Next →</button>
+          </div>
+        </div>
+
+        <p id="loadingMsg" class="hint">Loading words…</p>
+        <p id="errorMsg" class="hint hidden"></p>
+      </div>
+
+      <!-- Fixed translucent floats: task instruction + event log -->
+      <aside class="floatCol">
+        <section class="floatCard">
+          <div class="floatHead"><span>Task</span></div>
+          <p id="taskText">Trace every letter carefully.</p>
+        </section>
+        <section class="floatCard logCard">
+          <div class="floatHead"><span>Event log</span><span id="logCount"></span></div>
+          <div id="eventLog" aria-live="polite"></div>
+        </section>
+      </aside>
+    </div>
+
+    <div id="done">
+      <div class="done-card">
+        <div class="confetti">🎉 🎉 🎉</div>
+        <h2>Amazing writing!</h2>
+        <p id="doneMsg" class="hint"></p>
+        <button id="againBtn" class="act btn-check" type="button">Play again</button>
+      </div>
+    </div>
+
+    <div id="switchModal">
+      <div class="done-card">
+        <h2>Your work is still open</h2>
+        <p id="switchMsg" class="hint">This word still has un-checked writing. Leave it?</p>
+        <div class="modalBtns">
+          <button id="switchStayBtn" class="act btn-clear" type="button">Keep writing</button>
+          <button id="switchGoBtn" class="act btn-next" type="button">Switch word</button>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      // ---- Words are loaded from Airtable (table "HandWriting") ----
+      var WORKER =
+        "https://english-explorer-tracker.mkmueller-mission.workers.dev/airtable?table=HandWriting";
+
+      var WORDS = []; // filled by fetchWords()
+
+      // ---- Pen stroke shape signature per letter.
+      // We cannot run OCR, so we compare the pupil's stroke(s) to a rough
+      // letter template: how many strokes, where the pen starts, and the
+      // overall vertical/horizontal spread (normalised). This gives a
+      // friendly self-check — not a spelling guarantee.
+      // signature: [minStrokes, minFootHeight, expectStart]
+      var LETTER_SHAPES = {
+        a: { strokes: 2, foot: 0.1 },
+        b: { strokes: 2, foot: 0.1 },
+        c: { strokes: 1, foot: 0.1 },
+        d: { strokes: 2, foot: 0.1 },
+        e: { strokes: 1, foot: 0.1 },
+        n: { strokes: 1, foot: 0.1 },
+        o: { strokes: 1, foot: 0.1 },
+        i: { strokes: 2, foot: 0.1 },
+        k: { strokes: 2, foot: 0.1 },
+        l: { strokes: 1, foot: 0.1 },
+        r: { strokes: 2, foot: 0.1 },
+        t: { strokes: 2, foot: 0.1 },
+        u: { strokes: 1, foot: 0.1 },
+        y: { strokes: 1, foot: 0.1 },
+        b2: { strokes: 2, foot: 0.1 }
+      };
+
+      var ASCENDERS = "bdfhklit";
+      var DESCENDERS = "gjpqy";
+      function letterType(ch) {
+        if (ch !== ch.toLowerCase()) return "tall";
+        if (ASCENDERS.indexOf(ch) >= 0) return "tall";
+        if (DESCENDERS.indexOf(ch) >= 0) return "descender";
+        return "short";
+      }
+
+      // ---- State ----
+      var current = 0;
+      var locked = false; // after Check, drawing is read-only until Next/Clear
+      var passed = false; // the current word has passed its Check
+      var passedFlags = []; // one flag per word: passed the whole-word Check
+      var pendingIndex = -1; // rail target waiting for the switch guard
+      var LONGPRESS_MS = 650; // hold a pad this long (still) to check the letter
+      var PRESS_MOVE_TOL = 9; // pen travel beyond this = drawing, not a hold
+
+      var $ = function (id) { return document.getElementById(id); };
+
+      function setNextEnabled(enabled) {
+        var b = $("nextBtn");
+        b.disabled = !enabled;
+        b.title = enabled ? "Go to the next word" : "Check your word first";
+      }
+
+      // Fisher–Yates shuffle
+      function shuffle(arr) {
+        for (var i = arr.length - 1; i > 0; i--) {
+          var j = Math.floor(Math.random() * (i + 1));
+          var t = arr[i];
+          arr[i] = arr[j];
+          arr[j] = t;
+        }
+        return arr;
+      }
+
+      // ---- Load words from Airtable ----
+      function fetchWords() {
+        $("errorMsg").classList.add("hidden");
+        fetch(WORKER)
+          .then(function (r) {
+            if (!r.ok) throw new Error("HTTP " + r.status);
+            return r.json();
+          })
+          .then(function (data) {
+            var records = (data && data.records) || [];
+            var words = [];
+            records.forEach(function (rec) {
+              var f = (rec && rec.fields) || {};
+              var text = (f.Text || "").trim();
+              if (!text) return;
+              words.push({ w: text, img: f.Asset || "", title: ((f.PageTitle || "") + "").trim() });
+            });
+            if (!words.length) {
+              showError("No words yet \u2014 add them in Airtable and try again.");
+              return;
+            }
+            WORDS = shuffle(words);
+            resetGame();
+          })
+          .catch(function (err) {
+            showError("Couldn't load the words. Check your connection and try again.");
+          });
+      }
+      function showError(msg) {
+        $("loadingMsg").classList.add("hidden");
+        $("errorMsg").textContent = msg;
+        $("errorMsg").classList.remove("hidden");
+      }
+      function resetGame() {
+        current = 0;
+        passedFlags = WORDS.map(function () { return false; });
+        $("loadingMsg").classList.add("hidden");
+        $("errorMsg").classList.add("hidden");
+        $("eventLog").textContent = "";
+        logEntries = 0;
+        $("logCount").textContent = "";
+        buildRail();
+        buildWord();
+      }
+
+      // Offscreen context reused for glyph width measurement (never drawn into
+      // the visible pads). Width metrics work everywhere, incl. Tizen.
+      var MEASURE = document.createElement("canvas").getContext("2d");
+      var GHOST_FONT = "900 100px 'Segoe UI', Arial, sans-serif";
+
+      // Fixed per-letter ascent/descent ratios (fractions of the font size),
+      // taken from real 900-weight Segoe UI / Arial measurements. A cache of
+      // maxi values so that on EVERY device the ghost letter's OWN ink stays
+      // inside its handwriting zone: tall letters (b d f h k l AND t) fill the
+      // whole top-line-to-baseline band, the dot of "i" rides in the upper
+      // zone, short letters sit between the middle line and the baseline, and
+      // descender tails stay above the lower edge. Tizen has no bounding-box
+      // metrics, so we never rely on them.
+      var GLYPH_METRICS = (function () {
+        var cap = 0.72, x = 0.53, x2 = 0.52, asc = 0.74, fAsc = 0.75, dot = 0.73, tee = 0.72;
+        var T = {}, ch, i;
+        for (i = 65; i <= 90; i++) {
+          ch = String.fromCharCode(i);
+          T[ch] = { a: cap, d: ch === "Q" ? 0.09 : 0.01 };
+        }
+        "acemnors".split("").forEach(function (c) { T[c] = { a: x, d: 0.01 }; });
+        "uvwxz".split("").forEach(function (c) { T[c] = { a: x2, d: 0.01 }; });
+        "bhdkl".split("").forEach(function (c) { T[c] = { a: asc, d: 0.01 }; });
+        T.f = { a: fAsc, d: 0.01 };
+        T.i = { a: dot, d: 0.01 };
+        T.t = { a: tee, d: 0.01 };
+        T.j = { a: dot, d: 0.24 };
+        T.g = { a: x, d: 0.24 };
+        T.p = { a: x, d: 0.24 };
+        T.q = { a: x, d: 0.24 };
+        T.y = { a: x2, d: 0.24 };
+        return T;
+      })();
+
+      function ghostMetrics(ghost) {
+        var m = GLYPH_METRICS[ghost];
+        if (m) return m;
+        var type = letterType(ghost);
+        if (type === "tall") return { a: 0.72, d: 0.01 };
+        if (type === "descender") return { a: 0.52, d: 0.24 };
+        return { a: 0.52, d: 0.01 };
+      }
+
+      // Font size (CSS px) for one ghost letter, sized so the letter's own
+      // ink fills its handwriting zone: tall letters span top line to
+      // baseline, short letters span middle line to baseline (their highest
+      // ink — "t" stem, "i" dot — stops exactly at the middle line).
+      function ghostSize(ghost, cw, ch) {
+        var type = letterType(ghost);
+        var m = ghostMetrics(ghost);
+        var topLine = ch * 0.09;
+        var midLine = ch * 0.42;
+        var baseline = ch * 0.78;
+        var tailMax = ch * 0.97;
+        var fs = (type === "tall") ? (baseline - topLine) / m.a : (baseline - midLine) / m.a;
+        MEASURE.font = GHOST_FONT;
+        var w100 = MEASURE.measureText(ghost).width;
+        var fsMaxW = (cw * 0.88) * 100 / w100;
+        if (fs > fsMaxW) fs = fsMaxW;
+        if (type === "descender") {
+          var tailLen = m.d * fs;
+          if (tailLen > tailMax - baseline) fs = (tailMax - baseline) / m.d;
+        }
+        return { fs: fs, rA: m.a, rD: m.d, inkTop: baseline - m.a * fs, baseline: baseline };
+      }
+
+      // Faint traceable letter shown inside each blank pad before/while the
+      // pupil writes. Painted on top of the cleared canvas on every redraw.
+      // The capital first letter is TALL and spans from the top help line to
+      // the baseline; lowercase letters are SHORTER and span from the middle
+      // help line to the baseline (e.g. "Tree": a tall T, short r-e-e).
+      function drawGhost(en) {
+        var ctx = en.ctx;
+        var cw = en.canvas.getBoundingClientRect().width;
+        var ch = en.canvas.getBoundingClientRect().height;
+
+        ctx.save();
+        ctx.textAlign = "center";
+        ctx.textBaseline = "alphabetic";
+        ctx.fillStyle = "rgba(160,170,190,0.45)";
+
+        ctx.font = "900 " + en.fs + "px 'Segoe UI', Arial, sans-serif";
+        ctx.fillText(en.ghost, cw / 2, ch * 0.78);
+        ctx.restore();
+      }
+
+      // ---- Theme (copied from junior/minigames/mb-gs-pure-match.html) ----
+      // Same behaviour and colours in light and dark: the bar icon swaps the
+      // moon (dark active) for the sun glyph (light active), the choice
+      // persists in localStorage["miniGameTheme"] — shared with the
+      // minigames — and the system preference is the default.
+      (function () {
+        var root = document.documentElement;
+        var btn = document.getElementById("themeToggle");
+        var theme = "system";
+        var SUN =
+          '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="M20 12h2"/><path d="m19.07 4.93-1.41 1.41"/><path d="M12 20v2"/><path d="m4.93 19.07 1.41-1.41"/></svg>';
+        var MOON =
+          '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.985 12.486a9 9 0 1 1-9.473-9.472c.405-.022.617.463.402.807a6.5 6.5 0 0 0 8.268 8.268c.344-.215.829-.003.803.397Z"/></svg>';
+        try {
+          var saved = localStorage.getItem("miniGameTheme");
+          if (saved === "dark" || saved === "light") theme = saved;
+        } catch (e) {}
+        var mq = window.matchMedia("(prefers-color-scheme: dark)");
+        function apply() {
+          var dark = theme === "dark" || (theme === "system" && mq.matches);
+          root.classList.toggle("dark", dark);
+          root.classList.toggle("light", !dark);
+          btn.classList.toggle("dark", dark);
+          btn.innerHTML = dark ? SUN : MOON;
+          btn.setAttribute("aria-label", dark ? "Switch to light mode" : "Switch to dark mode");
+          btn.title = dark ? "Light mode" : "Dark mode";
+        }
+        apply();
+        if (mq.addEventListener) mq.addEventListener("change", apply);
+        else if (mq.addListener) mq.addListener(apply);
+        btn.addEventListener("click", function () {
+          theme = root.classList.contains("dark") ? "light" : "dark";
+          try { localStorage.setItem("miniGameTheme", theme); } catch (e) {}
+          apply();
+        });
+      })();
+
+      // ---- Top-bar colour + headline (same source as mb-gs-pure-match.html) ----
+      // The "Pure Match" row of the GridShiftVariants table supplies both:
+      // H1Text is the theme headline ("On the Farm") and PartColour is
+      // darkened for the light bar and lightened for the dark bar, exactly
+      // as the minigame does it. A failed read leaves the page on its
+      // built-in defaults — never blocks the game.
+      function normalizedFieldName(name) {
+        return String(name || "").toLowerCase().replace(/[^a-z0-9]/g, "");
+      }
+      function getField(fields, name) {
+        var wanted = normalizedFieldName(name);
+        var key = Object.keys(fields || {}).find(function (fieldName) {
+          return normalizedFieldName(fieldName) === wanted;
+        });
+        return key ? fields[key] : undefined;
+      }
+      function isChecked(val) {
+        var v = String(val || "").trim().toLowerCase();
+        return v === "true" || v === "1" || v === "checked" || v === "on" || v === "yes";
+      }
+      // Palette colours the page exposes as CSS variables (see :root).
+      var PALETTE_COLOURS = {
+        blue: "--color-blue",
+        yellow: "--color-yellow",
+        green: "--color-green",
+        red: "--color-red",
+        orange: "--color-orange",
+        purple: "--color-purple",
+      };
+      // Accepts a palette name ("Green"), a hex / rgb / hsl value, a plain
+      // CSS colour name, or an explicit "var(--color-x)" reference.
+      function resolveColour(value, fallback) {
+        var raw = String(value === undefined || value === null ? "" : value).trim();
+        if (!raw) return fallback;
+        if (/^var\(/i.test(raw)) return raw;
+        var key = raw.toLowerCase();
+        if (PALETTE_COLOURS[key]) return "var(" + PALETTE_COLOURS[key] + ")";
+        return raw;
+      }
+      function colourChannels(value) {
+        var probe = document.createElement("span");
+        probe.style.color = resolveColour(value, "");
+        if (!probe.style.color) return null;
+        document.body.appendChild(probe);
+        var computed = window.getComputedStyle(probe).color;
+        probe.parentNode.removeChild(probe);
+        var match = /^rgba?\(([^)]+)\)$/i.exec(computed);
+        if (!match) return null;
+        var channels = match[1].match(/[\d.]+/g);
+        if (!channels || channels.length < 3) return null;
+        return [
+          Math.max(0, Math.min(255, Number(channels[0]))),
+          Math.max(0, Math.min(255, Number(channels[1]))),
+          Math.max(0, Math.min(255, Number(channels[2]))),
+        ];
+      }
+      function applyPartColour(value) {
+        var channels = colourChannels(value);
+        if (!channels) return;
+        var darker = channels.map(function (channel) {
+          return Math.round(channel * 0.82);
+        });
+        var lighter = channels.map(function (channel) {
+          return Math.round(channel + (255 - channel) * 0.28);
+        });
+        function cssRgb(rgb) {
+          return "rgb(" + rgb.join(", ") + ")";
+        }
+        var rootStyle = document.documentElement.style;
+        rootStyle.setProperty("--theme-color", cssRgb(darker));
+        rootStyle.setProperty("--theme-color-dark", cssRgb(lighter));
+        rootStyle.setProperty("--primary", cssRgb(darker));
+        rootStyle.setProperty("--accent", cssRgb(darker));
+      }
+      (function loadTopbarTheme() {
+        var url = "https://english-explorer-tracker.mkmueller-mission.workers.dev/airtable?table=GridShiftVariants";
+        fetch(url)
+          .then(function (r) {
+            if (!r.ok) throw new Error("HTTP " + r.status);
+            return r.json();
+          })
+          .then(function (data) {
+            var records = (data && data.records) || [];
+            var rows = records.filter(function (rec) {
+              var f = (rec && rec.fields) || {};
+              var active = getField(f, "Active");
+              return (
+                normalizedFieldName(getField(f, "VarName")) === "purematch" &&
+                (active === undefined || isChecked(active))
+              );
+            });
+            if (!rows.length) return;
+            var settings = rows[0].fields || {};
+            applyPartColour(getField(settings, "PartColour"));
+            var headline = String(getField(settings, "H1Text") || "").trim();
+            var titleEl = document.getElementById("topbarTitle");
+            if (headline && titleEl) titleEl.textContent = headline;
+          })
+          .catch(function () {
+            // Keep the built-in bar title and colours; the game still works.
+          });
+      })();
+
+      // ---- Build canvases for the current word ----
+      var pads = []; // {canvas, ctx, pad, strokes:[[{x,y},...],...], drawing}
+      function buildWord() {
+        var word = WORDS[current];
+        var pic = $("picture");
+        if (word.img) {
+          pic.src = word.img;
+          pic.alt = word.w;
+          pic.classList.remove("hidden");
+        } else {
+          pic.removeAttribute("src");
+          pic.alt = "";
+          pic.classList.remove("hidden");
+        }
+        var row = $("wordRow");
+        row.innerHTML = "";
+        pads = [];
+        locked = false;
+        passed = false;
+        setNextEnabled(false);
+        $("pageTitle").textContent = word.title || "Show Your Best Writing!";
+        $("pageTitle").classList.toggle("long-title", ($("pageTitle").textContent || "").length > 42);
+        showSub("", "");
+        $("countLabel").textContent = (current + 1) + "/" + WORDS.length;
+        $("taskText").textContent =
+          "Trace every letter of “" + word.w +
+          "”. Hold a letter still for ≈ 1 second to check it.";
+        updateRail();
+
+        word.w.split("").forEach(function () {
+          var pad = document.createElement("div");
+          pad.className = "chpad";
+          var g1 = document.createElement("div");
+          g1.className = "guide base";
+          var g2 = document.createElement("div");
+          g2.className = "guide mid";
+          var g0 = document.createElement("div");
+          g0.className = "guide top";
+          var canvas = document.createElement("canvas");
+          pad.appendChild(g0);
+          pad.appendChild(g2);
+          pad.appendChild(g1);
+          pad.appendChild(canvas);
+          row.appendChild(pad);
+
+          var ctx = canvas.getContext("2d");
+          var entry = {
+            canvas: canvas, ctx: ctx, pad: pad, strokes: [],
+            drawing: false, lineWidth: 6,
+            startX: 0, startY: 0, moved: false, pressTimer: null,
+          };
+          // First letter is a capital, the rest lowercase (e.g. "Tree").
+          entry.ghost =
+            pads.length === 0
+              ? word.w.charAt(0).toUpperCase()
+              : word.w.charAt(pads.length);
+          pads.push(entry);
+
+          function size() {
+            var r = canvas.getBoundingClientRect();
+            var dpr = window.devicePixelRatio || 1;
+            canvas.width = Math.round(r.width * dpr);
+            canvas.height = Math.round(r.height * dpr);
+            ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+            redraw(entry); // re-apply the faint letter + any strokes
+          }
+          entry.size = size; // called by layoutPads()
+
+          function pos(e) {
+            var r = canvas.getBoundingClientRect();
+            return { x: e.clientX - r.left, y: e.clientY - r.top };
+          }
+          // Cancel a running long-press (drawing took over / pen left).
+          function clearPress() {
+            pad.classList.remove("pressing");
+            if (entry.pressTimer) {
+              window.clearTimeout(entry.pressTimer);
+              entry.pressTimer = null;
+            }
+          }
+          function down(e) {
+            if (locked) return;
+            e.preventDefault();
+            if (canvas.setPointerCapture && e.pointerId !== undefined) {
+              try { canvas.setPointerCapture(e.pointerId); } catch (err) {}
+            }
+            var p = pos(e.touches ? e.touches[0] : e);
+            entry.startX = p.x;
+            entry.startY = p.y;
+            entry.moved = false;
+            entry.drawing = true;
+            entry.strokes.push([p]);
+            // New ink clears the earlier per-letter verdict of this pad.
+            pad.classList.remove("pass", "fail");
+            ctx.lineWidth = entry.lineWidth;
+            ctx.lineCap = "round";
+            ctx.lineJoin = "round";
+            ctx.strokeStyle = "#1d4ed8";
+            // Long-press candidate: holding still checks this letter.
+            pad.classList.add("pressing");
+            if (entry.pressTimer) window.clearTimeout(entry.pressTimer);
+            entry.pressTimer = window.setTimeout(function () {
+              entry.pressTimer = null;
+              pad.classList.remove("pressing");
+              if (!entry.moved && entry.drawing) pressCheck(entry);
+            }, LONGPRESS_MS);
+          }
+          function move(e) {
+            if (!entry.drawing || locked) return;
+            e.preventDefault();
+            var p = pos(e.touches ? e.touches[0] : e);
+            var last = entry.strokes[entry.strokes.length - 1];
+            last.push(p);
+            if (!entry.moved) {
+              var dx = p.x - entry.startX;
+              var dy = p.y - entry.startY;
+              if (Math.sqrt(dx * dx + dy * dy) > PRESS_MOVE_TOL) {
+                entry.moved = true; // this is writing, not a long-press
+                clearPress();
+              }
+            }
+            redraw(entry);
+          }
+          function redraw(en) {
+            en.ctx.clearRect(0, 0, en.canvas.width, en.canvas.height);
+            drawGhost(en);
+            en.strokes.forEach(function (st) {
+              if (!st.length) return;
+              en.ctx.beginPath();
+              en.ctx.moveTo(st[0].x, st[0].y);
+              for (var i = 1; i < st.length; i++) en.ctx.lineTo(st[i].x, st[i].y);
+              en.ctx.stroke();
+            });
+          }
+          function up() {
+            entry.drawing = false;
+            clearPress();
+            // A hold without writing leaves a single-point dot stroke: drop it.
+            if (entry.strokes.length && entry.strokes[entry.strokes.length - 1].length === 1) {
+              entry.strokes.pop();
+              redraw(entry);
+            }
+          }
+
+          canvas.addEventListener("pointerdown", down);
+          canvas.addEventListener("pointermove", move);
+          canvas.addEventListener("pointerup", up);
+          canvas.addEventListener("pointercancel", up);
+        });
+        layoutStage();
+      }
+
+      // ---- Stage layout --------------------------------------------------
+      // The big square fills the free height of the stage column (its width
+      // equals its height — it is a square). The pads then fill the free
+      // space of the square: short words make a few very large pads, long
+      // and double words wrap into more rows of large pads instead of
+      // shrinking. Everything recomputes on resize / orientation change.
+      function layoutStage() {
+        if (!WORDS.length) return;
+        var col = $("stageCol");
+        if (!col) return;
+        var sentence = document.querySelector(".sentence");
+        var styles = window.getComputedStyle(col);
+        var padBottom = parseFloat(styles.paddingBottom) || 24;
+        var gaps = sentence ? (parseFloat(styles.rowGap) || 10) : 0;
+        var sentenceH = sentence ? sentence.getBoundingClientRect().height : 0;
+        var avail = col.clientHeight - padBottom - sentenceH - gaps * 2;
+        var size = Math.max(220, Math.min(avail, col.clientWidth));
+        col.style.setProperty("--sq-size", Math.round(size) + "px");
+        layoutPads();
+      }
+
+      // Choose the pad size: pick the smallest row count (1-4) whose pads
+      // still fill the writing zone generously.
+      function layoutPads() {
+        if (!pads.length) return;
+        var row = $("wordRow");
+        var box = row.getBoundingClientRect();
+        if (!box.width || !box.height) return;
+        var gap = parseFloat(window.getComputedStyle(row).columnGap) || 8;
+        var L = pads.length;
+        var chosen = null;
+        for (var rows = 1; rows <= 4; rows++) {
+          var perRow = Math.ceil(L / rows);
+          var zoneH = (box.height - (rows - 1) * gap) / rows;
+          var padW = Math.min(zoneH * 0.78, (box.width - (perRow - 1) * gap) / perRow);
+          var padH = Math.min(zoneH, padW / 0.78);
+          if (padW >= 34 && padH >= 44) {
+            chosen = { w: padW, h: padH };
+            break;
+          }
+          if (rows === 4) chosen = { w: Math.max(28, padW), h: Math.max(36, padH) };
+        }
+        pads.forEach(function (en) {
+          en.pad.style.width = chosen.w.toFixed(1) + "px";
+          en.pad.style.height = chosen.h.toFixed(1) + "px";
+          en.lineWidth = Math.max(5, Math.round(chosen.h * 0.07));
+          en.size();
+        });
+        computeGhostSizes();
+        pads.forEach(function (en) { redraw(en); });
+      }
+
+      // Precompute ghost font sizes: each letter sized by its own metrics
+      // so ascenders match the capital height and the dot of 'i' stays in
+      // the short-letter zone instead of overshooting.
+      function computeGhostSizes() {
+        if (!pads.length) return;
+        var rect = pads[0].canvas.getBoundingClientRect();
+        var sizes = pads.map(function (en) {
+          return ghostSize(en.ghost, rect.width, rect.height);
+        });
+        var capTop = sizes[0].inkTop;
+        sizes.forEach(function (s) {
+          if (s.inkTop < capTop) s.fs = (s.baseline - capTop) / s.rA;
+        });
+        pads.forEach(function (en, i) { en.fs = sizes[i].fs; });
+      }
+
+      // ---- Sentence bar line 2: word verdicts and per-letter hints ----
+      function showSub(text, cls) {
+        var el = $("subLine");
+        el.textContent = text;
+        el.className = cls || "";
+      }
+
+      // ---- Event log (newest first; old lines drop, never scrolls) ----
+      var logEntries = 0;
+      function pushLog(text, mismatch) {
+        var log = $("eventLog");
+        var line = document.createElement("div");
+        line.textContent = text;
+        if (mismatch) line.className = "mismatch";
+        log.insertBefore(line, log.firstChild);
+        logEntries++;
+        $("logCount").textContent = String(logEntries);
+        while (log.children.length > 1 && log.scrollHeight > log.clientHeight + 1) {
+          log.removeChild(log.lastElementChild);
+        }
+      }
+
+      // ---- Per-letter check (long-press: hold the pad without moving) ----
+      function padPassed(r) {
+        return r.drawn && r.zoneOk && r.coverage > 0.05 && r.coverage < 0.95 && r.strokes <= 6;
+      }
+      function pressCheck(en) {
+        // The hold itself can leave a dot stroke behind: drop it first.
+        if (en.strokes.length && en.strokes[en.strokes.length - 1].length === 1) {
+          en.strokes.pop();
+          redraw(en);
+        }
+        var r = checkPad(en);
+        if (!r.drawn) {
+          en.pad.classList.remove("pass", "fail");
+          showSub("Write “" + en.ghost + "” first, then hold to check.", "");
+          return;
+        }
+        if (padPassed(r)) {
+          en.pad.classList.remove("fail");
+          en.pad.classList.add("pass");
+          showSub("“" + en.ghost + "” looks right!", "ok");
+          pushLog("“" + en.ghost + "” ✓", false);
+        } else {
+          en.pad.classList.remove("pass");
+          en.pad.classList.add("fail");
+          showSub("“" + en.ghost + "”: " + (r.hints[0] || "Check the guide lines"), "fail");
+          pushLog("Mismatch “" + en.ghost + "”", true);
+        }
+      }
+
+      // ---- Words rail (left) ---------------------------------------------
+      function buildRail() {
+        var list = $("railList");
+        list.innerHTML = "";
+        WORDS.forEach(function (word, i) {
+          var item = document.createElement("button");
+          item.type = "button";
+          item.className = "railItem";
+          item.dataset.wordIndex = String(i);
+          var thumb = document.createElement("img");
+          thumb.className = "railThumb";
+          thumb.alt = "";
+          thumb.draggable = false;
+          if (word.img) thumb.src = word.img;
+          else thumb.removeAttribute("src");
+          var label = document.createElement("span");
+          label.className = "railWord";
+          label.textContent = word.w;
+          item.appendChild(thumb);
+          item.appendChild(label);
+          item.addEventListener("click", function () { requestWord(i); });
+          list.appendChild(item);
+        });
+        updateRail();
+      }
+      function updateRail() {
+        if (!WORDS.length) return;
+        var done = passedFlags.filter(Boolean).length;
+        $("railCount").textContent = done + "/" + WORDS.length;
+        var items = $("railList").querySelectorAll(".railItem");
+        for (var i = 0; i < items.length; i++) {
+          var idx = Number(items[i].dataset.wordIndex);
+          items[i].classList.toggle("current", idx === current);
+          items[i].classList.toggle("passed", !!passedFlags[idx]);
+        }
+      }
+      // Rail tap: jump freely; a guard appears when the open word still has
+      // un-checked writing (in-page modal, never window.confirm).
+      function requestWord(idx) {
+        if (idx === current) return;
+        var dirty = pads.some(function (en) { return en.strokes.length > 0; });
+        if (dirty && !passed) {
+          pendingIndex = idx;
+          $("switchModal").classList.add("show");
+          return;
+        }
+        current = idx;
+        buildWord();
+      }
+
+      // ---- Shape check for one letter pad ----
+      function checkPad(en) {
+        if (!en.strokes.length) return { drawn: false };
+        var type = letterType(en.ghost);
+        var box = en.canvas.getBoundingClientRect();
+        var ch = box.height;
+        var cw = box.width;
+        var all = [];
+        en.strokes.forEach(function (st) { all = all.concat(st); });
+        var minX = Infinity, maxX = -Infinity, minY = Infinity, maxY = -Infinity;
+        all.forEach(function (p) {
+          if (p.x < minX) minX = p.x;
+          if (p.x > maxX) maxX = p.x;
+          if (p.y < minY) minY = p.y;
+          if (p.y > maxY) maxY = p.y;
+        });
+        var w = maxX - minX, h = maxY - minY;
+        var coverage = Math.min(1, (w * h) / (cw * ch));
+        var hints = [];
+        var zoneOk = true;
+        if (type === "tall") {
+          if (minY / ch > 0.50) { hints.push("Reach higher to the top line"); zoneOk = false; }
+          if (maxY / ch < 0.68) { hints.push("Come down to the baseline"); zoneOk = false; }
+        } else if (type === "short") {
+          if (minY / ch < 0.32) { hints.push("Stay below the middle line"); zoneOk = false; }
+          if (maxY / ch > 0.88) { hints.push("Don\u2019t go below the baseline"); zoneOk = false; }
+          if (maxY / ch < 0.68) { hints.push("Reach down to the baseline"); zoneOk = false; }
+        } else {
+          if (minY / ch < 0.32) { hints.push("Start from the middle line"); zoneOk = false; }
+          if (maxY / ch < 0.78) { hints.push("The tail should go below the baseline"); zoneOk = false; }
+        }
+        return { drawn: true, zoneOk: zoneOk, coverage: coverage, hints: hints, strokes: en.strokes.length };
+      }
+
+      // ---- Check the whole word ----
+      function checkWord() {
+        if (locked) return;
+        locked = true;
+        var word = WORDS[current];
+        var letters = word.w.split("");
+        var anyDrawn = false,
+          okCount = 0,
+          allHints = [];
+        pads.forEach(function (en, i) {
+          var r = checkPad(en);
+          if (r.drawn) anyDrawn = true;
+          var ok = r.drawn && r.zoneOk && r.coverage > 0.05 && r.coverage < 0.95 && r.strokes <= 6;
+          if (ok) {
+            okCount++;
+          } else if (r.drawn && r.hints.length) {
+            allHints.push({ letter: letters[i], hint: r.hints[0] });
+          }
+        });
+        var sub = "";
+        if (!anyDrawn) {
+          showSub("Draw the word first, then check.", "fail");
+          locked = false;
+          return;
+        }
+        if (okCount >= pads.length - 1) {
+          passed = true;
+          passedFlags[current] = true;
+          setNextEnabled(true);
+          showSub("“" + word.w + "” looks right!", "ok");
+          updateRail();
+          pushLog("“" + word.w + "” ✓", false);
+        } else if (okCount >= pads.length - 2) {
+          showSub(
+            "Almost! " +
+              (allHints.length
+                ? "“" + allHints[0].letter + "”: " + allHints[0].hint
+                : "One or two letters need care."),
+            "almost",
+          );
+        } else {
+          showSub(
+            "Try again — " +
+              (allHints.length
+                ? "“" + allHints[0].letter + "”: " + allHints[0].hint
+                : "check the guide lines."),
+            "fail",
+          );
+        }
+      }
+
+      // ---- Clearing / navigation ----
+      function clearAll() {
+        locked = false;
+        passed = false;
+        setNextEnabled(false);
+        pads.forEach(function (en) {
+          en.strokes = [];
+          en.pad.classList.remove("pass", "fail", "pressing");
+          en.ctx.clearRect(0, 0, en.canvas.width, en.canvas.height);
+          drawGhost(en);
+        });
+        showSub("", "");
+      }
+      // Next = the next word that has not passed yet (sequential, wrapping);
+      // the word counter, rail and task card all follow. Passing every word
+      // ends the game.
+      function nextUnpassed(from) {
+        var n = WORDS.length;
+        for (var s = 1; s <= n; s++) {
+          var idx = (from + s) % n;
+          if (!passedFlags[idx]) return idx;
+        }
+        return -1;
+      }
+      function next() {
+        if (!passed) return;
+        var idx = nextUnpassed(current);
+        if (idx === -1) {
+          doneAll();
+          return;
+        }
+        current = idx;
+        buildWord();
+      }
+      function doneAll() {
+        $("doneMsg").textContent = "You wrote all " + WORDS.length + " words like a star!";
+        $("done").classList.add("show");
+        pushLog("All words written ✓", false);
+      }
+
+      $("checkBtn").addEventListener("click", checkWord);
+      $("clearBtn").addEventListener("click", clearAll);
+      $("nextBtn").addEventListener("click", next);
+      $("againBtn").addEventListener("click", function () {
+        $("done").classList.remove("show");
+        resetGame();
+      });
+      // Word-switch guard modal (rail taps on a half-written word).
+      $("switchStayBtn").addEventListener("click", function () {
+        $("switchModal").classList.remove("show");
+        pendingIndex = -1;
+      });
+      $("switchGoBtn").addEventListener("click", function () {
+        $("switchModal").classList.remove("show");
+        if (pendingIndex < 0) return;
+        pushLog("Word skipped", true);
+        current = pendingIndex;
+        pendingIndex = -1;
+        buildWord();
+      });
+
+      // Keep the square + pads sized on any viewport change (iPad rotation,
+      // resize, toolbars folding). Debounced — iOS fires resize bursts.
+      var resizeTimer = null;
+      function onViewportChange() {
+        if (resizeTimer) window.clearTimeout(resizeTimer);
+        resizeTimer = window.setTimeout(function () {
+          resizeTimer = null;
+          layoutStage();
+        }, 140);
+      }
+      window.addEventListener("resize", onViewportChange);
+      window.addEventListener("orientationchange", onViewportChange);
+
+      fetchWords();
+    </script>
+
+    <script src="../../tracker.js"></script>
+  </body>
+</html>
