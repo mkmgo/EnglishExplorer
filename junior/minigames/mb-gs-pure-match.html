@@ -107,8 +107,8 @@
         height: clamp(48px, 7vh, 64px);
         margin: -20px -20px 16px;
         padding: 0 4vw;
-        background: var(--card-bg);
-        color: var(--theme-color, var(--primary));
+        background: var(--theme-color, var(--primary));
+        color: #fff;
       }
       .topbarTitle {
         font-family: Verdana, "Trebuchet MS", sans-serif;
@@ -142,7 +142,7 @@
         border: 2px solid currentColor;
         border-radius: 999px;
         background: transparent;
-        color: var(--theme-color, var(--primary));
+        color: #fff;
         font-size: 0.92rem;
         box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
         cursor: pointer;
@@ -164,8 +164,16 @@
         background: var(--theme-color, var(--accent));
         color: #fff;
       }
+      #themeToggle:not(.dark) {
+        background: #fff;
+        color: var(--theme-color, var(--primary));
+      }
       html.dark .topbarBtn {
         color: var(--theme-color-dark, var(--accent));
+      }
+      html.dark #themeToggle.dark {
+        background: var(--theme-color-dark, var(--accent));
+        color: #232a36;
       }
 
       body::before {
@@ -208,6 +216,15 @@
         font-weight: 600;
         line-height: 1.25;
         text-align: left;
+      }
+      .pageHead h3.taskPrompt {
+        color: var(--text);
+        font-weight: 700;
+      }
+      .pageHead h3.taskPrompt.speakable {
+        cursor: pointer;
+        text-decoration: underline dotted var(--border-strong);
+        text-underline-offset: 3px;
       }
 
       .stage {
@@ -261,12 +278,6 @@
         min-height: calc(var(--deck-height) - 12px);
         font-size: 0.75rem;
       }
-      html[data-layout="vertical"] .taskText {
-        width: 100%;
-        font-size: 0.82rem;
-        line-height: 1.25;
-        margin: 0;
-      }
       html[data-layout="vertical"] .gridWrap {
         overflow-x: visible;
       }
@@ -317,6 +328,9 @@
       .statusPanel {
         min-width: 0;
       }
+      .statusPanel .deckHead {
+        text-transform: none;
+      }
       .deckHead {
         display: flex;
         align-items: center;
@@ -361,22 +375,29 @@
         flex: 1 1 auto;
         box-sizing: border-box;
         overflow: hidden;
-        padding: 7px;
-        border: 2px dashed var(--border-strong);
-        border-radius: 10px;
-        background: var(--item-bg);
+        padding: 0;
+        border: 0;
+        border-radius: 0;
+        background: transparent;
         color: var(--good);
         font-size: 0.72rem;
         font-weight: 800;
         line-height: 1.2;
         text-align: left;
         overflow-wrap: break-word;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
       }
-      .statusText > div + div {
-        margin-top: 5px;
+      .statusText > div {
+        margin-bottom: 5px;
       }
-      .statusPanel .deckHead .dot {
-        background: var(--good);
+      .statusText .mismatchEntry {
+        color: #ef4444;
+      }
+      .relatedWaiting {
+        visibility: hidden;
+        pointer-events: none;
       }
       /* The bridge message of a finished task: it sits in the empty stack
          field, centred horizontally and vertically. It is a button - a tap on
@@ -429,27 +450,6 @@
         font-weight: 600;
         line-height: 1.35;
       }
-      /* The instruction of the open task, under the card stack. It starts at
-         the left edge of the stack (instead of being centred in it) and is a
-         little larger and stronger than a plain hint, so the pupil reads it
-         as the current instruction. */
-      .taskText {
-        text-align: left;
-        color: var(--text);
-        font-size: 0.95rem;
-        font-weight: 700;
-        line-height: 1.35;
-        width: 112px;
-        margin: 0 auto;
-      }
-      /* A task with spoken words: the instruction can be tapped to hear the
-         words again. */
-      .taskText.speakable {
-        cursor: pointer;
-        text-decoration: underline dotted var(--border-strong);
-        text-underline-offset: 3px;
-      }
-
       /* ---------- Flip card (front + back brick) ---------- */
       .flipCard {
         width: var(--card-width, 96px);
@@ -691,7 +691,12 @@
         overflow: hidden;
       }
       .grid.trophy-finale .cell {
-        visibility: hidden;
+        opacity: 0.12;
+      }
+      .grid.trophy-finale .finaleImg {
+        object-position: center top;
+        filter: brightness(0.82);
+        opacity: 0.9;
       }
       .cell {
         width: var(--grid-cell-width, 104px);
@@ -883,10 +888,9 @@
         <section class="deckPanel" id="stackPanel">
           <div class="deckHead"><span class="dot" id="deckDot"></span><span id="deckLabel">Player</span><span class="count" id="count">0</span></div>
           <div class="deck" id="deck"><div class="bridgeText" id="bridgeText" hidden></div></div>
-          <div class="taskText" id="deckText">Turn over each card, then place it on the matching imprint.</div>
         </section>
         <section class="deckPanel statusPanel" id="statusPanel">
-          <div class="deckHead"><span class="dot"></span><span>SUCCESS</span></div>
+          <div class="deckHead"><span>EVENT LOG</span></div>
           <div class="statusText" id="status" aria-label="Completed messages" aria-live="polite"></div>
         </section>
       </div>
@@ -1149,13 +1153,12 @@
       var subheadlineEl = document.getElementById("subheadlineText");
       var deckDotEl = document.getElementById("deckDot");
       var deckLabelEl = document.getElementById("deckLabel");
-      var deckTextEl = document.getElementById("deckText");
       var bridgeEl = document.getElementById("bridgeText");
 
       // A task with spoken words: the instruction can be tapped to hear the
-      // words again.
-      if (deckTextEl) {
-        deckTextEl.addEventListener("click", function () {
+      // words again from the task prompt above the board.
+      if (subheadlineEl) {
+        subheadlineEl.addEventListener("click", function () {
           if (spokenText) speakTaskWords();
         });
       }
@@ -1173,7 +1176,7 @@
       // The variant row drives every task of the game:
       //   task1Text      - the instruction of the matching puzzle (task 1)
       //   taskNText      - the instruction of the follow-up task N
-      //   taskNDoneText  - the message shown in the success spot when task N is done
+      //   taskNDoneText  - the message shown in the log when task N is done
       //   taskNSpoken    - the words spoken aloud in task N
       //   taskNResult    - the card(s) that solve task N
       //   taskNDoneBridge- the message shown in the stack field when task N is
@@ -1187,17 +1190,17 @@
       // is solved by turning the cards of taskNResult to the back: the pupil
       // sees the words on the cards and turns the ones that belong to the
       // task. A task with spoken words tells the pupil which cards to turn.
-      // Earned messages fill the success spot; oldest messages are removed
-      // when needed to keep the panel from scrolling. The open task
-      // instruction is shown under the card stack.
+      // Earned messages fill the log; oldest messages are removed when needed
+      // to keep the panel from scrolling. The open task instruction is shown
+      // above the board.
       //
       // The intro step (taskNIntro) is different: it adds new cards to the
       // board and asks the pupil to move them onto the tile they belong to.
       // The new cards are the GridShift records that carry a TileRelated
-      // value: their picture is shown openly on a free cell. The taskNResult
-      // of such a task describes the action that finishes it (it holds no
-      // card ids); the cards of the task are the ones of taskNResult only
-      // when that field names them.
+      // value: their pictures are reserved in hidden cells at game start.
+      // The taskNResult of such a task describes the action that finishes it
+      // (it holds no card ids); the cards of the task are the ones of
+      // taskNResult only when that field names them.
       var variantSettings = {};
       var solutionIds = [];
       var awaitingTurn = false; // the board waits for the pupil to turn a card
@@ -1207,6 +1210,7 @@
       var accomplished = []; // the messages of the tasks completed so far
       var pendingAccText = ""; // message of the task that is still open
       var pendingBridgeText = ""; // bridge message of the task that is open
+      var initialSubheadlineText = ""; // H3Text before task-specific prompts
       var discarded = []; // the cards that were turned and put back
       var currentTask = 1; // the task that is open
       var taskText = ""; // instruction of the open task
@@ -1216,6 +1220,7 @@
       var introMode = false; // the open task is an intro task
       var introResultIds = []; // the cards the intro task names itself
       var relatedCards = []; // the cards the intro step added to the board
+      var relatedCardEntries = []; // hidden product cards and their reserved cells
       var relatedPlaced = 0; // how many of them sit on their tile
       var bridgePending = false; // a bridge message waits for its tap
       var introWaiting = false; // the intro cards wait for the bridge tap
@@ -1223,8 +1228,7 @@
       var finaleImageUrl = ""; // WPIMG2: the picture of the finale
       var finaleStarted = false; // the finale runs once, at the end
 
-      // Fallback for the line under the card stack, used until the variant
-      // row is read.
+      // Fallback task prompt, used until the variant row is read.
       var DEFAULT_DECK_TEXT =
         "Turn over each card, then place it on the matching imprint.";
 
@@ -1250,7 +1254,12 @@
 
       function addSuccessMessage(value) {
         var message = String(value || "").trim();
-        if (message) accomplished.push(message);
+        if (message) accomplished.push({ text: message, mismatch: false });
+      }
+
+      function addMismatchEvent() {
+        accomplished.push({ text: "Mismatch", mismatch: true });
+        showMessages();
       }
 
       function colourChannels(value) {
@@ -1386,9 +1395,9 @@
         return false;
       }
 
-      // Opens task n: its instruction goes under the card stack, its solution
-      // card(s) make the board wait for a turn and its message is added to the
-      // success spot once it is solved.
+      // Opens task n: its instruction replaces the H3 subheadline, its
+      // solution card(s) make the board wait for a turn and its message is
+      // added to the log once it is solved.
       function loadTask(n) {
         currentTask = n;
         var fields = taskFields(n);
@@ -1456,11 +1465,16 @@
         // Every task with a result is solved by turning the cards of
         // taskNResult to the back.
         awaitingTurn = solutionIds.length > 0;
-        if (deckTextEl) {
-          deckTextEl.textContent = taskText || (n === 1 ? DEFAULT_DECK_TEXT : "");
-          deckTextEl.classList.toggle("speakable", !!spokenText);
-          if (spokenText) deckTextEl.title = "Tap to hear the words again";
-          else deckTextEl.removeAttribute("title");
+        if (subheadlineEl) {
+          var prompt = taskText;
+          if (!prompt && n === 1) prompt = DEFAULT_DECK_TEXT;
+          else if (!prompt && hasTask) prompt = initialSubheadlineText;
+          subheadlineEl.textContent = prompt;
+          subheadlineEl.hidden = !prompt;
+          subheadlineEl.classList.toggle("taskPrompt", !!prompt);
+          subheadlineEl.classList.toggle("speakable", !!spokenText);
+          if (spokenText) subheadlineEl.title = "Tap to hear the words again";
+          else subheadlineEl.removeAttribute("title");
         }
         if (spokenText) {
           // The tutee sees the words on the cards and turns the spoken ones
@@ -1519,8 +1533,8 @@
         return total > 0 && turned >= total;
       }
 
-      // The cards of the task have all been turned: its message joins the
-      // success spot and its bridge message (if present) waits for a tap.
+      // The cards of the task have all been turned: its message joins the log
+      // and its bridge message (if present) waits for a tap.
       function completeTurnTask() {
         awaitingTurn = false;
         addSuccessMessage(pendingAccText || feedbackText("correct"));
@@ -1619,98 +1633,99 @@
         return null;
       }
 
-      function isUnoccupiedCell(cell) {
-        return !!cell &&
-          !cell.querySelector(".flipCard") &&
-          !cell.querySelector(".finaleImg");
+      function buildRelatedCard(record) {
+        var fields = (record && record.fields) || {};
+        var url = String(getField(fields, "TileRelated") || "").trim();
+        var relatedWord = String(getField(fields, "Related") || "").trim();
+        var card = buildCard(
+          {
+            id: String(record.id) + "-related",
+            fields: {
+              GridShiftID:
+                String(getField(fields, "GridShiftID") || record.id) + "-related",
+              TileName: relatedWord,
+              Display: relatedWord,
+              RenderMode: "cloudinary-img",
+              TileFront: url,
+              TileBack: String(
+                getField(fields, "TileBack") ||
+                  getField(fields, "TileBackA") ||
+                  "",
+              ),
+              FillTile: isChecked(getField(fields, "FillTileRelated"))
+                ? "true"
+                : "",
+            },
+          },
+          "related-" + record.id,
+        );
+        card.dataset.relatedTo = String(record.id);
+        if (!relatedWord) {
+          var nameEl = card.querySelector(".cardName");
+          if (nameEl && nameEl.parentNode) nameEl.parentNode.removeChild(nameEl);
+        }
+        card.classList.add("flipped", "relatedWaiting");
+        card.dataset.flipped = "true";
+        return card;
       }
 
-      // The intro step of the variant row: the GridShift records that carry a
-      // TileRelated value (the pictures of the farm products) are added to the
-      // board. Their picture is shown openly on an unoccupied cell and the
-      // pupil has to move every one of them onto the tile it belongs to.
+      function reserveRelatedCards(records) {
+        relatedCardEntries = [];
+        var cells = [];
+        var cellEls = gridEl.querySelectorAll(".cell");
+        for (var i = 0; i < cellEls.length; i++) {
+          if (!cellEls[i].querySelector(".imprint")) cells.push(cellEls[i]);
+        }
+        shuffle(cells);
+        for (var j = 0; j < records.length; j++) {
+          var cell = cells[j];
+          if (!cell) {
+            throw new Error(
+              "GridDimension needs at least " +
+                (gridEl.querySelectorAll(".cell").length + 1) +
+                " cells to reserve every TileRelated asset.",
+            );
+          }
+          var card = buildRelatedCard(records[j]);
+          cell.appendChild(card);
+          relatedCardEntries.push({ record: records[j], card: card });
+        }
+      }
+
+      // Product cards are reserved in random empty cells before play, then
+      // revealed in those same cells when the intro task begins.
       function startIntroTask() {
         relatedCards = [];
         relatedPlaced = 0;
-        // The records whose card lies on the board: only they have a tile the
-        // new card can be moved onto.
         var onBoard = {};
-        var boardCards = gridEl.querySelectorAll(".flipCard");
+        var boardCards = gridEl.querySelectorAll(".cell > .flipCard");
         for (var b = 0; b < boardCards.length; b++) {
-          onBoard[String(boardCards[b].dataset.recordId)] = true;
+          if (!boardCards[b].dataset.relatedTo) {
+            onBoard[String(boardCards[b].dataset.recordId)] = true;
+          }
         }
-        var sources = allCardRecords.filter(function (record) {
-          var url = String(
-            getField((record && record.fields) || {}, "TileRelated") || "",
-          ).trim();
-          return !!url && onBoard[String(record.id)];
+        var sources = relatedCardEntries.filter(function (entry) {
+          return onBoard[String(entry.record.id)];
         });
         if (introResultIds.length) {
           sources = sources.filter(function (record) {
             return (
-              introResultIds.indexOf(String(record.id)) > -1 ||
+              introResultIds.indexOf(String(record.record.id)) > -1 ||
               introResultIds.indexOf(
-                String(getField((record && record.fields) || {}, "GridShiftID")),
+                String(
+                  getField(
+                    (record.record && record.record.fields) || {},
+                    "GridShiftID",
+                  ),
+                ),
               ) > -1
             );
           });
         }
         shuffle(sources);
-        var cells = [];
-        var cellEls = gridEl.querySelectorAll(".cell");
-        for (var i = 0; i < cellEls.length; i++) {
-          if (isUnoccupiedCell(cellEls[i])) cells.push(cellEls[i]);
-        }
-        // The new cards are spread over empty cells only; occupied tiles are
-        // never overlaid by an intro card.
-        shuffle(cells);
         for (var j = 0; j < sources.length; j++) {
-          var targetCell = cells.shift();
-          while (targetCell && !isUnoccupiedCell(targetCell)) {
-            targetCell = cells.shift();
-          }
-          if (!targetCell) break;
-          var record = sources[j];
-          var fields = (record && record.fields) || {};
-          var url = String(getField(fields, "TileRelated")).trim();
-          // The word of the product (the `Related` field of the record the
-          // picture belongs to): it is written under the picture.
-          var relatedWord = String(getField(fields, "Related") || "").trim();
-          // `FillTileRelated` decides how the product card looks: checked it
-          // fills the whole card and carries no word, unchecked it shows the
-          // picture in a round with the word underneath.
-          var fillRelated = isChecked(getField(fields, "FillTileRelated"));
-          var card = buildCard(
-            {
-              id: String(record.id) + "-related",
-              fields: {
-                GridShiftID:
-                  String(getField(fields, "GridShiftID") || record.id) + "-related",
-                TileName: relatedWord,
-                Display: relatedWord,
-                RenderMode: "cloudinary-img",
-                TileFront: url,
-                TileBack: String(
-                  getField(fields, "TileBack") ||
-                    getField(fields, "TileBackA") ||
-                    "",
-                ),
-                FillTile: fillRelated ? "true" : "",
-              },
-            },
-            "related-" + record.id,
-          );
-          // The tile the card belongs to: the record the picture came from.
-          card.dataset.relatedTo = String(record.id);
-          if (!relatedWord) {
-            // Without a word the card carries no label at all.
-            var nameEl = card.querySelector(".cardName");
-            if (nameEl && nameEl.parentNode) nameEl.parentNode.removeChild(nameEl);
-          }
-          card.classList.add("flipped");
-          card.dataset.flipped = "true";
-          targetCell.appendChild(card);
-          relatedCards.push(card);
+          sources[j].card.classList.remove("relatedWaiting");
+          relatedCards.push(sources[j].card);
         }
         if (!relatedCards.length) {
           // No new card for this step (no record carries a TileRelated value):
@@ -1750,7 +1765,7 @@
       }
 
       // Every new card sits on its tile: the task is done, its message joins
-      // the success spot and the next task (if there is one) opens.
+      // the log and the next task (if there is one) opens.
       function completeIntroTask() {
         introMode = false;
         addSuccessMessage(pendingAccText || feedbackText("correct"));
@@ -1768,7 +1783,8 @@
           statusEl.children.length > 1 &&
           statusEl.scrollHeight > statusEl.clientHeight
         ) {
-          statusEl.removeChild(statusEl.firstElementChild);
+          statusEl.removeChild(statusEl.lastElementChild);
+          accomplished.shift();
         }
         var visibleMessages = [];
         for (var i = 0; i < statusEl.children.length; i++) {
@@ -1777,16 +1793,17 @@
         statusEl.setAttribute(
           "aria-label",
           visibleMessages.length
-            ? "Completed messages: " + visibleMessages.join(". ")
-            : "No completed messages yet",
+            ? "Event log: " + visibleMessages.join(". ")
+            : "Event log empty",
         );
       }
 
       function showMessages() {
         statusEl.textContent = "";
-        for (var i = 0; i < accomplished.length; i++) {
+        for (var i = accomplished.length - 1; i >= 0; i--) {
           var line = document.createElement("div");
-          line.textContent = accomplished[i];
+          line.textContent = accomplished[i].text;
+          if (accomplished[i].mismatch) line.className = "mismatchEntry";
           statusEl.appendChild(line);
         }
         syncSuccessPanelSize();
@@ -2200,6 +2217,7 @@
 
       function markWrongCell(cell) {
         if (!cell) return;
+        addMismatchEvent();
         if (cell.wrongFeedbackTimer) {
           window.clearTimeout(cell.wrongFeedbackTimer);
         }
@@ -2266,6 +2284,7 @@
             feedbackEl.textContent = "";
             if (allSolutionCardsTurned()) completeTurnTask();
           } else {
+            addMismatchEvent();
             turnCard.classList.add("wrong-pick");
             feedbackEl.textContent = "";
             window.setTimeout(function () {
@@ -2438,8 +2457,8 @@
 
           // VarName is only the internal name of the puzzle kind: it selects
           // the variant row and titles the browser tab, it is never shown on
-          // the page. The visible headline is H1Text, the subheadline under
-          // it is H3Text.
+          // the page. H1Text supplies the top-bar title; H3Text is shown until
+          // the active task prompt replaces it.
           var variantName = getField(settings, "VarName");
           if (variantName) {
             var heading = String(variantName).trim();
@@ -2447,9 +2466,11 @@
           }
           var headline = String(getField(settings, "H1Text") || "").trim();
           if (headline && topbarTitleEl) topbarTitleEl.textContent = headline;
-          var subheadline = String(getField(settings, "H3Text") || "").trim();
-          if (subheadline && subheadlineEl) {
-            subheadlineEl.textContent = subheadline;
+          initialSubheadlineText = String(
+            getField(settings, "H3Text") || "",
+          ).trim();
+          if (initialSubheadlineText && subheadlineEl) {
+            subheadlineEl.textContent = initialSubheadlineText;
             subheadlineEl.hidden = false;
           }
           // The variant row also supplies the player's deck badge
@@ -2460,10 +2481,10 @@
             if (labelText) deckLabelEl.textContent = labelText;
           }
           // task1DoneText replaces the old "Grid complete!" message and
-          // task1Text is the instruction shown under the card stack.
+          // task1Text is the instruction shown in the H3 prompt area.
           variantSettings = settings;
-          // Opens task 1 (the matching puzzle): its instruction goes under
-          // the card stack; its done message goes in the success spot.
+          // Opens task 1: its instruction goes in the H3 prompt area and its
+          // done message goes in the log.
           loadTask(1);
           // WPIMG1 is the subtle page backdrop and the board-gutter picture.
           var wpImg = getField(settings, "WPIMG1");
@@ -2476,8 +2497,7 @@
               );
             }
           }
-          // WPIMG2 is the picture of the finale: it appears small in the open
-          // slot when every task is solved.
+          // WPIMG2 covers the grid when every task is solved.
           var wpImg2 = getField(settings, "WPIMG2");
           if (wpImg2) {
             finaleImageUrl = String(wpImg2).trim().replace(/"/g, "%22");
@@ -2524,6 +2544,11 @@
             );
           }
           parseDeckCount(getField(settings, "DeckCount"), activeRecords.length);
+          var relatedRecords = activeRecords.filter(function (record) {
+            return !!String(
+              getField((record && record.fields) || {}, "TileRelated") || "",
+            ).trim();
+          });
 
           var cards = [];
           activeRecords.forEach(function (record) {
@@ -2544,7 +2569,7 @@
 
           var dim = parseGridDimension(
             getSetting(settings, [], "GridDimension"),
-            cards.length,
+            cards.length + relatedRecords.length,
           );
           if (
             !Number.isInteger(dim.cols) ||
@@ -2554,9 +2579,13 @@
           ) {
             throw new Error("GridDimension must contain positive grid dimensions.");
           }
-          if (dim.cols * dim.rows < cards.length) {
+          dim.rows = Math.max(
+            dim.rows,
+            Math.ceil((cards.length + relatedRecords.length) / dim.cols),
+          );
+          if (dim.cols * dim.rows < cards.length + relatedRecords.length) {
             throw new Error(
-              "GridDimension has fewer cells than the " + cards.length + " active cards.",
+              "GridDimension does not have enough cells for the active cards and their TileRelated assets.",
             );
           }
 
@@ -2566,6 +2595,7 @@
             return { key: card.dataset.match, text: card.dataset.imprint };
           });
           buildGrid(COLS, ROWS, targets);
+          reserveRelatedCards(relatedRecords);
           remaining = cards;
           // Only the first card of the stack has to be turned by the pupil:
           // the cards below it show their front from the beginning.
