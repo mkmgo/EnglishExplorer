@@ -481,6 +481,8 @@ ends with a button in the **empty stack field**:
 - When the **next** task is an intro task, its new cards **wait for the tap**:
   the turned cards return to the stack first, then the new cards join the open
   cells.
+- Exception: `task3DoneBridge` appears briefly in the H3 prompt line instead
+  of the stack; its turned cards return to the stack automatically.
 
 **Intro tasks (`taskNIntro`).** A task that carries an intro marker is not
 solved by turning cards — it **adds new cards to the board** and asks the
