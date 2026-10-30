@@ -2020,7 +2020,10 @@
           var fields = (record && record.fields) || {};
           var id = Number(getField(fields, "SYSID"));
           var url = String(getField(fields, "SysSound") || "").trim();
-          if (Number.isInteger(id) && url) systemSoundUrls[id] = url;
+          if (Number.isInteger(id) && url) {
+            systemSoundUrls[id] = url;
+            preloadSound(url);
+          }
         });
       }
 
@@ -2033,31 +2036,109 @@
       // ---------- Animal sounds (task 1 only) ----------
       // The Airtable field SoundAsset (GridShift) holds the short MP3 of the
       // animal on Cloudinary. In the matching puzzle (task 1) every correct
-      // match plays the sound of the card immediately. Follow-up turn tasks
-      // and the intro task play nothing. The Audio element is created on the
-      // first play and cached, so repeat matches are instant; playback
-      // happens inside the user gesture (the drop), so autoplay rules are
-      // satisfied on iPad and Tizen alike. Broken/missing sources stay
-      // silent without disturbing the game.
-      var soundCache = {}; // url -> Audio element
-      var systemSoundCache = {}; // url -> Audio element
+      // match plays the sound of the card. Follow-up turn tasks and the intro
+      // task play no card sounds.
+      var soundCache = Object.create(null); // URL -> preloaded Audio element
+
+      function preloadSound(src) {
+        if (!src || soundCache[src]) return;
+        try {
+          var audio = new Audio();
+          audio.preload = "auto";
+          audio.src = src;
+          audio.onerror = function () {
+            console.warn("Grid Shift sound failed to load:", src);
+          };
+          soundCache[src] = audio;
+          audio.load();
+        } catch (error) {
+          console.warn("Grid Shift sound could not be preloaded:", error);
+        }
+      }
+
+      function primeSoundsOnGesture(event) {
+        if (!event.isTrusted) return;
+        Object.keys(soundCache).forEach(function (src) {
+          var audio = soundCache[src];
+          if (audio._eePrimed || audio._eePriming || !audio.paused) return;
+          var token = {};
+          audio._eePriming = token;
+          audio.muted = true;
+          try {
+            var priming = audio.play();
+            if (!priming || typeof priming.then !== "function") {
+              audio.pause();
+              audio.currentTime = 0;
+              audio.muted = false;
+              audio._eePriming = null;
+              audio._eePrimed = true;
+              return;
+            }
+            priming.then(
+              function () {
+                if (audio._eePriming !== token) return;
+                try {
+                  audio.pause();
+                  audio.currentTime = 0;
+                } catch (error) {
+                  console.warn("Grid Shift sound could not reset after unlock:", error);
+                } finally {
+                  audio.muted = false;
+                  audio._eePriming = null;
+                  audio._eePrimed = true;
+                }
+              },
+              function () {
+                if (audio._eePriming !== token) return;
+                audio.muted = false;
+                audio._eePriming = null;
+              },
+            );
+          } catch (error) {
+            audio.muted = false;
+            audio._eePriming = null;
+          }
+        });
+      }
+
+      document.addEventListener("pointerdown", primeSoundsOnGesture, true);
+
+      function playSoundUrl(src) {
+        if (!src) return;
+        preloadSound(src);
+        var audio = soundCache[src];
+        if (!audio) return;
+        if (audio._eePriming) {
+          audio._eePriming = null;
+          audio.pause();
+        }
+        audio.muted = false;
+        try {
+          audio.currentTime = 0;
+        } catch (error) {
+          console.warn("Grid Shift sound could not restart:", error);
+        }
+        try {
+          var playback = audio.play();
+          if (playback && typeof playback.catch === "function") {
+            playback.then(
+              function () {
+                audio._eePrimed = true;
+              },
+              function (error) {
+                console.warn("Grid Shift sound could not play:", error);
+              },
+            );
+          }
+        } catch (error) {
+          console.warn("Grid Shift sound could not play:", error);
+        }
+      }
 
       function playTaskSound(card) {
         var src = String((card && card.dataset.sound) || "").trim();
         if (!src) return;
-        try {
-          var audio = soundCache[src];
-          if (!audio) {
-            audio = new Audio(src);
-            audio.preload = "auto";
-            soundCache[src] = audio;
-          }
-          try {
-            audio.currentTime = 0; // restart from the beginning every time
-          } catch (err) {}
-          var p = audio.play();
-          if (p && typeof p.catch === "function") p.catch(function () {});
-        } catch (err) {}
+        playSoundUrl(src);
       }
 
       function gridDimensions(count) {
@@ -2268,7 +2349,10 @@
         // The short animal MP3 (Airtable SoundAsset) — played when this card
         // is matched onto its imprint in task 1.
         var soundAsset = String((f && getField(f, "SoundAsset")) || "").trim();
-        if (soundAsset) card.dataset.sound = soundAsset;
+        if (soundAsset) {
+          card.dataset.sound = soundAsset;
+          preloadSound(soundAsset);
+        }
 
         var inner = document.createElement("div");
         inner.className = "flipInner";
@@ -2384,30 +2468,7 @@
       function playSystemSound(sysId) {
         var src = systemSoundUrls[sysId];
         if (!src) return;
-        try {
-          var audio = systemSoundCache[src];
-          if (!audio) {
-            audio = new Audio(src);
-            audio.preload = "auto";
-            audio.onerror = function () {
-              console.warn("Grid Shift system sound failed to load:", src);
-            };
-            systemSoundCache[src] = audio;
-          }
-          try {
-            audio.currentTime = 0;
-          } catch (error) {
-            console.warn("Grid Shift system sound could not restart:", error);
-          }
-          var playback = audio.play();
-          if (playback && typeof playback.catch === "function") {
-            playback.catch(function (error) {
-              console.warn("Grid Shift system sound could not play:", error);
-            });
-          }
-        } catch (error) {
-          console.warn("Grid Shift system sound could not play:", error);
-        }
+        playSoundUrl(src);
       }
 
       function refreshDecks() {

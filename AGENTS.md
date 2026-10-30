@@ -411,7 +411,10 @@ sound-effect URLs: `SYSID: 1` (`Mismatch`) plays on an incorrect turn or
 placement, `SYSID: 3` (`NewTask`) plays when a follow-up task is shown, and
 `SYSID: 4` (`TaskDone`) plays when a task is completed. `SYSID: 2`
 (`StatusUpdate`) is reserved for later. Task-specific text and completion
-messages continue to come from `GridShiftVariants`.
+messages continue to come from `GridShiftVariants`. System sounds and card
+`SoundAsset` audio are preloaded when their Airtable records arrive. On the
+first trusted pointer interaction, cached sounds are muted-played and reset to
+prime mobile Safari/iOS playback; subsequent event sounds play from the cache.
 
 ### Multi-task flow (Pure Match)
 
