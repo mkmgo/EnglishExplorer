@@ -377,7 +377,7 @@
         min-width: 0;
       }
       .statusPanel .deckHead {
-        text-transform: none;
+        text-transform: uppercase;
       }
       #eventLogIcon {
         display: inline-flex;
@@ -1241,14 +1241,12 @@
       var deckDotEl = document.getElementById("deckDot");
       var deckLabelEl = document.getElementById("deckLabel");
       var bridgeEl = document.getElementById("bridgeText");
-      var briefBridgeTimer = null;
-      var briefBridgeShowing = false;
 
       // A task with spoken words: the instruction can be tapped to hear the
       // words again from the task prompt above the board.
       if (subheadlineEl) {
         subheadlineEl.addEventListener("click", function () {
-          if (spokenText && !briefBridgeShowing) speakTaskWords();
+          if (spokenText) speakTaskWords();
         });
       }
 
@@ -1268,8 +1266,8 @@
       //   taskNDoneText  - the message shown in the log when task N is done
       //   taskNSpoken    - the words spoken aloud in task N
       //   taskNResult    - the card(s) that solve task N
-      //   taskNDoneBridge- the message shown in the stack field when task N is
-      //                    done (except task 3, which briefly uses the prompt)
+      //   taskNDoneBridge- optional bridge message shown in the stack field
+      //                    when task N is done (task 3 is retired)
       //   taskNIntro     - the marker that activates the intro step of task N
       //   taskNIntroAction- what the intro step does (a description); either
       //                    of the two fields activates the step and neither
@@ -1446,7 +1444,7 @@
           ],
           status: ["task" + n + "StatusText"],
           spoken: ["task" + n + "Spoken"],
-          bridge: ["task" + n + "DoneBridge"],
+          bridge: n === 3 ? [] : ["task" + n + "DoneBridge"],
           intro: ["task" + n + "Intro"],
           introAction: ["task" + n + "IntroAction"],
         };
@@ -1508,11 +1506,6 @@
       // solution card(s) make the board wait for a turn and its message is
       // added to the log once it is solved.
       function loadTask(n) {
-        if (briefBridgeTimer) {
-          window.clearTimeout(briefBridgeTimer);
-          briefBridgeTimer = null;
-        }
-        briefBridgeShowing = false;
         currentTask = n;
         var fields = taskFields(n);
         taskText = String(getFirstField(variantSettings, fields.text) || "").trim();
@@ -1650,49 +1643,18 @@
       }
 
       // The cards of the task have all been turned: its message joins the log.
-      // Bridge messages wait for a tap except task 3, which is shown briefly
-      // in the prompt while the turned cards return automatically.
+      // Bridge messages wait for a tap; task 3 has no bridge and clears
+      // its turned cards automatically.
       function completeTurnTask() {
         awaitingTurn = false;
         addSuccessMessage(pendingAccText || feedbackText("correct"));
         playSystemSound(4);
         var bridge = pendingBridgeText;
-        var briefBridge = currentTask === 3 && !!bridge;
-        bridgePending = !!bridge && !briefBridge;
+        bridgePending = !!bridge;
         if (!bridgePending) clearTurnedCards();
         loadTask(currentTask + 1);
-        if (briefBridge) showBriefBridgePrompt(bridge);
-        else if (bridge) showBridge(bridge);
+        if (bridge) showBridge(bridge);
         applyState();
-      }
-
-      function showBriefBridgePrompt(text) {
-        if (!subheadlineEl) return;
-        var previousPrompt = {
-          text: subheadlineEl.textContent,
-          hidden: subheadlineEl.hidden,
-          taskPrompt: subheadlineEl.classList.contains("taskPrompt"),
-          speakable: subheadlineEl.classList.contains("speakable"),
-          title: subheadlineEl.getAttribute("title"),
-        };
-        briefBridgeShowing = true;
-        subheadlineEl.textContent = text;
-        subheadlineEl.hidden = false;
-        subheadlineEl.classList.remove("speakable");
-        subheadlineEl.removeAttribute("title");
-        briefBridgeTimer = window.setTimeout(function () {
-          subheadlineEl.textContent = previousPrompt.text;
-          subheadlineEl.hidden = previousPrompt.hidden;
-          subheadlineEl.classList.toggle("taskPrompt", previousPrompt.taskPrompt);
-          subheadlineEl.classList.toggle("speakable", previousPrompt.speakable);
-          if (previousPrompt.title === null) {
-            subheadlineEl.removeAttribute("title");
-          } else {
-            subheadlineEl.setAttribute("title", previousPrompt.title);
-          }
-          briefBridgeShowing = false;
-          briefBridgeTimer = null;
-        }, 2000);
       }
 
       // The bridge message sits in the empty stack field, centred
@@ -2109,7 +2071,6 @@
             preloadSound(url);
           }
         });
-        playPendingStatusSound();
       }
 
       function track(action, detail) {
@@ -2124,6 +2085,9 @@
       // match plays the sound of the card. Follow-up turn tasks and the intro
       // task play no card sounds.
       var soundCache = Object.create(null); // URL -> preloaded Audio element
+      var soundQueue = [];
+      var activeSound = null;
+      var maxQueuedSounds = 8;
 
       function preloadSound(src) {
         if (!src || soundCache[src]) return;
@@ -2133,6 +2097,10 @@
           audio.src = src;
           audio.onerror = function () {
             console.warn("Grid Shift sound failed to load:", src);
+            if (activeSound === audio) finishSoundPlayback(null, audio);
+          };
+          audio.onended = function () {
+            if (activeSound === audio) finishSoundPlayback(null, audio);
           };
           soundCache[src] = audio;
           audio.load();
@@ -2141,64 +2109,42 @@
         }
       }
 
-      function primeSoundsOnGesture(event) {
+      function unlockSoundsOnGesture(event) {
         if (!event.isTrusted) return;
         trustedAudioGestureSeen = true;
-        Object.keys(soundCache).forEach(function (src) {
-          var audio = soundCache[src];
-          if (audio._eePrimed || audio._eePriming || !audio.paused) return;
-          var token = {};
-          audio._eePriming = token;
-          audio.muted = true;
-          try {
-            var priming = audio.play();
-            if (!priming || typeof priming.then !== "function") {
-              audio.pause();
-              audio.currentTime = 0;
-              audio.muted = false;
-              audio._eePriming = null;
-              audio._eePrimed = true;
-              return;
-            }
-            priming.then(
-              function () {
-                if (audio._eePriming !== token) return;
-                try {
-                  audio.pause();
-                  audio.currentTime = 0;
-                } catch (error) {
-                  console.warn("Grid Shift sound could not reset after unlock:", error);
-                } finally {
-                  audio.muted = false;
-                  audio._eePriming = null;
-                  audio._eePrimed = true;
-                }
-              },
-              function () {
-                if (audio._eePriming !== token) return;
-                audio.muted = false;
-                audio._eePriming = null;
-              },
-            );
-          } catch (error) {
-            audio.muted = false;
-            audio._eePriming = null;
-          }
-        });
         playPendingStatusSound();
+        drainSoundQueue();
       }
 
-      document.addEventListener("pointerdown", primeSoundsOnGesture, true);
+      document.addEventListener("pointerdown", unlockSoundsOnGesture, true);
 
-      function playSoundUrl(src) {
+      function playSoundUrl(src, optional) {
         if (!src) return;
         preloadSound(src);
-        var audio = soundCache[src];
-        if (!audio) return;
-        if (audio._eePriming) {
-          audio._eePriming = null;
-          audio.pause();
+        if (
+          soundQueue.some(function (item) {
+            return item.url === src;
+          })
+        ) {
+          return;
         }
+        if (optional && soundQueue.length >= maxQueuedSounds) return;
+        if (!optional && soundQueue.length >= maxQueuedSounds) {
+          var optionalIndex = soundQueue.findIndex(function (item) {
+            return item.optional;
+          });
+          if (optionalIndex >= 0) soundQueue.splice(optionalIndex, 1);
+        }
+        soundQueue.push({ url: src, optional: !!optional });
+        drainSoundQueue();
+      }
+
+      function drainSoundQueue() {
+        if (!trustedAudioGestureSeen || activeSound || !soundQueue.length) return;
+        var item = soundQueue.shift();
+        var audio = soundCache[item.url];
+        if (!audio) return drainSoundQueue();
+        activeSound = audio;
         audio.muted = false;
         try {
           audio.currentTime = 0;
@@ -2208,24 +2154,31 @@
         try {
           var playback = audio.play();
           if (playback && typeof playback.catch === "function") {
-            playback.then(
-              function () {
-                audio._eePrimed = true;
-              },
-              function (error) {
-                console.warn("Grid Shift sound could not play:", error);
-              },
-            );
+            playback.catch(function (error) {
+              console.warn("Grid Shift sound could not play:", error);
+              finishSoundPlayback(
+                error && error.name === "NotAllowedError" ? item : null,
+                audio,
+              );
+            });
           }
         } catch (error) {
           console.warn("Grid Shift sound could not play:", error);
+          finishSoundPlayback(null, audio);
         }
+      }
+
+      function finishSoundPlayback(retryItem, expectedAudio) {
+        if (expectedAudio && activeSound !== expectedAudio) return;
+        if (retryItem) soundQueue.unshift(retryItem);
+        activeSound = null;
+        if (!retryItem) drainSoundQueue();
       }
 
       function playTaskSound(card) {
         var src = String((card && card.dataset.sound) || "").trim();
         if (!src) return;
-        playSoundUrl(src);
+        playSoundUrl(src, true);
       }
 
       function gridDimensions(count) {

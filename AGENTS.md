@@ -332,7 +332,8 @@ checked; `SysIcoLucide` supplies the Lucide icon name. The TargetBox does not
 display the `SysItem` label (`ShowLabel` should be unchecked). The Event Log
 heading uses the `GridShiftSystem` row whose `SysItem` is `Event Log`; its
 `ShowLabel` and `ShowIcoLucide` checkboxes independently control the label and
-Lucide icon. The Event Log icon is 18px, slightly larger than the Stack's 14px
+Lucide icon. The Airtable label remains uppercase in the heading. The Event Log
+icon is 18px, slightly larger than the Stack's 14px
 dot. The icon-table request runs independently of game data loading, so an
 unavailable `GridShiftSystem` does not block the cards; its error is shown in
 the page feedback area.
@@ -376,13 +377,16 @@ The variant row also drives the page chrome:
 | `H3Text` | Single line text | Initial prompt shown below the top bar. Once the game starts, the active task's `taskNText` replaces it there. |
 | `PartLabel` | Single line text | Deck badge label (replaces the hardcoded `Player` / `PLAYER`). Currently `Onza`. |
 | `task1Text` | Single line text | Instruction of task 1 (the matching puzzle) — shown in the prompt area below the top bar, replacing `H3Text`. Empty = the built-in default instruction stays. |
+| `task1StatusText` | Single line text *(optional)* | Status message added once to the top of the Event Log when task 1 opens; plays `StatusUpdate` (SYSID 2). |
 | `task1DoneText` | Single line text | Message shown when the matching puzzle is solved (replaces the old hardcoded "Grid complete!"). Shown in the Log; older messages may leave the panel as newer ones are added. Empty = no message. |
 | `task2Text` | Single line text | Instruction of task 2 — shown in the prompt area below the top bar, like every other task instruction. Empty = nothing shown. |
+| `task2StatusText` | Single line text *(optional)* | Status message added once to the top of the Event Log when task 2 opens; plays `StatusUpdate` (SYSID 2). |
 | `task2DoneText` | Single line text | Message shown in the Log when task 2 is solved (added to the list of accomplished tasks). Empty = `CorrectText` (default "✔ Correct!") is added instead. |
 | `task2Result` | Link to `GridShift` | The card(s) that solve task 2 (e.g. the Tractor, `GridShiftID` 75). The tutee **turns** the card(s) to the back on the finished board. Holds the Airtable **record id(s)** of the GridShift row(s); a plain `GridShiftID` is accepted too. Empty = the task has no solution (nothing to turn). The older names `SolutionTaskN`, `SolutionNextTask(N-1)` and `task(N-1)Result` are still accepted. |
+| `task3StatusText` | Single line text *(optional)* | Status message added once to the top of the Event Log when task 3 opens; plays `StatusUpdate` (SYSID 2). |
 | `task3Spoken` | Long text *(optional)* | The words that are **spoken aloud** in task 3. The words are spoken slowly and without commas (one word per line or separated by commas). The tutee turns the cards of the spoken words to the back. Empty = the task is solved by reading the instruction only. |
-| `task3DoneBridge` | Single line text *(optional)* | The **bridge message** of task 3: it appears in the stack spot when task 3 is solved. It is a button — a tap on it returns the turned cards to the stack; when the next task is an intro task, its new cards wait for that tap. Empty = no bridge message. |
 | `task4Text` | Single line text | Instruction of task 4 — shown in the prompt area below the top bar, like every other task instruction. Empty = nothing shown. |
+| `task4StatusText` | Single line text *(optional)* | Status message added once to the top of the Event Log when task 4 opens; plays `StatusUpdate` (SYSID 2). |
 | `task4Result` | Single line text | The **action** that finishes task 4 (currently `Each card needs to be moved on related tile`). It describes the action, it holds no card ids; the cards of the task are the ones of `TileRelated` (see "Intro tasks" below). |
 | `task4DoneText` | Single line text | Message shown in the Log when task 4 is solved (added to the list of accomplished tasks). Empty = `CorrectText` (default "✔ Correct!") is added instead. |
 | `task4Intro` | Single line text *(optional)* | The **intro marker** of task 4: it activates the intro step (the new cards are added to the board and have to be moved onto their tiles). Its text is **never shown** — only the fact that it is filled matters. Empty = task 4 is an ordinary task. |
@@ -422,8 +426,11 @@ is shown, `SYSID: 3` (`NewTask`) plays when a follow-up task is shown, and
 and completion messages come from `GridShiftVariants` (`taskNStatusText` and
 `taskNDoneText`). System sounds and card `SoundAsset` audio are preloaded when
 their Airtable records arrive. The initial status sound waits for the first
-trusted pointer interaction to satisfy mobile Safari/iOS audio policies;
-subsequent event sounds play from the cache.
+trusted pointer interaction to satisfy mobile Safari/iOS audio policies.
+Sounds are played sequentially from the preloaded cache so back-to-back task,
+status, mismatch, and completion effects are less likely to interrupt or be
+blocked; duplicate queued effects are coalesced, and queued card sounds are
+capped so they cannot delay system feedback.
 
 ### Multi-task flow (Pure Match)
 
@@ -441,8 +448,8 @@ task setup uses `taskNText`, `taskNResult`, `taskNStatusText` and
 | `task2StatusText` | 2 | Status message added once to the top of the Event Log when the task opens. |
 | `task2Result` | 2 | The GridShift card(s) that solve task 2. |
 | `task2DoneText` | 2 | Green message when the last card of task 2 is turned. |
-| `task3Text` / `task3Result` / `task3DoneText` / `task3Spoken` / `task3DoneBridge` | 3 | …and so on, as far as the row goes. |
-| `task4Text` / `task4Result` / `task4DoneText` / `task4Intro` / `task4IntroAction` | 4 | The intro task — see "Intro tasks (`taskNIntro`)" below. |
+| `task3Text` / `task3Result` / `task3StatusText` / `task3DoneText` / `task3Spoken` | 3 | Spoken turn task; its status appears when it opens, and its cards return automatically when solved. |
+| `task4Text` / `task4Result` / `task4StatusText` / `task4DoneText` / `task4Intro` / `task4IntroAction` | 4 | The intro task — see "Intro tasks (`taskNIntro`)" below. |
 
 - Task 1 (the matching puzzle) needs **no result field**: its result is
   inherent — the `Deck` checkbox on `GridShift` together with each card's
@@ -540,8 +547,9 @@ ends with a button in the **empty stack field**:
 - When the **next** task is an intro task, its new cards **wait for the tap**:
   the turned cards return to the stack first, then the new cards join the open
   cells.
-- Exception: `task3DoneBridge` appears briefly in the H3 prompt line instead
-  of the stack; its turned cards return to the stack automatically.
+- Task 3 does not use a bridge: its turned cards return to the stack
+  automatically, and any legacy `task3DoneBridge` value is ignored. This keeps
+  the next task instruction visible in the TargetBox.
 
 **Intro tasks (`taskNIntro`).** A task that carries an intro marker is not
 solved by turning cards — it **adds new cards to the board** and asks the
