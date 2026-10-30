@@ -308,10 +308,13 @@ card checked in that field is included. `DeckCount` must be `Variable`,
 random unique cell; cards can only be placed on a matching imprint. Before
 turning, each card uses its `TileBack` asset. Both Airtable tables must be
 allowlisted by the worker.
-In wide layouts the single player deck sits left of the board with a 10px gap;
-the deck + board group is centred on the page (`grid-template-columns: 148px
-auto` + `justify-content: center` on `.stage`). In narrow layouts it moves
-above the board.
+In wide horizontal layouts the single player deck sits left of the board with
+a 10px gap; the deck + board group is centred on the page
+(`grid-template-columns: 148px auto` + `justify-content: center` on `.stage`).
+The task goal strip spans both columns above the stack/log and board. In narrow
+horizontal layouts the stack/log moves below the board, while the task goal
+strip remains directly above the board. In vertical layout, the task goal
+strip is above the stack/log, which sit between the strip and the board.
 
 The top bar has a horizontal / vertical layout toggle and the light/dark theme
 toggle. In light mode the bar uses the darker `PartColour` with white title and
@@ -324,6 +327,9 @@ The current task instruction replaces H3Text in the prompt area above the game.
 Event log entries are left-aligned, newest first, and older entries are dropped
 as needed to avoid scrolling. A wrong turn or drop at any stage adds a red
 `Mismatch` entry. Changing layout preserves the current board and progress.
+In conversation, the task prompt strip may also be called the **goal strip**,
+**target box**, **target line**, or **task area**; these are all names for the
+same strip directly above the grid.
 
 **The stack shows its front.** Only the **first** card of the stack has to be
 turned by the pupil — the cards below it show their front from the beginning

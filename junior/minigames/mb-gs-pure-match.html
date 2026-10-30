@@ -188,27 +188,29 @@
         opacity: var(--wp-opacity, 0.18);
       }
 
-      /* Headline block: the group is centred on the page, but the headline
-         and the subheadline inside it are left-aligned so both lines start
-         at the same horizontal position. */
-      .pageHead {
-        width: max-content;
-        max-width: 100%;
-        margin: 0 auto 8px;
+      /* ---- Task (goal) area ----
+         A fixed, label-less strip directly above the board: it shares the
+         grid's start and end (spans the board column) and is about one to
+         two text lines high. The prompt of the open task lives here and the
+         strip stays in place from the first task to the finale — only its
+         text changes. The accent top edge (the game colour) marks it as the
+         goal. */
+      .boardCol {
+        display: contents;
+      }
+      #taskPanel {
+        grid-area: goal;
+        flex: none;
+        width: 100%;
+        box-sizing: border-box;
+        min-height: clamp(44px, 7vh, 64px);
         display: flex;
-        flex-direction: column;
-        align-items: flex-start;
-      }
-
-      h1 {
-        margin: 0 0 4px;
-        max-width: 100%;
-        color: var(--heading);
-        font-size: clamp(1.4rem, 3.4vw, 2rem);
+        flex-direction: row;
+        align-items: center; /* vertical centering of the prompt lines */
         text-align: left;
+        border-top: 4px solid var(--theme-color, var(--primary));
       }
-
-      h3 {
+      #subheadlineText {
         margin: 0;
         max-width: 100%;
         color: var(--muted);
@@ -217,11 +219,11 @@
         line-height: 1.25;
         text-align: left;
       }
-      .pageHead h3.taskPrompt {
+      #subheadlineText.taskPrompt {
         color: var(--text);
         font-weight: 700;
       }
-      .pageHead h3.taskPrompt.speakable {
+      #subheadlineText.taskPrompt.speakable {
         cursor: pointer;
         text-decoration: underline dotted var(--border-strong);
         text-underline-offset: 3px;
@@ -230,18 +232,38 @@
       .stage {
         display: grid;
         grid-template-columns: 148px auto;
-        grid-template-areas: "players grid";
+        grid-template-areas:
+          "goal goal"
+          "players grid";
         justify-content: center;
         align-items: start;
         column-gap: 10px;
-        row-gap: 18px;
+        row-gap: 10px;
         width: 100%;
         max-width: 1500px;
       }
       html[data-layout="vertical"] .stage {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
+        display: grid;
+        width: max-content;
+        max-width: 100%;
+        grid-template-columns: max-content;
+        grid-template-areas:
+          "goal"
+          "players"
+          "grid";
+        justify-content: center;
+        align-items: start;
+        gap: 16px;
+      }
+      html[data-layout="vertical"] .boardCol {
+        display: contents;
+      }
+      html[data-layout="vertical"] #taskPanel {
+        width: 100%;
+        max-width: 100%;
+      }
+      html[data-layout="vertical"] .deckPair {
+        grid-area: players;
       }
       html[data-layout="vertical"] {
         --grid-cell-width: clamp(52px, 18vw, 72px);
@@ -279,7 +301,9 @@
         font-size: 0.75rem;
       }
       html[data-layout="vertical"] .gridWrap {
+        grid-area: grid;
         overflow-x: visible;
+        justify-self: center;
       }
       html[data-layout="vertical"] .cell .imprint span {
         font-size: clamp(0.5rem, 2.4vw, 0.72rem);
@@ -776,6 +800,16 @@
           flex-direction: column;
           align-items: center;
         }
+        html[data-layout="horizontal"] .boardCol {
+          display: flex;
+          flex-direction: column;
+          align-items: stretch;
+          gap: 10px;
+          order: 1;
+        }
+        html[data-layout="horizontal"] .deckPair {
+          order: 2;
+        }
         .deckPair {
           display: flex;
           flex-direction: column;
@@ -879,9 +913,6 @@
       </div>
     </header>
     <div id="gamepadCursor"></div>
-    <header class="pageHead">
-      <h3 id="subheadlineText" hidden></h3>
-    </header>
 
     <main class="stage">
       <div class="deckPair">
@@ -895,8 +926,15 @@
         </section>
       </div>
 
-      <div class="gridWrap">
-        <section class="grid" id="grid"></section>
+      <div class="boardCol">
+        <!-- Task (goal) area: a fixed, label-less strip as wide as the grid,
+             directly above it. The prompt text changes; the strip remains. -->
+        <section class="deckPanel" id="taskPanel" aria-label="Task goal">
+          <h3 id="subheadlineText" hidden></h3>
+        </section>
+        <div class="gridWrap">
+          <section class="grid" id="grid"></section>
+        </div>
       </div>
     </main>
 
@@ -1909,6 +1947,35 @@
         }
       }
 
+      // ---------- Animal sounds (task 1 only) ----------
+      // The Airtable field SoundAsset (GridShift) holds the short MP3 of the
+      // animal on Cloudinary. In the matching puzzle (task 1) every correct
+      // match plays the sound of the card immediately. Follow-up turn tasks
+      // and the intro task play nothing. The Audio element is created on the
+      // first play and cached, so repeat matches are instant; playback
+      // happens inside the user gesture (the drop), so autoplay rules are
+      // satisfied on iPad and Tizen alike. Broken/missing sources stay
+      // silent without disturbing the game.
+      var soundCache = {}; // url -> Audio element
+
+      function playTaskSound(card) {
+        var src = String((card && card.dataset.sound) || "").trim();
+        if (!src) return;
+        try {
+          var audio = soundCache[src];
+          if (!audio) {
+            audio = new Audio(src);
+            audio.preload = "auto";
+            soundCache[src] = audio;
+          }
+          try {
+            audio.currentTime = 0; // restart from the beginning every time
+          } catch (err) {}
+          var p = audio.play();
+          if (p && typeof p.catch === "function") p.catch(function () {});
+        } catch (err) {}
+      }
+
       function gridDimensions(count) {
         if (count <= 20) return { cols: 5, rows: 4 };
         if (count <= 30) return { cols: 6, rows: 5 };
@@ -2114,6 +2181,10 @@
         card.dataset.recordId = String((rec && rec.id) || "");
         card.dataset.match = normalizeMatch(matchText);
         card.dataset.imprint = String(matchText).trim();
+        // The short animal MP3 (Airtable SoundAsset) — played when this card
+        // is matched onto its imprint in task 1.
+        var soundAsset = String((f && getField(f, "SoundAsset")) || "").trim();
+        if (soundAsset) card.dataset.sound = soundAsset;
 
         var inner = document.createElement("div");
         inner.className = "flipInner";
@@ -2426,6 +2497,7 @@
           if (imprint) imprint.classList.add("taken");
           feedbackEl.textContent = "";
           track("Place", card.dataset.id);
+          playTaskSound(card); // task 1: reward the correct match instantly
           refreshDecks();
         } else if (overCell && overCell === fromCell) {
           // The card was dropped back onto the cell it came from: nothing
