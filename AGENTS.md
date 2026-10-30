@@ -115,8 +115,9 @@ There is **no `config.js`** — all secrets live server-side in the Cloudflare W
   - `GET /airtable?table=<TableName>` — read-only Airtable reader (PAT stays server-side).
     Only **allowlisted** tables are readable. Each table is sorted by its own field (or its
     natural Airtable order when it has no sort field): `BTStudyHub` (sorted by `DisplayOrder`,
-    used by `bt-study-hub.html`), `GridShift` (used by both Grid Shift games), and
-    `GridShiftVariants` (used by `mb-gs-pure-match.html`).
+    used by `bt-study-hub.html`), `GridShift` (used by both Grid Shift games),
+    `GridShiftSystem` (used by the Pure Match TargetBox), and `GridShiftVariants`
+    (used by `mb-gs-pure-match.html`).
     Returns `{ records: [...] }`.
   - `POST /` — Airtable visitor tracking.
   - `OPTIONS` — CORS preflight (`GET, POST, OPTIONS`).
@@ -314,7 +315,8 @@ a 10px gap; the deck + board group is centred on the page
 The task goal strip spans both columns above the stack/log and board. In narrow
 horizontal layouts the stack/log moves below the board, while the task goal
 strip remains directly above the board. In vertical layout, the task goal
-strip is above the stack/log, which sit between the strip and the board.
+strip is above the stack/log, which sit between the strip and the board; the
+strip doubles in height for longer prompts.
 
 The top bar has a horizontal / vertical layout toggle and the light/dark theme
 toggle. In light mode the bar uses the darker `PartColour` with white title and
@@ -324,6 +326,11 @@ uses at most four grid columns, and scales cells/cards and the stack and success
 panels to fit portrait mobile screens. The EVENT LOG panel matches the Stack panel's
 size: it sits below the stack in horizontal mode and beside it in vertical mode.
 The current task instruction replaces H3Text in the prompt area above the game.
+The TargetBox icon is loaded from `GridShiftSystem` (`SYSID: 5`,
+`SysItem: TargetBox`) and rendered before the prompt when `ShowIcoLucide` is
+checked; `SysIcoLucide` supplies the Lucide icon name. The TargetBox does not
+display the `SysItem` label (`ShowLabel` should be unchecked). The upcoming
+System Area classification is not yet used by this page.
 Event log entries are left-aligned, newest first, and older entries are dropped
 as needed to avoid scrolling. A wrong turn or drop at any stage adds a red
 `Mismatch` entry. Changing layout preserves the current board and progress.
@@ -379,6 +386,23 @@ The variant row also drives the page chrome:
 | `PartColour` | Single line text | Overall theme accent and deck badge dot. The color is darkened slightly for light-mode toolbar background; toolbar text and controls are white, with the theme toggle inverted for contrast. Accepts a palette name (`Blue`), a hex / `rgb()` / `hsl()` value, a plain CSS colour name, or `var(--color-x)`. Palette names map to the page's theme-aware vars (`--color-blue`, `--color-yellow`, `--color-green`, `--color-red`, `--color-orange`, `--color-purple`). Empty = `var(--color-red)`. |
 | `NoParticipants` | Number | Number of players. Only `1` is supported so far — a higher value stops the game with an in-page error instead of silently running one deck. |
 | `VarID` | Number | Variant id (not used by the game). |
+
+### `GridShiftSystem` table (Pure Match system areas)
+
+The Pure Match page reads `GridShiftSystem` through the worker's allowlisted
+`/airtable` endpoint. The TargetBox row is selected by `SYSID: 5` and
+`SysItem: TargetBox`.
+
+| Field | Type | Purpose |
+|---|---|---|
+| `SYSID` | Number / autonumber | Stable system-area id; the TargetBox is `5`. |
+| `SysItem` | Single line text | Internal item name; the TargetBox value is `TargetBox`. It is not shown as a label on this page. |
+| `SysIcoLucide` | Single line text | Lucide icon name to render before the task prompt. |
+| `ShowLabel` | Checkbox | Unchecked for TargetBox; the `SysItem` label is not displayed. Other system-item label behavior will be integrated later. |
+| `ShowIcoLucide` | Checkbox | Checked to display the `SysIcoLucide` icon. |
+
+The System Area classification field is upcoming and is not currently read by
+the page.
 
 ### Multi-task flow (Pure Match)
 
@@ -542,8 +566,9 @@ cell gutters and board padding. The cells stay opaque (they carry the imprints
 and the placed bricks). When the board is finished its copy of the picture
 fades to ~55% so the green completion colour (`.grid.done` → `--goal-bg`
 background + `--good` border) reads at full strength. The board only reaches
-that state when **every** task is solved. Tune with `--wp-opacity` (picture
-strength) in the `:root` block.
+that state when **every** task is solved. The default picture strength is
+`--wp-opacity: 0.23`; tune it in the `:root` block. Grid imprints use 0.48
+opacity so their words remain readable over the scene in both themes.
 
 ### Airtable `GridShift` table schema
 
