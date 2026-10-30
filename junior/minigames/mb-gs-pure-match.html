@@ -379,6 +379,24 @@
       .statusPanel .deckHead {
         text-transform: none;
       }
+      #eventLogIcon {
+        display: inline-flex;
+        flex: 0 0 auto;
+        align-items: center;
+        justify-content: center;
+        width: 18px;
+        height: 18px;
+        color: var(--good);
+      }
+      #eventLogIcon[hidden],
+      #eventLogLabel[hidden] {
+        display: none;
+      }
+      #eventLogIcon svg {
+        width: 100%;
+        height: 100%;
+        stroke-width: 2.25;
+      }
       .deckHead {
         display: flex;
         align-items: center;
@@ -442,6 +460,9 @@
       }
       .statusText .mismatchEntry {
         color: #ef4444;
+      }
+      .statusText .statusUpdateEntry {
+        color: var(--heading);
       }
       .relatedWaiting {
         visibility: hidden;
@@ -945,7 +966,10 @@
           <div class="deck" id="deck"><div class="bridgeText" id="bridgeText" hidden></div></div>
         </section>
         <section class="deckPanel statusPanel" id="statusPanel">
-          <div class="deckHead"><span>EVENT LOG</span></div>
+          <div class="deckHead" id="eventLogHeading">
+            <span id="eventLogIcon" hidden aria-hidden="true"></span>
+            <span id="eventLogLabel">Event Log</span>
+          </div>
           <div class="statusText" id="status" aria-label="Completed messages" aria-live="polite"></div>
         </section>
       </div>
@@ -1274,8 +1298,11 @@
       var matchingDone = false;
       var accomplished = []; // the messages of the tasks completed so far
       var systemSoundUrls = {}; // GridShiftSystem SysSound URLs, keyed by SYSID
+      var trustedAudioGestureSeen = false;
+      var pendingStatusSound = false;
       var gameReady = false;
       var targetBoxIconError = "";
+      var eventLogHeadingError = "";
       var pendingAccText = ""; // message of the task that is still open
       var pendingBridgeText = ""; // bridge message of the task that is open
       var initialSubheadlineText = ""; // H3Text before task-specific prompts
@@ -1323,6 +1350,17 @@
       function addSuccessMessage(value) {
         var message = String(value || "").trim();
         if (message) accomplished.push({ text: message, mismatch: false });
+      }
+
+      function addStatusUpdate(n, fieldNames) {
+        var message = String(
+          getFirstField(variantSettings, fieldNames) || "",
+        ).trim();
+        if (!message) return;
+        accomplished.push({ text: message, statusUpdate: true });
+        pendingStatusSound = true;
+        playPendingStatusSound();
+        showMessages();
       }
 
       function addMismatchEvent() {
@@ -1391,6 +1429,7 @@
           return {
             text: ["task1Text", "DeckText"],
             acc: ["task1DoneText", "Task1AccText"],
+            status: ["task1StatusText"],
             spoken: [],
             bridge: [],
             intro: [],
@@ -1405,6 +1444,7 @@
             "Task" + n + "AccText",
             "NextTask" + legacy + "AccText",
           ],
+          status: ["task" + n + "StatusText"],
           spoken: ["task" + n + "Spoken"],
           bridge: ["task" + n + "DoneBridge"],
           intro: ["task" + n + "Intro"],
@@ -1551,6 +1591,7 @@
           else subheadlineEl.removeAttribute("title");
         }
         if (hasTask && n > 1) playSystemSound(3);
+        if (hasTask) addStatusUpdate(n, fields.status);
         if (spokenText) {
           // The tutee sees the words on the cards and turns the spoken ones
           // to the back. The words are read out to tell the tutee which
@@ -1913,6 +1954,9 @@
           var line = document.createElement("div");
           line.textContent = accomplished[i].text;
           if (accomplished[i].mismatch) line.className = "mismatchEntry";
+          else if (accomplished[i].statusUpdate) {
+            line.className = "statusUpdateEntry";
+          }
           statusEl.appendChild(line);
         }
         syncSuccessPanelSize();
@@ -2014,6 +2058,46 @@
         renderIcons();
       }
 
+      function configureEventLogHeading(records) {
+        var matches = (records || []).filter(function (record) {
+          var fields = (record && record.fields) || {};
+          return normalizedFieldName(getField(fields, "SysItem")) === "eventlog";
+        });
+        if (matches.length !== 1) {
+          throw new Error(
+            "Expected one Event Log system setting in GridShiftSystem; found " +
+              matches.length +
+              ".",
+          );
+        }
+
+        var fields = matches[0].fields || {};
+        var label = document.getElementById("eventLogLabel");
+        var iconHost = document.getElementById("eventLogIcon");
+        if (!label || !iconHost) {
+          throw new Error("Event Log heading elements are missing.");
+        }
+        var item = String(getField(fields, "SysItem") || "Event Log").trim();
+        label.textContent = item;
+        label.hidden = !isChecked(getField(fields, "ShowLabel"));
+
+        iconHost.textContent = "";
+        var showIcon = isChecked(getField(fields, "ShowIcoLucide"));
+        if (showIcon) {
+          var iconName = String(getField(fields, "SysIcoLucide") || "").trim();
+          if (!iconName) {
+            throw new Error(
+              "Event Log requires a Lucide icon name in SysIcoLucide.",
+            );
+          }
+          var icon = document.createElement("i");
+          icon.setAttribute("data-lucide", iconName);
+          iconHost.appendChild(icon);
+        }
+        iconHost.hidden = !showIcon;
+        renderIcons();
+      }
+
       function configureSystemSoundUrls(records) {
         systemSoundUrls = {};
         (records || []).forEach(function (record) {
@@ -2025,6 +2109,7 @@
             preloadSound(url);
           }
         });
+        playPendingStatusSound();
       }
 
       function track(action, detail) {
@@ -2058,6 +2143,7 @@
 
       function primeSoundsOnGesture(event) {
         if (!event.isTrusted) return;
+        trustedAudioGestureSeen = true;
         Object.keys(soundCache).forEach(function (src) {
           var audio = soundCache[src];
           if (audio._eePrimed || audio._eePriming || !audio.paused) return;
@@ -2099,6 +2185,7 @@
             audio._eePriming = null;
           }
         });
+        playPendingStatusSound();
       }
 
       document.addEventListener("pointerdown", primeSoundsOnGesture, true);
@@ -2471,6 +2558,14 @@
         playSoundUrl(src);
       }
 
+      function playPendingStatusSound() {
+        if (!pendingStatusSound || !trustedAudioGestureSeen || !systemSoundUrls[2]) {
+          return;
+        }
+        pendingStatusSound = false;
+        playSystemSound(2);
+      }
+
       function refreshDecks() {
         renderDeck(remaining.concat(discarded));
         var done = remaining.length === 0;
@@ -2716,16 +2811,41 @@
       function showTargetBoxIconError(error) {
         console.error("Grid Shift Pure Match could not load its TargetBox icon:", error);
         targetBoxIconError = "TargetBox icon unavailable: " + error.message;
-        if (gameReady) feedbackEl.textContent = targetBoxIconError;
+        showSystemAreaErrors();
+      }
+
+      function showEventLogHeadingError(error) {
+        console.error("Grid Shift Pure Match could not load its Event Log heading:", error);
+        eventLogHeadingError = "Event Log heading unavailable: " + error.message;
+        showSystemAreaErrors();
+      }
+
+      function showSystemAreaErrors() {
+        if (!gameReady) return;
+        feedbackEl.textContent = [targetBoxIconError, eventLogHeadingError]
+          .filter(Boolean)
+          .join(" ");
       }
 
       fetchTable("GridShiftSystem")
         .then(function (data) {
           var records = (data && data.records) || [];
           configureSystemSoundUrls(records);
-          configureTargetBoxIcon(records);
+          try {
+            configureTargetBoxIcon(records);
+          } catch (error) {
+            showTargetBoxIconError(error);
+          }
+          try {
+            configureEventLogHeading(records);
+          } catch (error) {
+            showEventLogHeadingError(error);
+          }
         })
-        .catch(showTargetBoxIconError);
+        .catch(function (error) {
+          showTargetBoxIconError(error);
+          showEventLogHeadingError(error);
+        });
 
       // ---------- Build the configured Pure Match game from Airtable ----------
       Promise.all([
@@ -2908,7 +3028,7 @@
           refreshDecks();
           renderIcons();
           gameReady = true;
-          if (targetBoxIconError) feedbackEl.textContent = targetBoxIconError;
+          showSystemAreaErrors();
           return true;
         })
         .catch(function (error) {

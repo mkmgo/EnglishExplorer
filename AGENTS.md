@@ -116,7 +116,7 @@ There is **no `config.js`** — all secrets live server-side in the Cloudflare W
     Only **allowlisted** tables are readable. Each table is sorted by its own field (or its
     natural Airtable order when it has no sort field): `BTStudyHub` (sorted by `DisplayOrder`,
     used by `bt-study-hub.html`), `GridShift` (used by both Grid Shift games),
-    `GridShiftSystem` (used by the Pure Match TargetBox), and `GridShiftVariants`
+    `GridShiftSystem` (used by the Pure Match TargetBox and Event Log), and `GridShiftVariants`
     (used by `mb-gs-pure-match.html`).
     Returns `{ records: [...] }`.
   - `POST /` — Airtable visitor tracking.
@@ -329,13 +329,21 @@ The current task instruction replaces H3Text in the prompt area above the game.
 The TargetBox icon is loaded from `GridShiftSystem` (`SYSID: 5`,
 `SysItem: TargetBox`) and rendered before the prompt when `ShowIcoLucide` is
 checked; `SysIcoLucide` supplies the Lucide icon name. The TargetBox does not
-display the `SysItem` label (`ShowLabel` should be unchecked). The upcoming
-System Area classification is not yet used by this page. The icon-table request
-runs after the game data loads, so an unavailable `GridShiftSystem` does not
-block the cards; its error is shown in the page feedback area.
+display the `SysItem` label (`ShowLabel` should be unchecked). The Event Log
+heading uses the `GridShiftSystem` row whose `SysItem` is `Event Log`; its
+`ShowLabel` and `ShowIcoLucide` checkboxes independently control the label and
+Lucide icon. The Event Log icon is 18px, slightly larger than the Stack's 14px
+dot. The icon-table request runs independently of game data loading, so an
+unavailable `GridShiftSystem` does not block the cards; its error is shown in
+the page feedback area.
 Event log entries are left-aligned, newest first, and older entries are dropped
 as needed to avoid scrolling. A wrong turn or drop at any stage adds a red
-`Mismatch` entry. Changing layout preserves the current board and progress.
+`Mismatch` entry. When a task opens, its `taskNStatusText` message is added
+once, followed by any mismatch entries, then the task's completion message.
+`StatusUpdate` (SYSID 2) plays for the status message; `Mismatch` (SYSID 1)
+and `TaskDone` (SYSID 4) keep their existing triggers. The initial status sound
+waits for the first trusted pointer interaction to satisfy mobile audio
+policies. Changing layout preserves the current board and progress.
 In conversation, the task prompt strip may also be called the **goal strip**,
 **target box**, **target line**, or **task area**; these are all names for the
 same strip directly above the grid.
@@ -401,32 +409,36 @@ The Pure Match page reads `GridShiftSystem` through the worker's allowlisted
 | `SysItem` | Single line text | Internal item name; the TargetBox value is `TargetBox`. It is not shown as a label on this page. |
 | `SysIcoLucide` | Single line text | Lucide icon name to render before the task prompt. |
 | `SysSound` | URL *(optional)* | Sound effect played for the system event. Currently used for `Mismatch` (SYSID 1), `NewTask` (SYSID 3), and `TaskDone` (SYSID 4). |
-| `ShowLabel` | Checkbox | Unchecked for TargetBox; the `SysItem` label is not displayed. Other system-item label behavior will be integrated later. |
-| `ShowIcoLucide` | Checkbox | Checked to display the `SysIcoLucide` icon. |
+| `ShowLabel` | Checkbox | Controls whether the `SysItem` text is shown. Unchecked for TargetBox; checked for Event Log. |
+| `ShowIcoLucide` | Checkbox | Controls whether the `SysIcoLucide` icon is shown; checked for TargetBox and Event Log. |
 | `SysType` | Single select *(optional)* | System-row category (e.g. `Area`, `Move or State`, `Stage`); not currently used by the page. |
 
 `SysType` classifies system rows (for example `Area`, `Move or State`, or
 `Stage`) but is not yet used by the page. `SysSound` supplies optional
 sound-effect URLs: `SYSID: 1` (`Mismatch`) plays on an incorrect turn or
-placement, `SYSID: 3` (`NewTask`) plays when a follow-up task is shown, and
-`SYSID: 4` (`TaskDone`) plays when a task is completed. `SYSID: 2`
-(`StatusUpdate`) is reserved for later. Task-specific text and completion
-messages continue to come from `GridShiftVariants`. System sounds and card
-`SoundAsset` audio are preloaded when their Airtable records arrive. On the
-first trusted pointer interaction, cached sounds are muted-played and reset to
-prime mobile Safari/iOS playback; subsequent event sounds play from the cache.
+placement, `SYSID: 2` (`StatusUpdate`) plays once when a task's status message
+is shown, `SYSID: 3` (`NewTask`) plays when a follow-up task is shown, and
+`SYSID: 4` (`TaskDone`) plays when a task is completed. Task-specific status
+and completion messages come from `GridShiftVariants` (`taskNStatusText` and
+`taskNDoneText`). System sounds and card `SoundAsset` audio are preloaded when
+their Airtable records arrive. The initial status sound waits for the first
+trusted pointer interaction to satisfy mobile Safari/iOS audio policies;
+subsequent event sounds play from the cache.
 
 ### Multi-task flow (Pure Match)
 
 The variant row turns the single matching puzzle into a **sequence of tasks**.
 Task 1 is the matching puzzle itself; every further task is described by the
-triple `taskNText` + `taskNResult` + `taskNDoneText` (N = the task number):
+task setup uses `taskNText`, `taskNResult`, `taskNStatusText` and
+`taskNDoneText` (N = the task number):
 
 | Field | Task | Effect |
 |---|---|---|
 | `task1Text` | 1 (the matching puzzle) | The instruction shown in the prompt area below the top bar. |
+| `task1StatusText` | 1 (the matching puzzle) | Status message added once to the top of the Event Log when the task opens. |
 | `task1DoneText` | 1 (the matching puzzle) | Green message in the Log when every card is placed. |
 | `task2Text` | 2 | The instruction shown in the prompt area below the top bar. |
+| `task2StatusText` | 2 | Status message added once to the top of the Event Log when the task opens. |
 | `task2Result` | 2 | The GridShift card(s) that solve task 2. |
 | `task2DoneText` | 2 | Green message when the last card of task 2 is turned. |
 | `task3Text` / `task3Result` / `task3DoneText` / `task3Spoken` / `task3DoneBridge` | 3 | …and so on, as far as the row goes. |
@@ -443,6 +455,11 @@ triple `taskNText` + `taskNResult` + `taskNDoneText` (N = the task number):
   vertical mode. They are left-aligned and newest-first; oldest messages are
   removed as needed so the panel never scrolls. Wrong answers show a red mark
   at the selected card/cell rather than text under the grid.
+- When each valid task opens, its optional `taskNStatusText` is added once to
+  the top of the Event Log and plays the standard `StatusUpdate` sound
+  (`GridShiftSystem` SYSID 2). Subsequent mismatches and the closing
+  `taskNDoneText` appear above it as they occur; the next task's status then
+  becomes the newest entry.
 - The field names of the previous scheme (`DeckText`, `NextTaskN`,
   `TaskNAccText`, `NextTaskNAccText`, `SolutionTaskN`, `SolutionNextTaskN`,
   `task(N-1)Result`) are still accepted as fallbacks, so a row that was only
