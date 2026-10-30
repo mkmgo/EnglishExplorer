@@ -400,11 +400,18 @@ The Pure Match page reads `GridShiftSystem` through the worker's allowlisted
 | `SYSID` | Number / autonumber | Stable system-area id; the TargetBox is `5`. |
 | `SysItem` | Single line text | Internal item name; the TargetBox value is `TargetBox`. It is not shown as a label on this page. |
 | `SysIcoLucide` | Single line text | Lucide icon name to render before the task prompt. |
+| `SysSound` | URL *(optional)* | Sound effect played for the system event. Currently used for `Mismatch` (SYSID 1), `NewTask` (SYSID 3), and `TaskDone` (SYSID 4). |
 | `ShowLabel` | Checkbox | Unchecked for TargetBox; the `SysItem` label is not displayed. Other system-item label behavior will be integrated later. |
 | `ShowIcoLucide` | Checkbox | Checked to display the `SysIcoLucide` icon. |
+| `SysType` | Single select *(optional)* | System-row category (e.g. `Area`, `Move or State`, `Stage`); not currently used by the page. |
 
-The System Area classification field is upcoming and is not currently read by
-the page.
+`SysType` classifies system rows (for example `Area`, `Move or State`, or
+`Stage`) but is not yet used by the page. `SysSound` supplies optional
+sound-effect URLs: `SYSID: 1` (`Mismatch`) plays on an incorrect turn or
+placement, `SYSID: 3` (`NewTask`) plays when a follow-up task is shown, and
+`SYSID: 4` (`TaskDone`) plays when a task is completed. `SYSID: 2`
+(`StatusUpdate`) is reserved for later. Task-specific text and completion
+messages continue to come from `GridShiftVariants`.
 
 ### Multi-task flow (Pure Match)
 

@@ -1273,6 +1273,9 @@
       var speakTimer = null; // the timer that starts the spoken words
       var matchingDone = false;
       var accomplished = []; // the messages of the tasks completed so far
+      var systemSoundUrls = {}; // GridShiftSystem SysSound URLs, keyed by SYSID
+      var gameReady = false;
+      var targetBoxIconError = "";
       var pendingAccText = ""; // message of the task that is still open
       var pendingBridgeText = ""; // bridge message of the task that is open
       var initialSubheadlineText = ""; // H3Text before task-specific prompts
@@ -1324,6 +1327,7 @@
 
       function addMismatchEvent() {
         accomplished.push({ text: "❌Mismatch", mismatch: true });
+        playSystemSound(1);
         showMessages();
       }
 
@@ -1546,6 +1550,7 @@
           if (spokenText) subheadlineEl.title = "Tap to hear the words again";
           else subheadlineEl.removeAttribute("title");
         }
+        if (hasTask && n > 1) playSystemSound(3);
         if (spokenText) {
           // The tutee sees the words on the cards and turns the spoken ones
           // to the back. The words are read out to tell the tutee which
@@ -1609,6 +1614,7 @@
       function completeTurnTask() {
         awaitingTurn = false;
         addSuccessMessage(pendingAccText || feedbackText("correct"));
+        playSystemSound(4);
         var bridge = pendingBridgeText;
         var briefBridge = currentTask === 3 && !!bridge;
         bridgePending = !!bridge && !briefBridge;
@@ -1871,6 +1877,7 @@
       function completeIntroTask() {
         introMode = false;
         addSuccessMessage(pendingAccText || feedbackText("correct"));
+        playSystemSound(4);
         feedbackEl.textContent = "";
         loadTask(currentTask + 1);
         applyState();
@@ -1951,6 +1958,7 @@
           getFirstField(variantSettings, taskFields(1).acc) || "",
         ).trim();
         addSuccessMessage(message || feedbackText("correct"));
+        playSystemSound(4);
         loadTask(2);
         feedbackEl.textContent = "";
         applyState();
@@ -2006,6 +2014,16 @@
         renderIcons();
       }
 
+      function configureSystemSoundUrls(records) {
+        systemSoundUrls = {};
+        (records || []).forEach(function (record) {
+          var fields = (record && record.fields) || {};
+          var id = Number(getField(fields, "SYSID"));
+          var url = String(getField(fields, "SysSound") || "").trim();
+          if (Number.isInteger(id) && url) systemSoundUrls[id] = url;
+        });
+      }
+
       function track(action, detail) {
         if (typeof logActivity === "function") {
           logActivity("Nimza", PAGE, "GridShift", action, detail || "").catch(function () {});
@@ -2022,6 +2040,7 @@
       // satisfied on iPad and Tizen alike. Broken/missing sources stay
       // silent without disturbing the game.
       var soundCache = {}; // url -> Audio element
+      var systemSoundCache = {}; // url -> Audio element
 
       function playTaskSound(card) {
         var src = String((card && card.dataset.sound) || "").trim();
@@ -2362,6 +2381,35 @@
         }
       }
 
+      function playSystemSound(sysId) {
+        var src = systemSoundUrls[sysId];
+        if (!src) return;
+        try {
+          var audio = systemSoundCache[src];
+          if (!audio) {
+            audio = new Audio(src);
+            audio.preload = "auto";
+            audio.onerror = function () {
+              console.warn("Grid Shift system sound failed to load:", src);
+            };
+            systemSoundCache[src] = audio;
+          }
+          try {
+            audio.currentTime = 0;
+          } catch (error) {
+            console.warn("Grid Shift system sound could not restart:", error);
+          }
+          var playback = audio.play();
+          if (playback && typeof playback.catch === "function") {
+            playback.catch(function (error) {
+              console.warn("Grid Shift system sound could not play:", error);
+            });
+          }
+        } catch (error) {
+          console.warn("Grid Shift system sound could not play:", error);
+        }
+      }
+
       function refreshDecks() {
         renderDeck(remaining.concat(discarded));
         var done = remaining.length === 0;
@@ -2606,11 +2654,20 @@
 
       function showTargetBoxIconError(error) {
         console.error("Grid Shift Pure Match could not load its TargetBox icon:", error);
-        feedbackEl.textContent = "TargetBox icon unavailable: " + error.message;
+        targetBoxIconError = "TargetBox icon unavailable: " + error.message;
+        if (gameReady) feedbackEl.textContent = targetBoxIconError;
       }
 
+      fetchTable("GridShiftSystem")
+        .then(function (data) {
+          var records = (data && data.records) || [];
+          configureSystemSoundUrls(records);
+          configureTargetBoxIcon(records);
+        })
+        .catch(showTargetBoxIconError);
+
       // ---------- Build the configured Pure Match game from Airtable ----------
-      var gameSetupPromise = Promise.all([
+      Promise.all([
         fetchTable("GridShiftVariants"),
         fetchTable("GridShift"),
       ])
@@ -2789,21 +2846,14 @@
           feedbackEl.textContent = "";
           refreshDecks();
           renderIcons();
+          gameReady = true;
+          if (targetBoxIconError) feedbackEl.textContent = targetBoxIconError;
           return true;
         })
         .catch(function (error) {
           showLoadError(error);
           return false;
         });
-
-      gameSetupPromise.then(function (gameLoaded) {
-        if (!gameLoaded) return;
-        return fetchTable("GridShiftSystem")
-          .then(function (data) {
-            configureTargetBoxIcon((data && data.records) || []);
-          })
-          .catch(showTargetBoxIconError);
-      });
 
       // ---- PS4 controller -> pointer bridge ----
       // Tizen (USB gamepad) exposes the controller only via the raw Gamepad
