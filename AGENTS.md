@@ -330,7 +330,9 @@ The TargetBox icon is loaded from `GridShiftSystem` (`SYSID: 5`,
 `SysItem: TargetBox`) and rendered before the prompt when `ShowIcoLucide` is
 checked; `SysIcoLucide` supplies the Lucide icon name. The TargetBox does not
 display the `SysItem` label (`ShowLabel` should be unchecked). The upcoming
-System Area classification is not yet used by this page.
+System Area classification is not yet used by this page. The icon-table request
+runs after the game data loads, so an unavailable `GridShiftSystem` does not
+block the cards; its error is shown in the page feedback area.
 Event log entries are left-aligned, newest first, and older entries are dropped
 as needed to avoid scrolling. A wrong turn or drop at any stage adds a red
 `Mismatch` entry. Changing layout preserves the current board and progress.

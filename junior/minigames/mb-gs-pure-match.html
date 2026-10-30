@@ -2604,17 +2604,19 @@
         feedbackEl.textContent = error.message;
       }
 
+      function showTargetBoxIconError(error) {
+        console.error("Grid Shift Pure Match could not load its TargetBox icon:", error);
+        feedbackEl.textContent = "TargetBox icon unavailable: " + error.message;
+      }
+
       // ---------- Build the configured Pure Match game from Airtable ----------
-      Promise.all([
+      var gameSetupPromise = Promise.all([
         fetchTable("GridShiftVariants"),
         fetchTable("GridShift"),
-        fetchTable("GridShiftSystem"),
       ])
         .then(function (dataSets) {
           var variantRecords = (dataSets[0] && dataSets[0].records) || [];
           var cardRecords = (dataSets[1] && dataSets[1].records) || [];
-          var systemRecords = (dataSets[2] && dataSets[2].records) || [];
-          configureTargetBoxIcon(systemRecords);
           // Every GridShift record is kept: the intro step picks the records
           // that carry a TileRelated value.
           allCardRecords = cardRecords;
@@ -2787,8 +2789,21 @@
           feedbackEl.textContent = "";
           refreshDecks();
           renderIcons();
+          return true;
         })
-        .catch(showLoadError);
+        .catch(function (error) {
+          showLoadError(error);
+          return false;
+        });
+
+      gameSetupPromise.then(function (gameLoaded) {
+        if (!gameLoaded) return;
+        return fetchTable("GridShiftSystem")
+          .then(function (data) {
+            configureTargetBoxIcon((data && data.records) || []);
+          })
+          .catch(showTargetBoxIconError);
+      });
 
       // ---- PS4 controller -> pointer bridge ----
       // Tizen (USB gamepad) exposes the controller only via the raw Gamepad
