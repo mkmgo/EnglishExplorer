@@ -271,7 +271,7 @@
         font-weight: 800;
       }
 
-      /* ---- Stage column: sentence bar above the big square ---- */
+      /* ---- Stage column: sentence bar above the wide practice area ---- */
       .stageCol {
         flex: 1 1 auto;
         min-width: 0;
@@ -285,11 +285,11 @@
         padding-bottom: clamp(20px, 3.5vh, 30px); /* room for the pill */
       }
 
-      /* Sentence bar: same length as the square, clearly lower. The Airtable
+      /* Sentence bar: same width as the practice area. The Airtable
          PageTitle lives on line 1, verdict / per-letter hint + Word on line 2. */
       .sentence {
         flex: none;
-        width: var(--sq-size, 480px);
+        width: 100%;
         max-width: 100%;
         height: clamp(46px, 7.5vh, 66px);
         box-sizing: border-box;
@@ -351,15 +351,15 @@
         color: var(--danger);
       }
 
-      /* ---- The Square: asset zone (~35%) + writing grid (~65%) ---- */
+      /* ---- Practice area: asset zone (~35%) + writing grid (~65%) ---- */
       .squareWrap {
         flex: none;
         position: relative;
-        width: var(--sq-size, 480px);
+        width: 100%;
         max-width: 100%;
       }
       .square {
-        width: var(--sq-size, 480px);
+        width: 100%;
         height: var(--sq-size, 480px);
         max-width: 100%;
         box-sizing: border-box;
@@ -404,15 +404,23 @@
       .word-row {
         display: flex;
         flex-wrap: wrap;
-        gap: clamp(4px, 0.7vw, 8px);
+        column-gap: clamp(14px, 2vw, 24px);
+        row-gap: clamp(6px, 1vh, 12px);
+        align-items: center;
         align-content: center;
         justify-content: center;
         width: 100%;
         height: 100%;
         min-height: 0;
       }
+      .wordGroup {
+        display: flex;
+        flex: none;
+        flex-wrap: nowrap;
+        gap: clamp(4px, 0.7vw, 8px);
+      }
 
-      /* Writing pads: sized by JS from the free square space ("writing maxed"). */
+      /* Writing pads: sized by JS from the free practice area. */
       .chpad {
         position: relative;
         border-radius: 10px;
@@ -434,6 +442,9 @@
       }
       .chpad .guide.base {
         bottom: 22%;
+      }
+      .chpad .guide.descender {
+        bottom: 3%;
       }
       .chpad .guide.mid {
         bottom: 58%;
@@ -557,7 +568,7 @@
         color: #ef4444;
       }
 
-      /* ---- Floating action pill (bottom edge of the square) ---- */
+      /* ---- Floating action pill (bottom edge of the practice area) ---- */
       .pill {
         position: absolute;
         left: 50%;
@@ -702,7 +713,7 @@
           <p id="subLine"></p>
         </div>
 
-        <!-- The big square: asset on top (~35%), writing grid below -->
+        <!-- Wide practice area: asset on top (~35%), writing grid below -->
         <div class="squareWrap">
           <section class="square">
             <div class="assetZone">
@@ -1112,6 +1123,10 @@
         var row = $("wordRow");
         row.innerHTML = "";
         pads = [];
+        var wordGroups = word.w.trim().split(/\s+/).filter(Boolean);
+        var hasDescender = wordGroups.join("").split("").some(function (letter, index) {
+          return letterType(index === 0 ? letter.toUpperCase() : letter) === "descender";
+        });
         locked = false;
         passed = false;
         setNextEnabled(false);
@@ -1124,135 +1139,141 @@
           "”. Hold a letter still for ≈ 1 second to check it.";
         updateRail();
 
-        word.w.split("").forEach(function () {
-          var pad = document.createElement("div");
-          pad.className = "chpad";
-          var g1 = document.createElement("div");
-          g1.className = "guide base";
-          var g2 = document.createElement("div");
-          g2.className = "guide mid";
-          var g0 = document.createElement("div");
-          g0.className = "guide top";
-          var canvas = document.createElement("canvas");
-          pad.appendChild(g0);
-          pad.appendChild(g2);
-          pad.appendChild(g1);
-          pad.appendChild(canvas);
-          row.appendChild(pad);
+        wordGroups.forEach(function (text) {
+          var group = document.createElement("div");
+          group.className = "wordGroup";
+          row.appendChild(group);
+          text.split("").forEach(function (letter) {
+            var pad = document.createElement("div");
+            pad.className = "chpad";
+            var g1 = document.createElement("div");
+            g1.className = "guide base";
+            var gBottom = document.createElement("div");
+            gBottom.className = "guide descender";
+            var g2 = document.createElement("div");
+            g2.className = "guide mid";
+            var g0 = document.createElement("div");
+            g0.className = "guide top";
+            var canvas = document.createElement("canvas");
+            // Capitalize the first letter of the exercise; keep other
+            // letters as supplied by the word list.
+            var ghost = pads.length === 0 ? letter.toUpperCase() : letter;
+            pad.appendChild(g0);
+            pad.appendChild(g2);
+            pad.appendChild(g1);
+            if (hasDescender) pad.appendChild(gBottom);
+            pad.appendChild(canvas);
+            group.appendChild(pad);
 
-          var ctx = canvas.getContext("2d");
-          var entry = {
-            canvas: canvas, ctx: ctx, pad: pad, strokes: [],
-            drawing: false, lineWidth: 6,
-            startX: 0, startY: 0, moved: false, pressTimer: null,
-          };
-          // First letter is a capital, the rest lowercase (e.g. "Tree").
-          entry.ghost =
-            pads.length === 0
-              ? word.w.charAt(0).toUpperCase()
-              : word.w.charAt(pads.length);
-          pads.push(entry);
+            var ctx = canvas.getContext("2d");
+            var entry = {
+              canvas: canvas, ctx: ctx, pad: pad, strokes: [],
+              drawing: false, lineWidth: 6,
+              startX: 0, startY: 0, moved: false, pressTimer: null,
+            };
+            entry.ghost = ghost;
+            pads.push(entry);
 
-          function size() {
-            var r = canvas.getBoundingClientRect();
-            var dpr = window.devicePixelRatio || 1;
-            canvas.width = Math.round(r.width * dpr);
-            canvas.height = Math.round(r.height * dpr);
-            ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-            redraw(entry); // re-apply the faint letter + any strokes
-          }
-          entry.size = size; // called by layoutPads()
-
-          function pos(e) {
-            var r = canvas.getBoundingClientRect();
-            return { x: e.clientX - r.left, y: e.clientY - r.top };
-          }
-          // Cancel a running long-press (drawing took over / pen left).
-          function clearPress() {
-            pad.classList.remove("pressing");
-            if (entry.pressTimer) {
-              window.clearTimeout(entry.pressTimer);
-              entry.pressTimer = null;
+            function size() {
+              var r = canvas.getBoundingClientRect();
+              var dpr = window.devicePixelRatio || 1;
+              canvas.width = Math.round(r.width * dpr);
+              canvas.height = Math.round(r.height * dpr);
+              ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+              redraw(entry); // re-apply the faint letter + any strokes
             }
-          }
-          function down(e) {
-            if (locked) return;
-            e.preventDefault();
-            if (canvas.setPointerCapture && e.pointerId !== undefined) {
-              try { canvas.setPointerCapture(e.pointerId); } catch (err) {}
+            entry.size = size; // called by layoutPads()
+
+            function pos(e) {
+              var r = canvas.getBoundingClientRect();
+              return { x: e.clientX - r.left, y: e.clientY - r.top };
             }
-            var p = pos(e.touches ? e.touches[0] : e);
-            entry.startX = p.x;
-            entry.startY = p.y;
-            entry.moved = false;
-            entry.drawing = true;
-            entry.strokes.push([p]);
-            // New ink clears the earlier per-letter verdict of this pad.
-            pad.classList.remove("pass", "fail");
-            ctx.lineWidth = entry.lineWidth;
-            ctx.lineCap = "round";
-            ctx.lineJoin = "round";
-            ctx.strokeStyle = "#1d4ed8";
-            // Long-press candidate: holding still checks this letter.
-            pad.classList.add("pressing");
-            if (entry.pressTimer) window.clearTimeout(entry.pressTimer);
-            entry.pressTimer = window.setTimeout(function () {
-              entry.pressTimer = null;
+            // Cancel a running long-press (drawing took over / pen left).
+            function clearPress() {
               pad.classList.remove("pressing");
-              if (!entry.moved && entry.drawing) pressCheck(entry);
-            }, LONGPRESS_MS);
-          }
-          function move(e) {
-            if (!entry.drawing || locked) return;
-            e.preventDefault();
-            var p = pos(e.touches ? e.touches[0] : e);
-            var last = entry.strokes[entry.strokes.length - 1];
-            last.push(p);
-            if (!entry.moved) {
-              var dx = p.x - entry.startX;
-              var dy = p.y - entry.startY;
-              if (Math.sqrt(dx * dx + dy * dy) > PRESS_MOVE_TOL) {
-                entry.moved = true; // this is writing, not a long-press
-                clearPress();
+              if (entry.pressTimer) {
+                window.clearTimeout(entry.pressTimer);
+                entry.pressTimer = null;
               }
             }
-            redraw(entry);
-          }
-          function redraw(en) {
-            en.ctx.clearRect(0, 0, en.canvas.width, en.canvas.height);
-            drawGhost(en);
-            en.strokes.forEach(function (st) {
-              if (!st.length) return;
-              en.ctx.beginPath();
-              en.ctx.moveTo(st[0].x, st[0].y);
-              for (var i = 1; i < st.length; i++) en.ctx.lineTo(st[i].x, st[i].y);
-              en.ctx.stroke();
-            });
-          }
-          function up() {
-            entry.drawing = false;
-            clearPress();
-            // A hold without writing leaves a single-point dot stroke: drop it.
-            if (entry.strokes.length && entry.strokes[entry.strokes.length - 1].length === 1) {
-              entry.strokes.pop();
+            function down(e) {
+              if (locked) return;
+              e.preventDefault();
+              if (canvas.setPointerCapture && e.pointerId !== undefined) {
+                try { canvas.setPointerCapture(e.pointerId); } catch (err) {}
+              }
+              var p = pos(e.touches ? e.touches[0] : e);
+              entry.startX = p.x;
+              entry.startY = p.y;
+              entry.moved = false;
+              entry.drawing = true;
+              entry.strokes.push([p]);
+              // New ink clears the earlier per-letter verdict of this pad.
+              pad.classList.remove("pass", "fail");
+              ctx.lineWidth = entry.lineWidth;
+              ctx.lineCap = "round";
+              ctx.lineJoin = "round";
+              ctx.strokeStyle = "#1d4ed8";
+              // Long-press candidate: holding still checks this letter.
+              pad.classList.add("pressing");
+              if (entry.pressTimer) window.clearTimeout(entry.pressTimer);
+              entry.pressTimer = window.setTimeout(function () {
+                entry.pressTimer = null;
+                pad.classList.remove("pressing");
+                if (!entry.moved && entry.drawing) pressCheck(entry);
+              }, LONGPRESS_MS);
+            }
+            function move(e) {
+              if (!entry.drawing || locked) return;
+              e.preventDefault();
+              var p = pos(e.touches ? e.touches[0] : e);
+              var last = entry.strokes[entry.strokes.length - 1];
+              last.push(p);
+              if (!entry.moved) {
+                var dx = p.x - entry.startX;
+                var dy = p.y - entry.startY;
+                if (Math.sqrt(dx * dx + dy * dy) > PRESS_MOVE_TOL) {
+                  entry.moved = true; // this is writing, not a long-press
+                  clearPress();
+                }
+              }
               redraw(entry);
             }
-          }
+            function redraw(en) {
+              en.ctx.clearRect(0, 0, en.canvas.width, en.canvas.height);
+              drawGhost(en);
+              en.strokes.forEach(function (st) {
+                if (!st.length) return;
+                en.ctx.beginPath();
+                en.ctx.moveTo(st[0].x, st[0].y);
+                for (var i = 1; i < st.length; i++) en.ctx.lineTo(st[i].x, st[i].y);
+                en.ctx.stroke();
+              });
+            }
+            entry.redraw = function () { redraw(entry); };
+            function up() {
+              entry.drawing = false;
+              clearPress();
+              // A hold without writing leaves a single-point dot stroke: drop it.
+              if (entry.strokes.length && entry.strokes[entry.strokes.length - 1].length === 1) {
+                entry.strokes.pop();
+                redraw(entry);
+              }
+            }
 
-          canvas.addEventListener("pointerdown", down);
-          canvas.addEventListener("pointermove", move);
-          canvas.addEventListener("pointerup", up);
-          canvas.addEventListener("pointercancel", up);
+            canvas.addEventListener("pointerdown", down);
+            canvas.addEventListener("pointermove", move);
+            canvas.addEventListener("pointerup", up);
+            canvas.addEventListener("pointercancel", up);
+          });
         });
         layoutStage();
       }
 
       // ---- Stage layout --------------------------------------------------
-      // The big square fills the free height of the stage column (its width
-      // equals its height — it is a square). The pads then fill the free
-      // space of the square: short words make a few very large pads, long
-      // and double words wrap into more rows of large pads instead of
-      // shrinking. Everything recomputes on resize / orientation change.
+      // The practice area fills the stage column width and the free viewport
+      // height. Pads share one size across the word list; whole words wrap
+      // between lines when needed. Recompute on viewport changes.
       function layoutStage() {
         if (!WORDS.length) return;
         var col = $("stageCol");
@@ -1263,32 +1284,60 @@
         var gaps = sentence ? (parseFloat(styles.rowGap) || 10) : 0;
         var sentenceH = sentence ? sentence.getBoundingClientRect().height : 0;
         var avail = col.clientHeight - padBottom - sentenceH - gaps * 2;
-        var size = Math.max(220, Math.min(avail, col.clientWidth));
+        var size = Math.max(220, avail);
         col.style.setProperty("--sq-size", Math.round(size) + "px");
         layoutPads();
       }
 
-      // Choose the pad size: pick the smallest row count (1-4) whose pads
-      // still fill the writing zone generously.
+      // Keep pad sizes consistent across exercises. Words may wrap as groups,
+      // but a word is never split; choose the largest size that fits every
+      // loaded phrase within the writing area.
       function layoutPads() {
         if (!pads.length) return;
         var row = $("wordRow");
         var box = row.getBoundingClientRect();
         if (!box.width || !box.height) return;
-        var gap = parseFloat(window.getComputedStyle(row).columnGap) || 8;
-        var L = pads.length;
-        var chosen = null;
-        for (var rows = 1; rows <= 4; rows++) {
-          var perRow = Math.ceil(L / rows);
-          var zoneH = (box.height - (rows - 1) * gap) / rows;
-          var padW = Math.min(zoneH * 0.78, (box.width - (perRow - 1) * gap) / perRow);
-          var padH = Math.min(zoneH, padW / 0.78);
-          if (padW >= 34 && padH >= 44) {
-            chosen = { w: padW, h: padH };
-            break;
-          }
-          if (rows === 4) chosen = { w: Math.max(28, padW), h: Math.max(36, padH) };
+        var rowStyle = window.getComputedStyle(row);
+        var wordGap = parseFloat(rowStyle.columnGap) || 16;
+        var rowGap = parseFloat(rowStyle.rowGap) || 8;
+        var group = row.querySelector(".wordGroup");
+        var letterGap = group
+          ? parseFloat(window.getComputedStyle(group).columnGap) || 8
+          : 8;
+        var maxWordLength = WORDS.reduce(function (max, word) {
+          return word.w.trim().split(/\s+/).reduce(function (longest, text) {
+            return Math.max(longest, text.length);
+          }, max);
+        }, 1);
+        var low = 0;
+        var high = Math.min(box.height * 0.78, box.width / maxWordLength);
+        function fits(padW) {
+          var padH = padW / 0.78;
+          return WORDS.every(function (word) {
+            var lineWidth = 0;
+            var lineCount = 1;
+            var words = word.w.trim().split(/\s+/).filter(Boolean);
+            for (var i = 0; i < words.length; i++) {
+              var wordWidth = words[i].length * padW + (words[i].length - 1) * letterGap;
+              if (wordWidth > box.width) return false;
+              var nextWidth = lineWidth ? lineWidth + wordGap + wordWidth : wordWidth;
+              if (lineWidth && nextWidth > box.width) {
+                lineCount++;
+                lineWidth = wordWidth;
+              } else {
+                lineWidth = nextWidth;
+              }
+            }
+            return lineCount * padH + (lineCount - 1) * rowGap <= box.height;
+          });
         }
+        for (var attempt = 0; attempt < 24; attempt++) {
+          var mid = (low + high) / 2;
+          if (fits(mid)) low = mid;
+          else high = mid;
+        }
+        var padW = low;
+        var chosen = { w: padW, h: padW / 0.78 };
         pads.forEach(function (en) {
           en.pad.style.width = chosen.w.toFixed(1) + "px";
           en.pad.style.height = chosen.h.toFixed(1) + "px";
@@ -1296,7 +1345,7 @@
           en.size();
         });
         computeGhostSizes();
-        pads.forEach(function (en) { redraw(en); });
+        pads.forEach(function (en) { en.redraw(); });
       }
 
       // Precompute ghost font sizes: each letter sized by its own metrics
@@ -1445,7 +1494,8 @@
           if (maxY / ch < 0.68) { hints.push("Reach down to the baseline"); zoneOk = false; }
         } else {
           if (minY / ch < 0.32) { hints.push("Start from the middle line"); zoneOk = false; }
-          if (maxY / ch < 0.78) { hints.push("The tail should go below the baseline"); zoneOk = false; }
+          if (maxY / ch < 0.88) { hints.push("Take the tail down to the lower line"); zoneOk = false; }
+          if (maxY / ch > 0.99) { hints.push("Keep the tail above the lower line"); zoneOk = false; }
         }
         return { drawn: true, zoneOk: zoneOk, coverage: coverage, hints: hints, strokes: en.strokes.length };
       }
@@ -1455,18 +1505,17 @@
         if (locked) return;
         locked = true;
         var word = WORDS[current];
-        var letters = word.w.split("");
         var anyDrawn = false,
           okCount = 0,
           allHints = [];
-        pads.forEach(function (en, i) {
+        pads.forEach(function (en) {
           var r = checkPad(en);
           if (r.drawn) anyDrawn = true;
           var ok = r.drawn && r.zoneOk && r.coverage > 0.05 && r.coverage < 0.95 && r.strokes <= 6;
           if (ok) {
             okCount++;
           } else if (r.drawn && r.hints.length) {
-            allHints.push({ letter: letters[i], hint: r.hints[0] });
+            allHints.push({ letter: en.ghost, hint: r.hints[0] });
           }
         });
         var sub = "";
@@ -1562,7 +1611,7 @@
         buildWord();
       });
 
-      // Keep the square + pads sized on any viewport change (iPad rotation,
+      // Keep the practice area + pads sized on any viewport change (iPad rotation,
       // resize, toolbars folding). Debounced — iOS fires resize bursts.
       var resizeTimer = null;
       function onViewportChange() {
