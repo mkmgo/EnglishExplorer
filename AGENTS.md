@@ -32,6 +32,7 @@ EnglishExplorer/
 │   │   └── handwriting-practice-02.html  <-- Airtable-powered writing practice (fetches from HandWriting table)
 │   └── minigames/              <-- Highly gamified mini-games (formerly /Features)
 │       ├── abc-world.html
+│       ├── mb-gs-pure-match.html  <-- Pure Match Airtable authoring engine; selects a draft variant from GridShiftVariants
 │       ├── mb-grid-shift.html  <-- Grid Shift: flip bricks (front/back) from two 20-card stacks onto a shared 8x5 grid; Airtable table GridShift
 │       ├── mb-farmstead-mg.html  <-- Pure Match puzzle, shipped as the Farmstead lesson (VarName names this file); Airtable GridShiftVariants
 │       ├── mb-farmstead-mg.snapshot.json  <-- Frozen data for that page (variant row + cards + system rows); see its freeze doc
@@ -352,19 +353,27 @@ worker for the `?live=1` path.
 The released page **does not carry the data**. Its frozen snapshot lives in
 `junior/minigames/mb-farmstead-mg.snapshot.json` (a sibling of the page, fetched
 by its bare relative name) and holds the resolved settings, the raw Pure Match
-variant row, every `PM-Active` card and the `GridShiftSystem` rows. A normal load
-reads only that file — no game-data table requests — so the lesson is stable
-even if Airtable changes or the worker is down, and the top bar badge shows
-`Frozen YYYY-MM-DD`.
+variant row, every `PM-Active` card and the `GridShiftSystem` rows. A normal
+frozen load checks the matching `FreezeVariant` row, then reads game data only
+from the snapshot; if the status check cannot reach Airtable, the snapshot is
+used with an in-page warning. The top bar badge shows `Frozen YYYY-MM-DD`.
 
-**Unfreezing / authoring:** `mb-farmstead-mg.html?live=1` reads
-`GridShiftVariants`, `GridShift` and `GridShiftSystem` live from Airtable and
-runs the same pipeline (badge `LIVE from Airtable`). `FreezeVariant` is only the
-**capture guard** for the console snippet — it never switches the data source.
-Check it before capturing a release snapshot, uncheck it while authoring; see
+**Unfreezing / authoring:** the release page checks its matching
+`GridShiftVariants` row at startup. A checked `FreezeVariant` loads the frozen
+snapshot; an unchecked value loads `GridShiftVariants`, `GridShift` and
+`GridShiftSystem` live from Airtable (badge `LIVE from Airtable`). `?live=1`
+remains an explicit live override. If Airtable cannot provide the status check,
+the page uses its snapshot and displays a warning. The checkbox also remains
+the **capture guard** for the console snippet: check it before capturing a
+release snapshot and leave it unchecked while authoring; see
 [mb-farmstead-mg-freeze.md](junior/minigames/mb-farmstead-mg-freeze.md) for the
 capture and re-freeze workflow, the snapshot schema and the file's
 self-containment exception.
+
+The shared authoring engine `mb-gs-pure-match.html` always reads Airtable.
+Choose a variant with `?variant=<VarName>`; when no variant is specified and
+exactly one active row has `FreezeVariant` unchecked, the engine selects that
+draft automatically. If multiple drafts exist, specify `?variant=<VarName>`.
 
 **The deliverable is named after `VarName`.** The page, its snapshot and its
 freeze doc all mirror that one Airtable field in kebab-case:
@@ -483,7 +492,7 @@ The variant row also drives the page chrome:
 | `WrongProductText` | Single line text *(optional)* | Retained for compatibility; a product dropped on the wrong animal shows a red mark on that cell instead of text. |
 | `CorrectText` | Single line text *(optional)* | Added to the Log when a task is solved and the variant row has no own done text (default: `✔ Correct!`). |
 | `PartColour` | Single line text | Overall theme accent and deck badge dot. The color is darkened slightly for light-mode toolbar background; toolbar text and controls are white, with the theme toggle inverted for contrast. Accepts a palette name (`Blue`), a hex / `rgb()` / `hsl()` value, a plain CSS colour name, or `var(--color-x)`. Palette names map to the page's theme-aware vars (`--color-blue`, `--color-yellow`, `--color-green`, `--color-red`, `--color-orange`, `--color-purple`). Empty = `var(--color-red)`. |
-| `FreezeVariant` | Checkbox | Capture guard for the release snapshot. Check it before capturing (the console snippet refuses otherwise); uncheck it while authoring. It does **not** switch the data source — the released page always reads `mb-farmstead-mg.snapshot.json`, and `?live=1` always reads Airtable. |
+| `FreezeVariant` | Checkbox | Checked = the release page loads its frozen snapshot; unchecked = it loads live Airtable data. It also guards snapshot capture (the console snippet refuses unless checked). `?live=1` forces live mode. |
 | `NoParticipants` | Number | Number of players. Only `1` is supported so far — a higher value stops the game with an in-page error instead of silently running one deck. |
 | `VarID` | Number | Variant id (not used by the game). |
 

@@ -2,8 +2,8 @@
 
 > Pair documents: [`mb-farmstead-mg.html`](mb-farmstead-mg.html) (the game) and
 > [`mb-farmstead-mg.snapshot.json`](mb-farmstead-mg.snapshot.json) (the frozen
-> data it plays). The page reads the JSON file by default; `?live=1` reads the
-> same data from Airtable instead.
+> data it plays). A checked `FreezeVariant` reads the JSON file; an unchecked
+> value reads the same data from Airtable. `?live=1` always forces Airtable.
 
 ## Why freeze?
 
@@ -22,8 +22,8 @@ is always *the next* load: a lesson prepared today can silently become a
 different game tomorrow because someone tidied the base.
 
 **Goal:** ship a *frozen snapshot* of the fully-resolved game next to the page,
-so the released lesson is stable and reproducible, while Airtable remains the
-authoring tool — edits there only change the game when you explicitly re-freeze.
+so the released lesson is stable and reproducible while `FreezeVariant` is
+checked, and Airtable remains the authoring tool while it is unchecked.
 
 ---
 
@@ -38,7 +38,8 @@ Authoring loop (full detail in [Refresh workflow](#refresh-workflow-re-freezing)
 2. Edit the row in Airtable — instructions (`taskNText`), status messages,
    done messages, spoken words, pictures, colours, `H1Text`, the task results —
    and the `GridShift` / `GridShiftSystem` records it points at.
-3. Preview with **`mb-farmstead-mg.html?live=1`** (badge `LIVE from Airtable`).
+3. Preview with **`mb-farmstead-mg.html`** (badge `LIVE from Airtable`).
+   `?live=1` is still available as an explicit override.
    Reload after every Airtable edit; nothing is cached.
 4. When the lesson is right, check `FreezeVariant` and capture the snapshot.
 5. Commit the page **and** the snapshot together, then deploy.
@@ -81,21 +82,23 @@ doc. Never share a snapshot between variants.
 Load-time pipeline in `mb-farmstead-mg.html`:
 
 ```
-GET /airtable?table=GridShiftVariants   ──┐
-GET /airtable?table=GridShift           ──┤
-GET /airtable?table=GridShiftSystem     ──┘
-                                          ▼
-1. Pick the one row whose VarName matches the page file name
-2. Validate settings:  Hints = "Imprints of Display (Text)"
+GET /airtable?table=GridShiftVariants ── check FreezeVariant
+                                          ├─ checked ──> fetch sibling snapshot
+                                          └─ unchecked / ?live=1 ──> fetch GridShift + GridShiftSystem
+                                                                      ▼
+1. Check the matching variant row's `FreezeVariant` value; unchecked selects
+   Airtable, checked selects the sibling snapshot
+2. Pick the one row whose VarName matches the page file name
+3. Validate settings:  Hints = "Imprints of Display (Text)"
                        Placing = "Random"
                        Deck    = <checkbox field name>  (e.g. "PM-Active")
                        DeckCount = "Variable"
                        NoParticipants = 1
-3. Filter GridShift rows where <Deck> checkbox is checked
-4. Per card: read Display (match text) + all render fields → buildCard()
-5. parseGridDimension() → cols × rows (must hold every card + TileRelated product)
-6. shuffle(cards) → deck;  shuffle(cell slots) → random imprint placement
-7. render + gamepad bridge (unchanged by this proposal)
+4. Filter GridShift rows where <Deck> checkbox is checked
+5. Per card: read Display (match text) + all render fields → buildCard()
+6. parseGridDimension() → cols × rows (must hold every card + TileRelated product)
+7. shuffle(cards) → deck;  shuffle(cell slots) → random imprint placement
+8. render + gamepad bridge (unchanged by this proposal)
 ```
 
 **Freeze point:** after step 5 (everything validated and resolved), **before**
@@ -215,8 +218,8 @@ path reuses it with zero duplication and never drifts from the live path.
 
 | Mode | Trigger | Behaviour |
 |---|---|---|
-| **Frozen (default)** | normal URL | `fetch("mb-farmstead-mg.snapshot.json")` → validate → render. No Airtable game-data requests — the page still starts if the worker is down. Cloudinary media and the approved Lucide CDN still need connectivity. Badge: `Frozen YYYY-MM-DD`. |
-| **Live (authoring / unfreeze)** | `mb-farmstead-mg.html?live=1` | Fetches `GridShiftVariants`, `GridShift` and `GridShiftSystem` from Airtable, validates, and renders. Every Airtable input remains fully testable. Badge: `LIVE from Airtable`. |
+| **Frozen** | Normal URL with `FreezeVariant` checked | Checks the matching variant row, then fetches `mb-farmstead-mg.snapshot.json` → validate → render. No Airtable game-data requests; if the status check cannot run, the snapshot is used with an in-page warning. Badge: `Frozen YYYY-MM-DD`. |
+| **Live (authoring / unfreeze)** | Normal URL with `FreezeVariant` unchecked, or `?live=1` | Fetches `GridShiftVariants`, `GridShift` and `GridShiftSystem` from Airtable, validates, and renders. Every Airtable input remains fully testable. Badge: `LIVE from Airtable`. |
 
 The unfreeze path is **untouched by the storage format**: both modes converge on
 the same pipeline — `startGame(resolvedSettings, cardRecords)` → validate →
@@ -225,12 +228,13 @@ the same pipeline — `startGame(resolvedSettings, cardRecords)` → validate �
 
 | Entry point | Source |
 |---|---|
+| `startFromRelease()` | Read the matching Airtable `FreezeVariant`; select snapshot or live source |
 | `startFromFrozenFile()` | `fetchSnapshot(SNAPSHOT_URL)` → `startFromSnapshot(json)` |
 | `startFromLive()` | `fetchTable(...)` → `startGame(variantFields, cardRecords)` |
 
-`FreezeVariant` is a **capture guard, not a runtime switch**: it only decides
-whether the console snippet is allowed to produce a snapshot. The page never
-reads it to choose a data source.
+`FreezeVariant` is both a **runtime source switch** and a **capture guard**:
+unchecked loads live Airtable data; checked loads the release snapshot and
+allows the console snippet to capture a replacement.
 
 ### Failure behaviour
 
@@ -238,10 +242,12 @@ reads it to choose a data source.
 |---|---|
 | Snapshot file missing / 404 | In-page: `Frozen snapshot request failed (HTTP 404) for mb-farmstead-mg.snapshot.json.` + the `?live=1` hint. No dialogs (Tizen-safe). |
 | Snapshot file is not valid JSON | In-page: `Frozen snapshot … is not valid JSON.` |
+| FreezeVariant status request fails | Loads the frozen snapshot and displays a warning; the release remains playable while offline. |
+| No unique active Airtable row matches the page name | Loads the frozen snapshot and displays a warning. Fix `VarName` / duplicate rows before unfreezing. |
 | Page opened from `file://` | In-page: the snapshot cannot be read from a local file — serve the folder over HTTP(S) or use `?live=1`. |
 | Unknown `schemaVersion`, missing `cards` / `systemRecords` / `variantFields`, bad `frozenAt`, snapshot `VarName` ≠ page file name, `deckField` ≠ variant `Deck`, unsupported deck/placing/hint values, non-integer grid, cells < cards + `TileRelated` products, card with empty `Display` / mismatched `match`, card without `recordId` | Rejected at load with the specific message — a bad snapshot must never render a half-broken board. |
 | `?live=1` but no row carries the page's `VarName` | In-page: `Expected one mb-farmstead-mg setup in GridShiftVariants; found N.` — fix the `VarName`, or rename the page file to match it. |
-| `?live=1` but worker/Airtable fails | `showLoadError()` plus a hint that the frozen default needs no such dependency. |
+| Live mode but worker/Airtable fails | `showLoadError()` plus a hint that the frozen snapshot is still available. |
 
 ---
 
@@ -250,23 +256,22 @@ reads it to choose a data source.
 Airtable stays the authoring surface. The loop is:
 
 1. Edit content/settings in Airtable as usual. Leave `FreezeVariant` unchecked
-   while developing; open the game with `?live=1` to see those changes.
-2. Open `mb-farmstead-mg.html?live=1` and confirm the lesson plays as wanted
+   while developing; the normal page URL loads those changes live.
+2. Open `mb-farmstead-mg.html` and confirm the lesson plays as wanted
    (tasks 1–4, spoken words, bridge messages, the finale picture).
 3. Check `FreezeVariant` on the `mb-farmstead-mg` row in Airtable.
-4. On that same `?live=1` page, paste the **capture snippet** (below) into the
-   browser devtools console. It refuses to capture unless `FreezeVariant` is
-   checked, re-runs the game's validations, and **downloads**
+4. On that same live page (or with `?live=1`), paste the **capture snippet**
+   (below) into the browser devtools console. It refuses to capture unless
+   `FreezeVariant` is checked, re-runs the game's validations, and **downloads**
    `mb-farmstead-mg.snapshot.json`.
 5. Drop that file into `junior/minigames/`, replacing the old snapshot.
 6. Commit the page and the snapshot **together**, then deploy.
 7. Verify: open the page at its normal URL — the badge must read
    `Frozen <date>`, the stack count / grid must match the lesson, and the
-   network panel must show **no** `/airtable` requests (only the one snapshot
-   fetch).
-8. To keep authoring afterwards, uncheck `FreezeVariant` again and use
-   `?live=1`. Note that the *released* page keeps using the snapshot until it is
-   re-frozen — that is the whole point of the freeze.
+   network panel must show only the `GridShiftVariants` status request plus the
+   snapshot fetch (no Airtable game-data requests).
+8. To keep authoring afterwards, uncheck `FreezeVariant`; the normal URL then
+   loads live data. `?live=1` remains available as an explicit override.
 
 > Works equally from the Tizen browser's devtools or desktop Chrome; the
 > snippet only uses the same public worker endpoint the page already calls.

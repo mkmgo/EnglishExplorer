@@ -75,7 +75,7 @@ file name (today `mb-farmstead-mg`). These fields drive it:
 | `GridDimension (horizontal)` | `4x5` | Cell count or `rows x columns`; `4x5` means 4 rows × 5 columns. |
 | `Placing` | `Random` | Imprints are assigned to random unique cells. |
 | `Hints` | `Imprints of Display (Text)` | Use each selected card's `Display` value for its text imprint. |
-| `FreezeVariant` | checked / unchecked | Capture guard for the released snapshot. Check it before capturing and deploying a frozen release; leave it unchecked while authoring. The normal URL reads the sibling `mb-farmstead-mg.snapshot.json`; `?live=1` loads the current Airtable setup. |
+| `FreezeVariant` | checked / unchecked | Checked = the matching release page loads its frozen snapshot; unchecked = it loads live Airtable data. It also guards snapshot capture (must be checked). `?live=1` forces live mode. |
 | `PartColour` | `Red` | Player/deck colour setting; currently informational in Pure Match. |
 | `NoParticipants` | `1` | Participant count; currently informational in Pure Match. |
 | `task1Text` | `Match the cards correctly.` | Instruction of task 1 (the matching puzzle) — shown under the card stack. |
@@ -326,9 +326,13 @@ Pure Match also reads `GridShiftVariants` fields `VarName`, `H1Text`, `H3Text`,
 is fetched in its natural Airtable row order.
 
 Pure Match ships its data frozen in the sibling
-`mb-farmstead-mg.snapshot.json`; use `mb-farmstead-mg.html?live=1` to develop
-against Airtable and check `FreezeVariant` before capturing a release snapshot.
-The snapshot format and capture steps are documented in
+`mb-farmstead-mg.snapshot.json`; uncheck `FreezeVariant` to develop against
+Airtable from the normal page URL (`?live=1` remains an override), then check it
+before capturing a release snapshot. To begin another variant, add a new
+`GridShiftVariants` row with its own `VarName`, leave `FreezeVariant` unchecked,
+and open `mb-gs-pure-match.html`. The engine automatically selects the only
+unchecked active variant; if there are multiple drafts, select one explicitly
+with `?variant=<VarName>`. The snapshot format and capture steps are documented in
 [`mb-farmstead-mg-freeze.md`](mb-farmstead-mg-freeze.md).
 
 ---

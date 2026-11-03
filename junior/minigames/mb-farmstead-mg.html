@@ -1124,9 +1124,9 @@
       var WORKER =
         "https://english-explorer-tracker.mkmueller-mission.workers.dev/airtable?table=";
       var PAGE = "/junior/minigames/mb-farmstead-mg.html";
-      // The frozen release snapshot ships next to this page. It is the only
-      // data file the page reads; add ?live=1 to read the same data from
-      // Airtable instead (authoring / unfreeze). See AGENTS.md.
+      // The frozen release snapshot ships next to this page. FreezeVariant
+      // selects it by default; an unchecked Airtable value opens live data.
+      // ?live=1 remains an explicit override. See AGENTS.md.
       var SNAPSHOT_URL = "mb-farmstead-mg.snapshot.json";
       // The deliverable is named after GridShiftVariants.VarName, so the page
       // selects its variant row by its own file name. Renaming VarName and the
@@ -3301,7 +3301,8 @@
         }
       }
 
-      function startFromLive() {
+      function startFromLive(knownVariantRecords) {
+        liveMode = true;
         setModeBadge("LIVE from Airtable");
         fetchTable("GridShiftSystem")
           .then(function (data) {
@@ -3313,7 +3314,9 @@
           });
 
         Promise.all([
-          fetchTable("GridShiftVariants"),
+          knownVariantRecords
+            ? Promise.resolve({ records: knownVariantRecords })
+            : fetchTable("GridShiftVariants"),
           fetchTable("GridShift"),
         ])
           .then(function (dataSets) {
@@ -3363,7 +3366,7 @@
         });
       }
 
-      function startFromFrozenFile() {
+      function startFromFrozenFile(warning) {
         if (window.location.protocol === "file:") {
           showLoadError(
             new Error(
@@ -3374,11 +3377,58 @@
           );
           return;
         }
-        fetchSnapshot(SNAPSHOT_URL).then(startFromSnapshot).catch(showLoadError);
+        fetchSnapshot(SNAPSHOT_URL)
+          .then(function (snapshot) {
+            startFromSnapshot(snapshot);
+            if (warning && gameReady) feedbackEl.textContent = warning;
+          })
+          .catch(function (error) {
+            if (warning) error.message += " " + warning;
+            showLoadError(error);
+          });
+      }
+
+      function startFromRelease() {
+        setModeBadge("Checking FreezeVariant…");
+        fetchTable("GridShiftVariants")
+          .then(function (data) {
+            var records = (data && data.records) || [];
+            var wanted = normalizedFieldName(VARIANT_NAME);
+            var matches = records.filter(function (record) {
+              var fields = (record && record.fields) || {};
+              var name = getSetting(fields, ["VarName", "Name"]);
+              var active = getField(fields, "Active");
+              return (
+                normalizedFieldName(name) === wanted &&
+                (active === undefined || isChecked(active))
+              );
+            });
+            if (matches.length === 1) {
+              var fields = matches[0].fields || {};
+              if (!isChecked(getField(fields, "FreezeVariant"))) {
+                startFromLive(records);
+                return;
+              }
+              startFromFrozenFile();
+              return;
+            }
+            startFromFrozenFile(
+              "FreezeVariant could not be resolved for this page (" +
+                matches.length +
+                " matching Airtable rows); using its frozen snapshot.",
+            );
+          })
+          .catch(function (error) {
+            console.error("Could not check FreezeVariant:", error);
+            startFromFrozenFile(
+              "Could not check FreezeVariant in Airtable; using the frozen snapshot. " +
+                error.message,
+            );
+          });
       }
 
       if (liveMode) startFromLive();
-      else startFromFrozenFile();
+      else startFromRelease();
 
       // ---- PS4 controller -> pointer bridge ----
       // Tizen (USB gamepad) exposes the controller only via the raw Gamepad
