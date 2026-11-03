@@ -565,6 +565,10 @@
         z-index: 4 !important;
         cursor: default;
       }
+      .flipCard.placementSelected {
+        z-index: 20 !important;
+        filter: drop-shadow(0 0 7px var(--primary));
+      }
       .cell .flipCard.relatedPlaced .frontFace {
         box-shadow: 0 0 0 2px var(--item-bg);
       }
@@ -1866,6 +1870,7 @@
       // The card is moved onto the tile it belongs to: the cell keeps its
       // green frame and the task is done when every card is on its tile.
       function placeRelatedCard(card, cell) {
+        clearPlacementSelection();
         cell.appendChild(card);
         card.classList.add("matched", "relatedPlaced");
         cell.classList.add("solved-cell");
@@ -1873,6 +1878,29 @@
         track("Match", card.dataset.id);
         relatedPlaced++;
         if (relatedPlaced >= relatedCards.length) completeIntroTask();
+      }
+
+      function placeMatchingCard(card, cell) {
+        if (
+          !cell ||
+          cell.querySelector(".flipCard") ||
+          cell.dataset.match !== card.dataset.match
+        ) {
+          return false;
+        }
+        clearPlacementSelection();
+        var idx = remaining.indexOf(card);
+        if (idx > -1) remaining.splice(idx, 1);
+        card.classList.add("matched");
+        cell.appendChild(card);
+        cell.classList.add("filled");
+        var imprint = cell.querySelector(".imprint");
+        if (imprint) imprint.classList.add("taken");
+        feedbackEl.textContent = "";
+        track("Place", card.dataset.id);
+        playTaskSound(card);
+        refreshDecks();
+        return true;
       }
 
       // Every new card sits on its tile: the task is done, its message joins
@@ -2539,6 +2567,9 @@
       var grabOffsetY = 0;
       var overCell = null;
       var fromCell = null; // cell a placed card was grabbed from
+      var dragStartX = 0;
+      var dragStartY = 0;
+      var selectedPlacementCard = null;
 
       function clearOverCell() {
         if (overCell) {
@@ -2558,6 +2589,38 @@
           cell.classList.remove("wrong-target");
           cell.wrongFeedbackTimer = null;
         }, 1300);
+      }
+
+      function canSelectPlacementCard(card) {
+        if (!card || card.dataset.flipped !== "true") return false;
+        if (introMode) {
+          return (
+            relatedCards.indexOf(card) > -1 &&
+            !card.classList.contains("relatedPlaced")
+          );
+        }
+        return !awaitingTurn && remaining.indexOf(card) > -1;
+      }
+
+      function clearPlacementSelection() {
+        if (selectedPlacementCard) {
+          selectedPlacementCard.classList.remove("placementSelected");
+          selectedPlacementCard = null;
+        }
+        if (feedbackEl.textContent === "Selected. Tap the matching spot to place it.") {
+          feedbackEl.textContent = "";
+        }
+      }
+
+      function selectPlacementCard(card) {
+        if (selectedPlacementCard === card) {
+          clearPlacementSelection();
+          return;
+        }
+        clearPlacementSelection();
+        selectedPlacementCard = card;
+        card.classList.add("placementSelected");
+        feedbackEl.textContent = "Selected. Tap the matching spot to place it.";
       }
 
       var edgeScrollTimer = null;
@@ -2628,6 +2691,34 @@
           }
           return;
         }
+        var targetCell = e.target.closest(".cell");
+        if (selectedPlacementCard && card !== selectedPlacementCard) {
+          var tappedPlacementCard =
+            card ||
+            (targetCell && targetCell.querySelector(".flipCard"));
+          if (canSelectPlacementCard(tappedPlacementCard)) {
+            e.preventDefault();
+            selectPlacementCard(tappedPlacementCard);
+            return;
+          }
+          if (targetCell) {
+            e.preventDefault();
+            if (targetCell === selectedPlacementCard.parentNode) {
+              clearPlacementSelection();
+              return;
+            }
+            var chosenCard = selectedPlacementCard;
+            clearPlacementSelection();
+            if (introMode && isRelatedTarget(targetCell, chosenCard)) {
+              placeRelatedCard(chosenCard, targetCell);
+            } else if (!introMode && placeMatchingCard(chosenCard, targetCell)) {
+              return;
+            } else {
+              markWrongCell(targetCell);
+            }
+            return;
+          }
+        }
         if (!card) return;
         e.preventDefault();
         // A card that was turned stays face down until the bridge message
@@ -2644,6 +2735,8 @@
           return;
         }
         activeItem = card;
+        dragStartX = e.clientX;
+        dragStartY = e.clientY;
         fromCell = card.parentNode && card.parentNode.classList.contains("cell")
           ? card.parentNode
           : null;
@@ -2696,37 +2789,37 @@
         }
         activeItem.classList.remove("dragging-original");
         var card = activeItem;
-        if (introMode) {
+        var moved = Math.sqrt(
+          (e.clientX - dragStartX) * (e.clientX - dragStartX) +
+            (e.clientY - dragStartY) * (e.clientY - dragStartY),
+        );
+        if (
+          canSelectPlacementCard(card) &&
+          moved < 10 &&
+          (!overCell || overCell === fromCell)
+        ) {
+          selectPlacementCard(card);
+        } else if (introMode) {
+          if (selectedPlacementCard === card) clearPlacementSelection();
           // The intro task: the new cards are moved onto the tile they
-          // belong to.
+          // belong to. A short tap selects the card instead.
           if (overCell && isRelatedTarget(overCell, card)) {
             placeRelatedCard(card, overCell);
           } else if (overCell) {
             markWrongCell(overCell);
             feedbackEl.textContent = "";
           }
-        } else if (
-          overCell &&
-          !overCell.querySelector(".flipCard") &&
-          overCell.dataset.match === card.dataset.match
-        ) {
-          var idx = remaining.indexOf(card);
-          if (idx > -1) remaining.splice(idx, 1);
-          card.classList.add("matched");
-          overCell.appendChild(card);
-          overCell.classList.add("filled");
-          var imprint = overCell.querySelector(".imprint");
-          if (imprint) imprint.classList.add("taken");
-          feedbackEl.textContent = "";
-          track("Place", card.dataset.id);
-          playTaskSound(card); // task 1: reward the correct match instantly
-          refreshDecks();
-        } else if (overCell && overCell === fromCell) {
-          // The card was dropped back onto the cell it came from: nothing
-          // changes and no error is shown.
-        } else if (overCell) {
-          markWrongCell(overCell);
-          feedbackEl.textContent = "";
+        } else {
+          if (selectedPlacementCard === card) clearPlacementSelection();
+          if (overCell && placeMatchingCard(card, overCell)) {
+            // Task 1: reward the correct match instantly.
+          } else if (overCell && overCell === fromCell) {
+            // The card was dropped back onto the cell it came from: nothing
+            // changes and no error is shown.
+          } else if (overCell) {
+            markWrongCell(overCell);
+            feedbackEl.textContent = "";
+          }
         }
         fromCell = null;
         clearOverCell();
@@ -2993,16 +3086,16 @@
       // Tizen (USB gamepad) exposes the controller only via the raw Gamepad
       // API, producing no DOM events. This polls the gamepad each frame, moves
       // a visible cursor (stick / D-pad), and fires synthetic pointer events on
-      // Cross-press / Cross-release so the existing drag-and-drop handles it.
+      // Cross-press / Cross-release so the existing placement handlers handle it.
       // If no gamepad is present the block is inert and the page is unchanged.
       //
       // Steering is confirmed working on-device (Tizen + PS4 controller) —
       // identical to junior/minigames/mystery-base.html; keep both in sync.
       //
-      // Button map: Cross = turn/top-card grab & drop on a cell, Circle =
-      // cancel drag & snap the card back onto the deck, D-pad = move cursor /
-      // scroll page, R2 = toggle light/dark theme, Right stick = fine cursor
-      // movement.
+      // Button map: Cross = turn/select/grab a card, then place it on a cell;
+      // Circle = cancel drag & snap the card back onto the deck, D-pad = move
+      // cursor / scroll page, R2 = toggle light/dark theme, Right stick = fine
+      // cursor movement.
       var padCursor = document.getElementById("gamepadCursor");
       var padActive = false; // a gamepad is being polled
       var padX = window.innerWidth / 2;
