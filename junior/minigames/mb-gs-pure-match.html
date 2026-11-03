@@ -120,6 +120,19 @@
         text-align: center;
         text-transform: uppercase;
       }
+      .modeBadge {
+        grid-column: 1;
+        justify-self: start;
+        max-width: 100%;
+        overflow: hidden;
+        color: inherit;
+        font-size: 0.62rem;
+        font-weight: 800;
+        letter-spacing: 0.04em;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        opacity: 0.82;
+      }
       .topbarActions {
         grid-column: 3;
         justify-self: end;
@@ -272,6 +285,17 @@
         cursor: pointer;
         text-decoration: underline dotted var(--border-strong);
         text-underline-offset: 3px;
+      }
+      #taskPanel.finalTask {
+        border: 2px solid var(--good);
+        border-top-width: 6px;
+        background: var(--goal-bg);
+        box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.28);
+      }
+      #subheadlineText.taskPromptFinal {
+        color: var(--good);
+        font-size: clamp(1.1rem, 2.8vw, 1.55rem);
+        font-weight: 900;
       }
 
       .stage {
@@ -788,11 +812,20 @@
       .grid.trophy-finale {
         overflow: hidden;
       }
+      .grid.trophy-finale::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        z-index: 0;
+        border-radius: inherit;
+        background: rgba(16, 185, 129, 0.32);
+        pointer-events: none;
+      }
       .grid.trophy-finale .cell:not(.filled) {
-        background-color: rgba(255, 255, 255, 0.72);
+        background-color: rgba(209, 250, 229, 0.62);
       }
       html.dark .grid.trophy-finale .cell:not(.filled) {
-        background-color: rgba(15, 23, 42, 0.72);
+        background-color: rgba(6, 78, 59, 0.68);
       }
       .cell {
         width: var(--grid-cell-width, 104px);
@@ -978,6 +1011,7 @@
   </head>
   <body>
     <header class="topbar">
+      <span class="modeBadge" id="modeBadge" hidden></span>
       <span class="topbarTitle" id="topbarTitle">MY BASE</span>
       <div class="topbarActions">
         <button class="topbarBtn" id="layoutToggleBtn" aria-label="Switch to vertical layout" title="Vertical layout" aria-pressed="false"></button>
@@ -1016,6 +1050,556 @@
 
     <div class="hint" id="feedback" role="status" aria-live="polite"></div>
 
+    <script>
+      /* === PURE_MATCH_SNAPSHOT:BEGIN === */
+      var PURE_MATCH_SNAPSHOT = {
+    "schemaVersion":  1,
+    "frozenAt":  "2026-11-03T15:30:49Z",
+    "source":  "GridShiftVariants:Pure Match / GridShift:PM-Active",
+    "settings":  {
+                     "deckField":  "PM-Active",
+                     "deckCount":  "variable",
+                     "gridDimension":  "4x5",
+                     "cols":  5,
+                     "rows":  4,
+                     "placing":  "random",
+                     "hintField":  "Display",
+                     "hintLabel":  "Imprints of Display (Text)"
+                 },
+    "variantFields":  {
+                          "Deck":  "PM-Active",
+                          "Hints":  "Imprints of Display (Text)",
+                          "task3DoneBridge":  "Turned cards are cleared",
+                          "task4Result":  "Each card needs to be moved on related tile",
+                          "PartColour":  "Green",
+                          "task1StatusText":  "Sorting the farm things",
+                          "Placing":  "Random",
+                          "task3Spoken":  [
+                                              "Rooster",
+                                              "Chicks",
+                                              "Horse",
+                                              "Calf"
+                                          ],
+                          "GridDimension (horizontal)":  "4x5",
+                          "task2Result":  [
+                                              "recpUvOgWismxZJJK",
+                                              "recVlkus5qGoK2rus",
+                                              "recvxCJTUJoFNxQd7",
+                                              "reclgWQQT1L5ebndx",
+                                              "recXUmTcaoVgmkCol"
+                                          ],
+                          "DeckCount":  "variable",
+                          "task4IntroAction":  "TilesRelated distributed randomly on remaining free grid slots and shown openly. ",
+                          "NoParticipants":  1,
+                          "WPIMG1":  "https://res.cloudinary.com/dmkhsyfzf/image/upload/q_auto/f_auto/v1792184837/farm_animals_ivhm2c.jpg",
+                          "task1DoneText":  "â All farm things matched!",
+                          "task3StatusText":  "Some animals walking to their shelters",
+                          "task1Text":  "Match all farm things from the stack with the words ",
+                          "VarID":  1,
+                          "task4DoneText":  "YOU MADE IT",
+                          "H3Text":  "Match the cards. Solve the other tasks.",
+                          "task2StatusText":  "Spotlighting the animals",
+                          "task3Text":  "Turn the cards of the spoken farm animals",
+                          "VarName":  "Pure Match",
+                          "task4Text":  "Searching the producer animal",
+                          "FreezeVariant":  true,
+                          "task3Result":  [
+                                              "rec28YYboce6kHvmE",
+                                              "rechXClySBBEMIrsd",
+                                              "recovdHM2MI5gNsOR",
+                                              "rec0QSxvhAESmCYnr"
+                                          ],
+                          "task3DoneText":  "â Well done. These animals are safe now",
+                          "task2Text":  "Turn the cards to show only farm animals",
+                          "WPIMG2":  "https://res.cloudinary.com/dmkhsyfzf/image/upload/q_auto/f_auto/v1792644124/farm_shop_u2oe2e.jpg",
+                          "PartLabel":  "Stack",
+                          "task2DoneText":  "â Animals focused",
+                          "H1Text":  "Farm Things"
+                      },
+    "cards":  [
+                  {
+                      "id":  67,
+                      "recordId":  "rec0QSxvhAESmCYnr",
+                      "match":  "calf",
+                      "imprint":  "Calf",
+                      "fields":  {
+                                     "Display":  "Calf",
+                                     "TileFront":  "https://res.cloudinary.com/dmkhsyfzf/image/upload/c_crop,w_165,h_186,x_182,y_0/v1792360624/farm2_-_Copy_y7hsat.jpg",
+                                     "TileBack":  "https://res.cloudinary.com/dmkhsyfzf/image/upload/c_crop,w_342,h_345,x_462,y_50/v1791308099/cards_back_empty_yu8gij.jpg",
+                                     "PM-Active":  true,
+                                     "GridShiftID":  67,
+                                     "TileBackA":  "https://res.cloudinary.com/dmkhsyfzf/image/upload/c_crop,w_421,h_424,x_16,y_408/v1788697706/tiles_back_drswds.jpg",
+                                     "RenderMode":  "cloudinary-img",
+                                     "GridShiftVariants 2":  [
+                                                                 "recf67URjyhFMjLek"
+                                                             ],
+                                     "TileBackB":  "https://res.cloudinary.com/dmkhsyfzf/image/upload/c_crop,w_421,h_424,x_826,y_16/v1788697706/tiles_back_drswds.jpg",
+                                     "FillTile":  true,
+                                     "TileName":  "Calf",
+                                     "Category":  "Farm Things",
+                                     "SoundAsset":  "https://res.cloudinary.com/dmkhsyfzf/video/upload/v1793302776/ANIcow_lpw1ei.mp3",
+                                     "SubCategory":  "Animals"
+                                 }
+                  },
+                  {
+                      "id":  74,
+                      "recordId":  "rec28YYboce6kHvmE",
+                      "match":  "rooster",
+                      "imprint":  "Rooster",
+                      "fields":  {
+                                     "Display":  "Rooster",
+                                     "TileFront":  "https://res.cloudinary.com/dmkhsyfzf/image/upload/c_crop,w_170,h_158,x_510,y_186/v1792360624/farm2_-_Copy_y7hsat.jpg",
+                                     "TileBack":  "https://res.cloudinary.com/dmkhsyfzf/image/upload/c_crop,w_342,h_345,x_462,y_50/v1791308099/cards_back_empty_yu8gij.jpg",
+                                     "PM-Active":  true,
+                                     "GridShiftID":  74,
+                                     "TileBackA":  "https://res.cloudinary.com/dmkhsyfzf/image/upload/c_crop,w_421,h_424,x_16,y_408/v1788697706/tiles_back_drswds.jpg",
+                                     "RenderMode":  "cloudinary-img",
+                                     "GridShiftVariants 2":  [
+                                                                 "recf67URjyhFMjLek"
+                                                             ],
+                                     "TileBackB":  "https://res.cloudinary.com/dmkhsyfzf/image/upload/c_crop,w_421,h_424,x_826,y_16/v1788697706/tiles_back_drswds.jpg",
+                                     "FillTile":  true,
+                                     "TileName":  "Rooster",
+                                     "Category":  "Farm Things",
+                                     "SoundAsset":  "https://res.cloudinary.com/dmkhsyfzf/video/upload/v1793302764/ANIrooster_vlrph4.mp3",
+                                     "SubCategory":  "Animals"
+                                 }
+                  },
+                  {
+                      "id":  66,
+                      "recordId":  "recQGp6cNVnXkzRlB",
+                      "match":  "cow",
+                      "imprint":  "Cow",
+                      "fields":  {
+                                     "Display":  "Cow",
+                                     "TileFront":  "https://res.cloudinary.com/dmkhsyfzf/image/upload/c_crop,w_182,h_186,x_0,y_0/v1792360624/farm2_-_Copy_y7hsat.jpg",
+                                     "TileBack":  "https://res.cloudinary.com/dmkhsyfzf/image/upload/c_crop,w_342,h_345,x_462,y_50/v1791308099/cards_back_empty_yu8gij.jpg",
+                                     "PM-Active":  true,
+                                     "GridShiftID":  66,
+                                     "TileBackA":  "https://res.cloudinary.com/dmkhsyfzf/image/upload/c_crop,w_421,h_424,x_16,y_408/v1788697706/tiles_back_drswds.jpg",
+                                     "Related":  "Milk",
+                                     "RenderMode":  "cloudinary-img",
+                                     "TileBackB":  "https://res.cloudinary.com/dmkhsyfzf/image/upload/c_crop,w_421,h_424,x_826,y_16/v1788697706/tiles_back_drswds.jpg",
+                                     "FillTile":  true,
+                                     "TileName":  "Cow",
+                                     "Category":  "Farm Things",
+                                     "TileRelated":  "https://res.cloudinary.com/dmkhsyfzf/image/upload/c_crop,w_345,h_346,x_7,y_7/v1792629112/farm_products_zoavt7.jpg",
+                                     "TextSize":  "small",
+                                     "SoundAsset":  "https://res.cloudinary.com/dmkhsyfzf/video/upload/v1793302776/ANIcow_lpw1ei.mp3",
+                                     "SubCategory":  "Animals"
+                                 }
+                  },
+                  {
+                      "id":  77,
+                      "recordId":  "recVlkus5qGoK2rus",
+                      "match":  "water trough",
+                      "imprint":  "Water Trough",
+                      "fields":  {
+                                     "Display":  "Water Trough",
+                                     "TileFront":  "https://res.cloudinary.com/dmkhsyfzf/image/upload/c_crop,w_162,h_170,x_182,y_0/v1792629953/farm2_yhsmmb.jpg",
+                                     "TileBack":  "https://res.cloudinary.com/dmkhsyfzf/image/upload/c_crop,w_342,h_345,x_462,y_50/v1791308099/cards_back_empty_yu8gij.jpg",
+                                     "GridShiftVariants":  [
+                                                               "recf67URjyhFMjLek"
+                                                           ],
+                                     "PM-Active":  true,
+                                     "GridShiftID":  77,
+                                     "RenderMode":  "cloudinary-img",
+                                     "FillTile":  true,
+                                     "TileName":  "Water Trough",
+                                     "Category":  "Farm Things",
+                                     "Active":  true,
+                                     "SoundAsset":  "https://res.cloudinary.com/dmkhsyfzf/video/upload/v1793302764/ELEwater_jydogx.mp3",
+                                     "SubCategory":  "Tools"
+                                 }
+                  },
+                  {
+                      "id":  76,
+                      "recordId":  "recXUmTcaoVgmkCol",
+                      "match":  "chicken coop",
+                      "imprint":  "Chicken Coop",
+                      "fields":  {
+                                     "Display":  "Chicken Coop",
+                                     "TileFront":  "https://res.cloudinary.com/dmkhsyfzf/image/upload/c_crop,w_182,h_170,x_0,y_0/v1792629953/farm2_yhsmmb.jpg",
+                                     "TileBack":  "https://res.cloudinary.com/dmkhsyfzf/image/upload/c_crop,w_342,h_345,x_462,y_50/v1791308099/cards_back_empty_yu8gij.jpg",
+                                     "GridShiftVariants":  [
+                                                               "recf67URjyhFMjLek"
+                                                           ],
+                                     "PM-Active":  true,
+                                     "GridShiftID":  76,
+                                     "RenderMode":  "cloudinary-img",
+                                     "FillTile":  true,
+                                     "TileName":  "Chicken Coop",
+                                     "Category":  "Farm Things",
+                                     "Active":  true,
+                                     "SoundAsset":  "https://res.cloudinary.com/dmkhsyfzf/video/upload/v1793302776/ANIchicken_zqutgy.mp3",
+                                     "SubCategory":  "Buildings"
+                                 }
+                  },
+                  {
+                      "id":  69,
+                      "recordId":  "recXgZOa8gsl8rcCl",
+                      "match":  "goat",
+                      "imprint":  "Goat",
+                      "fields":  {
+                                     "Display":  "Goat",
+                                     "TileFront":  "https://res.cloudinary.com/dmkhsyfzf/image/upload/c_crop,w_161,h_161,x_679,y_11/v1792360624/farm2_-_Copy_y7hsat.jpg",
+                                     "TileBack":  "https://res.cloudinary.com/dmkhsyfzf/image/upload/c_crop,w_342,h_345,x_462,y_50/v1791308099/cards_back_empty_yu8gij.jpg",
+                                     "PM-Active":  true,
+                                     "GridShiftID":  69,
+                                     "TileBackA":  "https://res.cloudinary.com/dmkhsyfzf/image/upload/c_crop,w_421,h_424,x_16,y_408/v1788697706/tiles_back_drswds.jpg",
+                                     "Related":  "Goat Cheese",
+                                     "RenderMode":  "cloudinary-img",
+                                     "TileBackB":  "https://res.cloudinary.com/dmkhsyfzf/image/upload/c_crop,w_421,h_424,x_826,y_16/v1788697706/tiles_back_drswds.jpg",
+                                     "FillTile":  true,
+                                     "TileName":  "Goat",
+                                     "Category":  "Farm Things",
+                                     "TileRelated":  "https://res.cloudinary.com/dmkhsyfzf/image/upload/c_crop,w_335,h_346,x_345,y_7/v1792629112/farm_products_zoavt7.jpg",
+                                     "TextSize":  "small",
+                                     "SoundAsset":  "https://res.cloudinary.com/dmkhsyfzf/video/upload/v1793302777/ANIgoat_ghzafg.mp3",
+                                     "SubCategory":  "Animals"
+                                 }
+                  },
+                  {
+                      "id":  72,
+                      "recordId":  "recesuO97nEZrO50e",
+                      "match":  "hen",
+                      "imprint":  "Hen",
+                      "fields":  {
+                                     "Display":  "Hen",
+                                     "TileFront":  "https://res.cloudinary.com/dmkhsyfzf/image/upload/c_crop,w_165,h_158,x_182,y_186/v1792360624/farm2_-_Copy_y7hsat.jpg",
+                                     "TileBack":  "https://res.cloudinary.com/dmkhsyfzf/image/upload/c_crop,w_342,h_345,x_462,y_50/v1791308099/cards_back_empty_yu8gij.jpg",
+                                     "PM-Active":  true,
+                                     "GridShiftID":  72,
+                                     "TileBackA":  "https://res.cloudinary.com/dmkhsyfzf/image/upload/c_crop,w_421,h_424,x_16,y_408/v1788697706/tiles_back_drswds.jpg",
+                                     "Related":  "Eggs",
+                                     "RenderMode":  "cloudinary-img",
+                                     "TileBackB":  "https://res.cloudinary.com/dmkhsyfzf/image/upload/c_crop,w_421,h_424,x_826,y_16/v1788697706/tiles_back_drswds.jpg",
+                                     "FillTile":  true,
+                                     "TileName":  "Hen",
+                                     "Category":  "Farm Things",
+                                     "TileRelated":  "https://res.cloudinary.com/dmkhsyfzf/image/upload/c_crop,w_344,h_344,x_673,y_673/v1792629112/farm_products_zoavt7.jpg",
+                                     "TextSize":  "small",
+                                     "SoundAsset":  "https://res.cloudinary.com/dmkhsyfzf/video/upload/v1793302776/ANIchicken_zqutgy.mp3",
+                                     "SubCategory":  "Animals"
+                                 }
+                  },
+                  {
+                      "id":  70,
+                      "recordId":  "rechHgixn6z594I3d",
+                      "match":  "pig",
+                      "imprint":  "Pig",
+                      "fields":  {
+                                     "Display":  "Pig",
+                                     "TileFront":  "https://res.cloudinary.com/dmkhsyfzf/image/upload/c_crop,w_180,h_186,x_844,y_0/v1792360624/farm2_-_Copy_y7hsat.jpg",
+                                     "TileBack":  "https://res.cloudinary.com/dmkhsyfzf/image/upload/c_crop,w_342,h_345,x_462,y_50/v1791308099/cards_back_empty_yu8gij.jpg",
+                                     "PM-Active":  true,
+                                     "GridShiftID":  70,
+                                     "TileBackA":  "https://res.cloudinary.com/dmkhsyfzf/image/upload/c_crop,w_421,h_424,x_16,y_408/v1788697706/tiles_back_drswds.jpg",
+                                     "Related":  "Meat",
+                                     "RenderMode":  "cloudinary-img",
+                                     "TileBackB":  "https://res.cloudinary.com/dmkhsyfzf/image/upload/c_crop,w_421,h_424,x_826,y_16/v1788697706/tiles_back_drswds.jpg",
+                                     "FillTile":  true,
+                                     "TileName":  "Pig",
+                                     "Category":  "Farm Things",
+                                     "TileRelated":  "https://res.cloudinary.com/dmkhsyfzf/image/upload/c_crop,w_345,h_334,x_7,y_346/v1792629112/farm_products_zoavt7.jpg",
+                                     "TextSize":  "small",
+                                     "SoundAsset":  "https://res.cloudinary.com/dmkhsyfzf/video/upload/v1793302764/ANIpig_rb7oo2.mp3",
+                                     "SubCategory":  "Animals"
+                                 }
+                  },
+                  {
+                      "id":  73,
+                      "recordId":  "rechXClySBBEMIrsd",
+                      "match":  "chicks",
+                      "imprint":  "Chicks",
+                      "fields":  {
+                                     "Display":  "Chicks",
+                                     "TileFront":  "https://res.cloudinary.com/dmkhsyfzf/image/upload/c_crop,w_163,h_158,x_347,y_186/v1792360624/farm2_-_Copy_y7hsat.jpg",
+                                     "TileBack":  "https://res.cloudinary.com/dmkhsyfzf/image/upload/c_crop,w_342,h_345,x_462,y_50/v1791308099/cards_back_empty_yu8gij.jpg",
+                                     "PM-Active":  true,
+                                     "GridShiftID":  73,
+                                     "TileBackA":  "https://res.cloudinary.com/dmkhsyfzf/image/upload/c_crop,w_421,h_424,x_16,y_408/v1788697706/tiles_back_drswds.jpg",
+                                     "RenderMode":  "cloudinary-img",
+                                     "GridShiftVariants 2":  [
+                                                                 "recf67URjyhFMjLek"
+                                                             ],
+                                     "TileBackB":  "https://res.cloudinary.com/dmkhsyfzf/image/upload/c_crop,w_421,h_424,x_826,y_16/v1788697706/tiles_back_drswds.jpg",
+                                     "FillTile":  true,
+                                     "TileName":  "Chicks",
+                                     "Category":  "Farm Things",
+                                     "SoundAsset":  "https://res.cloudinary.com/dmkhsyfzf/video/upload/v1793302776/ANIchicken_zqutgy.mp3",
+                                     "SubCategory":  "Animals"
+                                 }
+                  },
+                  {
+                      "id":  79,
+                      "recordId":  "reclgWQQT1L5ebndx",
+                      "match":  "pitchfork",
+                      "imprint":  "Pitchfork",
+                      "fields":  {
+                                     "Display":  "Pitchfork",
+                                     "TileFront":  "https://res.cloudinary.com/dmkhsyfzf/image/upload/c_crop,w_165,h_170,x_680,y_0/v1792629953/farm2_yhsmmb.jpg",
+                                     "TileBack":  "https://res.cloudinary.com/dmkhsyfzf/image/upload/c_crop,w_342,h_345,x_462,y_50/v1791308099/cards_back_empty_yu8gij.jpg",
+                                     "GridShiftVariants":  [
+                                                               "recf67URjyhFMjLek"
+                                                           ],
+                                     "PM-Active":  true,
+                                     "GridShiftID":  79,
+                                     "RenderMode":  "cloudinary-img",
+                                     "FillTile":  true,
+                                     "TileName":  "Pitchfork",
+                                     "Category":  "Farm Things",
+                                     "Active":  true,
+                                     "SoundAsset":  "https://res.cloudinary.com/dmkhsyfzf/video/upload/v1793302765/FARMhay_kkyj4n.mp3",
+                                     "SubCategory":  "Tools"
+                                 }
+                  },
+                  {
+                      "id":  68,
+                      "recordId":  "recovdHM2MI5gNsOR",
+                      "match":  "horse",
+                      "imprint":  "Horse",
+                      "fields":  {
+                                     "Display":  "Horse",
+                                     "TileFront":  "https://res.cloudinary.com/dmkhsyfzf/image/upload/c_crop,w_163,h_186,x_347,y_0/v1792360624/farm2_-_Copy_y7hsat.jpg",
+                                     "TileBack":  "https://res.cloudinary.com/dmkhsyfzf/image/upload/c_crop,w_342,h_345,x_462,y_50/v1791308099/cards_back_empty_yu8gij.jpg",
+                                     "PM-Active":  true,
+                                     "GridShiftID":  68,
+                                     "TileBackA":  "https://res.cloudinary.com/dmkhsyfzf/image/upload/c_crop,w_421,h_424,x_16,y_408/v1788697706/tiles_back_drswds.jpg",
+                                     "RenderMode":  "cloudinary-img",
+                                     "GridShiftVariants 2":  [
+                                                                 "recf67URjyhFMjLek"
+                                                             ],
+                                     "TileBackB":  "https://res.cloudinary.com/dmkhsyfzf/image/upload/c_crop,w_421,h_424,x_826,y_16/v1788697706/tiles_back_drswds.jpg",
+                                     "FillTile":  true,
+                                     "TileName":  "Horse",
+                                     "Category":  "Farm Things",
+                                     "SoundAsset":  "https://res.cloudinary.com/dmkhsyfzf/video/upload/v1793302777/ANIhorse_zvt3x9.mp3",
+                                     "SubCategory":  "Animals"
+                                 }
+                  },
+                  {
+                      "id":  75,
+                      "recordId":  "recpUvOgWismxZJJK",
+                      "match":  "tractor",
+                      "imprint":  "Tractor",
+                      "fields":  {
+                                     "Display":  "Tractor",
+                                     "TileFront":  "https://res.cloudinary.com/dmkhsyfzf/image/upload/c_crop,w_165,h_168,x_182,y_344/v1792360624/farm2_-_Copy_y7hsat.jpg",
+                                     "TileBack":  "https://res.cloudinary.com/dmkhsyfzf/image/upload/c_crop,w_342,h_345,x_462,y_50/v1791308099/cards_back_empty_yu8gij.jpg",
+                                     "GridShiftVariants":  [
+                                                               "recf67URjyhFMjLek"
+                                                           ],
+                                     "PM-Active":  true,
+                                     "GridShiftID":  75,
+                                     "TileBackA":  "https://res.cloudinary.com/dmkhsyfzf/image/upload/c_crop,w_421,h_424,x_16,y_408/v1788697706/tiles_back_drswds.jpg",
+                                     "RenderMode":  "cloudinary-img",
+                                     "TileBackB":  "https://res.cloudinary.com/dmkhsyfzf/image/upload/c_crop,w_421,h_424,x_826,y_16/v1788697706/tiles_back_drswds.jpg",
+                                     "FillTile":  true,
+                                     "TileName":  "Tractor",
+                                     "Category":  "Farm Things",
+                                     "SoundAsset":  "https://res.cloudinary.com/dmkhsyfzf/video/upload/v1793302765/FARMtractor_qbbulm.mp3",
+                                     "SubCategory":  "Vehicles"
+                                 }
+                  },
+                  {
+                      "id":  71,
+                      "recordId":  "recr1ZAouMexV0zOD",
+                      "match":  "sheep",
+                      "imprint":  "Sheep",
+                      "fields":  {
+                                     "Display":  "Sheep",
+                                     "TileFront":  "https://res.cloudinary.com/dmkhsyfzf/image/upload/c_crop,w_182,h_158,x_0,y_186/v1792360624/farm2_-_Copy_y7hsat.jpg",
+                                     "TileBack":  "https://res.cloudinary.com/dmkhsyfzf/image/upload/c_crop,w_342,h_345,x_462,y_50/v1791308099/cards_back_empty_yu8gij.jpg",
+                                     "PM-Active":  true,
+                                     "GridShiftID":  71,
+                                     "TileBackA":  "https://res.cloudinary.com/dmkhsyfzf/image/upload/c_crop,w_421,h_424,x_16,y_408/v1788697706/tiles_back_drswds.jpg",
+                                     "Related":  "Wool",
+                                     "RenderMode":  "cloudinary-img",
+                                     "TileBackB":  "https://res.cloudinary.com/dmkhsyfzf/image/upload/c_crop,w_421,h_424,x_826,y_16/v1788697706/tiles_back_drswds.jpg",
+                                     "FillTile":  true,
+                                     "TileName":  "Sheep",
+                                     "Category":  "Farm Things",
+                                     "TileRelated":  "https://res.cloudinary.com/dmkhsyfzf/image/upload/c_crop,w_345,h_344,x_7,y_673/v1792629112/farm_products_zoavt7.jpg",
+                                     "TextSize":  "small",
+                                     "SoundAsset":  "https://res.cloudinary.com/dmkhsyfzf/video/upload/v1793302764/ANIsheep_oj2etu.mp3",
+                                     "SubCategory":  "Animals"
+                                 }
+                  },
+                  {
+                      "id":  78,
+                      "recordId":  "recvxCJTUJoFNxQd7",
+                      "match":  "milk churn",
+                      "imprint":  "Milk Churn",
+                      "fields":  {
+                                     "Display":  "Milk Churn",
+                                     "TileFront":  "https://res.cloudinary.com/dmkhsyfzf/image/upload/c_crop,w_165,h_164,x_680,y_170/v1792629953/farm2_yhsmmb.jpg",
+                                     "TileBack":  "https://res.cloudinary.com/dmkhsyfzf/image/upload/c_crop,w_342,h_345,x_462,y_50/v1791308099/cards_back_empty_yu8gij.jpg",
+                                     "GridShiftVariants":  [
+                                                               "recf67URjyhFMjLek"
+                                                           ],
+                                     "PM-Active":  true,
+                                     "GridShiftID":  78,
+                                     "RenderMode":  "cloudinary-img",
+                                     "FillTile":  true,
+                                     "TileName":  "Milk Churn",
+                                     "Category":  "Farm Things",
+                                     "Active":  true,
+                                     "SoundAsset":  "https://res.cloudinary.com/dmkhsyfzf/video/upload/v1793302765/FOODmilk_churn_wlyjx7.mp3",
+                                     "SubCategory":  "Tools"
+                                 }
+                  }
+              ],
+    "systemRecords":  [
+                          {
+                              "id":  "rec3d6Ooj2FWZl1hP",
+                              "createdTime":  "2026-10-29T22:43:08.000Z",
+                              "fields":  {
+                                             "SysIcoLucide":  "circle-chevrons-right",
+                                             "SYSID":  5,
+                                             "SysItem":  "TargetBox",
+                                             "ShowIcoLucide":  true,
+                                             "SysType":  "Area"
+                                         }
+                          },
+                          {
+                              "id":  "rec7x29S9EbA12Ko1",
+                              "createdTime":  "2026-10-29T22:36:41.000Z",
+                              "fields":  {
+                                             "SysIcoLucide":  "trending-up",
+                                             "SYSID":  3,
+                                             "SysItem":  "NewTask",
+                                             "SysSound":  "https://res.cloudinary.com/dmkhsyfzf/video/upload/v1793302765/SYSgoal_g1trwc.mp3",
+                                             "SysType":  "Move or State"
+                                         }
+                          },
+                          {
+                              "id":  "recFdX2RTz1kI0Hlr",
+                              "createdTime":  "2026-10-29T22:46:19.000Z",
+                              "fields":  {
+                                             "SysIcoLucide":  "layout-grid",
+                                             "SYSID":  7,
+                                             "SysItem":  "Grid",
+                                             "SysType":  "Area"
+                                         }
+                          },
+                          {
+                              "id":  "recHGkOy5OtqRrNHB",
+                              "createdTime":  "2026-10-29T22:30:28.000Z",
+                              "fields":  {
+                                             "SysIcoLucide":  "x",
+                                             "TextColour":  "Red",
+                                             "SYSID":  1,
+                                             "SysFallbackText":  "Mismatch",
+                                             "SysItem":  "Mismatch",
+                                             "ShowIcoLucide":  true,
+                                             "SysSound":  "https://res.cloudinary.com/dmkhsyfzf/video/upload/v1793302766/SYSfail_hzkiue.mp3",
+                                             "SysType":  "Move or State"
+                                         }
+                          },
+                          {
+                              "id":  "recHIezXmiPbNhNlr",
+                              "createdTime":  "2026-10-30T15:14:36.000Z",
+                              "fields":  {
+                                             "SYSID":  13,
+                                             "SysItem":  "TimeRunning",
+                                             "SysSound":  "https://res.cloudinary.com/dmkhsyfzf/video/upload/v1793373165/countdown_quxi96.mp3",
+                                             "SysType":  "Move or State"
+                                         }
+                          },
+                          {
+                              "id":  "recJBNcWqJWlMgi6e",
+                              "createdTime":  "2026-10-29T23:27:36.000Z",
+                              "fields":  {
+                                             "SysIcoLucide":  "user-star",
+                                             "SYSID":  10,
+                                             "SysItem":  "Understanding",
+                                             "SysType":  "Stage"
+                                         }
+                          },
+                          {
+                              "id":  "recZJgE7iD8er4rAV",
+                              "createdTime":  "2026-10-29T23:28:12.000Z",
+                              "fields":  {
+                                             "SysIcoLucide":  "circle-pile",
+                                             "SYSID":  11,
+                                             "SysItem":  "Matching",
+                                             "SysType":  "Stage"
+                                         }
+                          },
+                          {
+                              "id":  "recaytC3CtH0McGSK",
+                              "createdTime":  "2026-10-29T23:29:13.000Z",
+                              "fields":  {
+                                             "SysIcoLucide":  "user-star",
+                                             "SYSID":  12,
+                                             "SysItem":  "Solving",
+                                             "SysType":  "Stage"
+                                         }
+                          },
+                          {
+                              "id":  "recb6jgkSCWhz0KFM",
+                              "createdTime":  "2026-10-29T22:36:57.000Z",
+                              "fields":  {
+                                             "SysIcoLucide":  "goal",
+                                             "SYSID":  4,
+                                             "SysItem":  "TaskDone",
+                                             "SysSound":  "https://res.cloudinary.com/dmkhsyfzf/video/upload/v1793302766/SYSsuccess_b6xcow.mp3",
+                                             "SysType":  "Move or State"
+                                         }
+                          },
+                          {
+                              "id":  "recbINw5bypDpFddJ",
+                              "createdTime":  "2026-10-29T22:36:02.000Z",
+                              "fields":  {
+                                             "SysIcoLucide":  "refresh-cw",
+                                             "TextColour":  "Blue",
+                                             "SYSID":  2,
+                                             "SysFallbackText":  "In Progress",
+                                             "SysItem":  "StatusUpdate",
+                                             "ShowIcoLucide":  true,
+                                             "SysSound":  "https://res.cloudinary.com/dmkhsyfzf/video/upload/v1793302766/SYSlocking_u05d0n.mp3",
+                                             "SysType":  "Move or State"
+                                         }
+                          },
+                          {
+                              "id":  "recjIjkuzsSwfHeJ6",
+                              "createdTime":  "2026-10-29T22:46:28.000Z",
+                              "fields":  {
+                                             "SysIcoLucide":  "clock-check",
+                                             "SYSID":  8,
+                                             "ShowLabel":  true,
+                                             "SysItem":  "Event Log",
+                                             "ShowIcoLucide":  true,
+                                             "SysType":  "Area"
+                                         }
+                          },
+                          {
+                              "id":  "reckHuK1GxbLXyFcQ",
+                              "createdTime":  "2026-10-29T22:45:54.000Z",
+                              "fields":  {
+                                             "SysIcoLucide":  "layers-arrow-up",
+                                             "SYSID":  6,
+                                             "ShowLabel":  true,
+                                             "SysItem":  "Stack",
+                                             "ShowIcoLucide":  true,
+                                             "SysType":  "Area"
+                                         }
+                          },
+                          {
+                              "id":  "recqbBouDloA67VpF",
+                              "createdTime":  "2026-10-29T23:27:18.000Z",
+                              "fields":  {
+                                             "SysIcoLucide":  "cpu",
+                                             "SYSID":  9,
+                                             "SysItem":  "Learning",
+                                             "SysType":  "Stage"
+                                         }
+                          }
+                      ]
+};
+      /* === PURE_MATCH_SNAPSHOT:END === */
+    </script>
     <script>
       // Theme toggle (dark mode). Defaults to system preference.
       (function () {
@@ -1090,6 +1674,7 @@
       var WORKER =
         "https://english-explorer-tracker.mkmueller-mission.workers.dev/airtable?table=";
       var PAGE = "/junior/minigames/mb-gs-pure-match.html";
+      var liveMode = /(?:^|[?&])live=1(?:&|$)/.test(window.location.search);
 
       // ---------- Speech (TTS) ----------
       // The same approach as junior/thematic/adventure-outside.html: the web
@@ -1264,6 +1849,7 @@
       var statusEl = document.getElementById("status");
       var feedbackEl = document.getElementById("feedback");
       var topbarTitleEl = document.getElementById("topbarTitle");
+      var modeBadgeEl = document.getElementById("modeBadge");
       var taskPanelEl = document.getElementById("taskPanel");
       var subheadlineEl = document.getElementById("subheadlineText");
       var deckDotEl = document.getElementById("deckDot");
@@ -2024,6 +2610,22 @@
       }
       window.addEventListener("resize", syncSuccessPanelSize);
 
+      function showFinalTaskMessage() {
+        stopTaskPromptAttention();
+        var message = String(
+          getFirstField(variantSettings, ["task4DoneText"]) || "",
+        ).trim();
+        if (subheadlineEl) {
+          subheadlineEl.textContent = message;
+          subheadlineEl.hidden = !message;
+          subheadlineEl.classList.toggle("taskPrompt", !!message);
+          subheadlineEl.classList.toggle("taskPromptFinal", !!message);
+          subheadlineEl.classList.remove("speakable");
+          subheadlineEl.removeAttribute("title");
+        }
+        if (taskPanelEl) taskPanelEl.classList.toggle("finalTask", !!message);
+      }
+
       // The finale places the WPIMG2 trophy behind the full board.
       function runFinale() {
         gridEl.classList.add("done");
@@ -2048,6 +2650,7 @@
           // The game is over: place the trophy once and keep the full board.
           if (!finaleStarted) {
             finaleStarted = true;
+            showFinalTaskMessage();
             runFinale();
           }
         } else {
@@ -2937,7 +3540,11 @@
         console.error("Grid Shift Pure Match could not start:", error);
         deckEl.textContent = "Couldn't load game.";
         countEl.textContent = "!";
-        feedbackEl.textContent = error.message;
+        feedbackEl.textContent =
+          error.message +
+          (liveMode
+            ? " The frozen snapshot is still available at the default URL."
+            : "");
       }
 
       function showTargetBoxIconError(error) {
@@ -2959,214 +3566,302 @@
           .join(" ");
       }
 
-      fetchTable("GridShiftSystem")
-        .then(function (data) {
-          var records = (data && data.records) || [];
-          configureSystemSoundUrls(records);
-          try {
-            configureTargetBoxIcon(records);
-          } catch (error) {
-            showTargetBoxIconError(error);
-          }
-          try {
-            configureEventLogHeading(records);
-          } catch (error) {
-            showEventLogHeadingError(error);
-          }
-        })
-        .catch(function (error) {
+      function configureSystemAreas(records) {
+        records = records || [];
+        configureSystemSoundUrls(records);
+        try {
+          configureTargetBoxIcon(records);
+        } catch (error) {
           showTargetBoxIconError(error);
+        }
+        try {
+          configureEventLogHeading(records);
+        } catch (error) {
           showEventLogHeadingError(error);
+        }
+      }
+
+      function setModeBadge(text) {
+        if (!modeBadgeEl) return;
+        modeBadgeEl.textContent = text;
+        modeBadgeEl.hidden = !text;
+      }
+
+      function startGame(settings, cardRecords, resolved) {
+        resolved = resolved || null;
+        allCardRecords = cardRecords;
+        variantSettings = settings;
+
+        var hintField = parseHintField(getSetting(settings, ["Hints", "Hint"]));
+        if (normalizedFieldName(hintField) !== "display") {
+          throw new Error("Pure Match requires Hint = Imprints of Display (Text).");
+        }
+        if (normalizedFieldName(getField(settings, "Placing")) !== "random") {
+          throw new Error("This page currently supports Placing = Random.");
+        }
+        var deckField = String(getField(settings, "Deck") || "").trim();
+        if (!deckField) {
+          throw new Error("The Pure Match setup needs a Deck field name.");
+        }
+        var participants = Number(getField(settings, "NoParticipants"));
+        if (isFinite(participants) && participants > 1) {
+          throw new Error(
+            "This page currently supports NoParticipants = 1; found " +
+              participants +
+              ".",
+          );
+        }
+
+        var activeRecords = cardRecords.filter(function (record) {
+          return isChecked(
+            getField((record && record.fields) || {}, deckField),
+          );
         });
-
-      // ---------- Build the configured Pure Match game from Airtable ----------
-      Promise.all([
-        fetchTable("GridShiftVariants"),
-        fetchTable("GridShift"),
-      ])
-        .then(function (dataSets) {
-          var variantRecords = (dataSets[0] && dataSets[0].records) || [];
-          var cardRecords = (dataSets[1] && dataSets[1].records) || [];
-          // Every GridShift record is kept: the intro step picks the records
-          // that carry a TileRelated value.
-          allCardRecords = cardRecords;
-          var variants = variantRecords.filter(function (record) {
-            var fields = (record && record.fields) || {};
-            var name = getSetting(fields, ["VarName", "Name"]);
-            var active = getField(fields, "Active");
-            return (
-              normalizedFieldName(name) === "purematch" &&
-              (active === undefined || isChecked(active))
-            );
-          });
-          if (variants.length !== 1) {
-            throw new Error(
-              "Expected one Pure Match setup in GridShiftVariants; found " +
-                variants.length +
-                ".",
-            );
-          }
-
-          var settings = variants[0].fields || {};
-
-          // VarName is only the internal name of the puzzle kind: it selects
-          // the variant row and titles the browser tab, it is never shown on
-          // the page. H1Text supplies the top-bar title; H3Text is shown until
-          // the active task prompt replaces it.
-          var variantName = getField(settings, "VarName");
-          if (variantName) {
-            var heading = String(variantName).trim();
-            if (heading) document.title = heading;
-          }
-          var headline = String(getField(settings, "H1Text") || "").trim();
-          if (headline && topbarTitleEl) topbarTitleEl.textContent = headline;
-          initialSubheadlineText = String(
-            getField(settings, "H3Text") || "",
+        if (!activeRecords.length) {
+          throw new Error(
+            "No GridShift cards are checked for the configured Deck field '" +
+              deckField +
+              "'.",
+          );
+        }
+        parseDeckCount(getField(settings, "DeckCount"), activeRecords.length);
+        var relatedRecords = activeRecords.filter(function (record) {
+          return !!String(
+            getField((record && record.fields) || {}, "TileRelated") || "",
           ).trim();
-          if (initialSubheadlineText && subheadlineEl) {
-            subheadlineEl.textContent = initialSubheadlineText;
-            subheadlineEl.hidden = false;
-          }
-          // The variant row also supplies the player's deck badge
-          // (PartColour) and the deck label (PartLabel).
-          var partLabel = getField(settings, "PartLabel");
-          if (partLabel && deckLabelEl) {
-            var labelText = String(partLabel).trim();
-            if (labelText) deckLabelEl.textContent = labelText;
-          }
-          // task1DoneText replaces the old "Grid complete!" message and
-          // task1Text is the instruction shown in the H3 prompt area.
-          variantSettings = settings;
-          // Opens task 1: its instruction goes in the H3 prompt area and its
-          // done message goes in the log.
-          loadTask(1);
-          // WPIMG1 is the subtle page backdrop and the board-gutter picture.
-          var wpImg = getField(settings, "WPIMG1");
-          if (wpImg) {
-            var wpUrl = String(wpImg).trim().replace(/"/g, "%22");
-            if (wpUrl) {
-              document.documentElement.style.setProperty(
-                "--wp-img",
-                'url("' + wpUrl + '")',
-              );
-            }
-          }
-          // WPIMG2 covers the grid when every task is solved.
-          var wpImg2 = getField(settings, "WPIMG2");
-          if (wpImg2) {
-            finaleImageUrl = String(wpImg2).trim().replace(/"/g, "%22");
-          }
-          if (deckDotEl) {
-            deckDotEl.style.background = resolveColour(
-              getField(settings, "PartColour"),
-              "var(--color-red)",
+        });
+
+        var cards = [];
+        activeRecords.forEach(function (record) {
+          var fields = (record && record.fields) || {};
+          var matchText = getField(fields, "Display");
+          if (typeof matchText !== "string" || !matchText.trim()) {
+            throw new Error(
+              "A PM-Active card is missing text in its Display field.",
             );
           }
-          applyPartColour(getField(settings, "PartColour"));
+          var card = buildCard(record, matchText);
+          if (!card.dataset.match) {
+            throw new Error("Every PM-Active card must have a non-empty Display value.");
+          }
+          cards.push(card);
+        });
 
-          var hintField = parseHintField(getSetting(settings, ["Hints", "Hint"]));
-          if (normalizedFieldName(hintField) !== "display") {
-            throw new Error("Pure Match requires Hint = Imprints of Display (Text).");
-          }
-          var placing = normalizedFieldName(getField(settings, "Placing"));
-          if (placing !== "random") {
-            throw new Error("This page currently supports Placing = Random.");
-          }
-          var deckField = getField(settings, "Deck");
-          if (typeof deckField !== "string" || !deckField.trim()) {
-            throw new Error("The Pure Match setup needs a Deck field name.");
-          }
-          var participants = Number(getField(settings, "NoParticipants"));
-          if (isFinite(participants) && participants > 1) {
+        var dim = resolved
+          ? { cols: resolved.cols, rows: resolved.rows }
+          : parseGridDimension(
+              getSetting(settings, [], "GridDimension"),
+              cards.length + relatedRecords.length,
+            );
+        if (
+          !Number.isInteger(dim.cols) ||
+          !Number.isInteger(dim.rows) ||
+          dim.cols < 1 ||
+          dim.rows < 1
+        ) {
+          throw new Error("GridDimension must contain positive grid dimensions.");
+        }
+        dim.rows = Math.max(
+          dim.rows,
+          Math.ceil((cards.length + relatedRecords.length) / dim.cols),
+        );
+        if (dim.cols * dim.rows < cards.length + relatedRecords.length) {
+          throw new Error(
+            "GridDimension does not have enough cells for the active cards and their TileRelated assets.",
+          );
+        }
+
+        var variantName = getField(settings, "VarName");
+        if (variantName) {
+          var heading = String(variantName).trim();
+          if (heading) document.title = heading;
+        }
+        var headline = String(getField(settings, "H1Text") || "").trim();
+        if (headline && topbarTitleEl) topbarTitleEl.textContent = headline;
+        initialSubheadlineText = String(getField(settings, "H3Text") || "").trim();
+        if (initialSubheadlineText && subheadlineEl) {
+          subheadlineEl.textContent = initialSubheadlineText;
+          subheadlineEl.hidden = false;
+        }
+        var partLabel = getField(settings, "PartLabel");
+        if (partLabel && deckLabelEl) {
+          var labelText = String(partLabel).trim();
+          if (labelText) deckLabelEl.textContent = labelText;
+        }
+        var wpImg = String(getField(settings, "WPIMG1") || "").trim();
+        if (wpImg) {
+          document.documentElement.style.setProperty(
+            "--wp-img",
+            'url("' + wpImg.replace(/"/g, "%22") + '")',
+          );
+        }
+        var wpImg2 = String(getField(settings, "WPIMG2") || "").trim();
+        if (wpImg2) finaleImageUrl = wpImg2.replace(/"/g, "%22");
+        if (deckDotEl) {
+          deckDotEl.style.background = resolveColour(
+            getField(settings, "PartColour"),
+            "var(--color-red)",
+          );
+        }
+        applyPartColour(getField(settings, "PartColour"));
+
+        COLS = dim.cols;
+        ROWS = dim.rows;
+        shuffle(cards);
+        var targets = cards.map(function (card) {
+          return { key: card.dataset.match, text: card.dataset.imprint };
+        });
+        buildGrid(COLS, ROWS, targets);
+        reserveRelatedCards(relatedRecords);
+        remaining = cards;
+        if (remaining.length) {
+          remaining[remaining.length - 1].dataset.needsTurn = "true";
+        }
+        loadTask(1);
+        feedbackEl.textContent = "";
+        refreshDecks();
+        renderIcons();
+        gameReady = true;
+        showSystemAreaErrors();
+        return true;
+      }
+
+      function startFromSnapshot(snapshot) {
+        try {
+          if (!snapshot) {
             throw new Error(
-              "This page currently supports NoParticipants = 1; found " +
-                participants +
+              "No frozen snapshot — open with ?live=1 to load from Airtable or re-freeze.",
+            );
+          }
+          if (snapshot.schemaVersion !== 1) {
+            throw new Error(
+              "Unsupported frozen snapshot schemaVersion: " +
+                String(snapshot.schemaVersion) +
                 ".",
             );
           }
-
-          var activeRecords = cardRecords.filter(function (record) {
-            return isChecked(
-              getField((record && record.fields) || {}, deckField.trim()),
-            );
+          var settings = snapshot.variantFields;
+          var config = snapshot.settings;
+          if (!settings || typeof settings !== "object") {
+            throw new Error("Frozen snapshot is missing variantFields.");
+          }
+          if (!config || typeof config !== "object") {
+            throw new Error("Frozen snapshot is missing resolved settings.");
+          }
+          if (!Array.isArray(snapshot.cards) || !snapshot.cards.length) {
+            throw new Error("Frozen snapshot has no cards.");
+          }
+          if (!Array.isArray(snapshot.systemRecords)) {
+            throw new Error("Frozen snapshot is missing GridShiftSystem settings.");
+          }
+          if (!snapshot.frozenAt || isNaN(Date.parse(snapshot.frozenAt))) {
+            throw new Error("Frozen snapshot has an invalid frozenAt timestamp.");
+          }
+          var deckField = String(config.deckField || "").trim();
+          if (!deckField || deckField !== String(getField(settings, "Deck") || "").trim()) {
+            throw new Error("Frozen snapshot deckField does not match the variant settings.");
+          }
+          if (
+            String(config.deckCount || "").toLowerCase() !== "variable" ||
+            String(config.placing || "").toLowerCase() !== "random" ||
+            normalizedFieldName(config.hintField) !== "display" ||
+            normalizedFieldName(config.hintLabel) !==
+              "imprintsofdisplaytext"
+          ) {
+            throw new Error("Frozen snapshot has unsupported deck, placing, or hint settings.");
+          }
+          if (
+            !Number.isInteger(config.cols) ||
+            !Number.isInteger(config.rows) ||
+            config.cols < 1 ||
+            config.rows < 1
+          ) {
+            throw new Error("Frozen snapshot has invalid resolved grid dimensions.");
+          }
+          var cardRecords = snapshot.cards.map(function (card, index) {
+            if (!card || !card.fields || typeof card.fields !== "object") {
+              throw new Error("Frozen snapshot card " + (index + 1) + " is missing fields.");
+            }
+            if (
+              typeof card.imprint !== "string" ||
+              !card.imprint.trim() ||
+              String(card.match || "").trim().toLowerCase() !==
+                card.imprint.trim().toLowerCase() ||
+              String(getField(card.fields, "Display") || "").trim() !==
+                card.imprint.trim()
+            ) {
+              throw new Error("Frozen snapshot card " + (index + 1) + " has invalid match text.");
+            }
+            var recordId = String(card.recordId || "");
+            if (!recordId) {
+              throw new Error("Frozen snapshot card " + (index + 1) + " is missing recordId.");
+            }
+            return { id: recordId, fields: card.fields };
           });
-          if (!activeRecords.length) {
+          var relatedCount = cardRecords.filter(function (record) {
+            return !!String(getField(record.fields, "TileRelated") || "").trim();
+          }).length;
+          if (config.cols * config.rows < cardRecords.length + relatedCount) {
             throw new Error(
-              "No GridShift cards are checked for the configured Deck field '" +
-                deckField.trim() +
-                "'.",
+              "Frozen snapshot grid has " +
+                config.cols * config.rows +
+                " cells for " +
+                (cardRecords.length + relatedCount) +
+                " cards and related assets.",
             );
           }
-          parseDeckCount(getField(settings, "DeckCount"), activeRecords.length);
-          var relatedRecords = activeRecords.filter(function (record) {
-            return !!String(
-              getField((record && record.fields) || {}, "TileRelated") || "",
-            ).trim();
+          setModeBadge("Frozen " + snapshot.frozenAt.slice(0, 10));
+          configureSystemAreas(snapshot.systemRecords);
+          startGame(settings, cardRecords, {
+            cols: config.cols,
+            rows: config.rows,
+          });
+        } catch (error) {
+          showLoadError(error);
+        }
+      }
+
+      function startFromLive() {
+        setModeBadge("LIVE from Airtable");
+        fetchTable("GridShiftSystem")
+          .then(function (data) {
+            configureSystemAreas((data && data.records) || []);
+          })
+          .catch(function (error) {
+            showTargetBoxIconError(error);
+            showEventLogHeadingError(error);
           });
 
-          var cards = [];
-          activeRecords.forEach(function (record) {
-            var fields = (record && record.fields) || {};
-            var matchText = getField(fields, "Display");
-            if (typeof matchText !== "string" || !matchText.trim()) {
+        Promise.all([
+          fetchTable("GridShiftVariants"),
+          fetchTable("GridShift"),
+        ])
+          .then(function (dataSets) {
+            var variantRecords = (dataSets[0] && dataSets[0].records) || [];
+            var cardRecords = (dataSets[1] && dataSets[1].records) || [];
+            var variants = variantRecords.filter(function (record) {
+              var fields = (record && record.fields) || {};
+              var name = getSetting(fields, ["VarName", "Name"]);
+              var active = getField(fields, "Active");
+              return (
+                normalizedFieldName(name) === "purematch" &&
+                (active === undefined || isChecked(active))
+              );
+            });
+            if (variants.length !== 1) {
               throw new Error(
-                "A PM-Active card is missing text in its Display field.",
+                "Expected one Pure Match setup in GridShiftVariants; found " +
+                  variants.length +
+                  ".",
               );
             }
-            var card = buildCard(record, matchText);
-            if (!card.dataset.match) {
-              throw new Error("Every PM-Active card must have a non-empty Display value.");
-            }
-            cards.push(card);
-          });
-          shuffle(cards);
+            startGame(variants[0].fields || {}, cardRecords);
+          })
+          .catch(showLoadError);
+      }
 
-          var dim = parseGridDimension(
-            getSetting(settings, [], "GridDimension"),
-            cards.length + relatedRecords.length,
-          );
-          if (
-            !Number.isInteger(dim.cols) ||
-            !Number.isInteger(dim.rows) ||
-            dim.cols < 1 ||
-            dim.rows < 1
-          ) {
-            throw new Error("GridDimension must contain positive grid dimensions.");
-          }
-          dim.rows = Math.max(
-            dim.rows,
-            Math.ceil((cards.length + relatedRecords.length) / dim.cols),
-          );
-          if (dim.cols * dim.rows < cards.length + relatedRecords.length) {
-            throw new Error(
-              "GridDimension does not have enough cells for the active cards and their TileRelated assets.",
-            );
-          }
-
-          COLS = dim.cols;
-          ROWS = dim.rows;
-          var targets = cards.map(function (card) {
-            return { key: card.dataset.match, text: card.dataset.imprint };
-          });
-          buildGrid(COLS, ROWS, targets);
-          reserveRelatedCards(relatedRecords);
-          remaining = cards;
-          // Only the first card of the stack has to be turned by the pupil:
-          // the cards below it show their front from the beginning.
-          if (remaining.length) {
-            remaining[remaining.length - 1].dataset.needsTurn = "true";
-          }
-          feedbackEl.textContent = "";
-          refreshDecks();
-          renderIcons();
-          gameReady = true;
-          showSystemAreaErrors();
-          return true;
-        })
-        .catch(function (error) {
-          showLoadError(error);
-          return false;
-        });
+      if (liveMode) startFromLive();
+      else startFromSnapshot(PURE_MATCH_SNAPSHOT);
 
       // ---- PS4 controller -> pointer bridge ----
       // Tizen (USB gamepad) exposes the controller only via the raw Gamepad

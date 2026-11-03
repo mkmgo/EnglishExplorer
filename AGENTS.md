@@ -309,6 +309,12 @@ card checked in that field is included. `DeckCount` must be `Variable`,
 random unique cell; cards can only be placed on a matching imprint. Before
 turning, each card uses its `TileBack` asset. Both Airtable tables must be
 allowlisted by the worker.
+The released page uses an embedded, self-contained snapshot by default and
+does not fetch game-data tables; use `mb-gs-pure-match.html?live=1` to develop
+against Airtable. Check `FreezeVariant` before capturing a release snapshot.
+Uncheck it while authoring; see
+[grid-shift-pure-match-freeze.md](junior/minigames/grid-shift-pure-match-freeze.md)
+for the capture and re-freeze workflow.
 In wide horizontal layouts the single player deck sits left of the board with
 a 10px gap; the deck + board group is centred on the page
 (`grid-template-columns: 148px auto` + `justify-content: center` on `.stage`).
@@ -364,12 +370,13 @@ their source cells when moved onto their related tile. Wrong turns and drops
 show a red mark at the selected card/cell rather than a text message under the
 grid.
 
-**The finale.** When every task is solved, the `WPIMG2` picture appears as a
-slightly dimmed, top-aligned background behind the full grid; empty cells are
-translucent so the picture shows through while the grid and cards stay visible.
-The finale runs once (`finaleStarted`); a bridge message that still waits for its
-tap postpones it. Without `WPIMG2`, the full grid still turns green and remains
-visible.
+**The finale.** When every task is solved, the `task4DoneText` value from
+`GridShiftVariants` is shown prominently in the task strip. The `WPIMG2` picture
+appears as a slightly dimmed, top-aligned background behind the full grid; the
+finished grid and empty cells have a translucent green tint so the picture shows
+through while the cells and cards stay visible. The finale runs once
+(`finaleStarted`); a bridge message that still waits for its tap postpones it.
+Without `WPIMG2`, the full grid still turns green and remains visible.
 
 The variant row also drives the page chrome:
 
@@ -391,16 +398,17 @@ The variant row also drives the page chrome:
 | `task4Text` | Single line text | Instruction of task 4 — shown in the prompt area below the top bar, like every other task instruction. Empty = nothing shown. |
 | `task4StatusText` | Single line text *(optional)* | Status message added once to the top of the Event Log when task 4 opens; plays `StatusUpdate` (SYSID 2). |
 | `task4Result` | Single line text | The **action** that finishes task 4 (currently `Each card needs to be moved on related tile`). It describes the action, it holds no card ids; the cards of the task are the ones of `TileRelated` (see "Intro tasks" below). |
-| `task4DoneText` | Single line text | Message shown in the Log when task 4 is solved (added to the list of accomplished tasks). Empty = `CorrectText` (default "✔ Correct!") is added instead. |
+| `task4DoneText` | Single line text | Message shown in the Log when task 4 is solved (added to the list of accomplished tasks), and prominently in the task strip at the finale. Empty = `CorrectText` (default "✔ Correct!") is added to the Log instead; the final task strip remains empty. |
 | `task4Intro` | Single line text *(optional)* | The **intro marker** of task 4: it activates the intro step (the new cards are added to the board and have to be moved onto their tiles). Its text is **never shown** — only the fact that it is filled matters. Empty = task 4 is an ordinary task. |
 | `task4IntroAction` | Single line text *(optional)* | What the intro step does (currently `TileRelated cards reserved in empty cells and revealed for the intro task.`). It is a description only — it is not shown on the page. Empty = the step still runs. Either of the two fields activates the intro step, so the marker may also be written here. Related cards are reserved in hidden cells at game start, then revealed for the intro task. |
 | `WPIMG1` | URL | Subtle backdrop picture across the page and through the board gutters. Set at runtime as the `--wp-img` CSS custom property. Empty = no backdrop. |
-| `WPIMG2` | URL | Slightly dimmed, top-aligned background picture behind the grid when every task is solved. Empty cells are translucent so the grid stays visible over the picture. Empty = no picture, but the full grid still turns green. |
+| `WPIMG2` | URL | Slightly dimmed, top-aligned background picture behind the grid when every task is solved. The finished grid and empty cells have a translucent green tint so the picture shows through while the board stays visible. Empty = no picture, but the full grid still turns green. |
 | `WrongCardText` | Single line text *(optional)* | Retained for compatibility; wrong turns now show a red mark on the selected card instead of text. |
 | `WrongSpotText` | Single line text *(optional)* | Retained for compatibility; wrong drops now show a red mark on the selected cell instead of text. |
 | `WrongProductText` | Single line text *(optional)* | Retained for compatibility; a product dropped on the wrong animal shows a red mark on that cell instead of text. |
 | `CorrectText` | Single line text *(optional)* | Added to the Log when a task is solved and the variant row has no own done text (default: `✔ Correct!`). |
 | `PartColour` | Single line text | Overall theme accent and deck badge dot. The color is darkened slightly for light-mode toolbar background; toolbar text and controls are white, with the theme toggle inverted for contrast. Accepts a palette name (`Blue`), a hex / `rgb()` / `hsl()` value, a plain CSS colour name, or `var(--color-x)`. Palette names map to the page's theme-aware vars (`--color-blue`, `--color-yellow`, `--color-green`, `--color-red`, `--color-orange`, `--color-purple`). Empty = `var(--color-red)`. |
+| `FreezeVariant` | Checkbox | Release guard used by the snapshot capture workflow. Check before capturing/deploying a frozen release; uncheck while authoring. Normal page loads use the embedded snapshot; add `?live=1` to load current Airtable data. |
 | `NoParticipants` | Number | Number of players. Only `1` is supported so far — a higher value stops the game with an in-page error instead of silently running one deck. |
 | `VarID` | Number | Variant id (not used by the game). |
 

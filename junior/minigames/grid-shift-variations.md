@@ -74,6 +74,7 @@ selected by `VarName`; the live `Pure Match` row uses these fields:
 | `GridDimension (horizontal)` | `4x5` | Cell count or `rows x columns`; `4x5` means 4 rows × 5 columns. |
 | `Placing` | `Random` | Imprints are assigned to random unique cells. |
 | `Hints` | `Imprints of Display (Text)` | Use each selected card's `Display` value for its text imprint. |
+| `FreezeVariant` | checked / unchecked | Release guard for the embedded Pure Match snapshot. Check it before capturing and deploying a frozen release; leave it unchecked while authoring. The normal URL runs the embedded snapshot; `?live=1` always loads the current Airtable setup. |
 | `PartColour` | `Red` | Player/deck colour setting; currently informational in Pure Match. |
 | `NoParticipants` | `1` | Participant count; currently informational in Pure Match. |
 | `task1Text` | `Match the cards correctly.` | Instruction of task 1 (the matching puzzle) — shown under the card stack. |
@@ -317,10 +318,16 @@ game UIs.
 Pure Match also reads `GridShiftVariants` fields `VarName`, `H1Text`, `H3Text`,
 `task1Text`, `task1DoneText`, `task2Text`, `task2Result`, `task2DoneText`,
 `task3Text`, `task3Spoken`, `task3Result`, `task3DoneBridge`, `task4Text`,
-`task4Result`, `task4DoneText`, `task4Intro`, `task4IntroAction`, `Deck`,
+`task4Result`, `task4DoneText`, `task4Intro`, `task4IntroAction`,
+`FreezeVariant`, `Deck`,
 `DeckCount`, `GridDimension (horizontal)`, `Placing`, `Hints`, `PartColour`, and
 `NoParticipants`. `GridShiftVariants` is allowlisted in the tracker worker and
 is fetched in its natural Airtable row order.
+
+Pure Match is frozen in the page by default. Use `mb-gs-pure-match.html?live=1`
+to develop against Airtable; check `FreezeVariant` before capturing a release
+snapshot. The snapshot and capture steps are documented in
+[`grid-shift-pure-match-freeze.md`](grid-shift-pure-match-freeze.md).
 
 ---
 
