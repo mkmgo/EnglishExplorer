@@ -61,20 +61,21 @@ Check `FillTile` on some cards (full-bleed images) and leave others as default (
 ## Variant settings and territory zones
 
 `GridShiftVariants` is now used by Grid Shift Pure Match. The active setup is
-selected by `VarName`; the live `Pure Match` row uses these fields:
+selected by `VarName` — the page matches the row whose `VarName` equals its own
+file name (today `mb-farmstead-mg`). These fields drive it:
 
 | Field | Example | Purpose |
 |---|---|---|
 | `VarID` | `1` | Stable variant identifier. |
-| `VarName` | `Pure Match` | Internal name of the puzzle kind: selects this configuration for the Pure Match page and titles the browser tab. It is never displayed on the page. |
-| `H1Text` | `Topic: On the Farm` | Page headline — the `<h1>` above the game. |
+| `VarName` | `mb-farmstead-mg` | Internal key: selects this configuration for the page whose file name matches it (`mb-farmstead-mg.html`) and names the deliverable (page + snapshot + freeze doc). Never displayed. |
+| `H1Text` | `Farmstead` | Display title — the top bar and the browser tab. |
 | `H3Text` | `Match and solve all puzzles` | Subheadline under the headline, starting at the same horizontal position. |
 | `Deck` | `PM-Active` | Name of the checkbox field on `GridShift` that chooses cards. Every checked row is included. |
 | `DeckCount` | `variable` | Must be `Variable` so the full checked set is used. |
 | `GridDimension (horizontal)` | `4x5` | Cell count or `rows x columns`; `4x5` means 4 rows × 5 columns. |
 | `Placing` | `Random` | Imprints are assigned to random unique cells. |
 | `Hints` | `Imprints of Display (Text)` | Use each selected card's `Display` value for its text imprint. |
-| `FreezeVariant` | checked / unchecked | Release guard for the embedded Pure Match snapshot. Check it before capturing and deploying a frozen release; leave it unchecked while authoring. The normal URL runs the embedded snapshot; `?live=1` always loads the current Airtable setup. |
+| `FreezeVariant` | checked / unchecked | Capture guard for the released snapshot. Check it before capturing and deploying a frozen release; leave it unchecked while authoring. The normal URL reads the sibling `mb-farmstead-mg.snapshot.json`; `?live=1` loads the current Airtable setup. |
 | `PartColour` | `Red` | Player/deck colour setting; currently informational in Pure Match. |
 | `NoParticipants` | `1` | Participant count; currently informational in Pure Match. |
 | `task1Text` | `Match the cards correctly.` | Instruction of task 1 (the matching puzzle) — shown under the card stack. |
@@ -298,7 +299,7 @@ Same `GridShift` table, reskinned UI:
 ## Field Usage Quick Reference
 
 Card fields used by `mb-grid-shift.html` and
-`mb-gs-pure-match.html`:
+`mb-farmstead-mg.html`:
 ```
 GridShiftID, Active, PM-Active, TileName, Display, RenderMode,
 TileFront, TileBack, TileBackA, TileBackB, Lucide, Stroke,
@@ -324,10 +325,11 @@ Pure Match also reads `GridShiftVariants` fields `VarName`, `H1Text`, `H3Text`,
 `NoParticipants`. `GridShiftVariants` is allowlisted in the tracker worker and
 is fetched in its natural Airtable row order.
 
-Pure Match is frozen in the page by default. Use `mb-gs-pure-match.html?live=1`
-to develop against Airtable; check `FreezeVariant` before capturing a release
-snapshot. The snapshot and capture steps are documented in
-[`grid-shift-pure-match-freeze.md`](grid-shift-pure-match-freeze.md).
+Pure Match ships its data frozen in the sibling
+`mb-farmstead-mg.snapshot.json`; use `mb-farmstead-mg.html?live=1` to develop
+against Airtable and check `FreezeVariant` before capturing a release snapshot.
+The snapshot format and capture steps are documented in
+[`mb-farmstead-mg-freeze.md`](mb-farmstead-mg-freeze.md).
 
 ---
 

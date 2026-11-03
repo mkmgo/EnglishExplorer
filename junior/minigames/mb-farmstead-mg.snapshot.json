@@ -1,0 +1,546 @@
+{
+  "schemaVersion": 1,
+  "frozenAt": "2026-11-03T16:59:29.391Z",
+  "source": "GridShiftVariants:mb-farmstead-mg / GridShift:PM-Active",
+  "settings": {
+    "deckField": "PM-Active",
+    "deckCount": "variable",
+    "gridDimension": "4x5",
+    "cols": 5,
+    "rows": 4,
+    "placing": "random",
+    "hintField": "Display",
+    "hintLabel": "Imprints of Display (Text)"
+  },
+  "variantFields": {
+    "Deck": "PM-Active",
+    "Hints": "Imprints of Display (Text)",
+    "task3DoneBridge": "Turned cards are cleared",
+    "task4Result": "Each card needs to be moved on related tile",
+    "PartColour": "Green",
+    "task1StatusText": "Sorting the farm things",
+    "Placing": "Random",
+    "task3Spoken": [
+      "Rooster",
+      "Chicks",
+      "Horse",
+      "Calf"
+    ],
+    "GridDimension (horizontal)": "4x5",
+    "task2Result": [
+      "recpUvOgWismxZJJK",
+      "recVlkus5qGoK2rus",
+      "recvxCJTUJoFNxQd7",
+      "reclgWQQT1L5ebndx",
+      "recXUmTcaoVgmkCol"
+    ],
+    "DeckCount": "variable",
+    "task4IntroAction": "TilesRelated distributed randomly on remaining free grid slots and shown openly. ",
+    "NoParticipants": 1,
+    "WPIMG1": "https://res.cloudinary.com/dmkhsyfzf/image/upload/q_auto/f_auto/v1792184837/farm_animals_ivhm2c.jpg",
+    "task1DoneText": "✔ All farm things matched!",
+    "task3StatusText": "Some animals walking to their shelters",
+    "task1Text": "Match all farm things from the stack with the words ",
+    "VarID": 1,
+    "task4DoneText": "YOU MADE IT",
+    "H3Text": "Match the cards. Solve the other tasks.",
+    "task2StatusText": "Spotlighting the animals",
+    "task3Text": "Turn the cards of the spoken farm animals",
+    "VarName": "mb-farmstead-mg",
+    "task4Text": "Searching the producer animal",
+    "FreezeVariant": true,
+    "task3Result": [
+      "rec28YYboce6kHvmE",
+      "rechXClySBBEMIrsd",
+      "recovdHM2MI5gNsOR",
+      "rec0QSxvhAESmCYnr"
+    ],
+    "task3DoneText": "✔ Well done. These animals are safe now",
+    "task2Text": "Turn the cards to show only farm animals",
+    "WPIMG2": "https://res.cloudinary.com/dmkhsyfzf/image/upload/q_auto/f_auto/v1792644124/farm_shop_u2oe2e.jpg",
+    "PartLabel": "Stack",
+    "task2DoneText": "✔ Animals focused",
+    "H1Text": "Farmstead"
+  },
+  "cards": [
+    {
+      "id": 67,
+      "recordId": "rec0QSxvhAESmCYnr",
+      "match": "calf",
+      "imprint": "Calf",
+      "fields": {
+        "Display": "Calf",
+        "TileFront": "https://res.cloudinary.com/dmkhsyfzf/image/upload/c_crop,w_165,h_186,x_182,y_0/v1792360624/farm2_-_Copy_y7hsat.jpg",
+        "TileBack": "https://res.cloudinary.com/dmkhsyfzf/image/upload/c_crop,w_342,h_345,x_462,y_50/v1791308099/cards_back_empty_yu8gij.jpg",
+        "PM-Active": true,
+        "GridShiftID": 67,
+        "TileBackA": "https://res.cloudinary.com/dmkhsyfzf/image/upload/c_crop,w_421,h_424,x_16,y_408/v1788697706/tiles_back_drswds.jpg",
+        "RenderMode": "cloudinary-img",
+        "GridShiftVariants 2": [
+          "recf67URjyhFMjLek"
+        ],
+        "TileBackB": "https://res.cloudinary.com/dmkhsyfzf/image/upload/c_crop,w_421,h_424,x_826,y_16/v1788697706/tiles_back_drswds.jpg",
+        "FillTile": true,
+        "TileName": "Calf",
+        "Category": "Farm Things",
+        "SoundAsset": "https://res.cloudinary.com/dmkhsyfzf/video/upload/v1793302776/ANIcow_lpw1ei.mp3",
+        "SubCategory": "Animals"
+      }
+    },
+    {
+      "id": 74,
+      "recordId": "rec28YYboce6kHvmE",
+      "match": "rooster",
+      "imprint": "Rooster",
+      "fields": {
+        "Display": "Rooster",
+        "TileFront": "https://res.cloudinary.com/dmkhsyfzf/image/upload/c_crop,w_170,h_158,x_510,y_186/v1792360624/farm2_-_Copy_y7hsat.jpg",
+        "TileBack": "https://res.cloudinary.com/dmkhsyfzf/image/upload/c_crop,w_342,h_345,x_462,y_50/v1791308099/cards_back_empty_yu8gij.jpg",
+        "PM-Active": true,
+        "GridShiftID": 74,
+        "TileBackA": "https://res.cloudinary.com/dmkhsyfzf/image/upload/c_crop,w_421,h_424,x_16,y_408/v1788697706/tiles_back_drswds.jpg",
+        "RenderMode": "cloudinary-img",
+        "GridShiftVariants 2": [
+          "recf67URjyhFMjLek"
+        ],
+        "TileBackB": "https://res.cloudinary.com/dmkhsyfzf/image/upload/c_crop,w_421,h_424,x_826,y_16/v1788697706/tiles_back_drswds.jpg",
+        "FillTile": true,
+        "TileName": "Rooster",
+        "Category": "Farm Things",
+        "SoundAsset": "https://res.cloudinary.com/dmkhsyfzf/video/upload/v1793302764/ANIrooster_vlrph4.mp3",
+        "SubCategory": "Animals"
+      }
+    },
+    {
+      "id": 66,
+      "recordId": "recQGp6cNVnXkzRlB",
+      "match": "cow",
+      "imprint": "Cow",
+      "fields": {
+        "Display": "Cow",
+        "TileFront": "https://res.cloudinary.com/dmkhsyfzf/image/upload/c_crop,w_182,h_186,x_0,y_0/v1792360624/farm2_-_Copy_y7hsat.jpg",
+        "TileBack": "https://res.cloudinary.com/dmkhsyfzf/image/upload/c_crop,w_342,h_345,x_462,y_50/v1791308099/cards_back_empty_yu8gij.jpg",
+        "PM-Active": true,
+        "GridShiftID": 66,
+        "TileBackA": "https://res.cloudinary.com/dmkhsyfzf/image/upload/c_crop,w_421,h_424,x_16,y_408/v1788697706/tiles_back_drswds.jpg",
+        "Related": "Milk",
+        "RenderMode": "cloudinary-img",
+        "TileBackB": "https://res.cloudinary.com/dmkhsyfzf/image/upload/c_crop,w_421,h_424,x_826,y_16/v1788697706/tiles_back_drswds.jpg",
+        "FillTile": true,
+        "TileName": "Cow",
+        "Category": "Farm Things",
+        "TileRelated": "https://res.cloudinary.com/dmkhsyfzf/image/upload/c_crop,w_345,h_346,x_7,y_7/v1792629112/farm_products_zoavt7.jpg",
+        "TextSize": "small",
+        "SoundAsset": "https://res.cloudinary.com/dmkhsyfzf/video/upload/v1793302776/ANIcow_lpw1ei.mp3",
+        "SubCategory": "Animals"
+      }
+    },
+    {
+      "id": 77,
+      "recordId": "recVlkus5qGoK2rus",
+      "match": "water trough",
+      "imprint": "Water Trough",
+      "fields": {
+        "Display": "Water Trough",
+        "TileFront": "https://res.cloudinary.com/dmkhsyfzf/image/upload/c_crop,w_162,h_170,x_182,y_0/v1792629953/farm2_yhsmmb.jpg",
+        "TileBack": "https://res.cloudinary.com/dmkhsyfzf/image/upload/c_crop,w_342,h_345,x_462,y_50/v1791308099/cards_back_empty_yu8gij.jpg",
+        "GridShiftVariants": [
+          "recf67URjyhFMjLek"
+        ],
+        "PM-Active": true,
+        "GridShiftID": 77,
+        "RenderMode": "cloudinary-img",
+        "FillTile": true,
+        "TileName": "Water Trough",
+        "Category": "Farm Things",
+        "Active": true,
+        "SoundAsset": "https://res.cloudinary.com/dmkhsyfzf/video/upload/v1793302764/ELEwater_jydogx.mp3",
+        "SubCategory": "Tools"
+      }
+    },
+    {
+      "id": 76,
+      "recordId": "recXUmTcaoVgmkCol",
+      "match": "chicken coop",
+      "imprint": "Chicken Coop",
+      "fields": {
+        "Display": "Chicken Coop",
+        "TileFront": "https://res.cloudinary.com/dmkhsyfzf/image/upload/c_crop,w_182,h_170,x_0,y_0/v1792629953/farm2_yhsmmb.jpg",
+        "TileBack": "https://res.cloudinary.com/dmkhsyfzf/image/upload/c_crop,w_342,h_345,x_462,y_50/v1791308099/cards_back_empty_yu8gij.jpg",
+        "GridShiftVariants": [
+          "recf67URjyhFMjLek"
+        ],
+        "PM-Active": true,
+        "GridShiftID": 76,
+        "RenderMode": "cloudinary-img",
+        "FillTile": true,
+        "TileName": "Chicken Coop",
+        "Category": "Farm Things",
+        "Active": true,
+        "SoundAsset": "https://res.cloudinary.com/dmkhsyfzf/video/upload/v1793302776/ANIchicken_zqutgy.mp3",
+        "SubCategory": "Buildings"
+      }
+    },
+    {
+      "id": 69,
+      "recordId": "recXgZOa8gsl8rcCl",
+      "match": "goat",
+      "imprint": "Goat",
+      "fields": {
+        "Display": "Goat",
+        "TileFront": "https://res.cloudinary.com/dmkhsyfzf/image/upload/c_crop,w_161,h_161,x_679,y_11/v1792360624/farm2_-_Copy_y7hsat.jpg",
+        "TileBack": "https://res.cloudinary.com/dmkhsyfzf/image/upload/c_crop,w_342,h_345,x_462,y_50/v1791308099/cards_back_empty_yu8gij.jpg",
+        "PM-Active": true,
+        "GridShiftID": 69,
+        "TileBackA": "https://res.cloudinary.com/dmkhsyfzf/image/upload/c_crop,w_421,h_424,x_16,y_408/v1788697706/tiles_back_drswds.jpg",
+        "Related": "Goat Cheese",
+        "RenderMode": "cloudinary-img",
+        "TileBackB": "https://res.cloudinary.com/dmkhsyfzf/image/upload/c_crop,w_421,h_424,x_826,y_16/v1788697706/tiles_back_drswds.jpg",
+        "FillTile": true,
+        "TileName": "Goat",
+        "Category": "Farm Things",
+        "TileRelated": "https://res.cloudinary.com/dmkhsyfzf/image/upload/c_crop,w_335,h_346,x_345,y_7/v1792629112/farm_products_zoavt7.jpg",
+        "TextSize": "small",
+        "SoundAsset": "https://res.cloudinary.com/dmkhsyfzf/video/upload/v1793302777/ANIgoat_ghzafg.mp3",
+        "SubCategory": "Animals"
+      }
+    },
+    {
+      "id": 72,
+      "recordId": "recesuO97nEZrO50e",
+      "match": "hen",
+      "imprint": "Hen",
+      "fields": {
+        "Display": "Hen",
+        "TileFront": "https://res.cloudinary.com/dmkhsyfzf/image/upload/c_crop,w_165,h_158,x_182,y_186/v1792360624/farm2_-_Copy_y7hsat.jpg",
+        "TileBack": "https://res.cloudinary.com/dmkhsyfzf/image/upload/c_crop,w_342,h_345,x_462,y_50/v1791308099/cards_back_empty_yu8gij.jpg",
+        "PM-Active": true,
+        "GridShiftID": 72,
+        "TileBackA": "https://res.cloudinary.com/dmkhsyfzf/image/upload/c_crop,w_421,h_424,x_16,y_408/v1788697706/tiles_back_drswds.jpg",
+        "Related": "Eggs",
+        "RenderMode": "cloudinary-img",
+        "TileBackB": "https://res.cloudinary.com/dmkhsyfzf/image/upload/c_crop,w_421,h_424,x_826,y_16/v1788697706/tiles_back_drswds.jpg",
+        "FillTile": true,
+        "TileName": "Hen",
+        "Category": "Farm Things",
+        "TileRelated": "https://res.cloudinary.com/dmkhsyfzf/image/upload/c_crop,w_344,h_344,x_673,y_673/v1792629112/farm_products_zoavt7.jpg",
+        "TextSize": "small",
+        "SoundAsset": "https://res.cloudinary.com/dmkhsyfzf/video/upload/v1793302776/ANIchicken_zqutgy.mp3",
+        "SubCategory": "Animals"
+      }
+    },
+    {
+      "id": 70,
+      "recordId": "rechHgixn6z594I3d",
+      "match": "pig",
+      "imprint": "Pig",
+      "fields": {
+        "Display": "Pig",
+        "TileFront": "https://res.cloudinary.com/dmkhsyfzf/image/upload/c_crop,w_180,h_186,x_844,y_0/v1792360624/farm2_-_Copy_y7hsat.jpg",
+        "TileBack": "https://res.cloudinary.com/dmkhsyfzf/image/upload/c_crop,w_342,h_345,x_462,y_50/v1791308099/cards_back_empty_yu8gij.jpg",
+        "PM-Active": true,
+        "GridShiftID": 70,
+        "TileBackA": "https://res.cloudinary.com/dmkhsyfzf/image/upload/c_crop,w_421,h_424,x_16,y_408/v1788697706/tiles_back_drswds.jpg",
+        "Related": "Meat",
+        "RenderMode": "cloudinary-img",
+        "TileBackB": "https://res.cloudinary.com/dmkhsyfzf/image/upload/c_crop,w_421,h_424,x_826,y_16/v1788697706/tiles_back_drswds.jpg",
+        "FillTile": true,
+        "TileName": "Pig",
+        "Category": "Farm Things",
+        "TileRelated": "https://res.cloudinary.com/dmkhsyfzf/image/upload/c_crop,w_345,h_334,x_7,y_346/v1792629112/farm_products_zoavt7.jpg",
+        "TextSize": "small",
+        "SoundAsset": "https://res.cloudinary.com/dmkhsyfzf/video/upload/v1793302764/ANIpig_rb7oo2.mp3",
+        "SubCategory": "Animals"
+      }
+    },
+    {
+      "id": 73,
+      "recordId": "rechXClySBBEMIrsd",
+      "match": "chicks",
+      "imprint": "Chicks",
+      "fields": {
+        "Display": "Chicks",
+        "TileFront": "https://res.cloudinary.com/dmkhsyfzf/image/upload/c_crop,w_163,h_158,x_347,y_186/v1792360624/farm2_-_Copy_y7hsat.jpg",
+        "TileBack": "https://res.cloudinary.com/dmkhsyfzf/image/upload/c_crop,w_342,h_345,x_462,y_50/v1791308099/cards_back_empty_yu8gij.jpg",
+        "PM-Active": true,
+        "GridShiftID": 73,
+        "TileBackA": "https://res.cloudinary.com/dmkhsyfzf/image/upload/c_crop,w_421,h_424,x_16,y_408/v1788697706/tiles_back_drswds.jpg",
+        "RenderMode": "cloudinary-img",
+        "GridShiftVariants 2": [
+          "recf67URjyhFMjLek"
+        ],
+        "TileBackB": "https://res.cloudinary.com/dmkhsyfzf/image/upload/c_crop,w_421,h_424,x_826,y_16/v1788697706/tiles_back_drswds.jpg",
+        "FillTile": true,
+        "TileName": "Chicks",
+        "Category": "Farm Things",
+        "SoundAsset": "https://res.cloudinary.com/dmkhsyfzf/video/upload/v1793302776/ANIchicken_zqutgy.mp3",
+        "SubCategory": "Animals"
+      }
+    },
+    {
+      "id": 79,
+      "recordId": "reclgWQQT1L5ebndx",
+      "match": "pitchfork",
+      "imprint": "Pitchfork",
+      "fields": {
+        "Display": "Pitchfork",
+        "TileFront": "https://res.cloudinary.com/dmkhsyfzf/image/upload/c_crop,w_165,h_170,x_680,y_0/v1792629953/farm2_yhsmmb.jpg",
+        "TileBack": "https://res.cloudinary.com/dmkhsyfzf/image/upload/c_crop,w_342,h_345,x_462,y_50/v1791308099/cards_back_empty_yu8gij.jpg",
+        "GridShiftVariants": [
+          "recf67URjyhFMjLek"
+        ],
+        "PM-Active": true,
+        "GridShiftID": 79,
+        "RenderMode": "cloudinary-img",
+        "FillTile": true,
+        "TileName": "Pitchfork",
+        "Category": "Farm Things",
+        "Active": true,
+        "SoundAsset": "https://res.cloudinary.com/dmkhsyfzf/video/upload/v1793302765/FARMhay_kkyj4n.mp3",
+        "SubCategory": "Tools"
+      }
+    },
+    {
+      "id": 68,
+      "recordId": "recovdHM2MI5gNsOR",
+      "match": "horse",
+      "imprint": "Horse",
+      "fields": {
+        "Display": "Horse",
+        "TileFront": "https://res.cloudinary.com/dmkhsyfzf/image/upload/c_crop,w_163,h_186,x_347,y_0/v1792360624/farm2_-_Copy_y7hsat.jpg",
+        "TileBack": "https://res.cloudinary.com/dmkhsyfzf/image/upload/c_crop,w_342,h_345,x_462,y_50/v1791308099/cards_back_empty_yu8gij.jpg",
+        "PM-Active": true,
+        "GridShiftID": 68,
+        "TileBackA": "https://res.cloudinary.com/dmkhsyfzf/image/upload/c_crop,w_421,h_424,x_16,y_408/v1788697706/tiles_back_drswds.jpg",
+        "RenderMode": "cloudinary-img",
+        "GridShiftVariants 2": [
+          "recf67URjyhFMjLek"
+        ],
+        "TileBackB": "https://res.cloudinary.com/dmkhsyfzf/image/upload/c_crop,w_421,h_424,x_826,y_16/v1788697706/tiles_back_drswds.jpg",
+        "FillTile": true,
+        "TileName": "Horse",
+        "Category": "Farm Things",
+        "SoundAsset": "https://res.cloudinary.com/dmkhsyfzf/video/upload/v1793302777/ANIhorse_zvt3x9.mp3",
+        "SubCategory": "Animals"
+      }
+    },
+    {
+      "id": 75,
+      "recordId": "recpUvOgWismxZJJK",
+      "match": "tractor",
+      "imprint": "Tractor",
+      "fields": {
+        "Display": "Tractor",
+        "TileFront": "https://res.cloudinary.com/dmkhsyfzf/image/upload/c_crop,w_165,h_168,x_182,y_344/v1792360624/farm2_-_Copy_y7hsat.jpg",
+        "TileBack": "https://res.cloudinary.com/dmkhsyfzf/image/upload/c_crop,w_342,h_345,x_462,y_50/v1791308099/cards_back_empty_yu8gij.jpg",
+        "GridShiftVariants": [
+          "recf67URjyhFMjLek"
+        ],
+        "PM-Active": true,
+        "GridShiftID": 75,
+        "TileBackA": "https://res.cloudinary.com/dmkhsyfzf/image/upload/c_crop,w_421,h_424,x_16,y_408/v1788697706/tiles_back_drswds.jpg",
+        "RenderMode": "cloudinary-img",
+        "TileBackB": "https://res.cloudinary.com/dmkhsyfzf/image/upload/c_crop,w_421,h_424,x_826,y_16/v1788697706/tiles_back_drswds.jpg",
+        "FillTile": true,
+        "TileName": "Tractor",
+        "Category": "Farm Things",
+        "SoundAsset": "https://res.cloudinary.com/dmkhsyfzf/video/upload/v1793302765/FARMtractor_qbbulm.mp3",
+        "SubCategory": "Vehicles"
+      }
+    },
+    {
+      "id": 71,
+      "recordId": "recr1ZAouMexV0zOD",
+      "match": "sheep",
+      "imprint": "Sheep",
+      "fields": {
+        "Display": "Sheep",
+        "TileFront": "https://res.cloudinary.com/dmkhsyfzf/image/upload/c_crop,w_182,h_158,x_0,y_186/v1792360624/farm2_-_Copy_y7hsat.jpg",
+        "TileBack": "https://res.cloudinary.com/dmkhsyfzf/image/upload/c_crop,w_342,h_345,x_462,y_50/v1791308099/cards_back_empty_yu8gij.jpg",
+        "PM-Active": true,
+        "GridShiftID": 71,
+        "TileBackA": "https://res.cloudinary.com/dmkhsyfzf/image/upload/c_crop,w_421,h_424,x_16,y_408/v1788697706/tiles_back_drswds.jpg",
+        "Related": "Wool",
+        "RenderMode": "cloudinary-img",
+        "TileBackB": "https://res.cloudinary.com/dmkhsyfzf/image/upload/c_crop,w_421,h_424,x_826,y_16/v1788697706/tiles_back_drswds.jpg",
+        "FillTile": true,
+        "TileName": "Sheep",
+        "Category": "Farm Things",
+        "TileRelated": "https://res.cloudinary.com/dmkhsyfzf/image/upload/c_crop,w_345,h_344,x_7,y_673/v1792629112/farm_products_zoavt7.jpg",
+        "TextSize": "small",
+        "SoundAsset": "https://res.cloudinary.com/dmkhsyfzf/video/upload/v1793302764/ANIsheep_oj2etu.mp3",
+        "SubCategory": "Animals"
+      }
+    },
+    {
+      "id": 78,
+      "recordId": "recvxCJTUJoFNxQd7",
+      "match": "milk churn",
+      "imprint": "Milk Churn",
+      "fields": {
+        "Display": "Milk Churn",
+        "TileFront": "https://res.cloudinary.com/dmkhsyfzf/image/upload/c_crop,w_165,h_164,x_680,y_170/v1792629953/farm2_yhsmmb.jpg",
+        "TileBack": "https://res.cloudinary.com/dmkhsyfzf/image/upload/c_crop,w_342,h_345,x_462,y_50/v1791308099/cards_back_empty_yu8gij.jpg",
+        "GridShiftVariants": [
+          "recf67URjyhFMjLek"
+        ],
+        "PM-Active": true,
+        "GridShiftID": 78,
+        "RenderMode": "cloudinary-img",
+        "FillTile": true,
+        "TileName": "Milk Churn",
+        "Category": "Farm Things",
+        "Active": true,
+        "SoundAsset": "https://res.cloudinary.com/dmkhsyfzf/video/upload/v1793302765/FOODmilk_churn_wlyjx7.mp3",
+        "SubCategory": "Tools"
+      }
+    }
+  ],
+  "systemRecords": [
+    {
+      "id": "rec3d6Ooj2FWZl1hP",
+      "createdTime": "2026-10-29T22:43:08.000Z",
+      "fields": {
+        "SysIcoLucide": "circle-chevrons-right",
+        "SYSID": 5,
+        "SysItem": "TargetBox",
+        "ShowIcoLucide": true,
+        "SysType": "Area"
+      }
+    },
+    {
+      "id": "rec7x29S9EbA12Ko1",
+      "createdTime": "2026-10-29T22:36:41.000Z",
+      "fields": {
+        "SysIcoLucide": "trending-up",
+        "SYSID": 3,
+        "SysItem": "NewTask",
+        "SysSound": "https://res.cloudinary.com/dmkhsyfzf/video/upload/v1793302765/SYSgoal_g1trwc.mp3",
+        "SysType": "Move or State"
+      }
+    },
+    {
+      "id": "recFdX2RTz1kI0Hlr",
+      "createdTime": "2026-10-29T22:46:19.000Z",
+      "fields": {
+        "SysIcoLucide": "layout-grid",
+        "SYSID": 7,
+        "SysItem": "Grid",
+        "SysType": "Area"
+      }
+    },
+    {
+      "id": "recHGkOy5OtqRrNHB",
+      "createdTime": "2026-10-29T22:30:28.000Z",
+      "fields": {
+        "SysIcoLucide": "x",
+        "TextColour": "Red",
+        "SYSID": 1,
+        "SysFallbackText": "Mismatch",
+        "SysItem": "Mismatch",
+        "ShowIcoLucide": true,
+        "SysSound": "https://res.cloudinary.com/dmkhsyfzf/video/upload/v1793302766/SYSfail_hzkiue.mp3",
+        "SysType": "Move or State"
+      }
+    },
+    {
+      "id": "recHIezXmiPbNhNlr",
+      "createdTime": "2026-10-30T15:14:36.000Z",
+      "fields": {
+        "SYSID": 13,
+        "SysItem": "TimeRunning",
+        "SysSound": "https://res.cloudinary.com/dmkhsyfzf/video/upload/v1793373165/countdown_quxi96.mp3",
+        "SysType": "Move or State"
+      }
+    },
+    {
+      "id": "recJBNcWqJWlMgi6e",
+      "createdTime": "2026-10-29T23:27:36.000Z",
+      "fields": {
+        "SysIcoLucide": "user-star",
+        "SYSID": 10,
+        "SysItem": "Understanding",
+        "SysType": "Stage"
+      }
+    },
+    {
+      "id": "recZJgE7iD8er4rAV",
+      "createdTime": "2026-10-29T23:28:12.000Z",
+      "fields": {
+        "SysIcoLucide": "circle-pile",
+        "SYSID": 11,
+        "SysItem": "Matching",
+        "SysType": "Stage"
+      }
+    },
+    {
+      "id": "recaytC3CtH0McGSK",
+      "createdTime": "2026-10-29T23:29:13.000Z",
+      "fields": {
+        "SysIcoLucide": "user-star",
+        "SYSID": 12,
+        "SysItem": "Solving",
+        "SysType": "Stage"
+      }
+    },
+    {
+      "id": "recb6jgkSCWhz0KFM",
+      "createdTime": "2026-10-29T22:36:57.000Z",
+      "fields": {
+        "SysIcoLucide": "goal",
+        "SYSID": 4,
+        "SysItem": "TaskDone",
+        "SysSound": "https://res.cloudinary.com/dmkhsyfzf/video/upload/v1793302766/SYSsuccess_b6xcow.mp3",
+        "SysType": "Move or State"
+      }
+    },
+    {
+      "id": "recbINw5bypDpFddJ",
+      "createdTime": "2026-10-29T22:36:02.000Z",
+      "fields": {
+        "SysIcoLucide": "refresh-cw",
+        "TextColour": "Blue",
+        "SYSID": 2,
+        "SysFallbackText": "In Progress",
+        "SysItem": "StatusUpdate",
+        "ShowIcoLucide": true,
+        "SysSound": "https://res.cloudinary.com/dmkhsyfzf/video/upload/v1793302766/SYSlocking_u05d0n.mp3",
+        "SysType": "Move or State"
+      }
+    },
+    {
+      "id": "recjIjkuzsSwfHeJ6",
+      "createdTime": "2026-10-29T22:46:28.000Z",
+      "fields": {
+        "SysIcoLucide": "clock-check",
+        "SYSID": 8,
+        "ShowLabel": true,
+        "SysItem": "Event Log",
+        "ShowIcoLucide": true,
+        "SysType": "Area"
+      }
+    },
+    {
+      "id": "reckHuK1GxbLXyFcQ",
+      "createdTime": "2026-10-29T22:45:54.000Z",
+      "fields": {
+        "SysIcoLucide": "layers-arrow-up",
+        "SYSID": 6,
+        "ShowLabel": true,
+        "SysItem": "Stack",
+        "ShowIcoLucide": true,
+        "SysType": "Area"
+      }
+    },
+    {
+      "id": "recqbBouDloA67VpF",
+      "createdTime": "2026-10-29T23:27:18.000Z",
+      "fields": {
+        "SysIcoLucide": "cpu",
+        "SYSID": 9,
+        "SysItem": "Learning",
+        "SysType": "Stage"
+      }
+    }
+  ]
+}

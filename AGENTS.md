@@ -33,7 +33,9 @@ EnglishExplorer/
 │   └── minigames/              <-- Highly gamified mini-games (formerly /Features)
 │       ├── abc-world.html
 │       ├── mb-grid-shift.html  <-- Grid Shift: flip bricks (front/back) from two 20-card stacks onto a shared 8x5 grid; Airtable table GridShift
-│       ├── mb-gs-pure-match.html  <-- Single-player Grid Shift: place flipped cards onto randomized matching text imprints
+│       ├── mb-farmstead-mg.html  <-- Pure Match puzzle, shipped as the Farmstead lesson (VarName names this file); Airtable GridShiftVariants
+│       ├── mb-farmstead-mg.snapshot.json  <-- Frozen data for that page (variant row + cards + system rows); see its freeze doc
+│       ├── mb-farmstead-mg-freeze.md  <-- Freeze / re-freeze workflow for that snapshot; where future development happens (Airtable)
 │       ├── mystery-base.html   <-- FLAGSHIP: most-viewed, most-developed version; keep pristine, treat as base for feature integration
 │       ├── mystery-phrases.html
 │       ├── new-words-wizard.html
@@ -79,9 +81,41 @@ put in them (see "Self-contained files" below).
   both Grid Shift pages. Icons are declared as `<i data-lucide="name">` placeholders and swapped
   for real SVGs with `lucide.createIcons()` via a `renderIcons()` helper. Do **not** add any other
   external JS/CSS library without discussion.
+- **Approved exception for a frozen data file**: `junior/minigames/mb-farmstead-mg.snapshot.json`
+  (see "Frozen snapshot data file" below) — the only data file a page may fetch.
 - Images and videos are hosted on Cloudinary and referenced by absolute `https://res.cloudinary.com/...` URLs.
-- No HTML file links to another HTML file (no local `href`/`src`/`window.open` to sibling files). **Do not introduce relative file references** — if two files must share code, treat that as a deliberate refactor and discuss it first.
+- No HTML file links to another HTML file (no local `href`/`src`/`window.open` to sibling files). **Do not introduce relative file references** — if two files must share code, treat that as a deliberate refactor and discuss it first. The two sanctioned local references are `tracker.js` (scripts) and the Pure Match snapshot JSON (data).
 - When moving/renaming a file, move it without editing (git detects byte-identical copies as renames), then apply any edits on the new path.
+
+#### Frozen snapshot data file (`mb-farmstead-mg.snapshot.json`)
+
+A released game may ship its **frozen data** as one JSON file instead of an
+inline `<script>` block, so the generated snapshot stays out of hand-edited code.
+Only one file has this status today:
+
+- `junior/minigames/mb-farmstead-mg.snapshot.json` — read by
+  `junior/minigames/mb-farmstead-mg.html` via the bare relative URL
+  `mb-farmstead-mg.snapshot.json`.
+
+Rules for it (do not generalise without discussing it first):
+
+- It holds **data only** — never code. It is a dated capture of Airtable, not a
+  config the page writes back.
+- It stays in the **same folder** as its page and is committed **together** with
+  it, so a checkout always has a matching pair.
+- **No other page may fetch it.** A future frozen game gets its **own**
+  `<page>.snapshot.json` (`<page>` mirrors the HTML name, `.snapshot` marks it as
+  a capture) — never a shared file.
+- The page must keep its **`?live=1`** path, so the game still works from
+  Airtable when the file is missing or when the content is being edited.
+- Consequence: that page must be served over **HTTP(S)** (GitHub Pages or a local
+  server). Chromium blocks a `file://` page from fetching a sibling file, so the
+  page detects `file://` and shows an in-page message pointing at `?live=1`.
+- The fetch uses `cache: "no-cache"` and the top bar badge shows the capture date
+  (`Frozen YYYY-MM-DD`), so a stale or wrong snapshot is visible at a glance.
+
+To re-freeze, follow
+[mb-farmstead-mg-freeze.md](junior/minigames/mb-farmstead-mg-freeze.md).
 
 ### File naming rules
 
@@ -117,7 +151,7 @@ There is **no `config.js`** — all secrets live server-side in the Cloudflare W
     natural Airtable order when it has no sort field): `BTStudyHub` (sorted by `DisplayOrder`,
     used by `bt-study-hub.html`), `GridShift` (used by both Grid Shift games),
     `GridShiftSystem` (used by the Pure Match TargetBox and Event Log), and `GridShiftVariants`
-    (used by `mb-gs-pure-match.html`).
+    (used by `mb-farmstead-mg.html` in `?live=1` mode only — the released page reads its snapshot file).
     Returns `{ records: [...] }`.
   - `POST /` — Airtable visitor tracking.
   - `OPTIONS` — CORS preflight (`GET, POST, OPTIONS`).
@@ -294,11 +328,16 @@ across the two decks (`Math.ceil(count / 2)`) — e.g. 20 → 10/10, 30 → 15/1
 
 ### Grid Shift Pure Match variant
 
-`junior/minigames/mb-gs-pure-match.html` is a separate one-player game.
-It uses the `GridShiftVariants` row with `VarName: Pure Match` for its settings.
-`VarName` is only the **internal name of the puzzle kind** — it selects the
-variant row and titles the browser tab; it is never displayed on the page. The
-visible top-bar title comes from `H1Text`; `H3Text` is shown as the initial
+`junior/minigames/mb-farmstead-mg.html` is a separate one-player game (the
+**Pure Match** puzzle kind, currently shipped as the *Farmstead* lesson).
+It uses the `GridShiftVariants` row whose `VarName` its own file name matches —
+today `VarName: mb-farmstead-mg`. The page derives the expected `VarName` from
+its file name (`VARIANT_NAME`), so renaming the row and the file together works
+without a code edit.
+`VarName` is the **internal key** — it selects the variant row and names the
+deliverable; it is never displayed on the page. The visible top-bar title comes
+from `H1Text` (currently `Farmstead`), and the browser tab shows `H1Text`
+(falling back to `VarName` when it is empty). `H3Text` is shown as the initial
 subheadline, then replaced by the active task's instruction.
 `Deck` names the checkbox field on `GridShift` (currently `PM-Active`); every
 card checked in that field is included. `DeckCount` must be `Variable`,
@@ -307,14 +346,50 @@ card checked in that field is included. `DeckCount` must be `Variable`,
 `Placing` currently supports `Random`, and `Hints` must be
 `Imprints of Display (Text)`. Each checked card's `Display` text is placed at a
 random unique cell; cards can only be placed on a matching imprint. Before
-turning, each card uses its `TileBack` asset. Both Airtable tables must be
-allowlisted by the worker.
-The released page uses an embedded, self-contained snapshot by default and
-does not fetch game-data tables; use `mb-gs-pure-match.html?live=1` to develop
-against Airtable. Check `FreezeVariant` before capturing a release snapshot.
-Uncheck it while authoring; see
-[grid-shift-pure-match-freeze.md](junior/minigames/grid-shift-pure-match-freeze.md)
-for the capture and re-freeze workflow.
+turning, each card uses its `TileBack` asset. All three tables
+(`GridShiftVariants`, `GridShift`, `GridShiftSystem`) must be allowlisted by the
+worker for the `?live=1` path.
+The released page **does not carry the data**. Its frozen snapshot lives in
+`junior/minigames/mb-farmstead-mg.snapshot.json` (a sibling of the page, fetched
+by its bare relative name) and holds the resolved settings, the raw Pure Match
+variant row, every `PM-Active` card and the `GridShiftSystem` rows. A normal load
+reads only that file — no game-data table requests — so the lesson is stable
+even if Airtable changes or the worker is down, and the top bar badge shows
+`Frozen YYYY-MM-DD`.
+
+**Unfreezing / authoring:** `mb-farmstead-mg.html?live=1` reads
+`GridShiftVariants`, `GridShift` and `GridShiftSystem` live from Airtable and
+runs the same pipeline (badge `LIVE from Airtable`). `FreezeVariant` is only the
+**capture guard** for the console snippet — it never switches the data source.
+Check it before capturing a release snapshot, uncheck it while authoring; see
+[mb-farmstead-mg-freeze.md](junior/minigames/mb-farmstead-mg-freeze.md) for the
+capture and re-freeze workflow, the snapshot schema and the file's
+self-containment exception.
+
+**The deliverable is named after `VarName`.** The page, its snapshot and its
+freeze doc all mirror that one Airtable field in kebab-case:
+
+| Airtable `VarName` | Page | Snapshot | Freeze doc |
+|---|---|---|---|
+| `mb-farmstead-mg` | `junior/minigames/mb-farmstead-mg.html` | `mb-farmstead-mg.snapshot.json` | `mb-farmstead-mg-freeze.md` |
+
+Renaming or re-pitching the lesson therefore starts in Airtable: change
+`VarName`, then rename the three files (git rename, no edits) and update their
+links. The page selects its row by file name, so `?live=1` follows the rename
+automatically. A **new** variant row gets its own page + snapshot + doc; nothing
+is shared between variants.
+
+**Release-time values are baked in.** The snapshot carries the whole resolved
+variant row, so the values the page reads for its chrome come from the file, not
+from Airtable: `H1Text` is the visible top-bar title and the browser tab title,
+while `VarName` only has to agree with the file name. Both are the sanctioned
+*no-unfreeze* exception — you can retitle a released lesson by editing Airtable
+**and re-freezing**, never by leaving the page pointed at live tables. (Retitling
+a lesson text-only still needs a re-freeze, exactly like a card edit; there is no
+partial live overlay.)
+The frozen loader rejects a snapshot whose `VarName` does not match the page's
+file name, so a rename cannot silently ship an old capture.
+
 In wide horizontal layouts the single player deck sits left of the board with
 a 10px gap; the deck + board group is centred on the page
 (`grid-template-columns: 148px auto` + `justify-content: center` on `.stage`).
@@ -382,10 +457,10 @@ The variant row also drives the page chrome:
 
 | Field | Type | Purpose |
 |---|---|---|
-| `VarName` | Single line text | Internal name of the puzzle kind — selects the variant row (the page matches `Pure Match`) and titles the browser tab. It is **never shown on the page**. |
-| `H1Text` | Single line text | Theme title shown in the top bar (currently `Topic: On the Farm`). Empty = the built-in `MY BASE` title stays. |
+| `VarName` | Single line text | Internal key of the variant. It selects the row (the page matches the **file name**, e.g. `mb-farmstead-mg.html` → `mb-farmstead-mg`) and names the deliverable. It is **never shown on the page** — the visible titles come from `H1Text`. |
+| `H1Text` | Single line text | Display title: the top-bar title and the browser tab (currently `Farmstead`). Empty = the built-in `MY BASE` title stays and the tab falls back to `VarName`. |
 | `H3Text` | Single line text | Initial prompt shown below the top bar. Once the game starts, the active task's `taskNText` replaces it there. |
-| `PartLabel` | Single line text | Deck badge label (replaces the hardcoded `Player` / `PLAYER`). Currently `Onza`. |
+| `PartLabel` | Single line text | Deck badge label (replaces the hardcoded `Player` / `PLAYER`). Currently `Stack`. |
 | `task1Text` | Single line text | Instruction of task 1 (the matching puzzle) — shown in the prompt area below the top bar, replacing `H3Text`. Empty = the built-in default instruction stays. |
 | `task1StatusText` | Single line text *(optional)* | Status message added once to the top of the Event Log when task 1 opens; plays `StatusUpdate` (SYSID 2). |
 | `task1DoneText` | Single line text | Message shown when the matching puzzle is solved (replaces the old hardcoded "Grid complete!"). Shown in the Log; older messages may leave the panel as newer ones are added. Empty = no message. |
@@ -408,7 +483,7 @@ The variant row also drives the page chrome:
 | `WrongProductText` | Single line text *(optional)* | Retained for compatibility; a product dropped on the wrong animal shows a red mark on that cell instead of text. |
 | `CorrectText` | Single line text *(optional)* | Added to the Log when a task is solved and the variant row has no own done text (default: `✔ Correct!`). |
 | `PartColour` | Single line text | Overall theme accent and deck badge dot. The color is darkened slightly for light-mode toolbar background; toolbar text and controls are white, with the theme toggle inverted for contrast. Accepts a palette name (`Blue`), a hex / `rgb()` / `hsl()` value, a plain CSS colour name, or `var(--color-x)`. Palette names map to the page's theme-aware vars (`--color-blue`, `--color-yellow`, `--color-green`, `--color-red`, `--color-orange`, `--color-purple`). Empty = `var(--color-red)`. |
-| `FreezeVariant` | Checkbox | Release guard used by the snapshot capture workflow. Check before capturing/deploying a frozen release; uncheck while authoring. Normal page loads use the embedded snapshot; add `?live=1` to load current Airtable data. |
+| `FreezeVariant` | Checkbox | Capture guard for the release snapshot. Check it before capturing (the console snippet refuses otherwise); uncheck it while authoring. It does **not** switch the data source — the released page always reads `mb-farmstead-mg.snapshot.json`, and `?live=1` always reads Airtable. |
 | `NoParticipants` | Number | Number of players. Only `1` is supported so far — a higher value stops the game with an in-page error instead of silently running one deck. |
 | `VarID` | Number | Variant id (not used by the game). |
 
@@ -488,7 +563,7 @@ task setup uses `taskNText`, `taskNResult`, `taskNStatusText` and
 - `taskNResult` is an Airtable **link** to the `GridShift` table, so it
   holds the record id(s) of the solution card(s). In Airtable the link is made
   from the card row's `GridShiftVariants` field (the Tractor, `GridShiftID` 75,
-  links back to the "Pure Match" variant) and then shows up in the variant's
+  links back to the `mb-farmstead-mg` variant) and then shows up in the variant's
   `task2Result` field. The same card may serve more than one task (a card can
   answer several questions) — link it in each task's own result field.
 - A task without an instruction (`taskNText`, `taskNSpoken` and `taskNIntro` all
@@ -712,9 +787,9 @@ triggers the check; a hold leaves no dot stroke behind.
 counter, rail and task card follow. Passing every word shows the completion
 overlay. The rail counter shows `<passed>/<total>`.
 
-**Top bar** — copied from `junior/minigames/mb-gs-pure-match.html`: theme
+**Top bar** — copied from `junior/minigames/mb-farmstead-mg.html`: theme
 headline + `PartColour` (light: darkened fill / dark: `#232a36` with the
-lightened colour) come from the **`GridShiftVariants` "Pure Match" row**
+lightened colour) come from the **`GridShiftVariants` `mb-farmstead-mg` row**
 (`H1Text` / `PartColour`); the SVG sun/moon toggle persists to
 `localStorage["miniGameTheme"]` (shared with the minigames, system default).
 
