@@ -427,10 +427,11 @@ and completion messages come from `GridShiftVariants` (`taskNStatusText` and
 `taskNDoneText`). System sounds and card `SoundAsset` audio are preloaded when
 their Airtable records arrive. The initial status sound waits for the first
 trusted pointer interaction to satisfy mobile Safari/iOS audio policies.
-Sounds are played sequentially from the preloaded cache so back-to-back task,
-status, mismatch, and completion effects are less likely to interrupt or be
-blocked; duplicate queued effects are coalesced, and queued card sounds are
-capped so they cannot delay system feedback.
+System effects are played sequentially from the preloaded cache so back-to-back
+task, status, mismatch, and completion sounds are less likely to interrupt each
+other; duplicate queued effects are coalesced. Animal card sounds play directly
+on a correct match using a clone of the preloaded audio, replacing any still-
+playing animal sound instead of joining the system-effects queue.
 
 ### Multi-task flow (Pure Match)
 

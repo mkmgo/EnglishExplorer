@@ -2115,7 +2115,7 @@
       var soundCache = Object.create(null); // URL -> preloaded Audio element
       var soundQueue = [];
       var activeSound = null;
-      var maxQueuedSounds = 8;
+      var activeAnimalSound = null;
 
       function preloadSound(src) {
         if (!src || soundCache[src]) return;
@@ -2146,7 +2146,7 @@
 
       document.addEventListener("pointerdown", unlockSoundsOnGesture, true);
 
-      function playSoundUrl(src, optional) {
+      function playSoundUrl(src) {
         if (!src) return;
         preloadSound(src);
         if (
@@ -2156,14 +2156,7 @@
         ) {
           return;
         }
-        if (optional && soundQueue.length >= maxQueuedSounds) return;
-        if (!optional && soundQueue.length >= maxQueuedSounds) {
-          var optionalIndex = soundQueue.findIndex(function (item) {
-            return item.optional;
-          });
-          if (optionalIndex >= 0) soundQueue.splice(optionalIndex, 1);
-        }
-        soundQueue.push({ url: src, optional: !!optional });
+        soundQueue.push({ url: src });
         drainSoundQueue();
       }
 
@@ -2206,7 +2199,30 @@
       function playTaskSound(card) {
         var src = String((card && card.dataset.sound) || "").trim();
         if (!src) return;
-        playSoundUrl(src, true);
+        var master = soundCache[src];
+        if (!master || !trustedAudioGestureSeen) return;
+        if (activeAnimalSound) {
+          activeAnimalSound.pause();
+          activeAnimalSound = null;
+        }
+        try {
+          var audio = master.cloneNode();
+          audio.muted = false;
+          audio.onended = function () {
+            if (activeAnimalSound === audio) activeAnimalSound = null;
+          };
+          activeAnimalSound = audio;
+          var playback = audio.play();
+          if (playback && typeof playback.catch === "function") {
+            playback.catch(function (error) {
+              console.warn("Grid Shift animal sound could not play:", error);
+              if (activeAnimalSound === audio) activeAnimalSound = null;
+            });
+          }
+        } catch (error) {
+          console.warn("Grid Shift animal sound could not play:", error);
+          if (activeAnimalSound === audio) activeAnimalSound = null;
+        }
       }
 
       function gridDimensions(count) {
