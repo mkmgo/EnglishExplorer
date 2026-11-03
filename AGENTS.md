@@ -326,6 +326,8 @@ uses at most four grid columns, and scales cells/cards and the stack and success
 panels to fit portrait mobile screens. The EVENT LOG panel matches the Stack panel's
 size: it sits below the stack in horizontal mode and beside it in vertical mode.
 The current task instruction replaces H3Text in the prompt area above the game.
+The task prompt pulses three times when a task opens and repeats the pulse after
+30 seconds without pointer or keyboard interaction.
 The TargetBox icon is loaded from `GridShiftSystem` (`SYSID: 5`,
 `SysItem: TargetBox`) and rendered before the prompt when `ShowIcoLucide` is
 checked; `SysIcoLucide` supplies the Lucide icon name. The TargetBox does not
@@ -362,11 +364,12 @@ their source cells when moved onto their related tile. Wrong turns and drops
 show a red mark at the selected card/cell rather than a text message under the
 grid.
 
-**The finale.** When every task is solved, the `WPIMG2` picture covers the full
-grid area as a slightly dimmed, top-aligned trophy; once it loads, the grid
-cells remain subtly visible beneath the translucent image. The finale runs once
-(`finaleStarted`); a bridge message that still waits for its tap postpones it.
-Without `WPIMG2`, the full grid still turns green and remains visible.
+**The finale.** When every task is solved, the `WPIMG2` picture appears as a
+slightly dimmed, top-aligned background behind the full grid; empty cells are
+translucent so the picture shows through while the grid and cards stay visible.
+The finale runs once (`finaleStarted`); a bridge message that still waits for its
+tap postpones it. Without `WPIMG2`, the full grid still turns green and remains
+visible.
 
 The variant row also drives the page chrome:
 
@@ -392,7 +395,7 @@ The variant row also drives the page chrome:
 | `task4Intro` | Single line text *(optional)* | The **intro marker** of task 4: it activates the intro step (the new cards are added to the board and have to be moved onto their tiles). Its text is **never shown** — only the fact that it is filled matters. Empty = task 4 is an ordinary task. |
 | `task4IntroAction` | Single line text *(optional)* | What the intro step does (currently `TileRelated cards reserved in empty cells and revealed for the intro task.`). It is a description only — it is not shown on the page. Empty = the step still runs. Either of the two fields activates the intro step, so the marker may also be written here. Related cards are reserved in hidden cells at game start, then revealed for the intro task. |
 | `WPIMG1` | URL | Subtle backdrop picture across the page and through the board gutters. Set at runtime as the `--wp-img` CSS custom property. Empty = no backdrop. |
-| `WPIMG2` | URL | Slightly dimmed, top-aligned trophy picture that covers the whole grid area when every task is solved. The grid remains subtly visible through the translucent image. Empty = no picture, but the full grid still turns green. |
+| `WPIMG2` | URL | Slightly dimmed, top-aligned background picture behind the grid when every task is solved. Empty cells are translucent so the grid stays visible over the picture. Empty = no picture, but the full grid still turns green. |
 | `WrongCardText` | Single line text *(optional)* | Retained for compatibility; wrong turns now show a red mark on the selected card instead of text. |
 | `WrongSpotText` | Single line text *(optional)* | Retained for compatibility; wrong drops now show a red mark on the selected cell instead of text. |
 | `WrongProductText` | Single line text *(optional)* | Retained for compatibility; a product dropped on the wrong animal shows a red mark on that cell instead of text. |

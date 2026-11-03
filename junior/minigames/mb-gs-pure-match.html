@@ -212,6 +212,28 @@
         text-align: left;
         border-top: 4px solid var(--theme-color, var(--primary));
       }
+      @keyframes taskPromptAttention {
+        0%,
+        100% {
+          box-shadow: var(--shadow);
+          background-color: var(--card-bg);
+        }
+        50% {
+          box-shadow: 0 0 0 5px var(--theme-color, var(--primary)),
+            0 0 22px rgba(59, 130, 246, 0.55);
+          background-color: var(--dropzone-hover);
+        }
+      }
+      #taskPanel.taskPromptAttention {
+        animation: taskPromptAttention 0.7s ease-in-out 3;
+      }
+      @media (prefers-reduced-motion: reduce) {
+        #taskPanel.taskPromptAttention {
+          animation: none;
+          box-shadow: 0 0 0 4px var(--theme-color, var(--primary));
+          background-color: var(--dropzone-hover);
+        }
+      }
       #targetBoxIcon {
         display: inline-flex;
         flex: 0 0 auto;
@@ -749,27 +771,28 @@
       .grid.done::before {
         opacity: calc(var(--wp-opacity, 0.23) * 0.55);
       }
-      /* The trophy covers the whole board after the last task is complete. */
+      /* Keep the finale picture behind the board so the grid stays visible. */
       .finaleImg {
         position: absolute;
         inset: 0;
-        z-index: 5;
+        z-index: 0;
         width: 100%;
         height: 100%;
         object-fit: cover;
+        object-position: center top;
         border-radius: inherit;
         display: block;
+        opacity: 0.48;
+        pointer-events: none;
       }
       .grid.trophy-finale {
         overflow: hidden;
       }
-      .grid.trophy-finale .cell {
-        opacity: 0.12;
+      .grid.trophy-finale .cell:not(.filled) {
+        background-color: rgba(255, 255, 255, 0.72);
       }
-      .grid.trophy-finale .finaleImg {
-        object-position: center top;
-        filter: brightness(0.82);
-        opacity: 0.9;
+      html.dark .grid.trophy-finale .cell:not(.filled) {
+        background-color: rgba(15, 23, 42, 0.72);
       }
       .cell {
         width: var(--grid-cell-width, 104px);
@@ -1241,10 +1264,55 @@
       var statusEl = document.getElementById("status");
       var feedbackEl = document.getElementById("feedback");
       var topbarTitleEl = document.getElementById("topbarTitle");
+      var taskPanelEl = document.getElementById("taskPanel");
       var subheadlineEl = document.getElementById("subheadlineText");
       var deckDotEl = document.getElementById("deckDot");
       var deckLabelEl = document.getElementById("deckLabel");
       var bridgeEl = document.getElementById("bridgeText");
+      var taskAttentionTimer = null;
+      var TASK_PROMPT_IDLE_MS = 30000;
+
+      function stopTaskPromptAttention() {
+        if (taskAttentionTimer) {
+          window.clearTimeout(taskAttentionTimer);
+          taskAttentionTimer = null;
+        }
+        if (taskPanelEl) taskPanelEl.classList.remove("taskPromptAttention");
+      }
+
+      function pulseTaskPrompt() {
+        if (!taskPanelEl || !subheadlineEl || subheadlineEl.hidden || finaleStarted) {
+          return;
+        }
+        taskPanelEl.classList.remove("taskPromptAttention");
+        void taskPanelEl.offsetWidth;
+        taskPanelEl.classList.add("taskPromptAttention");
+      }
+
+      function scheduleTaskPromptAttention() {
+        if (taskAttentionTimer) window.clearTimeout(taskAttentionTimer);
+        taskAttentionTimer = null;
+        if (!subheadlineEl || subheadlineEl.hidden || finaleStarted) return;
+        taskAttentionTimer = window.setTimeout(function () {
+          pulseTaskPrompt();
+          scheduleTaskPromptAttention();
+        }, TASK_PROMPT_IDLE_MS);
+      }
+
+      function startTaskPromptAttention() {
+        stopTaskPromptAttention();
+        pulseTaskPrompt();
+        scheduleTaskPromptAttention();
+      }
+
+      function resetTaskPromptAttention() {
+        if (!taskAttentionTimer) return;
+        if (taskPanelEl) taskPanelEl.classList.remove("taskPromptAttention");
+        scheduleTaskPromptAttention();
+      }
+
+      document.addEventListener("pointerdown", resetTaskPromptAttention);
+      document.addEventListener("keydown", resetTaskPromptAttention);
 
       // A task with spoken words: the instruction can be tapped to hear the
       // words again from the task prompt above the board.
@@ -1587,6 +1655,8 @@
           if (spokenText) subheadlineEl.title = "Tap to hear the words again";
           else subheadlineEl.removeAttribute("title");
         }
+        if (hasTask) startTaskPromptAttention();
+        else stopTaskPromptAttention();
         if (hasTask && n > 1) playSystemSound(3);
         if (hasTask) addStatusUpdate(n, fields.status);
         if (spokenText) {
@@ -1954,13 +2024,13 @@
       }
       window.addEventListener("resize", syncSuccessPanelSize);
 
-      // The finale layers the WPIMG2 trophy over the full board.
+      // The finale places the WPIMG2 trophy behind the full board.
       function runFinale() {
         gridEl.classList.add("done");
         if (!finaleImageUrl) return;
         var img = document.createElement("img");
         img.className = "finaleImg";
-        img.alt = "Trophy";
+        img.alt = "";
         img.onload = function () {
           gridEl.classList.add("trophy-finale");
         };
