@@ -88,6 +88,31 @@ put in them (see "Self-contained files" below).
 - No HTML file links to another HTML file (no local `href`/`src`/`window.open` to sibling files). **Do not introduce relative file references** — if two files must share code, treat that as a deliberate refactor and discuss it first. The two sanctioned local references are `tracker.js` (scripts) and the Pure Match snapshot JSON (data).
 - When moving/renaming a file, move it without editing (git detects byte-identical copies as renames), then apply any edits on the new path.
 
+#### Page icons and link previews
+
+Give each page a clear, legible identity in browser tabs, when saved to an iOS
+home screen, and when its URL is shared:
+
+- Use the page's actual square logo artwork for both `rel="icon"` and
+  `rel="apple-touch-icon"`. Follow `updates.html` as the working reference:
+  both links use the same image. Supply a square PNG of at least 180 × 180 px
+  for sharp display on high-density screens.
+- The artwork should occupy the image rather than appear as a small mark inside
+  a large transparent border. Avoid Cloudinary `c_pad` for these icons because
+  it adds empty space; if the source has excess transparent canvas, use a
+  centered `c_fill` derivative and verify it does not crop the artwork. Do not
+  draw a rounded mask into the image; iOS applies its own shape to home-screen
+  icons.
+- Set both `og:image` and `twitter:image` for link previews to a high-resolution
+  version of the page artwork, not the small favicon derivative. For square
+  artwork, use a square 1200 × 1200 px image and `twitter:card` set to
+  `summary_large_image`. Keep both preview tags on the same image so forwarded
+  links have a consistent appearance across platforms.
+- Use an absolute HTTPS image URL. Before release, verify it returns an image
+  successfully and inspect the page's tab icon, iOS home-screen icon, and a
+  shared-link preview. Social platforms may cache previews independently of the
+  page, so allow for their cache when checking updates.
+
 #### Frozen snapshot data file (`mb-farmstead-mg.snapshot.json`)
 
 A released game may ship its **frozen data** as one JSON file instead of an
