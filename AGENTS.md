@@ -195,7 +195,9 @@ There is **no `config.js`** — all secrets live server-side in the Cloudflare W
   - `POST /bookings/cancel` — sets an unticked future booking to `Cancelled`; settlement
     reports should count only `Status: Booked`.
     A Durable Object serializes automatic booking, booking and cancellation changes.
-    The public Updates page does not authenticate the person changing a booking.
+    The Updates page asks for one of two client-side access keys before a person
+    can change a booking checkbox. This is only a child-deterrent: the keys are
+    visible in the page source and the Worker booking endpoints remain unauthenticated.
   - `POST /` — Airtable visitor tracking.
   - `OPTIONS` — CORS preflight (`GET, POST, OPTIONS`).
 - Deploy with `npx wrangler deploy` from `english-explorer-tracker/`; the configured Durable

@@ -350,6 +350,73 @@
       .bookingMessage.error {
         color: var(--bad);
       }
+      .bookingAuth[hidden] {
+        display: none;
+      }
+      .bookingAuth {
+        position: fixed;
+        inset: 0;
+        z-index: 1000;
+        display: grid;
+        place-items: center;
+        padding: 1rem;
+        background: rgba(15, 23, 42, 0.62);
+      }
+      .bookingAuthCard {
+        width: min(100%, 360px);
+        padding: 1.1rem;
+        border: 1px solid rgba(96, 112, 141, 0.25);
+        border-radius: 14px;
+        background: var(--panel);
+        box-shadow: var(--shadow);
+      }
+      .bookingAuthTitle {
+        margin: 0 0 0.4rem;
+        font-size: 1.05rem;
+      }
+      .bookingAuthHint {
+        margin: 0 0 0.8rem;
+        color: var(--muted);
+        font-size: 0.85rem;
+      }
+      .bookingAuthInput {
+        width: 100%;
+        min-height: 2.75rem;
+        padding: 0.55rem 0.7rem;
+        border: 1px solid rgba(96, 112, 141, 0.4);
+        border-radius: 8px;
+        background: var(--bg);
+        color: var(--ink);
+        font: inherit;
+      }
+      .bookingAuthError {
+        min-height: 1.2em;
+        margin: 0.35rem 0;
+        color: var(--bad);
+        font-size: 0.8rem;
+      }
+      .bookingAuthActions {
+        display: flex;
+        justify-content: flex-end;
+        gap: 0.55rem;
+        margin-top: 0.7rem;
+      }
+      .bookingAuthActions button {
+        min-height: 2.5rem;
+        padding: 0.45rem 0.85rem;
+        border: 1px solid rgba(96, 112, 141, 0.35);
+        border-radius: 8px;
+        background: var(--panel);
+        color: var(--ink);
+        font: inherit;
+        font-weight: 600;
+        cursor: pointer;
+      }
+      .bookingAuthActions button[type="submit"] {
+        border-color: var(--accent);
+        background: var(--accent);
+        color: #fff;
+      }
       .column.onza .bookingPanel {
         --booking-accent: #2563eb;
       }
@@ -1198,6 +1265,35 @@
       </div>
     </div>
 
+    <div class="bookingAuth" id="bookingAuth" hidden>
+      <form
+        class="bookingAuthCard"
+        id="bookingAuthForm"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="bookingAuthTitle"
+      >
+        <h2 class="bookingAuthTitle" id="bookingAuthTitle">
+          Confirm booking change
+        </h2>
+        <p class="bookingAuthHint">Enter an access key to change this session.</p>
+        <input
+          class="bookingAuthInput"
+          id="bookingAuthKey"
+          type="password"
+          autocomplete="off"
+          autocapitalize="off"
+          spellcheck="false"
+          aria-label="Access key"
+        />
+        <p class="bookingAuthError" id="bookingAuthError" role="alert"></p>
+        <div class="bookingAuthActions">
+          <button type="button" id="bookingAuthCancel">Cancel</button>
+          <button type="submit">Continue</button>
+        </div>
+      </form>
+    </div>
+
     <script>
       var themeBtn = document.getElementById("themeBtn");
       var themeDark = false;
@@ -1274,6 +1370,61 @@
         var slots = [];
         var busySlots = new Set();
         var students = ["Onza", "Nimza"];
+        var bookingAuthKeys = ["key#29", "key#08"];
+        var pendingBookingChange = null;
+        var bookingAuth = document.getElementById("bookingAuth");
+        var bookingAuthForm = document.getElementById("bookingAuthForm");
+        var bookingAuthKey = document.getElementById("bookingAuthKey");
+        var bookingAuthError = document.getElementById("bookingAuthError");
+
+        function closeBookingAuth() {
+          bookingAuth.hidden = true;
+          bookingAuthKey.value = "";
+          bookingAuthError.textContent = "";
+          pendingBookingChange = null;
+          renderAll();
+        }
+
+        function requestBookingAuth(student, slotId, book) {
+          if (pendingBookingChange) return;
+          pendingBookingChange = {
+            student: student,
+            slotId: slotId,
+            book: book,
+          };
+          bookingAuth.hidden = false;
+          bookingAuthKey.value = "";
+          bookingAuthError.textContent = "";
+          bookingAuthKey.focus();
+        }
+
+        bookingAuthForm.addEventListener("submit", function (event) {
+          event.preventDefault();
+          var key = bookingAuthKey.value.trim();
+          if (!bookingAuthKeys.includes(key)) {
+            bookingAuthError.textContent = "That key did not match. Try again.";
+            bookingAuthKey.value = "";
+            bookingAuthKey.focus();
+            return;
+          }
+          var change = pendingBookingChange;
+          closeBookingAuth();
+          if (change) {
+            updateBooking(change.student, change.slotId, change.book);
+          }
+        });
+
+        document
+          .getElementById("bookingAuthCancel")
+          .addEventListener("click", closeBookingAuth);
+        bookingAuth.addEventListener("click", function (event) {
+          if (event.target === bookingAuth) closeBookingAuth();
+        });
+        document.addEventListener("keydown", function (event) {
+          if (event.key === "Escape" && !bookingAuth.hidden) {
+            closeBookingAuth();
+          }
+        });
 
         function escapeHtml(value) {
           return String(value).replace(/[&<>"']/g, function (char) {
@@ -1414,7 +1565,9 @@
             list.querySelectorAll('input[type="checkbox"]:not(:disabled)')
               .forEach(function (input) {
                 input.addEventListener("change", function () {
-                  updateBooking(student, input.dataset.slotId, input.checked);
+                  var book = input.checked;
+                  input.checked = !book;
+                  requestBookingAuth(student, input.dataset.slotId, book);
                 });
               });
           }
