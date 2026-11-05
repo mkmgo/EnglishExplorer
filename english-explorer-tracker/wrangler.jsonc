@@ -7,6 +7,20 @@
 	"name": "english-explorer-tracker",
 	"main": "src/index.js",
 	"compatibility_date": "2026-08-20",
+	"durable_objects": {
+		"bindings": [
+			{
+				"name": "BOOKING_COORDINATOR",
+				"class_name": "BookingCoordinator"
+			}
+		]
+	},
+	"migrations": [
+		{
+			"tag": "v1",
+			"new_sqlite_classes": ["BookingCoordinator"]
+		}
+	],
 	"observability": {
 		"enabled": true
 	},

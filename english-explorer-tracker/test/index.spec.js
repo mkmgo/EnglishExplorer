@@ -5,7 +5,7 @@ import {
 	SELF,
 } from "cloudflare:test";
 import { describe, it, expect } from "vitest";
-import worker from "../src";
+import worker, { BookingCoordinator } from "../src";
 
 describe("English Explorer Tracker worker", () => {
 	it("returns 405 for unknown routes", async () => {
@@ -42,6 +42,127 @@ describe("English Explorer Tracker worker", () => {
 			"https://tracker.dev/airtable?table=Secrets",
 		);
 		expect(response.status).toBe(400);
+	});
+
+	it("reads public lesson slots without caching or exposing other fields", async () => {
+		const ctx = createExecutionContext();
+		const origFetch = globalThis.fetch;
+		globalThis.fetch = () =>
+			new Response(
+				JSON.stringify({
+					records: [
+						{
+							id: "recSlot1",
+							fields: {
+								Student: "Onza",
+								StartsAt: "2026-11-12T08:00:00.000Z",
+								Status: "Available",
+								Lesson: "Farmstead",
+								PrivateNote: "not public",
+							},
+						},
+					],
+				}),
+				{ status: 200, headers: { "Content-Type": "application/json" } },
+			);
+		try {
+			const response = await worker.fetch(
+				new Request("https://tracker.dev/airtable?table=LessonSlots"),
+				{ AIRTABLE_BASE_ID: "base1", AIRTABLE_PAT: "pat-test" },
+				ctx,
+			);
+			await waitOnExecutionContext(ctx);
+			expect(response.status).toBe(200);
+			expect(response.headers.get("Cache-Control")).toBe("no-store");
+			const body = await response.json();
+			expect(body.records[0].fields.PrivateNote).toBeUndefined();
+			expect(body.records[0].fields.Lesson).toBe("Farmstead");
+		} finally {
+			globalThis.fetch = origFetch;
+		}
+	});
+
+	it("confirms available lesson slots through the booking coordinator", async () => {
+		const origFetch = globalThis.fetch;
+		const calls = [];
+		globalThis.fetch = async (url, options = {}) => {
+			calls.push({ url: new URL(String(url)), options });
+			if (options.method === "PATCH") {
+				const body = JSON.parse(options.body);
+				return new Response(JSON.stringify({ records: body.records }), {
+					status: 200,
+					headers: { "Content-Type": "application/json" },
+				});
+			}
+			return new Response(
+				JSON.stringify({
+					records: [
+						{
+							id: "recSlot1",
+							fields: { Student: "Onza", Status: "Available" },
+						},
+					],
+				}),
+				{ status: 200, headers: { "Content-Type": "application/json" } },
+			);
+		};
+		try {
+			const coordinator = new BookingCoordinator(
+				{ blockConcurrencyWhile: (callback) => callback() },
+				{ AIRTABLE_BASE_ID: "base1", AIRTABLE_PAT: "pat-test" },
+			);
+			const response = await coordinator.fetch(
+				new Request("https://tracker.dev/bookings", {
+					method: "POST",
+					headers: { "Content-Type": "application/json" },
+					body: JSON.stringify({ student: "Onza", slotIds: ["recSlot1"] }),
+				}),
+			);
+			expect(response.status).toBe(200);
+			expect(calls).toHaveLength(2);
+			expect(calls[1].options.method).toBe("PATCH");
+			expect(JSON.parse(calls[1].options.body).records[0].fields.Status).toBe(
+				"Booked",
+			);
+		} finally {
+			globalThis.fetch = origFetch;
+		}
+	});
+
+	it("rejects a slot that has already been booked", async () => {
+		const origFetch = globalThis.fetch;
+		let requestCount = 0;
+		globalThis.fetch = async () => {
+			requestCount += 1;
+			return new Response(
+				JSON.stringify({
+					records: [
+						{
+							id: "recSlot1",
+							fields: { Student: "Onza", Status: "Booked" },
+						},
+					],
+				}),
+				{ status: 200, headers: { "Content-Type": "application/json" } },
+			);
+		};
+		try {
+			const coordinator = new BookingCoordinator(
+				{ blockConcurrencyWhile: (callback) => callback() },
+				{ AIRTABLE_BASE_ID: "base1", AIRTABLE_PAT: "pat-test" },
+			);
+			const response = await coordinator.fetch(
+				new Request("https://tracker.dev/bookings", {
+					method: "POST",
+					headers: { "Content-Type": "application/json" },
+					body: JSON.stringify({ student: "Onza", slotIds: ["recSlot1"] }),
+				}),
+			);
+			expect(response.status).toBe(409);
+			expect(requestCount).toBe(1);
+		} finally {
+			globalThis.fetch = origFetch;
+		}
 	});
 
 	it("reads an allowlisted Airtable table and returns records", async () => {
@@ -97,7 +218,9 @@ describe("English Explorer Tracker worker", () => {
 		};
 		try {
 			const response = await worker.fetch(
-				new Request("https://tracker.dev/airtable?table=BTStudyHub"),
+				new Request(
+					"https://tracker.dev/airtable?table=BTStudyHub&test=pagination",
+				),
 				{ AIRTABLE_BASE_ID: "base1", AIRTABLE_PAT: "pat-test" },
 				ctx,
 			);

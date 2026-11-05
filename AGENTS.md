@@ -178,13 +178,19 @@ There is **no `config.js`** — all secrets live server-side in the Cloudflare W
     Only **allowlisted** tables are readable. Each table is sorted by its own field (or its
     natural Airtable order when it has no sort field): `BTStudyHub` (sorted by `DisplayOrder`,
     used by `bt-study-hub.html`), `GridShift` (used by both Grid Shift games),
-    `GridShiftSystem` (used by the Pure Match TargetBox and Event Log), and `GridShiftVariants`
-    (used by `mb-farmstead-mg.html` in `?live=1` mode only — the released page reads its snapshot file).
-    Returns `{ records: [...] }`.
+    `GridShiftSystem` (used by the Pure Match TargetBox and Event Log), `GridShiftVariants`
+    (used by `mb-farmstead-mg.html` in `?live=1` mode only — the released page reads its snapshot file),
+    and `LessonSlots` (used by `updates.html`; only Student, StartsAt, Status and Lesson are
+    returned, without edge caching). Returns `{ records: [...] }`.
+  - `POST /bookings` — confirms 1–10 available `LessonSlots` records for Onza or Nimza and
+    sets `Status` to `Booked` plus `BookedAt`. A Durable Object serializes reservations to
+    prevent two requests from booking the same slot simultaneously. The public Updates page
+    does not authenticate the person making a booking.
   - `POST /` — Airtable visitor tracking.
   - `OPTIONS` — CORS preflight (`GET, POST, OPTIONS`).
-- Deploy with `npx wrangler deploy` from `english-explorer-tracker/`; set secrets with
-  `npx wrangler secret put <NAME>`. Run tests with `npm test` in that folder.
+- Deploy with `npx wrangler deploy` from `english-explorer-tracker/`; the configured Durable
+  Object migration is applied during deployment. Set secrets with `npx wrangler secret put <NAME>`.
+  Run tests with `npm test` in that folder.
 
 ## Platforms
 
