@@ -1103,7 +1103,15 @@
         } catch (e) {}
         try {
           var savedLayout = localStorage.getItem("pureMatchLayout");
-          if (savedLayout === "horizontal" || savedLayout === "vertical") {
+          var hasLayoutPreference =
+            localStorage.getItem("pureMatchLayoutUserSet") === "1";
+          if (savedLayout === "vertical") {
+            layout = savedLayout;
+          } else if (
+            savedLayout === "horizontal" &&
+            (hasLayoutPreference ||
+              !window.matchMedia("(max-width: 900px)").matches)
+          ) {
             layout = savedLayout;
           } else if (window.matchMedia("(max-width: 900px)").matches) {
             layout = "vertical";
@@ -1153,6 +1161,7 @@
           layout = layout === "horizontal" ? "vertical" : "horizontal";
           try {
             localStorage.setItem("pureMatchLayout", layout);
+            localStorage.setItem("pureMatchLayoutUserSet", "1");
           } catch (e) {}
           applyLayout();
         });
