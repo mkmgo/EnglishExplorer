@@ -93,10 +93,11 @@ put in them (see "Self-contained files" below).
 Give each page a clear, legible identity in browser tabs, when saved to an iOS
 home screen, and when its URL is shared:
 
-- Use the page's actual square logo artwork for both `rel="icon"` and
-  `rel="apple-touch-icon"`. Follow `updates.html` as the working reference:
-  both links use the same image. Supply a square PNG of at least 180 × 180 px
-  for sharp display on high-density screens.
+- Use the page's own square logo artwork for both `rel="icon"` and
+  `rel="apple-touch-icon"`; do not borrow another page's artwork. Follow
+  `updates.html` as the working reference: both links use the same image URL.
+  A square source can be used directly, as in `updates.html`; supply at least
+  180 × 180 px for sharp display on high-density screens.
 - Preserve the complete artwork. For a non-square source or a logo whose
   details reach its edges, use a non-cropping Cloudinary `c_fit` (or `c_pad`)
   transformation in a square output with enough breathing room for iOS's
@@ -106,10 +107,12 @@ home screen, and when its URL is shared:
   when the source is already square. Do not draw a rounded mask into the image;
   iOS applies its own shape to home-screen icons.
 - Set both `og:image` and `twitter:image` for link previews to a high-resolution
-  version of the page artwork, not the small favicon derivative. For square
-  artwork, use a square 1200 × 1200 px image and `twitter:card` set to
+  version of the same page artwork, not the small favicon derivative. For
+  square artwork, use a square 1200 × 1200 px image and `twitter:card` set to
   `summary_large_image`. Keep both preview tags on the same image so forwarded
-  links have a consistent appearance across platforms.
+  links have a consistent appearance across platforms. The favicon and Apple
+  icon share one image URL; the social preview tags share one high-resolution
+  image URL.
 - Use an absolute HTTPS image URL. Before release, verify it returns an image
   successfully and inspect the page's tab icon, iOS home-screen icon, and a
   shared-link preview. Social platforms may cache previews independently of the
