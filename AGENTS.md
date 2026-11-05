@@ -97,12 +97,12 @@ home screen, and when its URL is shared:
   `rel="apple-touch-icon"`. Follow `updates.html` as the working reference:
   both links use the same image. Supply a square PNG of at least 180 × 180 px
   for sharp display on high-density screens.
-- The artwork should occupy the image rather than appear as a small mark inside
-  a large transparent border. Avoid Cloudinary `c_pad` for these icons because
-  it adds empty space; if the source has excess transparent canvas, use a
-  centered `c_fill` derivative and verify it does not crop the artwork. Do not
-  draw a rounded mask into the image; iOS applies its own shape to home-screen
-  icons.
+- Preserve the complete artwork. For a non-square source or a logo whose
+  details reach its edges, use a non-cropping Cloudinary `c_fit` (or `c_pad`)
+  transformation in a square output; do not use `c_fill`, which can cut off
+  important details. Avoid adding unnecessary transparent margins when the
+  source is already square. Do not draw a rounded mask into the image; iOS
+  applies its own shape to home-screen icons.
 - Set both `og:image` and `twitter:image` for link previews to a high-resolution
   version of the page artwork, not the small favicon derivative. For square
   artwork, use a square 1200 × 1200 px image and `twitter:card` set to
