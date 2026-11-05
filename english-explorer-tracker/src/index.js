@@ -273,7 +273,7 @@ async function fetchLessonSlots(env) {
 	return { records };
 }
 
-function isFutureWeekdaySlot(record, now) {
+export function isFutureWeekdaySlot(record, now) {
 	const startsAt = new Date(record.fields?.StartsAt);
 	if (
 		!['Onza', 'Nimza'].includes(record.fields?.Student) ||
@@ -282,10 +282,14 @@ function isFutureWeekdaySlot(record, now) {
 	) {
 		return false;
 	}
-	const sastWeekday = new Date(
-		startsAt.getTime() + 2 * 60 * 60 * 1000,
-	).getUTCDay();
-	return sastWeekday !== 6;
+	const sastStart = new Date(startsAt.getTime() + 2 * 60 * 60 * 1000);
+	const sastNow = new Date(now.getTime() + 2 * 60 * 60 * 1000);
+	const sastWeekday = sastStart.getUTCDay();
+	const sameSastDay =
+		sastStart.getUTCFullYear() === sastNow.getUTCFullYear() &&
+		sastStart.getUTCMonth() === sastNow.getUTCMonth() &&
+		sastStart.getUTCDate() === sastNow.getUTCDate();
+	return sastWeekday !== 6 && !(sameSastDay && sastNow.getUTCHours() >= 12);
 }
 
 async function patchLessonSlots(env, updates) {

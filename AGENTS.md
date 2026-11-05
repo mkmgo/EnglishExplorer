@@ -188,7 +188,8 @@ There is **no `config.js`** — all secrets live server-side in the Cloudflare W
   - Worker cron daily at 12:00 South African Standard Time (`0 10 * * *` UTC) — marks
     each student's earliest upcoming non-cancelled weekday slot `Booked` if it is
     `Available`. The Updates page also runs this check on load to initialize the next
-    session before the first cron run. Cancelling the earliest upcoming session does not
+    session before the first cron run. After 12:00 SAST, remaining same-day sessions are
+    no longer considered upcoming. Cancelling the earliest upcoming session does not
     automatically book a later one; it advances the Class line and later sessions remain
     opt-in. Saturday slots are never auto-booked.
   - `POST /bookings/cancel` — sets an unticked future booking to `Cancelled`; settlement

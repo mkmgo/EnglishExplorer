@@ -5,7 +5,7 @@ import {
 	SELF,
 } from "cloudflare:test";
 import { describe, it, expect } from "vitest";
-import worker, { BookingCoordinator } from "../src";
+import worker, { BookingCoordinator, isFutureWeekdaySlot } from "../src";
 
 function futureSastDate(weekday) {
 	const now = new Date();
@@ -19,6 +19,40 @@ function futureSastDate(weekday) {
 }
 
 describe("English Explorer Tracker worker", () => {
+	it("stops counting today's remaining sessions as upcoming after 12pm SAST", () => {
+		const todayAfternoonSlot = {
+			fields: {
+				Student: "Onza",
+				StartsAt: "2026-11-05T10:30:00.000Z",
+				Status: "Available",
+			},
+		};
+		expect(
+			isFutureWeekdaySlot(
+				todayAfternoonSlot,
+				new Date("2026-11-05T09:00:00.000Z"),
+			),
+		).toBe(true);
+		expect(
+			isFutureWeekdaySlot(
+				todayAfternoonSlot,
+				new Date("2026-11-05T10:01:00.000Z"),
+			),
+		).toBe(false);
+		expect(
+			isFutureWeekdaySlot(
+				{
+					fields: {
+						Student: "Onza",
+						StartsAt: "2026-11-06T08:00:00.000Z",
+						Status: "Available",
+					},
+				},
+				new Date("2026-11-05T10:01:00.000Z"),
+			),
+		).toBe(true);
+	});
+
 	it("returns 405 for unknown routes", async () => {
 		const ctx = createExecutionContext();
 		const response = await worker.fetch(
