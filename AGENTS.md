@@ -471,7 +471,8 @@ strip doubles in height for longer prompts.
 The top bar has a horizontal / vertical layout toggle and the light/dark theme
 toggle. In light mode the bar uses the darker `PartColour` with white title and
 controls; the theme toggle uses the inverse treatment for contrast. Horizontal
-is the default; vertical stacks the deck above the board,
+is the default on screens wider than 900px; narrower screens default to vertical
+unless a layout preference has been saved. Vertical stacks the deck above the board,
 uses at most four grid columns, and scales cells/cards and the stack and success
 panels to fit portrait mobile screens. The EVENT LOG panel matches the Stack panel's
 size: it sits below the stack in horizontal mode and beside it in vertical mode.

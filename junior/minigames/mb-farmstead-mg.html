@@ -1103,7 +1103,11 @@
         } catch (e) {}
         try {
           var savedLayout = localStorage.getItem("pureMatchLayout");
-          if (savedLayout === "vertical") layout = savedLayout;
+          if (savedLayout === "horizontal" || savedLayout === "vertical") {
+            layout = savedLayout;
+          } else if (window.matchMedia("(max-width: 900px)").matches) {
+            layout = "vertical";
+          }
         } catch (e) {}
         var darkMq = window.matchMedia("(prefers-color-scheme: dark)");
 
