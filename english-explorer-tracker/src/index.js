@@ -398,8 +398,12 @@ export class BookingCoordinator {
 	fetch(request) {
 		return this.ctx.blockConcurrencyWhile(async () => {
 			const path = new URL(request.url).pathname;
-			if (path === '/auto') return handleAutoBook(this.env);
-			if (path === '/cancel') return handleCancelBooking(request, this.env);
+			if (path === '/auto' || path === '/bookings/auto') {
+				return handleAutoBook(this.env);
+			}
+			if (path === '/cancel' || path === '/bookings/cancel') {
+				return handleCancelBooking(request, this.env);
+			}
 			return handleBooking(request, this.env);
 		});
 	}

@@ -254,7 +254,7 @@ describe("English Explorer Tracker worker", () => {
 				{ AIRTABLE_BASE_ID: "base1", AIRTABLE_PAT: "pat-test" },
 			);
 			const response = await coordinator.fetch(
-				new Request("https://tracker.dev/auto", { method: "POST" }),
+				new Request("https://tracker.dev/bookings/auto", { method: "POST" }),
 			);
 			expect(response.status).toBe(200);
 			expect(requests).toHaveLength(2);
@@ -302,7 +302,7 @@ describe("English Explorer Tracker worker", () => {
 				{ AIRTABLE_BASE_ID: "base1", AIRTABLE_PAT: "pat-test" },
 			);
 			const response = await coordinator.fetch(
-				new Request("https://tracker.dev/auto", { method: "POST" }),
+				new Request("https://tracker.dev/bookings/auto", { method: "POST" }),
 			);
 			expect(response.status).toBe(200);
 			expect(requestCount).toBe(1);
@@ -345,7 +345,7 @@ describe("English Explorer Tracker worker", () => {
 				{ AIRTABLE_BASE_ID: "base1", AIRTABLE_PAT: "pat-test" },
 			);
 			const response = await coordinator.fetch(
-				new Request("https://tracker.dev/cancel", {
+				new Request("https://tracker.dev/bookings/cancel", {
 					method: "POST",
 					headers: { "Content-Type": "application/json" },
 					body: JSON.stringify({ student: "Nimza", slotId: "recBooked" }),
