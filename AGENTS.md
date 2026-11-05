@@ -586,8 +586,10 @@ trusted pointer interaction to satisfy mobile Safari/iOS audio policies.
 System effects are played sequentially from the preloaded cache so back-to-back
 task, status, mismatch, and completion sounds are less likely to interrupt each
 other; duplicate queued effects are coalesced. Animal card sounds play directly
-on a correct match using a clone of the preloaded audio, replacing any still-
-playing animal sound instead of joining the system-effects queue.
+on a correct match, replacing any still-playing animal sound instead of joining
+the system-effects queue. Non-iOS uses a clone of the preloaded audio; iOS reuses
+the primed element. On iOS, preloaded audio elements are primed muted during a
+trusted pointer gesture for home-screen app playback restrictions.
 
 ### Multi-task flow (Pure Match)
 

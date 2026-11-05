@@ -2301,6 +2301,9 @@
       var soundQueue = [];
       var activeSound = null;
       var activeAnimalSound = null;
+      var isIOSAudio =
+        /iPad|iPhone|iPod/.test(navigator.userAgent) ||
+        (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
 
       function preloadSound(src) {
         if (!src || soundCache[src]) return;
@@ -2314,6 +2317,7 @@
           };
           audio.onended = function () {
             if (activeSound === audio) finishSoundPlayback(null, audio);
+            if (activeAnimalSound === audio) activeAnimalSound = null;
           };
           soundCache[src] = audio;
           audio.load();
@@ -2325,8 +2329,41 @@
       function unlockSoundsOnGesture(event) {
         if (!event.isTrusted) return;
         trustedAudioGestureSeen = true;
+        if (isIOSAudio) {
+          Object.keys(soundCache).forEach(function (src) {
+            primeSoundForIOS(soundCache[src]);
+          });
+        }
         playPendingStatusSound();
         drainSoundQueue();
+      }
+
+      function primeSoundForIOS(audio) {
+        if (!audio || audio.dataset.iosPrimed === "true") return;
+        var wasMuted = audio.muted;
+        audio.muted = true;
+        try {
+          var playback = audio.play();
+          audio.pause();
+          try {
+            audio.currentTime = 0;
+          } catch (error) {
+            // The media may not have loaded enough to seek yet.
+          }
+          audio.dataset.iosPrimed = "true";
+          if (playback && typeof playback.catch === "function") {
+            playback.catch(function (error) {
+              if (error && error.name !== "AbortError") {
+                audio.dataset.iosPrimed = "";
+                console.warn("Grid Shift sound could not be unlocked:", error);
+              }
+            });
+          }
+        } catch (error) {
+          console.warn("Grid Shift sound could not be unlocked:", error);
+        } finally {
+          audio.muted = wasMuted;
+        }
       }
 
       document.addEventListener("pointerdown", unlockSoundsOnGesture, true);
@@ -2391,12 +2428,20 @@
           activeAnimalSound = null;
         }
         try {
-          var audio = master.cloneNode();
+          var audio = isIOSAudio ? master : master.cloneNode();
           audio.muted = false;
+          if (isIOSAudio) primeSoundForIOS(audio);
           audio.onended = function () {
             if (activeAnimalSound === audio) activeAnimalSound = null;
           };
           activeAnimalSound = audio;
+          if (isIOSAudio) {
+            try {
+              audio.currentTime = 0;
+            } catch (error) {
+              console.warn("Grid Shift animal sound could not restart:", error);
+            }
+          }
           var playback = audio.play();
           if (playback && typeof playback.catch === "function") {
             playback.catch(function (error) {
