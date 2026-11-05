@@ -21,6 +21,9 @@
 			"new_sqlite_classes": ["BookingCoordinator"]
 		}
 	],
+	"triggers": {
+		"crons": ["0 10 * * *"]
+	},
 	"observability": {
 		"enabled": true
 	},

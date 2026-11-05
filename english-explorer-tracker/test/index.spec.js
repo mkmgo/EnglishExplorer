@@ -7,6 +7,17 @@ import {
 import { describe, it, expect } from "vitest";
 import worker, { BookingCoordinator } from "../src";
 
+function futureSastDate(weekday) {
+	const now = new Date();
+	const candidate = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000);
+	candidate.setUTCHours(12, 0, 0, 0);
+	while (candidate <= now) candidate.setUTCDate(candidate.getUTCDate() + 1);
+	while (new Date(candidate.getTime() + 2 * 60 * 60 * 1000).getUTCDay() !== weekday) {
+		candidate.setUTCDate(candidate.getUTCDate() + 1);
+	}
+	return candidate.toISOString();
+}
+
 describe("English Explorer Tracker worker", () => {
 	it("returns 405 for unknown routes", async () => {
 		const ctx = createExecutionContext();
@@ -99,7 +110,11 @@ describe("English Explorer Tracker worker", () => {
 					records: [
 						{
 							id: "recSlot1",
-							fields: { Student: "Onza", Status: "Available" },
+							fields: {
+								Student: "Onza",
+								StartsAt: futureSastDate(2),
+								Status: "Available",
+							},
 						},
 					],
 				}),
@@ -124,6 +139,186 @@ describe("English Explorer Tracker worker", () => {
 			expect(JSON.parse(calls[1].options.body).records[0].fields.Status).toBe(
 				"Booked",
 			);
+		} finally {
+			globalThis.fetch = origFetch;
+		}
+	});
+
+	it("books the earliest upcoming weekday slot unless already booked", async () => {
+		const nextOnzaSlot = {
+			id: "recOnzaNext",
+			fields: {
+				Student: "Onza",
+				StartsAt: futureSastDate(1),
+				Status: "Available",
+			},
+		};
+		const laterOnzaSlot = {
+			id: "recOnzaLater",
+			fields: {
+				Student: "Onza",
+				StartsAt: new Date(
+					new Date(nextOnzaSlot.fields.StartsAt).getTime() + 24 * 60 * 60 * 1000,
+				).toISOString(),
+				Status: "Available",
+			},
+		};
+		const saturdaySlot = {
+			id: "recSaturday",
+			fields: {
+				Student: "Onza",
+				StartsAt: futureSastDate(6),
+				Status: "Available",
+			},
+		};
+		const alreadyBookedNimzaSlot = {
+			id: "recNimzaBooked",
+			fields: {
+				Student: "Nimza",
+				StartsAt: futureSastDate(2),
+				Status: "Booked",
+			},
+		};
+		const availableNimzaSlot = {
+			id: "recNimzaAvailable",
+			fields: {
+				Student: "Nimza",
+				StartsAt: new Date(
+					new Date(alreadyBookedNimzaSlot.fields.StartsAt).getTime() +
+						24 * 60 * 60 * 1000,
+				).toISOString(),
+				Status: "Available",
+			},
+		};
+		const origFetch = globalThis.fetch;
+		const requests = [];
+		globalThis.fetch = async (url, options = {}) => {
+			requests.push({ url: new URL(String(url)), options });
+			if (options.method === "PATCH") {
+				const records = JSON.parse(options.body).records;
+				return new Response(JSON.stringify({ records }), {
+					status: 200,
+					headers: { "Content-Type": "application/json" },
+				});
+			}
+			return new Response(
+				JSON.stringify({
+					records: [
+						nextOnzaSlot,
+						laterOnzaSlot,
+						saturdaySlot,
+						alreadyBookedNimzaSlot,
+						availableNimzaSlot,
+					],
+				}),
+				{ status: 200, headers: { "Content-Type": "application/json" } },
+			);
+		};
+		try {
+			const coordinator = new BookingCoordinator(
+				{ blockConcurrencyWhile: (callback) => callback() },
+				{ AIRTABLE_BASE_ID: "base1", AIRTABLE_PAT: "pat-test" },
+			);
+			const response = await coordinator.fetch(
+				new Request("https://tracker.dev/auto", { method: "POST" }),
+			);
+			expect(response.status).toBe(200);
+			expect(requests).toHaveLength(2);
+			const update = JSON.parse(requests[1].options.body);
+			expect(update.records).toHaveLength(1);
+			expect(update.records[0].id).toBe("recOnzaNext");
+			expect(update.records[0].fields.Status).toBe("Booked");
+		} finally {
+			globalThis.fetch = origFetch;
+		}
+	});
+
+	it("does not automatically book a later session when the earliest session was cancelled", async () => {
+		const cancelledSlot = {
+			id: "recCancelledNext",
+			fields: {
+				Student: "Onza",
+				StartsAt: futureSastDate(1),
+				Status: "Cancelled",
+			},
+		};
+		const laterAvailableSlot = {
+			id: "recLaterAvailable",
+			fields: {
+				Student: "Onza",
+				StartsAt: new Date(
+					new Date(cancelledSlot.fields.StartsAt).getTime() +
+						24 * 60 * 60 * 1000,
+				).toISOString(),
+				Status: "Available",
+			},
+		};
+		const origFetch = globalThis.fetch;
+		let requestCount = 0;
+		globalThis.fetch = async () => {
+			requestCount += 1;
+			return new Response(
+				JSON.stringify({ records: [cancelledSlot, laterAvailableSlot] }),
+				{ status: 200, headers: { "Content-Type": "application/json" } },
+			);
+		};
+		try {
+			const coordinator = new BookingCoordinator(
+				{ blockConcurrencyWhile: (callback) => callback() },
+				{ AIRTABLE_BASE_ID: "base1", AIRTABLE_PAT: "pat-test" },
+			);
+			const response = await coordinator.fetch(
+				new Request("https://tracker.dev/auto", { method: "POST" }),
+			);
+			expect(response.status).toBe(200);
+			expect(requestCount).toBe(1);
+			expect((await response.json()).count).toBe(0);
+		} finally {
+			globalThis.fetch = origFetch;
+		}
+	});
+
+	it("cancels a booked session so it is excluded from settlement", async () => {
+		const origFetch = globalThis.fetch;
+		let update;
+		globalThis.fetch = async (url, options = {}) => {
+			if (options.method === "PATCH") {
+				update = JSON.parse(options.body);
+				return new Response(JSON.stringify({ records: update.records }), {
+					status: 200,
+					headers: { "Content-Type": "application/json" },
+				});
+			}
+			return new Response(
+				JSON.stringify({
+					records: [
+						{
+							id: "recBooked",
+							fields: {
+								Student: "Nimza",
+								StartsAt: futureSastDate(2),
+								Status: "Booked",
+							},
+						},
+					],
+				}),
+				{ status: 200, headers: { "Content-Type": "application/json" } },
+			);
+		};
+		try {
+			const coordinator = new BookingCoordinator(
+				{ blockConcurrencyWhile: (callback) => callback() },
+				{ AIRTABLE_BASE_ID: "base1", AIRTABLE_PAT: "pat-test" },
+			);
+			const response = await coordinator.fetch(
+				new Request("https://tracker.dev/cancel", {
+					method: "POST",
+					headers: { "Content-Type": "application/json" },
+					body: JSON.stringify({ student: "Nimza", slotId: "recBooked" }),
+				}),
+			);
+			expect(response.status).toBe(200);
+			expect(update.records[0].fields.Status).toBe("Cancelled");
 		} finally {
 			globalThis.fetch = origFetch;
 		}

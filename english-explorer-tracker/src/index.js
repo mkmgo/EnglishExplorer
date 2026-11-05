@@ -208,7 +208,8 @@ async function handleBooking(request, env) {
 			(record) =>
 				!record ||
 				record.fields?.Student !== student ||
-				record.fields?.Status !== 'Available',
+				!['Available', 'Cancelled'].includes(record.fields?.Status) ||
+				!isFutureWeekdaySlot(record, new Date()),
 		)
 	) {
 		return json(
@@ -247,6 +248,143 @@ async function handleBooking(request, env) {
 	return json({ records: updateData.records || [] });
 }
 
+async function fetchLessonSlots(env) {
+	const airtableUrl = new URL(
+		`https://api.airtable.com/v0/${env.AIRTABLE_BASE_ID}/LessonSlots`,
+	);
+	airtableUrl.searchParams.set('maxRecords', '200');
+	airtableUrl.searchParams.set('pageSize', '100');
+	const records = [];
+	let offset;
+	do {
+		if (offset) airtableUrl.searchParams.set('offset', offset);
+		const response = await fetch(airtableUrl, {
+			headers: { Authorization: 'Bearer ' + env.AIRTABLE_PAT },
+		});
+		const data = await response.json();
+		if (!response.ok) {
+			return {
+				response: json(withAirtableDiagnostic(data, response.status), response.status),
+			};
+		}
+		records.push(...(data.records || []));
+		offset = data.offset;
+	} while (offset && records.length < 200);
+	return { records };
+}
+
+function isFutureWeekdaySlot(record, now) {
+	const startsAt = new Date(record.fields?.StartsAt);
+	if (
+		!['Onza', 'Nimza'].includes(record.fields?.Student) ||
+		!Number.isFinite(startsAt.getTime()) ||
+		startsAt <= now
+	) {
+		return false;
+	}
+	const sastWeekday = new Date(
+		startsAt.getTime() + 2 * 60 * 60 * 1000,
+	).getUTCDay();
+	return sastWeekday !== 6;
+}
+
+async function patchLessonSlots(env, updates) {
+	const records = [];
+	for (let start = 0; start < updates.length; start += 10) {
+		const response = await fetch(
+			`https://api.airtable.com/v0/${env.AIRTABLE_BASE_ID}/LessonSlots`,
+			{
+				method: 'PATCH',
+				headers: {
+					Authorization: 'Bearer ' + env.AIRTABLE_PAT,
+					'Content-Type': 'application/json',
+				},
+				body: JSON.stringify({ records: updates.slice(start, start + 10) }),
+			},
+		);
+		const data = await response.json();
+		if (!response.ok) {
+			return {
+				response: json(withAirtableDiagnostic(data, response.status), response.status),
+			};
+		}
+		records.push(...(data.records || []));
+	}
+	return { records };
+}
+
+async function handleAutoBook(env) {
+	if (!env.AIRTABLE_BASE_ID || !env.AIRTABLE_PAT) {
+		return json({ error: 'Airtable booking is not configured' }, 500);
+	}
+	const result = await fetchLessonSlots(env);
+	if (result.response) return result.response;
+	const now = new Date();
+	const futureSlots = result.records
+		.filter((record) => isFutureWeekdaySlot(record, now))
+		.sort(
+			(a, b) =>
+				new Date(a.fields.StartsAt).getTime() -
+				new Date(b.fields.StartsAt).getTime(),
+		);
+	const updates = [];
+	for (const student of ['Onza', 'Nimza']) {
+		const nextSlot = futureSlots.find(
+			(record) =>
+				record.fields.Student === student &&
+				['Available', 'Booked', 'Cancelled'].includes(record.fields.Status),
+		);
+		if (nextSlot?.fields.Status === 'Available') {
+			updates.push({
+				id: nextSlot.id,
+				fields: { Status: 'Booked', BookedAt: now.toISOString() },
+			});
+		}
+	}
+	const updated = await patchLessonSlots(env, updates);
+	if (updated.response) return updated.response;
+	return json({ records: updated.records, count: updated.records.length });
+}
+
+async function handleCancelBooking(request, env) {
+	let body;
+	try {
+		body = await request.json();
+	} catch {
+		return json({ error: 'Request body must be valid JSON' }, 400);
+	}
+	const { student, slotId } = body || {};
+	if (
+		!['Onza', 'Nimza'].includes(student) ||
+		typeof slotId !== 'string' ||
+		!slotId.trim()
+	) {
+		return json({ error: 'A student and session are required' }, 400);
+	}
+	if (!env.AIRTABLE_BASE_ID || !env.AIRTABLE_PAT) {
+		return json({ error: 'Airtable booking is not configured' }, 500);
+	}
+	const result = await fetchLessonSlots(env);
+	if (result.response) return result.response;
+	const slot = result.records.find((record) => record.id === slotId);
+	if (
+		!slot ||
+		slot.fields?.Student !== student ||
+		slot.fields?.Status !== 'Booked' ||
+		!isFutureWeekdaySlot(slot, new Date())
+	) {
+		return json(
+			{ error: 'This booked session cannot be changed. Refresh and try again.' },
+			409,
+		);
+	}
+	const updated = await patchLessonSlots(env, [
+		{ id: slot.id, fields: { Status: 'Cancelled' } },
+	]);
+	if (updated.response) return updated.response;
+	return json({ records: updated.records });
+}
+
 export class BookingCoordinator {
 	constructor(ctx, env) {
 		this.ctx = ctx;
@@ -254,9 +392,12 @@ export class BookingCoordinator {
 	}
 
 	fetch(request) {
-		return this.ctx.blockConcurrencyWhile(() =>
-			handleBooking(request, this.env),
-		);
+		return this.ctx.blockConcurrencyWhile(async () => {
+			const path = new URL(request.url).pathname;
+			if (path === '/auto') return handleAutoBook(this.env);
+			if (path === '/cancel') return handleCancelBooking(request, this.env);
+			return handleBooking(request, this.env);
+		});
 	}
 }
 
@@ -326,7 +467,12 @@ export default {
 			return handleAirtable(request, env);
 		}
 
-		if (request.method === 'POST' && url.pathname === '/bookings') {
+		if (
+			request.method === 'POST' &&
+			['/bookings', '/bookings/auto', '/bookings/cancel'].includes(
+				url.pathname,
+			)
+		) {
 			const id = env.BOOKING_COORDINATOR.idFromName('lesson-bookings');
 			return env.BOOKING_COORDINATOR.get(id).fetch(request);
 		}
@@ -340,5 +486,19 @@ export default {
 			status: 405,
 			headers: CORS_HEADERS,
 		});
+	},
+	async scheduled(controller, env, ctx) {
+		const id = env.BOOKING_COORDINATOR.idFromName('lesson-bookings');
+		ctx.waitUntil(
+			env.BOOKING_COORDINATOR.get(id)
+				.fetch(new Request('https://booking.internal/auto', { method: 'POST' }))
+				.then(async (response) => {
+					if (!response.ok) {
+						console.error(
+							`Automatic lesson booking failed (${response.status}): ${await response.text()}`,
+						);
+					}
+				}),
+		);
 	},
 };

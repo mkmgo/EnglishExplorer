@@ -301,6 +301,11 @@
         font-weight: 700;
         text-transform: uppercase;
       }
+      .bookingHint {
+        margin: 0 0 0.35rem;
+        color: var(--muted);
+        font-size: 0.78rem;
+      }
       .bookingSlots {
         display: grid;
         gap: 0.1rem;
@@ -344,25 +349,6 @@
       }
       .bookingMessage.error {
         color: var(--bad);
-      }
-      .bookingButton {
-        display: block;
-        min-width: 6rem;
-        margin: 0.45rem 0 0 auto;
-        padding: 0.48rem 0.9rem;
-        border: 0;
-        border-radius: 999px;
-        background: var(--accent);
-        color: #fff;
-        font: inherit;
-        font-size: 0.82rem;
-        font-weight: 700;
-        text-transform: uppercase;
-        cursor: pointer;
-      }
-      .bookingButton:disabled {
-        cursor: not-allowed;
-        opacity: 0.5;
       }
       .column.onza .bookingPanel {
         --booking-accent: #2563eb;
@@ -439,7 +425,7 @@
           <div class="column onza">
             <h2 class="columnHead onza">Onza</h2>
             <p class="columnSub">
-              Class: Thu, 05/11/2026, 10am<br /><b
+              Class: <span id="nextClassOnza">Loading…</span><br /><b
                 >Up Next: Farmstead</b
               >
             </p>
@@ -744,6 +730,10 @@
               <h3 class="bookingHead" id="bookOnzaTitle">
                 Upcoming sessions for Onza
               </h3>
+              <p class="bookingHint">
+                The next weekday session is booked by default. Untick to exclude
+                it from settlement; tick others to add sessions.
+              </p>
               <div
                 class="bookingSlots"
                 id="bookingSlotsOnza"
@@ -752,21 +742,13 @@
                 <p class="bookingMessage">Loading sessions…</p>
               </div>
               <p class="bookingMessage" id="bookingMessageOnza" role="status"></p>
-              <button
-                class="bookingButton"
-                id="bookingButtonOnza"
-                type="button"
-                disabled
-              >
-                Book
-              </button>
             </section>
           </div>
 
           <div class="column nima">
             <h2 class="columnHead nima">Nimza</h2>
             <p class="columnSub">
-              Class: Thu, 05/11/2026, 11am<br /><b
+              Class: <span id="nextClassNimza">Loading…</span><br /><b
                 >Up Next: Auxiliary, Modal and Main Verbs</b
               >
             </p>
@@ -1198,6 +1180,10 @@
               <h3 class="bookingHead" id="bookNimzaTitle">
                 Upcoming sessions for Nimza
               </h3>
+              <p class="bookingHint">
+                The next weekday session is booked by default. Untick to exclude
+                it from settlement; tick others to add sessions.
+              </p>
               <div
                 class="bookingSlots"
                 id="bookingSlotsNimza"
@@ -1206,14 +1192,6 @@
                 <p class="bookingMessage">Loading sessions…</p>
               </div>
               <p class="bookingMessage" id="bookingMessageNimza" role="status"></p>
-              <button
-                class="bookingButton"
-                id="bookingButtonNimza"
-                type="button"
-                disabled
-              >
-                Book
-              </button>
             </section>
           </div>
         </div>
@@ -1294,7 +1272,7 @@
         var WORKER =
           "https://english-explorer-tracker.mkmueller-mission.workers.dev";
         var slots = [];
-        var selected = { Onza: new Set(), Nimza: new Set() };
+        var busySlots = new Set();
         var students = ["Onza", "Nimza"];
 
         function escapeHtml(value) {
@@ -1312,7 +1290,8 @@
         function formatSlotDate(value) {
           var date = new Date(value);
           if (isNaN(date.getTime())) return value;
-          return new Intl.DateTimeFormat(undefined, {
+          return new Intl.DateTimeFormat("en-GB", {
+            timeZone: "Africa/Johannesburg",
             weekday: "short",
             day: "2-digit",
             month: "2-digit",
@@ -1320,6 +1299,17 @@
             hour: "numeric",
             minute: "2-digit",
           }).format(date);
+        }
+
+        function isSaturdaySast(value) {
+          var date = new Date(value);
+          return (
+            !isNaN(date.getTime()) &&
+            new Intl.DateTimeFormat("en-US", {
+              timeZone: "Africa/Johannesburg",
+              weekday: "short",
+            }).format(date) === "Sat"
+          );
         }
 
         function setMessage(student, text, isError) {
@@ -1332,14 +1322,16 @@
 
         function renderStudent(student) {
           var list = document.getElementById("bookingSlots" + student);
-          var button = document.getElementById("bookingButton" + student);
           var studentSlots = slots
             .filter(function (slot) {
               var fields = slot.fields || {};
               var date = new Date(fields.StartsAt);
               return (
                 fields.Student === student &&
-                ["Available", "Booked", "Current"].includes(fields.Status) &&
+                ["Available", "Booked", "Cancelled", "Current"].includes(
+                  fields.Status,
+                ) &&
+                !isSaturdaySast(fields.StartsAt) &&
                 (fields.Status === "Current" ||
                   (Number.isFinite(date.getTime()) && date >= new Date()))
               );
@@ -1350,18 +1342,13 @@
                 new Date(b.fields.StartsAt).getTime()
               );
             });
-          var availableIds = new Set(
-            studentSlots
-              .filter(function (slot) {
-                return slot.fields.Status === "Available";
-              })
-              .map(function (slot) {
-                return slot.id;
-              }),
-          );
-          selected[student].forEach(function (slotId) {
-            if (!availableIds.has(slotId)) selected[student].delete(slotId);
+          var nextClass = studentSlots.find(function (slot) {
+            return slot.fields.Status !== "Cancelled";
           });
+          document.getElementById("nextClass" + student).textContent =
+            nextClass
+              ? formatSlotDate(nextClass.fields.StartsAt)
+              : "—";
 
           if (!studentSlots.length) {
             list.innerHTML =
@@ -1372,17 +1359,9 @@
                 var fields = slot.fields || {};
                 var booked = fields.Status === "Booked";
                 var current = fields.Status === "Current";
-                var selectedNow = selected[student].has(slot.id);
-                var checked = booked || current || selectedNow;
-                var disabled =
-                  booked ||
-                  current ||
-                  button.dataset.busy === "1";
-                var status = current
-                  ? "Current"
-                  : booked
-                    ? "Booked"
-                    : "";
+                var checked = booked || current;
+                var disabled = current || busySlots.has(slot.id);
+                var status = fields.Status;
                 return (
                   '<label class="bookingSlot">' +
                   '<input type="checkbox" data-slot-id="' +
@@ -1401,7 +1380,7 @@
                   "</span>" +
                   (status
                     ? '<span class="bookingStatus">' +
-                      status +
+                      escapeHtml(status) +
                       "</span>"
                     : "") +
                   "</label>"
@@ -1412,96 +1391,93 @@
             list.querySelectorAll('input[type="checkbox"]:not(:disabled)')
               .forEach(function (input) {
                 input.addEventListener("change", function () {
-                  if (input.checked) selected[student].add(input.dataset.slotId);
-                  else selected[student].delete(input.dataset.slotId);
-                  button.disabled =
-                    selected[student].size === 0 || button.dataset.busy === "1";
+                  updateBooking(student, input.dataset.slotId, input.checked);
                 });
               });
           }
-          button.disabled =
-            selected[student].size === 0 || button.dataset.busy === "1";
-          button.onclick = function () {
-            submitBookings(student);
-          };
         }
 
         function renderAll() {
           students.forEach(renderStudent);
         }
 
+        function requestJson(url, options) {
+          return fetch(url, options).then(function (response) {
+            return response.json().then(function (data) {
+              if (!response.ok) {
+                throw new Error(
+                  data.workerMessage || data.error || "Request failed.",
+                );
+              }
+              return data;
+            });
+          });
+        }
+
         function loadSlots() {
-          return fetch(WORKER + "/airtable?table=LessonSlots", {
+          return requestJson(WORKER + "/airtable?table=LessonSlots", {
             cache: "no-store",
           })
-            .then(function (response) {
-              return response.json().then(function (data) {
-                if (!response.ok) {
-                  throw new Error(
-                    data.workerMessage || data.error || "Could not load sessions.",
-                  );
-                }
-                return data;
-              });
-            })
             .then(function (data) {
               slots = Array.isArray(data.records) ? data.records : [];
               renderAll();
             });
         }
 
-        function submitBookings(student) {
-          var button = document.getElementById("bookingButton" + student);
-          var slotIds = Array.from(selected[student]);
-          if (!slotIds.length || button.dataset.busy === "1") return;
-          if (slotIds.length > 10) {
-            setMessage(student, "Please book no more than 10 sessions at once.", true);
-            return;
-          }
-          button.dataset.busy = "1";
-          button.disabled = true;
-          button.textContent = "Booking…";
-          setMessage(student, "", false);
-          renderAll();
-
-          fetch(WORKER + "/bookings", {
+        function autoBookSlots() {
+          return requestJson(WORKER + "/bookings/auto", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ student: student, slotIds: slotIds }),
+          });
+        }
+
+        function updateBooking(student, slotId, book) {
+          if (busySlots.has(slotId)) return;
+          busySlots.add(slotId);
+          setMessage(
+            student,
+            book ? "Booking session…" : "Updating settlement status…",
+            false,
+          );
+          renderAll();
+          var endpoint = book ? "/bookings" : "/bookings/cancel";
+          var payload = book
+            ? { student: student, slotIds: [slotId] }
+            : { student: student, slotId: slotId };
+          requestJson(WORKER + endpoint, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(payload),
           })
             .then(function (response) {
-              return response.json().then(function (data) {
-                if (!response.ok) {
-                  throw new Error(
-                    data.workerMessage || data.error || "Booking failed.",
-                  );
-                }
-                return data;
-              });
-            })
-            .then(function (data) {
-              var updatedById = new Map(
-                (Array.isArray(data.records) ? data.records : []).map(
-                  function (slot) {
-                    return [slot.id, slot];
-                  },
-                ),
-              );
+              var updated = Array.isArray(response.records)
+                ? response.records.find(function (record) {
+                    return record.id === slotId;
+                  })
+                : null;
               slots = slots.map(function (slot) {
-                if (!selected[student].has(slot.id)) return slot;
-                return updatedById.get(slot.id) || {
-                  id: slot.id,
-                  fields: Object.assign({}, slot.fields, { Status: "Booked" }),
-                };
+                if (slot.id !== slotId) return slot;
+                return (
+                  updated || {
+                    id: slot.id,
+                    fields: Object.assign({}, slot.fields, {
+                      Status: book ? "Booked" : "Cancelled",
+                    }),
+                  }
+                );
               });
-              selected[student].clear();
-              setMessage(student, "Your sessions are booked.", false);
+              setMessage(
+                student,
+                book
+                  ? "Booked and included in settlement."
+                  : "Cancelled and excluded from settlement.",
+                false,
+              );
               renderAll();
               return loadSlots().catch(function (error) {
                 setMessage(
                   student,
-                  "Booking confirmed, but availability could not refresh: " +
-                    error.message,
+                  "Saved, but the schedule could not refresh: " + error.message,
                   true,
                 );
               });
@@ -1514,34 +1490,41 @@
                 .catch(function (refreshError) {
                   setMessage(
                     student,
-                    error.message +
-                      " Availability refresh failed: " +
-                      refreshError.message,
+                    error.message + " Refresh failed: " + refreshError.message,
                     true,
                   );
                 });
             })
             .finally(function () {
-              button.dataset.busy = "0";
-              button.textContent = "Book";
+              busySlots.delete(slotId);
               renderAll();
             });
         }
 
-        students.forEach(function (student) {
-          document.getElementById("bookingButton" + student).onclick =
-            function () {
-              submitBookings(student);
-            };
-        });
-        loadSlots().catch(function (error) {
-          students.forEach(function (student) {
-            document.getElementById("bookingSlots" + student).innerHTML =
-              '<p class="bookingMessage error">' +
-              escapeHtml(error.message) +
-              "</p>";
+        autoBookSlots()
+          .then(loadSlots)
+          .catch(function (error) {
+            return loadSlots()
+              .then(function () {
+                students.forEach(function (student) {
+                  setMessage(
+                    student,
+                    "Automatic booking failed: " + error.message,
+                    true,
+                  );
+                });
+              })
+              .catch(function (loadError) {
+                students.forEach(function (student) {
+                  document.getElementById("nextClass" + student).textContent =
+                    "Unavailable";
+                  document.getElementById("bookingSlots" + student).innerHTML =
+                    '<p class="bookingMessage error">' +
+                    escapeHtml(loadError.message) +
+                    "</p>";
+                });
+              });
           });
-        });
       })();
     </script>
     <script src="tracker.js"></script>

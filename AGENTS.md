@@ -183,14 +183,35 @@ There is **no `config.js`** — all secrets live server-side in the Cloudflare W
     and `LessonSlots` (used by `updates.html`; only Student, StartsAt, Status and Lesson are
     returned, without edge caching). Returns `{ records: [...] }`.
   - `POST /bookings` — confirms 1–10 available `LessonSlots` records for Onza or Nimza and
-    sets `Status` to `Booked` plus `BookedAt`. A Durable Object serializes reservations to
-    prevent two requests from booking the same slot simultaneously. The public Updates page
-    does not authenticate the person making a booking.
+    sets `Status` to `Booked` plus `BookedAt`; a previously `Cancelled` slot can be explicitly
+    rebooked too.
+  - Worker cron daily at 12:00 South African Standard Time (`0 10 * * *` UTC) — marks
+    each student's earliest upcoming non-cancelled weekday slot `Booked` if it is
+    `Available`. The Updates page also runs this check on load to initialize the next
+    session before the first cron run. Cancelling the earliest upcoming session does not
+    automatically book a later one; it advances the Class line and later sessions remain
+    opt-in. Saturday slots are never auto-booked.
+  - `POST /bookings/cancel` — sets an unticked future booking to `Cancelled`; settlement
+    reports should count only `Status: Booked`.
+    A Durable Object serializes automatic booking, booking and cancellation changes.
+    The public Updates page does not authenticate the person changing a booking.
   - `POST /` — Airtable visitor tracking.
   - `OPTIONS` — CORS preflight (`GET, POST, OPTIONS`).
 - Deploy with `npx wrangler deploy` from `english-explorer-tracker/`; the configured Durable
   Object migration is applied during deployment. Set secrets with `npx wrangler secret put <NAME>`.
   Run tests with `npm test` in that folder.
+
+### LessonSlots table (Updates booking)
+
+`LessonSlots` has one record per scheduled lesson. Maintain upcoming sessions by adding
+records with `Student` (`Onza` or `Nimza`), `StartsAt` (date and time), and `Status`
+(`Available`, `Booked`, `Cancelled`, or `Current`). `Lesson` is optional. `BookedAt` is a
+date/time field set by the Worker when the record is booked. The next upcoming weekday
+slot for each student is booked automatically at 12pm SAST; the pupil can untick that
+booking to mark it `Cancelled`. The Class line advances to the next non-cancelled session,
+but that session remains unchecked unless explicitly booked. Cancelled slots are excluded
+from settlement, and Saturday records are not shown or auto-booked. This does
+not generate recurring dates: add each upcoming lesson as a record in Airtable.
 
 ## Platforms
 
